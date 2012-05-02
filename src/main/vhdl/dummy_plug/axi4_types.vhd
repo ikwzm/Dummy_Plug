@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_master_player.vhd
 --!     @brief   AXI4 Master Bus Function Model
---!     @version 0.0.1
---!     @date    2012/5/1
+--!     @version 0.0.2
+--!     @date    2012/5/2
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --

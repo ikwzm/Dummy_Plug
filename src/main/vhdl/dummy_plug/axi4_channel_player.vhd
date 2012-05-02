@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_channel_player.vhd
 --!     @brief   AXI4 A/R/W/B Channel Dummy Plug Player.
---!     @version 0.0.1
---!     @date    2012/5/1
+--!     @version 0.0.2
+--!     @date    2012/5/2
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -40,6 +40,7 @@ library DUMMY_PLUG;
 use     DUMMY_PLUG.AXI4_TYPES.all;
 use     DUMMY_PLUG.SYNC.SYNC_REQ_VECTOR;
 use     DUMMY_PLUG.SYNC.SYNC_ACK_VECTOR;
+use     DUMMY_PLUG.SYNC.SYNC_PLUG_NUM_TYPE;
 -----------------------------------------------------------------------------------
 --! @brief   AXI4_CHANNEL_PLAYER :
 -----------------------------------------------------------------------------------
@@ -51,14 +52,18 @@ entity  AXI4_CHANNEL_PLAYER is
         SCENARIO_FILE   : --! @brief シナリオファイルの名前.
                           STRING;
         CHANNEL         : --! @brief チャネル識別子.
-                          --!      * 'A' 'W' 'R' 'B' の何れかを指定する.
+                          --!      * 'M' 'A' 'W' 'R' 'B' の何れかを指定する.
                           CHARACTER := 'A';
         MASTER          : --! @brief マスターモードを指定する.
                           boolean   := FALSE;
         SLAVE           : --! @brief スレーブモードを指定する.
                           boolean   := FALSE;
-        NAME            : --! @brief 固有名詞.
+        NAME            : --! @brief ダミープラグの固有名詞.
                           STRING;
+        FULL_NAME       : --! @brief メッセージ出力用の固有名詞.
+                          STRING;
+        OUTPUT_DELAY    : --! @brief 出力信号遅延時間
+                          time;
         AXI4_ID_WIDTH   : --! @brief AXI4 IS WIDTH :
                           integer :=  4;
         AXI4_A_WIDTH    : --! @brief AXI4 ADDR WIDTH :
@@ -67,10 +72,15 @@ entity  AXI4_CHANNEL_PLAYER is
                           integer := 32;
         AXI4_R_WIDTH    : --! @brief AXI4 READ DATA WIDTH :
                           integer := 32;
-        SYNC_PORT       : --! @brief ローカル同期信号のポート番号.
+        SYNC_WIDTH      : --! @brief 外部シンクロ用信号の本数.
+                          integer :=  1;
+        SYNC_LOCAL_PORT : --! @brief ローカル同期信号のポート番号.
                           integer := 0;
-        SYNC_WAIT       : --! @brief ローカル同期時のウェイトクロック数.
-                          integer := 2
+        SYNC_LOCAL_WAIT : --! @brief ローカル同期時のウェイトクロック数.
+                          integer := 2;
+        FINISH_ABORT    : --! @brief FINISH コマンド実行時にシミュレーションを
+                          --!        アボートするかどうかを指定するフラグ.
+                          boolean := false
     );
     -------------------------------------------------------------------------------
     -- 入出力ポートの定義.
@@ -150,8 +160,11 @@ entity  AXI4_CHANNEL_PLAYER is
         --------------------------------------------------------------------------
         -- シンクロ用信号
         --------------------------------------------------------------------------
-        SYNC_REQ        : out   SYNC_REQ_VECTOR(SYNC_PORT downto SYNC_PORT);
-        SYNC_ACK        : in    SYNC_ACK_VECTOR(SYNC_PORT downto SYNC_PORT)
+        SYNC_REQ        : out   SYNC_REQ_VECTOR(SYNC_WIDTH-1 downto 0);
+        SYNC_ACK        : in    SYNC_ACK_VECTOR(SYNC_WIDTH-1 downto 0) := (others => '0');
+        SYNC_LOCAL_REQ  : out   SYNC_REQ_VECTOR(SYNC_LOCAL_PORT downto SYNC_LOCAL_PORT);
+        SYNC_LOCAL_ACK  : in    SYNC_ACK_VECTOR(SYNC_LOCAL_PORT downto SYNC_LOCAL_PORT);
+        FINISH          : out   std_logic
     );
 end AXI4_CHANNEL_PLAYER;
 -----------------------------------------------------------------------------------
@@ -176,41 +189,82 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
     --! 
     -------------------------------------------------------------------------------
     procedure  MATCH_AXI4_CHANNEL(
-        variable CORE       : inout CORE_TYPE;            --! コア変数.
                  SIGNALS    : in    AXI4_CHANNEL_SIGNAL_TYPE;
                  MATCH      : out   boolean
     ) is
     begin 
         MATCH_AXI4_CHANNEL(
-             SIGNALS    => SIGNALS ,
-             MATCH      => MATCH   ,
-             AVALID     => AVALID_I,
-             ADDR       => ADDR_I  ,
-             AWRITE     => AWRITE_I,
-             ALEN       => ALEN_I  ,
-             ASIZE      => ASIZE_I ,
-             ABURST     => ABURST_I,
-             ALOCK      => ALOCK_I ,
-             ACACHE     => ACACHE_I,
-             APROT      => APROT_I ,
-             AID        => AID_I   ,
-             AREADY     => AREADY_I,
-             RVALID     => RVALID_I,
-             RLAST      => RLAST_I ,
-             RDATA      => RDATA_I ,
-             RRESP      => RRESP_I ,
-             RID        => RID_I   ,
-             RREADY     => RREADY_I,
-             WVALID     => WVALID_I,
-             WLAST      => WLAST_I ,
-             WDATA      => WDATA_I ,
-             WSTRB      => WSTRB_I ,
-             WID        => WID_I   ,
-             WREADY     => WREADY_I,
-             BVALID     => BVALID_I,
-             BRESP      => BRESP_I ,
-             BID        => BID_I   ,
-             BREADY     => BREADY_I
+            SIGNALS    => SIGNALS ,
+            MATCH      => MATCH   ,
+            AVALID     => AVALID_I,
+            ADDR       => ADDR_I  ,
+            AWRITE     => AWRITE_I,
+            ALEN       => ALEN_I  ,
+            ASIZE      => ASIZE_I ,
+            ABURST     => ABURST_I,
+            ALOCK      => ALOCK_I ,
+            ACACHE     => ACACHE_I,
+            APROT      => APROT_I ,
+            AID        => AID_I   ,
+            AREADY     => AREADY_I,
+            RVALID     => RVALID_I,
+            RLAST      => RLAST_I ,
+            RDATA      => RDATA_I ,
+            RRESP      => RRESP_I ,
+            RID        => RID_I   ,
+            RREADY     => RREADY_I,
+            WVALID     => WVALID_I,
+            WLAST      => WLAST_I ,
+            WDATA      => WDATA_I ,
+            WSTRB      => WSTRB_I ,
+            WID        => WID_I   ,
+            WREADY     => WREADY_I,
+            BVALID     => BVALID_I,
+            BRESP      => BRESP_I ,
+            BID        => BID_I   ,
+            BREADY     => BREADY_I
+         );
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! 
+    -------------------------------------------------------------------------------
+    procedure  MATCH_AXI4_CHANNEL(
+        variable CORE       : inout CORE_TYPE;
+                 SIGNALS    : in    AXI4_CHANNEL_SIGNAL_TYPE;
+                 MATCH      : out   boolean
+    ) is
+    begin 
+        MATCH_AXI4_CHANNEL(
+            SELF       => CORE    ,
+            SIGNALS    => SIGNALS ,
+            MATCH      => MATCH   ,
+            AVALID     => AVALID_I,
+            ADDR       => ADDR_I  ,
+            AWRITE     => AWRITE_I,
+            ALEN       => ALEN_I  ,
+            ASIZE      => ASIZE_I ,
+            ABURST     => ABURST_I,
+            ALOCK      => ALOCK_I ,
+            ACACHE     => ACACHE_I,
+            APROT      => APROT_I ,
+            AID        => AID_I   ,
+            AREADY     => AREADY_I,
+            RVALID     => RVALID_I,
+            RLAST      => RLAST_I ,
+            RDATA      => RDATA_I ,
+            RRESP      => RRESP_I ,
+            RID        => RID_I   ,
+            RREADY     => RREADY_I,
+            WVALID     => WVALID_I,
+            WLAST      => WLAST_I ,
+            WDATA      => WDATA_I ,
+            WSTRB      => WSTRB_I ,
+            WID        => WID_I   ,
+            WREADY     => WREADY_I,
+            BVALID     => BVALID_I,
+            BRESP      => BRESP_I ,
+            BID        => BID_I   ,
+            BREADY     => BREADY_I
          );
     end procedure;
 begin 
@@ -222,17 +276,19 @@ begin
         -- 各種変数の定義.
         ---------------------------------------------------------------------------
         constant  CHANNEL_NAME  : STRING(1 to 1) := (1 => CHANNEL);
-        constant  FULL_NAME     : STRING := NAME & "." & CHANNEL_NAME;
         file      stream        : TEXT;
         variable  core          : CORE_TYPE;
         variable  operation     : OPERATION_TYPE;
-        variable  op_code       : STRING(1 to 3);
-        constant  OP_MY         : STRING(1 to 3) := CHANNEL_NAME & "  ";
-        variable  signals       : AXI4_CHANNEL_SIGNAL_TYPE;
-        variable  key_word      : STRING(1 to 4);
-        constant  KEY_WAIT      : STRING(1 to 4) := "WAIT";
+        variable  op_code       : STRING(1 to 5);
+        constant  OP_CHANNEL    : STRING(1 to 5) := (1 => CHANNEL, others => ' ');
+        constant  OP_SAY        : STRING(1 to 5) := "SAY  ";
+        constant  OP_SYNC       : STRING(1 to 5) := "SYNC ";
+        constant  OP_WAIT       : STRING(1 to 5) := "WAIT ";
+        constant  OP_CHECK      : STRING(1 to 5) := "CHECK";
+        variable  out_signals   : AXI4_CHANNEL_SIGNAL_TYPE;
+        variable  chk_signals   : AXI4_CHANNEL_SIGNAL_TYPE;
         ---------------------------------------------------------------------------
-        -- チャネル信号変数の初期化.
+        --! @brief チャネル信号変数の初期化.
         ---------------------------------------------------------------------------
         function  GEN_INIT_SIGNALS return AXI4_CHANNEL_SIGNAL_TYPE is
             variable value : AXI4_CHANNEL_SIGNAL_TYPE;
@@ -291,71 +347,115 @@ begin
         end function;
         constant  INIT_SIGNALS  : AXI4_CHANNEL_SIGNAL_TYPE := GEN_INIT_SIGNALS;
         ---------------------------------------------------------------------------
-        -- 信号変数の値を出力するサブプログラム.
+        --! @brief 信号変数(out_signals)の値をポートに出力するサブプログラム.
         ---------------------------------------------------------------------------
         procedure EXECUTE_OUTPUT is
         begin 
             if (MASTER) then
                 case CHANNEL is
-                    when 'A'    => ADDR_O   <= signals.A.ADDR(ADDR_O'range);
-                                   AWRITE_O <= signals.A.WRITE;
-                                   AVALID_O <= signals.A.VALID;
-                                   ALEN_O   <= signals.A.LEN;
-                                   ASIZE_O  <= signals.A.SIZE;
-                                   ABURST_O <= signals.A.BURST;
-                                   ALOCK_O  <= signals.A.LOCK;
-                                   ACACHE_O <= signals.A.CACHE;
-                                   APROT_O  <= signals.A.PROT;
-                                   AID_O    <= signals.A.id(AID_O'range);
-                    when 'W'    => WDATA_O  <= signals.W.DATA(WDATA_O'range);
-                                   WLAST_O  <= signals.W.LAST;
-                                   WSTRB_O  <= signals.W.STRB(WSTRB_O'range);
-                                   WID_O    <= signals.W.ID(WID_O'range);
-                                   WVALID_O <= signals.W.VALID;
-                    when 'R'    => RREADY_O <= signals.R.READY;
-                    when 'B'    => BREADY_O <= signals.B.READY;
-                    when others => null;
+                    when 'A' =>
+                        ADDR_O   <= out_signals.A.ADDR(ADDR_O'range) after OUTPUT_DELAY;
+                        AWRITE_O <= out_signals.A.WRITE              after OUTPUT_DELAY;
+                        AVALID_O <= out_signals.A.VALID              after OUTPUT_DELAY;
+                        ALEN_O   <= out_signals.A.LEN                after OUTPUT_DELAY;
+                        ASIZE_O  <= out_signals.A.SIZE               after OUTPUT_DELAY;
+                        ABURST_O <= out_signals.A.BURST              after OUTPUT_DELAY;
+                        ALOCK_O  <= out_signals.A.LOCK               after OUTPUT_DELAY;
+                        ACACHE_O <= out_signals.A.CACHE              after OUTPUT_DELAY;
+                        APROT_O  <= out_signals.A.PROT               after OUTPUT_DELAY;
+                        AID_O    <= out_signals.A.id(AID_O'range)    after OUTPUT_DELAY;
+                    when 'W' =>
+                        WDATA_O  <= out_signals.W.DATA(WDATA_O'range)after OUTPUT_DELAY;
+                        WLAST_O  <= out_signals.W.LAST               after OUTPUT_DELAY;
+                        WSTRB_O  <= out_signals.W.STRB(WSTRB_O'range)after OUTPUT_DELAY;
+                        WID_O    <= out_signals.W.ID(WID_O'range)    after OUTPUT_DELAY;
+                        WVALID_O <= out_signals.W.VALID              after OUTPUT_DELAY;
+                    when 'R' =>
+                        RREADY_O <= out_signals.R.READY              after OUTPUT_DELAY;
+                    when 'B' =>
+                        BREADY_O <= out_signals.B.READY              after OUTPUT_DELAY;
+                    when others =>
+                        null;
                 end case;
             end if;
             if (SLAVE) then
                 case CHANNEL is
-                    when 'A'    => AREADY_O <= signals.A.READY;
-                    when 'W'    => WREADY_O <= signals.W.READY;
-                    when 'R'    => RDATA_O  <= signals.R.DATA(RDATA_O'range);
-                                   RRESP_O  <= signals.R.RESP;
-                                   RLAST_O  <= signals.R.LAST;
-                                   RID_O    <= signals.R.ID(RID_O'range);
-                                   RVALID_O <= signals.R.VALID;
-                    when 'B'    => BRESP_O  <= signals.B.RESP;
-                                   BID_O    <= signals.B.ID(BID_O'range);
-                                   BVALID_O <= signals.B.VALID;
-                    when others => null;
+                    when 'A' =>
+                        AREADY_O <= out_signals.A.READY              after OUTPUT_DELAY;
+                    when 'W' =>
+                        WREADY_O <= out_signals.W.READY              after OUTPUT_DELAY;
+                    when 'R' =>
+                        RDATA_O  <= out_signals.R.DATA(RDATA_O'range)after OUTPUT_DELAY;
+                        RRESP_O  <= out_signals.R.RESP               after OUTPUT_DELAY;
+                        RLAST_O  <= out_signals.R.LAST               after OUTPUT_DELAY;
+                        RID_O    <= out_signals.R.ID(RID_O'range)    after OUTPUT_DELAY;
+                        RVALID_O <= out_signals.R.VALID              after OUTPUT_DELAY;
+                    when 'B' =>
+                        BRESP_O  <= out_signals.B.RESP               after OUTPUT_DELAY;
+                        BID_O    <= out_signals.B.ID(BID_O'range)    after OUTPUT_DELAY;
+                        BVALID_O <= out_signals.B.VALID              after OUTPUT_DELAY;
+                    when others =>
+                        null;
                 end case;
             end if;
         end procedure;
         ---------------------------------------------------------------------------
-        -- WAITオペレーション.
+        --! @brief ローカル同期オペレーション.
         ---------------------------------------------------------------------------
         procedure LOCAL_SYNC is
-            variable sync_count : SYNC_REQ_VECTOR(SYNC_REQ'range);
+            variable sync_count : SYNC_REQ_VECTOR(SYNC_LOCAL_REQ'range);
         begin
             REPORT_DEBUG(core, string'("LOCAL_SYNC BEGIN"));
-            sync_count(SYNC_PORT) := SYNC_WAIT;
-            SYNC_BEGIN(SYNC_REQ,           sync_count);
+            sync_count(SYNC_LOCAL_PORT) := SYNC_LOCAL_WAIT;
+            SYNC_BEGIN(SYNC_LOCAL_REQ,                 sync_count);
             REPORT_DEBUG(core, string'("LOCAL_SYNC WAIT"));
-            SYNC_END  (SYNC_REQ, SYNC_ACK, sync_count);
+            SYNC_END  (SYNC_LOCAL_REQ, SYNC_LOCAL_ACK, sync_count);
             REPORT_DEBUG(core, string'("LOCAL_SYNC END"));
         end procedure;
         ---------------------------------------------------------------------------
-        -- WAITオペレーション.
+        --! @brief CHECKオペレーション.信号が指定された値になっているかチェック.
+        ---------------------------------------------------------------------------
+        procedure EXECUTE_CHECK is
+            variable read_good  : boolean;
+            variable skip_good  : boolean;
+            variable next_event : EVENT_TYPE;
+            variable match      : boolean;
+        begin
+            SEEK_EVENT(core, stream, next_event);
+            case next_event is
+                when EVENT_MAP_BEGIN =>
+                    READ_EVENT(core, stream, EVENT_MAP_BEGIN, read_good);
+                    chk_signals := AXI4_CHANNEL_SIGNAL_DONTCARE;
+                    READ_AXI4_CHANNEL(
+                        SELF       => core            ,  -- In :
+                        STREAM     => stream          ,  -- I/O:
+                        CHANNEL    => CHANNEL         ,  -- In :
+                        ID_WIDTH   => AXI4_ID_WIDTH   ,  -- In :
+                        A_WIDTH    => AXI4_A_WIDTH    ,  -- In :
+                        R_WIDTH    => AXI4_R_WIDTH    ,  -- In :
+                        W_WIDTH    => AXI4_W_WIDTH    ,  -- In :
+                        SIGNALS    => chk_signals     ,  -- I/O:
+                        CURR_EVENT => next_event         -- Out:
+                    );
+                    assert (next_event = EVENT_MAP_END)
+                        report "Internal Read Error in " & FULL_NAME & " EXECUTE_CHECK"
+                        severity FAILURE;
+                    READ_EVENT(core, stream, EVENT_MAP_END, read_good);
+                    MATCH_AXI4_CHANNEL(core, chk_signals, match);
+                when others =>
+                    SKIP_EVENT(core, stream, next_event,    skip_good);
+                    -- ERROR
+            end case;
+        end procedure;
+        ---------------------------------------------------------------------------
+        --! @brief  WAITオペレーション. 指定された条件まで待機.
         ---------------------------------------------------------------------------
         procedure EXECUTE_WAIT is
-            variable read_good  :       boolean;
-            variable skip_good  :       boolean;
-            variable next_event :       EVENT_TYPE;
-            variable signals    :       AXI4_CHANNEL_SIGNAL_TYPE;
-            variable wait_count :       integer;
-            variable match      :       boolean;
+            variable read_good  : boolean;
+            variable skip_good  : boolean;
+            variable next_event : EVENT_TYPE;
+            variable wait_count : integer;
+            variable match      : boolean;
         begin 
             SEEK_EVENT(core, stream, next_event);
             case next_event is
@@ -372,7 +472,7 @@ begin
                     wait_count := 0;
                 when EVENT_MAP_BEGIN =>
                     READ_EVENT(core, stream, EVENT_MAP_BEGIN, read_good);
-                    signals := AXI4_CHANNEL_SIGNAL_DONTCARE;
+                    chk_signals := AXI4_CHANNEL_SIGNAL_DONTCARE;
                     READ_AXI4_CHANNEL(
                         SELF       => core            ,  -- In :
                         STREAM     => stream          ,  -- I/O:
@@ -381,7 +481,7 @@ begin
                         A_WIDTH    => AXI4_A_WIDTH    ,  -- In :
                         R_WIDTH    => AXI4_R_WIDTH    ,  -- In :
                         W_WIDTH    => AXI4_W_WIDTH    ,  -- In :
-                        SIGNALS    => signals         ,  -- I/O:
+                        SIGNALS    => chk_signals     ,  -- I/O:
                         CURR_EVENT => next_event         -- Out:
                     );
                     assert (next_event = EVENT_MAP_END)
@@ -390,7 +490,7 @@ begin
                     READ_EVENT(core, stream, EVENT_MAP_END, read_good);
                     CHK_LOOP:loop
                         wait until (ACLK'event and ACLK = '1');
-                        MATCH_AXI4_CHANNEL(core, signals, match);
+                        MATCH_AXI4_CHANNEL(chk_signals, match);
                         exit when(match);
                     end loop;
                 when others =>
@@ -399,17 +499,17 @@ begin
             end case;
         end procedure;
         ---------------------------------------------------------------------------
-        -- チャネルオペレーション(SCALAR)
+        --! @brief チャネルオペレーション(SCALAR)実行サブプログラム.
         ---------------------------------------------------------------------------
-        procedure EXECUTE_SCALAR is
+        procedure EXECUTE_CHANNEL_SCALAR_OPERATION is
             variable skip_good : boolean;
         begin 
             SKIP_EVENT(core, stream, EVENT_SCALAR, skip_good);
         end procedure;
         ---------------------------------------------------------------------------
-        -- チャネルオペレーション(MAP)
+        --! @brief チャネルオペレーション(MAP)実行サブプログラム.
         ---------------------------------------------------------------------------
-        procedure EXECUTE_MAP is
+        procedure EXECUTE_CHANNEL_MAP_OPERATION is
             variable next_event : EVENT_TYPE;
             variable read_good  : boolean;
             variable skip_good  : boolean;
@@ -424,16 +524,17 @@ begin
                     A_WIDTH    => AXI4_A_WIDTH    ,  -- In :
                     R_WIDTH    => AXI4_R_WIDTH    ,  -- In :
                     W_WIDTH    => AXI4_W_WIDTH    ,  -- In :
-                    SIGNALS    => signals         ,  -- I/O:
+                    SIGNALS    => out_signals     ,  -- I/O:
                     CURR_EVENT => next_event         -- Out:
                 );
                 EXECUTE_OUTPUT;
                 case next_event is
                     when EVENT_SCALAR  =>
-                        COPY_KEY_WORD(core, key_word);
-                        case key_word is
-                            when KEY_WAIT => EXECUTE_WAIT;
-                            when others   => EXECUTE_UNDEFINED_MAP_KEY(core, stream, key_word);
+                        COPY_KEY_WORD(core, op_code);
+                        case op_code is
+                            when OP_WAIT  => EXECUTE_WAIT;
+                            when OP_CHECK => EXECUTE_CHECK;
+                            when others   => EXECUTE_UNDEFINED_MAP_KEY(core, stream, op_code);
                         end case;
                     when EVENT_MAP_END =>
                         exit MAP_LOOP;
@@ -446,7 +547,7 @@ begin
         ---------------------------------------------------------------------------
         -- チャネルオペレーションループ
         ---------------------------------------------------------------------------
-        procedure EXECUTE_CHANNEL_LOOP is
+        procedure EXECUTE_CHANNEL_OPERATION is
             variable next_event : EVENT_TYPE;
             variable read_good  : boolean;
             variable skip_good  : boolean;
@@ -463,15 +564,57 @@ begin
                         READ_EVENT(core, stream, EVENT_SEQ_END,   read_good);
                         seq_level := seq_level - 1;
                     when EVENT_MAP_BEGIN =>
-                        EXECUTE_MAP;
+                        EXECUTE_CHANNEL_MAP_OPERATION;
                     when EVENT_SCALAR    =>
-                        EXECUTE_SCALAR;
+                        EXECUTE_CHANNEL_SCALAR_OPERATION;
                     when others          =>
                         SKIP_EVENT(core, stream, next_event,      skip_good);
                         -- ERROR
                 end case;
                 exit when (seq_level <= 0);
             end loop;
+        end procedure;
+        ---------------------------------------------------------------------------
+        --! @brief  SYNCオペレーション. 
+        ---------------------------------------------------------------------------
+        procedure EXECUTE_SYNC(operation: in OPERATION_TYPE) is
+            variable read_good  : boolean;
+            variable skip_good  : boolean;
+            variable next_event : EVENT_TYPE;
+            variable wait_count : integer;
+            variable port_num   : integer;
+            variable str_len    : integer;
+            variable match      : boolean;
+        begin
+            case operation is
+                when OP_DOC_BEGIN | OP_SCALAR =>
+                    LOCAL_SYNC;
+                    CORE_SYNC (core, 0, 2, sync_req, sync_ack);
+                when OP_MAP       =>
+                    SEEK_EVENT(core, stream, next_event);
+                    case next_event is
+                        when EVENT_MAP_BEGIN =>
+                        when EVENT_SCALAR    =>
+                            READ_EVENT(core, stream, EVENT_SCALAR, read_good);
+                            MATCH_KEY_WORD(core, string'("LOCAL"), match);
+                            if (match) then
+                                LOCAL_SYNC;
+                            else
+                                STRING_TO_INTEGER(core.str_buf(1 to core.str_len), port_num, str_len);
+                                if (SYNC_REQ'low <= port_num and port_num <= SYNC_REQ'high) then
+                                    LOCAL_SYNC;
+                                    CORE_SYNC (core, port_num, 2, sync_req, sync_ack);
+                                end if;
+                            end if;
+                        when others          =>
+                            SKIP_EVENT(core, stream, next_event, skip_good);
+                    end case;
+                    assert (next_event = EVENT_MAP_END)
+                        report "Internal Read Error in " & FULL_NAME & " EXECUTE_SKIP"
+                        severity FAILURE;
+                    READ_EVENT(core, stream, EVENT_MAP_END, read_good);
+                when others       => null;
+            end case;
         end procedure;
     begin
         ---------------------------------------------------------------------------
@@ -486,30 +629,73 @@ begin
             OPERATION   => operation      --! コアのオペレーション.
         );
         ---------------------------------------------------------------------------
+        -- 変数の初期化.
+        ---------------------------------------------------------------------------
+        out_signals := INIT_SIGNALS;
+        chk_signals := INIT_SIGNALS;
+        ---------------------------------------------------------------------------
         -- 信号の初期化
         ---------------------------------------------------------------------------
-        SYNC_REQ <= (others => 0);
-        signals := INIT_SIGNALS;
+        SYNC_REQ       <= (0 =>10, others => 0);
+        SYNC_LOCAL_REQ <= (        others => 0);
+        FINISH         <= '0';
         EXECUTE_OUTPUT;
+        core.debug := 0;
         ---------------------------------------------------------------------------
         -- メインオペレーションループ
         ---------------------------------------------------------------------------
-        core.debug := 0;
-        MAIN_LOOP: while (operation /= OP_FINISH) loop
-            READ_OPERATION(core, stream, operation, op_code);
-            case operation is
-                when OP_DOC_BEGIN   => LOCAL_SYNC;
-                when OP_MAP         =>
-                    if (op_code = OP_MY) then
-                        EXECUTE_CHANNEL_LOOP;
-                    else
-                        EXECUTE_SKIP(core, stream);
-                    end if;
-                when OP_SCALAR      => EXECUTE_UNDEFINED_SCALAR(core, stream, op_code);
-                when OP_FINISH      => exit;
-                when others         => null;
-            end case;
-        end loop;
+        if (CHANNEL = 'M') then
+            wait until(ACLK'event and ACLK = '1' and ARESETn = '1');
+            while (operation /= OP_FINISH) loop
+                READ_OPERATION(core, stream, operation, op_code);
+                case operation is
+                    when OP_DOC_BEGIN     => EXECUTE_SYNC(operation);
+                    when OP_MAP    =>
+                        case op_code is
+                            when OP_SAY   => EXECUTE_SAY (core, stream);
+                            when OP_SYNC  => EXECUTE_SYNC(operation);
+                            when OP_WAIT  => EXECUTE_WAIT;
+                            when OP_CHECK => EXECUTE_CHECK;
+                            when others   => EXECUTE_SKIP(core, stream);
+                        end case;
+                    when OP_SCALAR =>
+                        case op_code is
+                            when OP_SYNC  => EXECUTE_SYNC(operation);
+                            when others   => null;
+                        end case;
+                    when OP_FINISH => exit;
+                    when others    => null;
+                end case;
+            end loop;
+        else
+            while (operation /= OP_FINISH) loop
+                READ_OPERATION(core, stream, operation, op_code);
+                case operation is
+                    when OP_DOC_BEGIN   => LOCAL_SYNC;
+                    when OP_MAP         =>
+                        if    (op_code = OP_CHANNEL) then
+                            EXECUTE_CHANNEL_OPERATION;
+                        elsif (op_code = OP_SYNC) then
+                            LOCAL_SYNC;
+                            EXECUTE_SKIP(core, stream);
+                        else
+                            EXECUTE_SKIP(core, stream);
+                        end if;
+                    when OP_SCALAR      =>
+                        if (op_code = OP_SYNC) then
+                            LOCAL_SYNC;
+                        else
+                            EXECUTE_UNDEFINED_SCALAR(core, stream, op_code);
+                        end if;
+                    when OP_FINISH      => exit;
+                    when others         => null;
+                end case;
+            end loop;
+        end if;
+        FINISH <= '1';
+        if (FINISH_ABORT) then
+            assert FALSE report "Simulation complete." severity FAILURE;
+        end if;
         wait;
     end process;
 end MODEL;

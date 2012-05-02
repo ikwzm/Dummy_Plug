@@ -58,9 +58,10 @@ DUMMY_PLUG_AXI4          = $(DUMMY_PLUG_CORE)         \
 axi4_core.o                : axi4_types.o $(DUMMY_PLUG_CORE_PACKAGE)
 axi4_models.o              : axi4_types.o $(DUMMY_PLUG_CORE_PACKAGE)
 axi4_signal_printer.o      : axi4_types.o $(DUMMY_PLUG_CORE_PACKAGE)
-axi4_channel_player.o      : axi4_types.o axi4_core.o
-axi4_master_player.o       : axi4_types.o axi4_core.o axi4_channel_player.o
-axi4_slave_player.o        : axi4_types.o axi4_core.o axi4_channel_player.o
+axi4_channel_player.o      : axi4_types.o axi4_core.o 
+axi4_core_player.o         : axi4_types.o axi4_core.o axi4_channel_player.o
+axi4_master_player.o       : axi4_types.o axi4_core.o axi4_core_player.o
+axi4_slave_player.o        : axi4_types.o axi4_core.o axi4_core_player.o 
 
 axi4_types.o               : $(DUMMY_PLUG_AXI4_SRC_PATH)/axi4_types.vhd
 	 $(GHDL) -a $(GHDLFLAGS) --work=$(WORK) $<
@@ -69,6 +70,9 @@ axi4_core.o                : $(DUMMY_PLUG_AXI4_SRC_PATH)/axi4_core.vhd
 	 $(GHDL) -a $(GHDLFLAGS) --work=$(WORK) $<
 
 axi4_models.o              : $(DUMMY_PLUG_AXI4_SRC_PATH)/axi4_models.vhd
+	 $(GHDL) -a $(GHDLFLAGS) --work=$(WORK) $<
+
+axi4_core_player.o         : $(DUMMY_PLUG_AXI4_SRC_PATH)/axi4_core_player.vhd 
 	 $(GHDL) -a $(GHDLFLAGS) --work=$(WORK) $<
 
 axi4_channel_player.o      : $(DUMMY_PLUG_AXI4_SRC_PATH)/axi4_channel_player.vhd 

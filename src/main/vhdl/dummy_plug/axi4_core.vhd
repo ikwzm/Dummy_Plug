@@ -206,7 +206,7 @@ package AXI4_CORE is
     procedure READ_AXI4_CHANNEL(
         variable SELF       : inout CORE.CORE_TYPE;       --! コア変数.
         file     STREAM     :       TEXT;                 --! 入力ストリーム.
-                 CHANNEL    : in    character;            --! 'A','R','W','B'を指定.
+                 CHANNEL    : in    character;            --! 'M','A','R','W','B'を指定.
                  ID_WIDTH   : in    integer;
                  A_WIDTH    : in    integer;
                  R_WIDTH    : in    integer;
@@ -284,6 +284,122 @@ package AXI4_CORE is
         signal   BREADY     : in    std_logic
     );
     -------------------------------------------------------------------------------
+    --! @brief AXI4_CORE_PLAYER
+    -------------------------------------------------------------------------------
+    component AXI4_CORE_PLAYER is
+        ---------------------------------------------------------------------------
+        -- ジェネリック変数.
+        ---------------------------------------------------------------------------
+        generic (
+            SCENARIO_FILE   : --! @brief シナリオファイルの名前.
+                              STRING;
+            MASTER          : --! @brief マスターモードを指定する.
+                              boolean   := FALSE;
+            SLAVE           : --! @brief スレーブモードを指定する.
+                              boolean   := FALSE;
+            NAME            : --! @brief 固有名詞.
+                              STRING;
+            OUTPUT_DELAY    : --! @brief 出力信号遅延時間
+                              time;
+            AXI4_ID_WIDTH   : --! @brief AXI4 IS WIDTH :
+                              integer :=  4;
+            AXI4_A_WIDTH    : --! @brief AXI4 ADDR WIDTH :
+                              integer := 32;
+            AXI4_W_WIDTH    : --! @brief AXI4 WRITE DATA WIDTH :
+                              integer := 32;
+            AXI4_R_WIDTH    : --! @brief AXI4 READ DATA WIDTH :
+                              integer := 32;
+            SYNC_PLUG_NUM   : --! @brief シンクロ用信号のプラグ番号.
+                              SYNC.SYNC_PLUG_NUM_TYPE := 1;
+            SYNC_WIDTH      : --! @brief シンクロ用信号の本数.
+                              integer :=  1;
+            FINISH_ABORT    : --! @brief FINISH コマンド実行時にシミュレーションを
+                              --!        アボートするかどうかを指定するフラグ.
+                              boolean := true
+        );
+        --------------------------------------------------------------------------
+        -- 入出力ポートの定義.
+        --------------------------------------------------------------------------
+        port(
+            ----------------------------------------------------------------------
+            -- グローバルシグナル.
+            ----------------------------------------------------------------------
+            ACLK            : in    std_logic;
+            ARESETn         : in    std_logic;
+            ----------------------------------------------------------------------
+            -- アドレスチャネルシグナル.
+            ----------------------------------------------------------------------
+            AVALID_I        : in    std_logic;
+            AVALID_O        : out   std_logic;
+            ADDR_I          : in    std_logic_vector(AXI4_A_WIDTH   -1 downto 0);
+            ADDR_O          : out   std_logic_vector(AXI4_A_WIDTH   -1 downto 0);
+            AWRITE_I        : in    std_logic;
+            AWRITE_O        : out   std_logic;
+            ALEN_I          : in    AXI4_ALEN_TYPE;
+            ALEN_O          : out   AXI4_ALEN_TYPE;
+            ASIZE_I         : in    AXI4_ASIZE_TYPE;
+            ASIZE_O         : out   AXI4_ASIZE_TYPE;
+            ABURST_I        : in    AXI4_ABURST_TYPE;
+            ABURST_O        : out   AXI4_ABURST_TYPE;
+            ALOCK_I         : in    AXI4_ALOCK_TYPE;
+            ALOCK_O         : out   AXI4_ALOCK_TYPE;
+            ACACHE_I        : in    AXI4_ACACHE_TYPE;
+            ACACHE_O        : out   AXI4_ACACHE_TYPE;
+            APROT_I         : in    AXI4_APROT_TYPE;
+            APROT_O         : out   AXI4_APROT_TYPE;
+            AID_I           : in    std_logic_vector(AXI4_ID_WIDTH  -1 downto 0);
+            AID_O           : out   std_logic_vector(AXI4_ID_WIDTH  -1 downto 0);
+            AREADY_I        : in    std_logic;
+            AREADY_O        : out   std_logic;
+            ----------------------------------------------------------------------
+            -- リードチャネルシグナル.
+            ----------------------------------------------------------------------
+            RVALID_I        : in    std_logic;
+            RVALID_O        : out   std_logic;
+            RLAST_I         : in    std_logic;
+            RLAST_O         : out   std_logic;
+            RDATA_I         : in    std_logic_vector(AXI4_R_WIDTH   -1 downto 0);
+            RDATA_O         : out   std_logic_vector(AXI4_R_WIDTH   -1 downto 0);
+            RRESP_I         : in    AXI4_RESP_TYPE;
+            RRESP_O         : out   AXI4_RESP_TYPE;
+            RID_I           : in    std_logic_vector(AXI4_ID_WIDTH  -1 downto 0);
+            RID_O           : out   std_logic_vector(AXI4_ID_WIDTH  -1 downto 0);
+            RREADY_I        : in    std_logic;
+            RREADY_O        : out   std_logic;
+            ----------------------------------------------------------------------
+            -- ライトチャネルシグナル.
+            ----------------------------------------------------------------------
+            WVALID_I        : in    std_logic;
+            WVALID_O        : out   std_logic;
+            WLAST_I         : in    std_logic;
+            WLAST_O         : out   std_logic;
+            WDATA_I         : in    std_logic_vector(AXI4_W_WIDTH   -1 downto 0);
+            WDATA_O         : out   std_logic_vector(AXI4_W_WIDTH   -1 downto 0);
+            WSTRB_I         : in    std_logic_vector(AXI4_W_WIDTH/8 -1 downto 0);
+            WSTRB_O         : out   std_logic_vector(AXI4_W_WIDTH/8 -1 downto 0);
+            WID_I           : in    std_logic_vector(AXI4_ID_WIDTH  -1 downto 0);
+            WID_O           : out   std_logic_vector(AXI4_ID_WIDTH  -1 downto 0);
+            WREADY_I        : in    std_logic;
+            WREADY_O        : out   std_logic;
+            ----------------------------------------------------------------------
+            -- ライト応答チャネルシグナル.
+            ----------------------------------------------------------------------
+            BVALID_I        : in    std_logic;
+            BVALID_O        : out   std_logic;
+            BRESP_I         : in    AXI4_RESP_TYPE;
+            BRESP_O         : out   AXI4_RESP_TYPE;
+            BID_I           : in    std_logic_vector(AXI4_ID_WIDTH  -1 downto 0);
+            BID_O           : out   std_logic_vector(AXI4_ID_WIDTH  -1 downto 0);
+            BREADY_I        : in    std_logic;
+            BREADY_O        : out   std_logic;
+            ----------------------------------------------------------------------
+            -- シンクロ用信号
+            ----------------------------------------------------------------------
+            SYNC            : inout SYNC.SYNC_SIG_VECTOR (SYNC_WIDTH-1 downto 0);
+            FINISH          : out   std_logic
+        );
+    end component;
+    -------------------------------------------------------------------------------
     --! @brief AXI4_CHANNEL_PLAYER
     -------------------------------------------------------------------------------
     component  AXI4_CHANNEL_PLAYER is
@@ -302,6 +418,10 @@ package AXI4_CORE is
                               boolean   := FALSE;
             NAME            : --! @brief 固有名詞.
                               STRING;
+            FULL_NAME       : --! @brief メッセージ出力用の固有名詞.
+                              STRING;
+            OUTPUT_DELAY    : --! @brief 出力信号遅延時間
+                              time;
             AXI4_ID_WIDTH   : --! @brief AXI4 IS WIDTH :
                               integer :=  4;
             AXI4_A_WIDTH    : --! @brief AXI4 ADDR WIDTH :
@@ -310,10 +430,15 @@ package AXI4_CORE is
                               integer := 32;
             AXI4_R_WIDTH    : --! @brief AXI4 READ DATA WIDTH :
                               integer := 32;
-            SYNC_PORT       : --! @brief ローカル同期信号のポート番号.
-                              integer := 0;
-            SYNC_WAIT       : --! @brief ローカル同期時のウェイトクロック数.
-                              integer := 2
+            SYNC_WIDTH      : --! @brief 外部シンクロ用信号の本数.
+                              integer :=  1;
+            SYNC_LOCAL_PORT : --! @brief ローカル同期信号のポート番号.
+                              integer :=  0;
+            SYNC_LOCAL_WAIT : --! @brief ローカル同期時のウェイトクロック数.
+                              integer :=  2;
+            FINISH_ABORT    : --! @brief FINISH コマンド実行時にシミュレーションを
+                              --!        アボートするかどうかを指定するフラグ.
+                              boolean := true
         );
         ---------------------------------------------------------------------------
         -- 入出力ポートの定義.
@@ -393,8 +518,11 @@ package AXI4_CORE is
             -----------------------------------------------------------------------
             -- シンクロ用信号
             -----------------------------------------------------------------------
-            SYNC_REQ        : out   SYNC.SYNC_REQ_VECTOR(SYNC_PORT downto SYNC_PORT);
-            SYNC_ACK        : in    SYNC.SYNC_ACK_VECTOR(SYNC_PORT downto SYNC_PORT)
+            SYNC_REQ        : out   SYNC.SYNC_REQ_VECTOR(SYNC_WIDTH-1 downto 0);
+            SYNC_ACK        : in    SYNC.SYNC_ACK_VECTOR(SYNC_WIDTH-1 downto 0) := (others => '0');
+            SYNC_LOCAL_REQ  : out   SYNC.SYNC_REQ_VECTOR(SYNC_LOCAL_PORT downto SYNC_LOCAL_PORT);
+            SYNC_LOCAL_ACK  : in    SYNC.SYNC_ACK_VECTOR(SYNC_LOCAL_PORT downto SYNC_LOCAL_PORT);
+            FINISH          : out   std_logic
         );
     end component;
 end     AXI4_CORE;
@@ -467,7 +595,7 @@ package body AXI4_CORE is
     procedure READ_AXI4_CHANNEL(
         variable SELF       : inout CORE_TYPE;            --! コア変数.
         file     STREAM     :       TEXT;                 --! 入力ストリーム.
-                 CHANNEL    : in    character;            --! 'A','R','W','B'を指定.
+                 CHANNEL    : in    character;            --! 'M','A','R','W','B'を指定.
                  ID_WIDTH   : in    integer;
                  A_WIDTH    : in    integer;
                  R_WIDTH    : in    integer;

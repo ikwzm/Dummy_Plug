@@ -56,6 +56,8 @@ component  AXI4_MASTER_PLAYER
                           STRING;
         NAME            : --! @brief 固有名詞.
                           STRING;
+        OUTPUT_DELAY    : --! @brief 出力信号遅延時間
+                          time    := 0 ns;
         AXI4_ID_WIDTH   : --! @brief AXI4 IS WIDTH :
                           integer :=  4;
         AXI4_A_WIDTH    : --! @brief AXI4 ADDR WIDTH :
@@ -140,6 +142,8 @@ component  AXI4_SLAVE_PLAYER
                           STRING;
         NAME            : --! @brief 固有名詞.
                           STRING;
+        OUTPUT_DELAY    : --! @brief 出力信号遅延時間
+                          time    := 0 ns;
         AXI4_ID_WIDTH   : --! @brief AXI4 IS WIDTH :
                           integer :=  4;
         AXI4_A_WIDTH    : --! @brief AXI4 ADDR WIDTH :

@@ -158,6 +158,7 @@ begin
         generic map (
             SCENARIO_FILE   => SCENARIO_FILE,
             NAME            => "M",
+            OUTPUT_DELAY    => DELAY,
             AXI4_ID_WIDTH   => AXI4_ID_WIDTH,
             AXI4_A_WIDTH    => AXI4_A_WIDTH,
             AXI4_W_WIDTH    => AXI4_W_WIDTH,
@@ -225,6 +226,7 @@ begin
         generic map (
             SCENARIO_FILE   => SCENARIO_FILE,
             NAME            => "S",
+            OUTPUT_DELAY    => DELAY,
             AXI4_ID_WIDTH   => AXI4_ID_WIDTH,
             AXI4_A_WIDTH    => AXI4_A_WIDTH,
             AXI4_W_WIDTH    => AXI4_W_WIDTH,
