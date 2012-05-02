@@ -52,6 +52,11 @@ For example, when the master performs a write transaction will write the scenari
             AIX DUMMU-PLUG SAMPLE SCENARIO 1 DONE
         ---
 
+##Trial##
+
+*Dummy Plug* is checking operation by GHDL.  
+When "cd sim/ghdl" and "make",  library and test bench is compiled and it is begun to run.
+
 ##License##
 
 2-clause BSD license

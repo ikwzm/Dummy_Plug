@@ -51,7 +51,13 @@ AXI4のマスターモデルとスレーブモデルに対応しています.
             AIX DUMMU-PLUG SAMPLE SCENARIO 1 DONE
         ---
 
-###ライセンス###
+##お試し
+
+*Dummy Plug* は GHDL で動作確認をしています.  
+sim/ghdl の下に Makefile があります.  
+make コマンドを実行することでライブラリとテストベンチがコンパイルされ走ります.
+
+##ライセンス##
 
 二条項BSDライセンス (2-clause BSD license) で公開しています。
 
