@@ -11,7 +11,7 @@
 
 This models corresponds to the master and slave model of AXI4. 
 
-* Dummy Plug * sequentially reads the scenario file that is written in a format like YAML, 
+*Dummy Plug* sequentially reads the scenario file that is written in a format like YAML, 
 and outputs the signal pattern.
 
 For example, when the master performs a write transaction will write the scenario, as follows.
