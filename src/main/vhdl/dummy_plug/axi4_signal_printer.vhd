@@ -50,6 +50,16 @@ entity  AXI4_SIGNAL_PRINTER is
                           STRING;
         TAG             : --! @brief
                           STRING;
+        TAG_WIDTH       : --! @brief タグを出力する際の文字幅.
+                          --!      * TAG_WIDTH>0 =>  TAG_WIDTH幅の右詰.
+                          --!      * TAG_WIDTH<0 => -TAG_WIDTH幅の左詰.
+                          --!      * TAG_WIDTH=0 => 出力しない.
+                          integer := 13;
+        TIME_WIDTH      : --! @brief 時間を出力する際の文字幅.
+                          --!      * TIME_WIDTH>0 =>  TAG_WIDTH幅の右詰.
+                          --!      * TIME_WIDTH<0 => -TAG_WIDTH幅の左詰.
+                          --!      * TIEM_WIDTH=0 => 出力しない.
+                          integer := 13;
         AXI4_ID_WIDTH   : --! @brief AXI4 IS WIDTH :
                           integer :=  4;
         AXI4_A_WIDTH    : --! @brief AXI4 ADDR WIDTH :
@@ -127,13 +137,26 @@ begin
         variable  text_line      : LINE;
         procedure p(M:in string) is
         begin
-            WRITE(text_line, TAG & M);
+            if    (TAG_WIDTH > 0) then
+                WRITE(text_line, TAG, RIGHT,  TAG_WIDTH);
+            elsif (TAG_WIDTH < 0) then
+                WRITE(text_line, TAG, LEFT , -TAG_WIDTH);
+            end if;
+            WRITE(text_line, M);
             WRITELINE(OUTPUT, text_line);
         end procedure;
         procedure p(T:in time;M:in string) is
         begin
-            WRITE(text_line, TAG);
-            WRITE(text_line, T, RIGHT, 13);
+            if    (TAG_WIDTH > 0) then
+                WRITE(text_line, TAG, RIGHT,  TAG_WIDTH);
+            elsif (TAG_WIDTH < 0) then
+                WRITE(text_line, TAG, LEFT , -TAG_WIDTH);
+            end if;
+            if    (TIME_WIDTH > 0) then
+                WRITE(text_line, T, RIGHT,  TIME_WIDTH);
+            elsif (TIME_WIDTH < 0) then
+                WRITE(text_line, T, LEFT , -TIME_WIDTH);
+            end if;
             WRITE(text_line, M);
             WRITELINE(OUTPUT, text_line);
         end procedure;

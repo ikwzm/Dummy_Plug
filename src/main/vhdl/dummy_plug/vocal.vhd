@@ -54,9 +54,9 @@ package VOCAL is
         tag_error           : LINE;
         tag_failure         : LINE;
         tag_read_error      : LINE;
-        enable_time         : boolean;
-        enable_tag          : boolean;
-        enable_name         : boolean;
+        tag_field_width     : integer;
+        time_field_width    : integer;
+        name_field_width    : integer;
         enable_debug        : boolean;
         enable_remark       : boolean;
         enable_note         : boolean;
@@ -109,10 +109,6 @@ package VOCAL is
     --! @brief 標準出力(OUTPUT)に適当にメッセージを出力するサブプログラム.
     -------------------------------------------------------------------------------
     procedure SHOUT(SELF:inout VOCAL_TYPE;message:in STRING);
-    -------------------------------------------------------------------------------
-    --! @brief timeフィールドの文字数.
-    -------------------------------------------------------------------------------
-    constant  TIME_FIELD_WIDTH : integer := 13;
 end VOCAL;
 -----------------------------------------------------------------------------------
 -- 
@@ -127,14 +123,20 @@ package body  VOCAL is
     -------------------------------------------------------------------------------
     --! @brief デフォルトの出力用タグ
     -------------------------------------------------------------------------------
-    constant  DEFAULT_TAG_DEBUG      : STRING := ">>>>> Debug   :";
-    constant  DEFAULT_TAG_REMARK     : STRING := "----- Remark  :";
-    constant  DEFAULT_TAG_NOTE       : STRING := "----- Note    :";
-    constant  DEFAULT_TAG_WARNING    : STRING := "+++++ Warning :";
-    constant  DEFAULT_TAG_MISMATCH   : STRING := "????? Mismatch:";
-    constant  DEFAULT_TAG_ERROR      : STRING := "***** Error   :";
-    constant  DEFAULT_TAG_FAILURE    : STRING := "##### Failure :";
-    constant  DEFAULT_TAG_READ_ERROR : STRING := "!!!!Read Error:";
+    constant  DEFAULT_TAG_DEBUG          : STRING  := ">>>>> Debug   :";
+    constant  DEFAULT_TAG_REMARK         : STRING  := "----- Remark  :";
+    constant  DEFAULT_TAG_NOTE           : STRING  := "----- Note    :";
+    constant  DEFAULT_TAG_WARNING        : STRING  := "+++++ Warning :";
+    constant  DEFAULT_TAG_MISMATCH       : STRING  := "????? Mismatch:";
+    constant  DEFAULT_TAG_ERROR          : STRING  := "***** Error   :";
+    constant  DEFAULT_TAG_FAILURE        : STRING  := "##### Failure :";
+    constant  DEFAULT_TAG_READ_ERROR     : STRING  := "!!!!Read Error:";
+    -------------------------------------------------------------------------------
+    --! @brief デフォルトの各フィールド幅
+    -------------------------------------------------------------------------------
+    constant  DEFAULT_TIME_FIELD_WIDTH   : integer := 13;
+    constant  DEFAULT_NAME_FIELD_WIDTH   : integer := 8;
+    constant  DEFAULT_TAG_FIELD_WIDTH    : integer := -15;
     -------------------------------------------------------------------------------
     --! @brief 各種の状態を保持する構造体の初期化用定数を生成する関数.
     -------------------------------------------------------------------------------
@@ -152,15 +154,16 @@ package body  VOCAL is
         WRITE(self.tag_error     , DEFAULT_TAG_ERROR     );
         WRITE(self.tag_failure   , DEFAULT_TAG_FAILURE   );
         WRITE(self.tag_read_error, DEFAULT_TAG_READ_ERROR);
-        self.enable_time     := TRUE;
-        self.enable_name     := TRUE;
-        self.enable_debug    := FALSE;
-        self.enable_remark   := TRUE;
-        self.enable_note     := TRUE;
-        self.enable_warning  := TRUE;
-        self.enable_mismatch := TRUE;
-        self.enable_error    := TRUE;
-        self.enable_failure  := TRUE;
+        self.time_field_width := DEFAULT_TIME_FIELD_WIDTH;
+        self.name_field_width := DEFAULT_NAME_FIELD_WIDTH;
+        self.tag_field_width  := DEFAULT_TAG_FIELD_WIDTH;
+        self.enable_debug     := FALSE;
+        self.enable_remark    := TRUE;
+        self.enable_note      := TRUE;
+        self.enable_warning   := TRUE;
+        self.enable_mismatch  := TRUE;
+        self.enable_error     := TRUE;
+        self.enable_failure   := TRUE;
         return self;
     end function;
     -------------------------------------------------------------------------------
@@ -169,11 +172,17 @@ package body  VOCAL is
     procedure REPORT_MESSAGE(SELF:inout VOCAL_TYPE; tag:inout LINE; message:in STRING) is
         variable text_line   : LINE;
     begin
-        if (SELF.enable_tag) then
-            WRITE(text_line, tag(tag'range) & " ");
+        if    (SELF.tag_field_width > 0) then
+            WRITE(text_line, tag(tag'range), RIGHT,  SELF.tag_field_width);
+            WRITE(text_line, string'(" "));
+        elsif (SELF.tag_field_width < 0) then
+            WRITE(text_line, tag(tag'range), LEFT , -SELF.tag_field_width);
+            WRITE(text_line, string'(" "));
         end if;
-        if (SELF.enable_time) then
-            WRITE(text_line, Now, RIGHT, TIME_FIELD_WIDTH);
+        if    (SELF.time_field_width > 0) then
+            WRITE(text_line, Now, RIGHT,  SELF.time_field_width);
+        elsif (SELF.time_field_width < 0) then
+            WRITE(text_line, Now, LEFT , -SELF.time_field_width);
         end if;
         WRITE(text_line, " (" & SELF.name(SELF.name'range) & ") " & message);
         WRITELINE(OUTPUT, text_line);
@@ -254,13 +263,19 @@ package body  VOCAL is
     procedure SAY(SELF:inout VOCAL_TYPE;message:in STRING) is
         variable text_line   : LINE;
     begin
-        if (SELF.enable_time) then
-            WRITE(text_line, Now, RIGHT, TIME_FIELD_WIDTH);
+        if    (SELF.time_field_width > 0) then
+            WRITE(text_line, Now, RIGHT,  SELF.time_field_width);
+            WRITE(text_line, string'("|"));
+        elsif (SELF.time_field_width < 0) then
+            WRITE(text_line, Now, LEFT , -SELF.time_field_width);
             WRITE(text_line, string'("|"));
         end if;
-        if (SELF.enable_name) then
-            WRITE(text_line, SELF.name(SELF.name'range));
-            WRITE(text_line, string'("<"));
+        if    (SELF.name_field_width > 0) then
+            WRITE(text_line, SELF.name(SELF.name'range), RIGHT,  SELF.name_field_width);
+            WRITE(text_line, string'(" < "));
+        elsif (SELF.name_field_width < 0) then
+            WRITE(text_line, SELF.name(SELF.name'range), LEFT , -SELF.name_field_width);
+            WRITE(text_line, string'(" < "));
         end if;
         WRITE(text_line, message);
         WRITELINE(OUTPUT, text_line);
@@ -271,13 +286,19 @@ package body  VOCAL is
     procedure SHOUT(SELF:inout VOCAL_TYPE;message:in STRING) is
         variable text_line   : LINE;
     begin
-        if (SELF.enable_time) then
-            WRITE(text_line, Now, RIGHT, TIME_FIELD_WIDTH);
+        if    (SELF.time_field_width > 0) then
+            WRITE(text_line, Now, RIGHT,  SELF.time_field_width);
+            WRITE(text_line, string'("|"));
+        elsif (SELF.time_field_width < 0) then
+            WRITE(text_line, Now, LEFT , -SELF.time_field_width);
             WRITE(text_line, string'("|"));
         end if;
-        if (SELF.enable_name) then
-            WRITE(text_line, SELF.name(SELF.name'range));
-            WRITE(text_line, string'("<"));
+        if    (SELF.name_field_width > 0) then
+            WRITE(text_line, SELF.name(SELF.name'range), RIGHT,  SELF.name_field_width);
+            WRITE(text_line, string'(" < "));
+        elsif (SELF.name_field_width < 0) then
+            WRITE(text_line, SELF.name(SELF.name'range), LEFT , -SELF.name_field_width);
+            WRITE(text_line, string'(" < "));
         end if;
         WRITE(text_line, message);
         WRITELINE(OUTPUT, text_line);

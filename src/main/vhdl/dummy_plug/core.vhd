@@ -226,6 +226,13 @@ package CORE is
         variable SELF       : inout CORE_TYPE;            --! コア変数.
                  MESSAGE    : in    STRING
     );
+    -------------------------------------------------------------------------------
+    --! @brief 致命的エラーによる中断.
+    -------------------------------------------------------------------------------
+    procedure EXECUTE_ABORT(
+        variable SELF       : inout CORE_TYPE;            --! コア変数.
+                 MESSAGE    : in    STRING
+    );
 end CORE;
 -----------------------------------------------------------------------------------
 --! @brief Dummy Plug のコアパッケージ本体.
@@ -818,5 +825,17 @@ package body CORE is
         DEBUG_DUMP(SELF.reader);
         SEEK_EVENT(SELF, STREAM, next_event);
         SKIP_EVENT(SELF, STREAM, next_event, read_good);
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief 致命的エラーによる中断.
+    -------------------------------------------------------------------------------
+    procedure EXECUTE_ABORT(
+        variable SELF       : inout CORE_TYPE;            --! コア変数.
+                 MESSAGE    : in    STRING
+    ) is
+    begin
+        REPORT_FAILURE(SELF.vocal, MESSAGE);
+        DEBUG_DUMP(SELF.reader);
+        assert FALSE report MESSAGE severity FAILURE;
     end procedure;
 end CORE;

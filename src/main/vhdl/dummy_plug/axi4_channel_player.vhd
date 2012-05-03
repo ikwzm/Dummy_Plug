@@ -279,14 +279,38 @@ begin
         file      stream        : TEXT;
         variable  core          : CORE_TYPE;
         variable  operation     : OPERATION_TYPE;
-        variable  op_code       : STRING(1 to 5);
-        constant  OP_CHANNEL    : STRING(1 to 5) := (1 => CHANNEL, others => ' ');
-        constant  OP_SAY        : STRING(1 to 5) := "SAY  ";
-        constant  OP_SYNC       : STRING(1 to 5) := "SYNC ";
-        constant  OP_WAIT       : STRING(1 to 5) := "WAIT ";
-        constant  OP_CHECK      : STRING(1 to 5) := "CHECK";
+        variable  keyword       : STRING(1 to 5);
+        constant  KEY_CHANNEL   : STRING(1 to 5) := (1 => CHANNEL, others => ' ');
+        constant  KEY_SAY       : STRING(1 to 5) := "SAY  ";
+        constant  KEY_SYNC      : STRING(1 to 5) := "SYNC ";
+        constant  KEY_WAIT      : STRING(1 to 5) := "WAIT ";
+        constant  KEY_CHECK     : STRING(1 to 5) := "CHECK";
+        constant  KEY_PORT      : STRING(1 to 5) := "PORT ";
+        constant  KEY_LOCAL     : STRING(1 to 5) := "LOCAL";
+        constant  KEY_TIMEOUT   : STRING(1 to 5) := "TIMEO";
         variable  out_signals   : AXI4_CHANNEL_SIGNAL_TYPE;
         variable  chk_signals   : AXI4_CHANNEL_SIGNAL_TYPE;
+        ---------------------------------------------------------------------------
+        --! @brief 
+        ---------------------------------------------------------------------------
+        procedure SCAN_INTEGER(VAL: out integer;LEN: out integer) is
+        begin
+            STRING_TO_INTEGER(core.str_buf(1 to core.str_len), VAL, LEN);
+        end procedure;
+        ---------------------------------------------------------------------------
+        --! @brief 
+        ---------------------------------------------------------------------------
+        procedure EXECUTE_UNDEFINED_MAP_KEY(KEY:in STRING) is
+        begin
+            EXECUTE_UNDEFINED_MAP_KEY(core, stream, KEY);
+        end procedure;
+        ---------------------------------------------------------------------------
+        --! @brief 
+        ---------------------------------------------------------------------------
+        procedure EXECUTE_UNDEFINED_SCALAR(KEY:in STRING) is
+        begin
+            EXECUTE_UNDEFINED_SCALAR(core, stream, KEY);
+        end procedure;
         ---------------------------------------------------------------------------
         --! @brief チャネル信号変数の初期化.
         ---------------------------------------------------------------------------
@@ -455,13 +479,17 @@ begin
             variable skip_good  : boolean;
             variable next_event : EVENT_TYPE;
             variable wait_count : integer;
+            variable scan_len   : integer;
+            variable timeout    : integer;
             variable match      : boolean;
-        begin 
+        begin
+            timeout := 10000000;
             SEEK_EVENT(core, stream, next_event);
             case next_event is
                 when EVENT_SCALAR =>
-                    READ_INTEGER(core.reader, stream, wait_count, read_good);
-                    if (read_good = FALSE) then
+                    READ_EVENT(core, stream, EVENT_SCALAR, read_good);
+                    SCAN_INTEGER(wait_count, scan_len);
+                    if (read_good = FALSE or scan_len = 0) then
                         wait_count := 1;
                     end if;
                     if (wait_count > 0) then
@@ -473,30 +501,137 @@ begin
                 when EVENT_MAP_BEGIN =>
                     READ_EVENT(core, stream, EVENT_MAP_BEGIN, read_good);
                     chk_signals := AXI4_CHANNEL_SIGNAL_DONTCARE;
-                    READ_AXI4_CHANNEL(
-                        SELF       => core            ,  -- In :
-                        STREAM     => stream          ,  -- I/O:
-                        CHANNEL    => CHANNEL         ,  -- In :
-                        ID_WIDTH   => AXI4_ID_WIDTH   ,  -- In :
-                        A_WIDTH    => AXI4_A_WIDTH    ,  -- In :
-                        R_WIDTH    => AXI4_R_WIDTH    ,  -- In :
-                        W_WIDTH    => AXI4_W_WIDTH    ,  -- In :
-                        SIGNALS    => chk_signals     ,  -- I/O:
-                        CURR_EVENT => next_event         -- Out:
-                    );
-                    assert (next_event = EVENT_MAP_END)
-                        report "Internal Read Error in " & FULL_NAME & " EXECUTE_WAIT"
-                        severity FAILURE;
-                    READ_EVENT(core, stream, EVENT_MAP_END, read_good);
+                    MAP_LOOP: loop
+                        READ_AXI4_CHANNEL(
+                            SELF       => core            ,  -- In :
+                            STREAM     => stream          ,  -- I/O:
+                            CHANNEL    => CHANNEL         ,  -- In :
+                            ID_WIDTH   => AXI4_ID_WIDTH   ,  -- In :
+                            A_WIDTH    => AXI4_A_WIDTH    ,  -- In :
+                            R_WIDTH    => AXI4_R_WIDTH    ,  -- In :
+                            W_WIDTH    => AXI4_W_WIDTH    ,  -- In :
+                            SIGNALS    => chk_signals     ,  -- I/O:
+                            CURR_EVENT => next_event         -- Out:
+                        );
+                        case next_event is
+                            when EVENT_SCALAR  =>
+                                COPY_KEY_WORD(core, keyword);
+                                case keyword is
+                                    when KEY_TIMEOUT =>
+                                        SEEK_EVENT(core, stream, next_event);
+                                        read_good := TRUE;
+                                        scan_len  := 0;
+                                        if (next_event = EVENT_SCALAR) then
+                                            READ_EVENT(core, stream, next_event, read_good);
+                                            SCAN_INTEGER(timeout, scan_len);
+                                        end if;
+                                        if (read_good = FALSE or scan_len = 0) then
+                                            timeout := 10000000;
+                                        end if;
+                                    when others    => EXECUTE_UNDEFINED_MAP_KEY(keyword);
+                                end case;
+                            when EVENT_MAP_END =>
+                                exit MAP_LOOP;
+                            when others        =>
+                                SKIP_EVENT(core, stream, next_event,    skip_good);
+                                -- ERROR
+                        end case;
+                    end loop;
                     CHK_LOOP:loop
                         wait until (ACLK'event and ACLK = '1');
                         MATCH_AXI4_CHANNEL(chk_signals, match);
                         exit when(match);
+                        timeout := timeout - 1;
+                        if (timeout < 0) then
+                            EXECUTE_ABORT(core, string'("WAIT Time Out!"));
+                        end if;
                     end loop;
                 when others =>
                     SKIP_EVENT(core, stream, next_event,    skip_good);
                     -- ERROR
             end case;
+        end procedure;
+        ---------------------------------------------------------------------------
+        --! @brief  SYNCオペレーション. 
+        ---------------------------------------------------------------------------
+        procedure EXECUTE_SYNC(operation: in OPERATION_TYPE) is
+            variable read_good  : boolean;
+            variable skip_good  : boolean;
+            variable next_event : EVENT_TYPE;
+            variable port_num   : integer;
+            variable wait_num   : integer;
+            variable scan_len   : integer;
+            variable match      : boolean;
+            variable map_level  : integer;
+            type     STATE_TYPE is (STATE_NULL, STATE_SCALAR_PORT,
+                                    STATE_MAP_KEY, STATE_MAP_PORT, STATE_MAP_WAIT, STATE_ERROR);
+            variable state      : STATE_TYPE;
+        begin
+            port_num := 0;
+            wait_num := 2;
+            case operation is
+                when OP_MAP       =>
+                    map_level := 0;
+                    state     := STATE_SCALAR_PORT;
+                    OP_MAP_LOOP: loop
+                        SEEK_EVENT(core, stream, next_event);
+                        case next_event is
+                            when EVENT_MAP_BEGIN =>
+                                READ_EVENT(core, stream, next_event, read_good);
+                                map_level := map_level + 1;
+                                state     := STATE_MAP_KEY;
+                            when EVENT_MAP_END   =>
+                                READ_EVENT(core, stream, next_event, read_good);
+                                map_level := map_level - 1;
+                                state     := STATE_NULL;
+                            when EVENT_SCALAR    =>
+                                READ_EVENT(core, stream, next_event, read_good);
+                                case state is
+                                    when STATE_MAP_KEY =>
+                                        COPY_KEY_WORD(core, keyword);
+                                        case keyword is
+                                            when KEY_PORT => state := STATE_MAP_PORT;
+                                            when KEY_WAIT => state := STATE_MAP_WAIT;
+                                            when others   => state := STATE_ERROR;
+                                        end case;
+                                    when STATE_SCALAR_PORT | STATE_MAP_PORT =>
+                                        COPY_KEY_WORD(core, keyword);
+                                        if    (keyword = KEY_LOCAL) then
+                                            port_num := -1;
+                                        else
+                                            SCAN_INTEGER(port_num, scan_len);
+                                            if (SYNC_REQ'low <= port_num and port_num <= SYNC_REQ'high) then
+                                                port_num := -2;
+                                            end if;
+                                        end if;
+                                        if (state = STATE_MAP_PORT) then
+                                            state := STATE_MAP_KEY;
+                                        else
+                                            state := STATE_NULL;
+                                        end if;
+                                    when STATE_MAP_WAIT =>
+                                        SCAN_INTEGER(wait_num, scan_len);
+                                        state := STATE_MAP_KEY;
+                                    when others =>
+                                        state := STATE_MAP_KEY;
+                                end case;
+                            when others =>
+                                SKIP_EVENT(core, stream, next_event, skip_good);
+                        end case;
+                        exit when (map_level = 0);
+                    end loop;
+                    assert (next_event = EVENT_MAP_END)
+                        report "Internal Read Error in " & FULL_NAME & " EXECUTE_WAIT"
+                        severity FAILURE;
+                    READ_EVENT(core, stream, EVENT_MAP_END, read_good);
+                when OP_DOC_BEGIN => null;
+                when OP_SCALAR    => null;
+                when others       => null;
+            end case;
+            LOCAL_SYNC;
+            if (port_num >= 0) then
+                CORE_SYNC(core, port_num, wait_num, SYNC_REQ, SYNC_ACK);
+            end if;
         end procedure;
         ---------------------------------------------------------------------------
         --! @brief チャネルオペレーション(SCALAR)実行サブプログラム.
@@ -530,11 +665,11 @@ begin
                 EXECUTE_OUTPUT;
                 case next_event is
                     when EVENT_SCALAR  =>
-                        COPY_KEY_WORD(core, op_code);
-                        case op_code is
-                            when OP_WAIT  => EXECUTE_WAIT;
-                            when OP_CHECK => EXECUTE_CHECK;
-                            when others   => EXECUTE_UNDEFINED_MAP_KEY(core, stream, op_code);
+                        COPY_KEY_WORD(core, keyword);
+                        case keyword is
+                            when KEY_WAIT  => EXECUTE_WAIT;
+                            when KEY_CHECK => EXECUTE_CHECK;
+                            when others    => EXECUTE_UNDEFINED_MAP_KEY(keyword);
                         end case;
                     when EVENT_MAP_END =>
                         exit MAP_LOOP;
@@ -574,48 +709,6 @@ begin
                 exit when (seq_level <= 0);
             end loop;
         end procedure;
-        ---------------------------------------------------------------------------
-        --! @brief  SYNCオペレーション. 
-        ---------------------------------------------------------------------------
-        procedure EXECUTE_SYNC(operation: in OPERATION_TYPE) is
-            variable read_good  : boolean;
-            variable skip_good  : boolean;
-            variable next_event : EVENT_TYPE;
-            variable wait_count : integer;
-            variable port_num   : integer;
-            variable str_len    : integer;
-            variable match      : boolean;
-        begin
-            case operation is
-                when OP_DOC_BEGIN | OP_SCALAR =>
-                    LOCAL_SYNC;
-                    CORE_SYNC (core, 0, 2, sync_req, sync_ack);
-                when OP_MAP       =>
-                    SEEK_EVENT(core, stream, next_event);
-                    case next_event is
-                        when EVENT_MAP_BEGIN =>
-                        when EVENT_SCALAR    =>
-                            READ_EVENT(core, stream, EVENT_SCALAR, read_good);
-                            MATCH_KEY_WORD(core, string'("LOCAL"), match);
-                            if (match) then
-                                LOCAL_SYNC;
-                            else
-                                STRING_TO_INTEGER(core.str_buf(1 to core.str_len), port_num, str_len);
-                                if (SYNC_REQ'low <= port_num and port_num <= SYNC_REQ'high) then
-                                    LOCAL_SYNC;
-                                    CORE_SYNC (core, port_num, 2, sync_req, sync_ack);
-                                end if;
-                            end if;
-                        when others          =>
-                            SKIP_EVENT(core, stream, next_event, skip_good);
-                    end case;
-                    assert (next_event = EVENT_MAP_END)
-                        report "Internal Read Error in " & FULL_NAME & " EXECUTE_SKIP"
-                        severity FAILURE;
-                    READ_EVENT(core, stream, EVENT_MAP_END, read_good);
-                when others       => null;
-            end case;
-        end procedure;
     begin
         ---------------------------------------------------------------------------
         -- ダミープラグコアの初期化.
@@ -647,21 +740,21 @@ begin
         if (CHANNEL = 'M') then
             wait until(ACLK'event and ACLK = '1' and ARESETn = '1');
             while (operation /= OP_FINISH) loop
-                READ_OPERATION(core, stream, operation, op_code);
+                READ_OPERATION(core, stream, operation, keyword);
                 case operation is
                     when OP_DOC_BEGIN     => EXECUTE_SYNC(operation);
                     when OP_MAP    =>
-                        case op_code is
-                            when OP_SAY   => EXECUTE_SAY (core, stream);
-                            when OP_SYNC  => EXECUTE_SYNC(operation);
-                            when OP_WAIT  => EXECUTE_WAIT;
-                            when OP_CHECK => EXECUTE_CHECK;
-                            when others   => EXECUTE_SKIP(core, stream);
+                        case keyword is
+                            when KEY_SAY   => EXECUTE_SAY (core, stream);
+                            when KEY_SYNC  => EXECUTE_SYNC(operation);
+                            when KEY_WAIT  => EXECUTE_WAIT;
+                            when KEY_CHECK => EXECUTE_CHECK;
+                            when others    => EXECUTE_SKIP(core, stream);
                         end case;
                     when OP_SCALAR =>
-                        case op_code is
-                            when OP_SYNC  => EXECUTE_SYNC(operation);
-                            when others   => null;
+                        case keyword is
+                            when KEY_SYNC  => EXECUTE_SYNC(operation);
+                            when others    => null;
                         end case;
                     when OP_FINISH => exit;
                     when others    => null;
@@ -669,23 +762,23 @@ begin
             end loop;
         else
             while (operation /= OP_FINISH) loop
-                READ_OPERATION(core, stream, operation, op_code);
+                READ_OPERATION(core, stream, operation, keyword);
                 case operation is
                     when OP_DOC_BEGIN   => LOCAL_SYNC;
                     when OP_MAP         =>
-                        if    (op_code = OP_CHANNEL) then
+                        if    (keyword = KEY_CHANNEL) then
                             EXECUTE_CHANNEL_OPERATION;
-                        elsif (op_code = OP_SYNC) then
+                        elsif (keyword = KEY_SYNC) then
                             LOCAL_SYNC;
                             EXECUTE_SKIP(core, stream);
                         else
                             EXECUTE_SKIP(core, stream);
                         end if;
                     when OP_SCALAR      =>
-                        if (op_code = OP_SYNC) then
+                        if (keyword = KEY_SYNC) then
                             LOCAL_SYNC;
                         else
-                            EXECUTE_UNDEFINED_SCALAR(core, stream, op_code);
+                            EXECUTE_UNDEFINED_SCALAR(core, stream, keyword);
                         end if;
                     when OP_FINISH      => exit;
                     when others         => null;

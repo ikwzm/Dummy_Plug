@@ -224,6 +224,16 @@ component AXI4_SIGNAL_PRINTER
                           STRING;
         TAG             : --!
                           STRING;
+        TAG_WIDTH       : --! @brief タグを出力する際の文字幅.
+                          --!      * TAG_WIDTH>0 =>  TAG_WIDTH幅の右詰.
+                          --!      * TAG_WIDTH<0 => -TAG_WIDTH幅の左詰.
+                          --!      * TAG_WIDTH=0 => 出力しない.
+                          integer := 13;
+        TIME_WIDTH      : --! @brief 時間を出力する際の文字幅.
+                          --!      * TIME_WIDTH>0 =>  TAG_WIDTH幅の右詰.
+                          --!      * TIME_WIDTH<0 => -TAG_WIDTH幅の左詰.
+                          --!      * TIEM_WIDTH=0 => 出力しない.
+                          integer := 13;
         AXI4_ID_WIDTH   : --! @brief AXI4 IS WIDTH :
                           integer :=  4;
         AXI4_A_WIDTH    : --! @brief AXI4 ADDR WIDTH :

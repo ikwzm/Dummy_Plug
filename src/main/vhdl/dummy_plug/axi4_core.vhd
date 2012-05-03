@@ -743,7 +743,7 @@ package body AXI4_CORE is
                         when KEY_RVALID     => READ_VAL(SIGNALS.R.VALID);
                         when KEY_RREADY     => READ_VAL(SIGNALS.R.READY);
                         when KEY_WDATA      => READ_VAL(SIGNALS.W.DATA(W_WIDTH  -1 downto 0));
-                        when KEY_WSTRB      => READ_VAL(SIGNALS.W.DATA(W_WIDTH/8-1 downto 0));
+                        when KEY_WSTRB      => READ_VAL(SIGNALS.W.STRB(W_WIDTH/8-1 downto 0));
                         when KEY_WLAST      => READ_VAL(SIGNALS.W.LAST);
                         when KEY_WID        => READ_VAL(SIGNALS.W.ID);
                         when KEY_WVALID     => READ_VAL(SIGNALS.W.VALID);

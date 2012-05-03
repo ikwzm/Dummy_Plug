@@ -139,7 +139,7 @@ begin
     N: MARCHAL
         generic map(
             SCENARIO_FILE   => SCENARIO_FILE,
-            NAME            => "N",
+            NAME            => "MARCHAL",
             SYNC_PLUG_NUM   => 1,
             SYNC_WIDTH      => SYNC_WIDTH,
             FINISH_ABORT    => FALSE
@@ -157,7 +157,7 @@ begin
     M: AXI4_MASTER_PLAYER
         generic map (
             SCENARIO_FILE   => SCENARIO_FILE,
-            NAME            => "M",
+            NAME            => "MASTER",
             OUTPUT_DELAY    => DELAY,
             AXI4_ID_WIDTH   => AXI4_ID_WIDTH,
             AXI4_A_WIDTH    => AXI4_A_WIDTH,
@@ -225,7 +225,7 @@ begin
     S: AXI4_SLAVE_PLAYER
         generic map (
             SCENARIO_FILE   => SCENARIO_FILE,
-            NAME            => "S",
+            NAME            => "SLAVE",
             OUTPUT_DELAY    => DELAY,
             AXI4_ID_WIDTH   => AXI4_ID_WIDTH,
             AXI4_A_WIDTH    => AXI4_A_WIDTH,
@@ -292,6 +292,8 @@ begin
         generic map (
             NAME            => "AXI4_TEST_1",
             TAG             => "",
+            TAG_WIDTH       => 0,
+            TIME_WIDTH      => 13,
             AXI4_ID_WIDTH   => AXI4_ID_WIDTH,
             AXI4_A_WIDTH    => AXI4_A_WIDTH,
             AXI4_W_WIDTH    => AXI4_W_WIDTH,
