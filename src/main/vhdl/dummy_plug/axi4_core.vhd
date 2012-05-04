@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_core.vhd
---!     @brief   Core Package for AXI4 Dummy Plug.
---!     @version 0.0.1
---!     @date    2012/5/1
+--!     @brief   AXI4 Dummy Plug Core Package.
+--!     @version 0.0.3
+--!     @date    2012/5/4
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -207,6 +207,8 @@ package AXI4_CORE is
         variable SELF       : inout CORE.CORE_TYPE;       --! コア変数.
         file     STREAM     :       TEXT;                 --! 入力ストリーム.
                  CHANNEL    : in    character;            --! 'M','A','R','W','B'を指定.
+                 R_ENABLE   : in    boolean;              --! リード可/不可を指定.
+                 W_ENABLE   : in    boolean;              --! ライト可/不可を指定.
                  ID_WIDTH   : in    integer;
                  A_WIDTH    : in    integer;
                  R_WIDTH    : in    integer;
@@ -293,12 +295,16 @@ package AXI4_CORE is
         generic (
             SCENARIO_FILE   : --! @brief シナリオファイルの名前.
                               STRING;
+            NAME            : --! @brief 固有名詞.
+                              STRING;
             MASTER          : --! @brief マスターモードを指定する.
                               boolean   := FALSE;
             SLAVE           : --! @brief スレーブモードを指定する.
                               boolean   := FALSE;
-            NAME            : --! @brief 固有名詞.
-                              STRING;
+            READ            : --! @brief リードモードを指定する.
+                              boolean   := TRUE;
+            WRITE           : --! @brief ライトモードを指定する.
+                              boolean   := TRUE;
             OUTPUT_DELAY    : --! @brief 出力信号遅延時間
                               time;
             AXI4_ID_WIDTH   : --! @brief AXI4 IS WIDTH :
@@ -409,6 +415,10 @@ package AXI4_CORE is
         generic (
             SCENARIO_FILE   : --! @brief シナリオファイルの名前.
                               STRING;
+            NAME            : --! @brief 固有名詞.
+                              STRING;
+            FULL_NAME       : --! @brief メッセージ出力用の固有名詞.
+                              STRING;
             CHANNEL         : --! @brief チャネル識別子.
                               --!      * 'A' 'W' 'R' 'B' の何れかを指定する.
                               CHARACTER := 'A';
@@ -416,10 +426,10 @@ package AXI4_CORE is
                               boolean   := FALSE;
             SLAVE           : --! @brief スレーブモードを指定する.
                               boolean   := FALSE;
-            NAME            : --! @brief 固有名詞.
-                              STRING;
-            FULL_NAME       : --! @brief メッセージ出力用の固有名詞.
-                              STRING;
+            READ            : --! @brief リードモードを指定する.
+                              boolean   := TRUE;
+            WRITE           : --! @brief ライトモードを指定する.
+                              boolean   := TRUE;
             OUTPUT_DELAY    : --! @brief 出力信号遅延時間
                               time;
             AXI4_ID_WIDTH   : --! @brief AXI4 IS WIDTH :
@@ -546,7 +556,7 @@ use     DUMMY_PLUG.UTIL.HEX_TO_STRING;
 -----------------------------------------------------------------------------------
 package body AXI4_CORE is
     -------------------------------------------------------------------------------
-    --
+    --! @brief 信号名の定義.
     -------------------------------------------------------------------------------
     constant  KEY_ADDR      : STRING(1 to 6) := "ADDR  ";
     constant  KEY_WRITE     : STRING(1 to 6) := "WRITE ";
@@ -590,12 +600,174 @@ package body AXI4_CORE is
     constant  KEY_BVALID    : STRING(1 to 6) := "BVALID";
     constant  KEY_BREADY    : STRING(1 to 6) := "BREADY";
     -------------------------------------------------------------------------------
+    --! @brief READERから読み取る信号の種類を示すタイプの定義.
+    -------------------------------------------------------------------------------
+    type      READ_AXI4_SIGNAL_TYPE is (
+              READ_NONE     ,
+              READ_ADDR     ,
+              READ_AWRITE   ,
+              READ_ALEN     ,
+              READ_ASIZE    ,
+              READ_ABURST   ,
+              READ_ALOCK    ,
+              READ_ACACHE   ,
+              READ_APROT    ,
+              READ_AID      ,
+              READ_AVALID   ,
+              READ_AREADY   ,
+              READ_RDATA    ,
+              READ_RRESP    ,
+              READ_RLAST    ,
+              READ_RID      ,
+              READ_RVALID   ,
+              READ_RREADY   ,
+              READ_WDATA    ,
+              READ_WSTRB    ,
+              READ_WLAST    ,
+              READ_WID      ,
+              READ_WVALID   ,
+              READ_WREADY   ,
+              READ_BRESP    ,
+              READ_BID      ,
+              READ_BVALID   ,
+              READ_BREADY   
+    );
+    -------------------------------------------------------------------------------
+    --! @brief KEY_WORD から READ_AXI4_SIGNAL_TYPEに変換する関数.
+    -------------------------------------------------------------------------------
+    function  TO_READ_AXI4_SIGNAL(
+                 KEY_WORD   : STRING(1 to 6);
+                 CHANNEL    : character;
+                 R,W        : boolean
+    ) return READ_AXI4_SIGNAL_TYPE is
+        variable val        : READ_AXI4_SIGNAL_TYPE;
+        variable A,B        : boolean;
+    begin
+        A := R or W;
+        B := W;
+        case KEY_WORD is
+            when KEY_ID         =>
+                case CHANNEL is
+                    when 'A'    => if (A) then return READ_AID  ; end if;
+                    when 'R'    => if (B) then return READ_RID  ; end if;
+                    when 'W'    => if (W) then return READ_WID  ; end if;
+                    when 'B'    => if (B) then return READ_BID  ; end if;
+                    when others => null;
+                end case;
+            when KEY_DATA       =>
+                case CHANNEL is
+                    when 'R'    => if (R) then return READ_RDATA; end if;
+                    when 'W'    => if (W) then return READ_WDATA; end if;
+                    when others => null;
+                end case;
+            when KEY_LAST       =>
+                case CHANNEL is
+                    when 'R'    => if (R) then return READ_RLAST; end if;
+                    when 'W'    => if (W) then return READ_WLAST; end if;
+                    when others => null;
+                end case;
+            when KEY_RESP       =>
+                case CHANNEL is
+                    when 'R'    => if (R) then return READ_RRESP; end if;
+                    when 'B'    => if (B) then return READ_BRESP; end if;
+                    when others => null;
+                end case;
+            when KEY_VALID      =>
+                case CHANNEL is
+                    when 'A'    => if (A) then return READ_AVALID;end if;
+                    when 'R'    => if (R) then return READ_RVALID;end if;
+                    when 'W'    => if (W) then return READ_WVALID;end if;
+                    when 'B'    => if (B) then return READ_BVALID;end if;
+                    when others => null;
+                end case;
+            when KEY_READY      =>
+                case CHANNEL is
+                    when 'A'    => if (A) then return READ_AREADY;end if;
+                    when 'R'    => if (R) then return READ_RREADY;end if;
+                    when 'W'    => if (W) then return READ_WREADY;end if;
+                    when 'B'    => if (B) then return READ_BREADY;end if;
+                    when others => null;
+                end case;
+            when KEY_ADDR       => if (A) then return READ_ADDR;  end if;
+            when KEY_WRITE      =>
+                case CHANNEL is
+                    when 'A'    => if (A) then return READ_AWRITE;end if;
+                    when others => null;
+                end case;
+            when KEY_LEN        =>
+                case CHANNEL is
+                    when 'A'    => if (A) then return READ_ALEN;  end if;
+                    when others => null;
+                end case;
+            when KEY_SIZE       =>
+                case CHANNEL is
+                    when 'A'    => if (A) then return READ_ASIZE; end if;
+                    when others => null;
+                end case;
+            when KEY_BURST      =>
+                case CHANNEL is
+                    when 'A'    => if (A) then return READ_ABURST;end if;
+                    when others => null;
+                end case;
+            when KEY_LOCK       =>
+                case CHANNEL is
+                    when 'A'    => if (A) then return READ_ALOCK; end if;
+                    when others => null;
+                end case;
+            when KEY_CACHE      =>
+                case CHANNEL is
+                    when 'A'    => if (A) then return READ_ACACHE;end if;
+                    when others => null;
+                end case;
+            when KEY_PROT       =>
+                case CHANNEL is
+                    when 'A'    => if (A) then return READ_APROT; end if;
+                    when others => null;
+                end case;
+            when KEY_STRB       =>
+                case CHANNEL is
+                    when 'W'    => if (W) then return READ_WSTRB; end if;
+                    when others => null;
+                end case;
+            when KEY_AWRITE     => if (A) then return READ_AWRITE;end if;
+            when KEY_ALEN       => if (A) then return READ_ALEN;  end if;
+            when KEY_ASIZE      => if (A) then return READ_ASIZE; end if;
+            when KEY_ABURST     => if (A) then return READ_ABURST;end if;
+            when KEY_ALOCK      => if (A) then return READ_ALOCK; end if;
+            when KEY_ACACHE     => if (A) then return READ_ACACHE;end if;
+            when KEY_APROT      => if (A) then return READ_APROT; end if;
+            when KEY_AID        => if (A) then return READ_AID;   end if;
+            when KEY_AVALID     => if (A) then return READ_AVALID;end if;
+            when KEY_AREADY     => if (A) then return READ_AREADY;end if;
+            when KEY_RDATA      => if (R) then return READ_RDATA; end if;
+            when KEY_RRESP      => if (R) then return READ_RRESP; end if;
+            when KEY_RLAST      => if (R) then return READ_RLAST; end if;
+            when KEY_RID        => if (R) then return READ_RID;   end if;
+            when KEY_RVALID     => if (R) then return READ_RVALID;end if;
+            when KEY_RREADY     => if (R) then return READ_RREADY;end if;
+            when KEY_WDATA      => if (W) then return READ_WDATA; end if;
+            when KEY_WSTRB      => if (W) then return READ_WSTRB; end if;
+            when KEY_WLAST      => if (W) then return READ_WLAST; end if;
+            when KEY_WID        => if (W) then return READ_WID;   end if;
+            when KEY_WVALID     => if (W) then return READ_WVALID;end if;
+            when KEY_WREADY     => if (W) then return READ_WREADY;end if;
+            when KEY_BRESP      => if (B) then return READ_BRESP; end if;
+            when KEY_BID        => if (B) then return READ_BID;   end if;
+            when KEY_BVALID     => if (B) then return READ_BVALID;end if;
+            when KEY_BREADY     => if (B) then return READ_BREADY;end if;
+            when others         => null;
+        end case;
+        return READ_NONE;
+    end function;
+    -------------------------------------------------------------------------------
     --! @brief READERのマップからチャネル信号の構造体を読み取るサブプログラム.
     -------------------------------------------------------------------------------
     procedure READ_AXI4_CHANNEL(
         variable SELF       : inout CORE_TYPE;            --! コア変数.
         file     STREAM     :       TEXT;                 --! 入力ストリーム.
                  CHANNEL    : in    character;            --! 'M','A','R','W','B'を指定.
+                 R_ENABLE   : in    boolean;              --! リード可/不可を指定.
+                 W_ENABLE   : in    boolean;              --! ライト可/不可を指定.
                  ID_WIDTH   : in    integer;
                  A_WIDTH    : in    integer;
                  R_WIDTH    : in    integer;
@@ -642,123 +814,38 @@ package body AXI4_CORE is
                 when EVENT_SCALAR  =>
                     READ_EVENT(SELF, STREAM, EVENT_SCALAR , read_good);
                     COPY_KEY_WORD(SELF, key_word);
-                    case key_word is
-                        when KEY_ID         =>
-                            case CHANNEL is
-                                when 'A'    => READ_VAL(SIGNALS.A.ID(ID_WIDTH-1 downto 0));
-                                when 'R'    => READ_VAL(SIGNALS.R.ID(ID_WIDTH-1 downto 0));
-                                when 'W'    => READ_VAL(SIGNALS.W.ID(ID_WIDTH-1 downto 0));
-                                when 'B'    => READ_VAL(SIGNALS.B.ID(ID_WIDTH-1 downto 0));
-                                when others => exit MAP_LOOP;
-                            end case;
-                        when KEY_DATA       =>
-                            case CHANNEL is
-                                when 'R'    => READ_VAL(SIGNALS.R.DATA(R_WIDTH-1 downto 0));
-                                when 'W'    => READ_VAL(SIGNALS.W.DATA(W_WIDTH-1 downto 0));
-                                when others => exit MAP_LOOP;
-                            end case;
-                        when KEY_LAST       =>
-                            case CHANNEL is
-                                when 'R'    => READ_VAL(SIGNALS.R.LAST);
-                                when 'W'    => READ_VAL(SIGNALS.W.LAST);
-                                when others => exit MAP_LOOP;
-                            end case;
-                        when KEY_RESP       =>
-                            case CHANNEL is
-                                when 'R'    => READ_VAL(SIGNALS.R.RESP);
-                                when 'B'    => READ_VAL(SIGNALS.B.RESP);
-                                when others => exit MAP_LOOP;
-                            end case;
-                        when KEY_VALID      =>
-                            case CHANNEL is
-                                when 'A'    => READ_VAL(SIGNALS.A.VALID);
-                                when 'R'    => READ_VAL(SIGNALS.R.VALID);
-                                when 'W'    => READ_VAL(SIGNALS.W.VALID);
-                                when 'B'    => READ_VAL(SIGNALS.B.VALID);
-                                when others => exit MAP_LOOP;
-                            end case;
-                        when KEY_READY      =>
-                            case CHANNEL is
-                                when 'A'    => READ_VAL(SIGNALS.A.READY);
-                                when 'R'    => READ_VAL(SIGNALS.R.READY);
-                                when 'W'    => READ_VAL(SIGNALS.W.READY);
-                                when 'B'    => READ_VAL(SIGNALS.B.READY);
-                                when others => exit MAP_LOOP;
-                            end case;
-                        when KEY_ADDR       => READ_VAL(SIGNALS.A.ADDR(A_WIDTH  -1 downto 0));
-                        when KEY_WRITE      =>
-                            case CHANNEL is
-                                when 'A'    => READ_VAL(SIGNALS.A.WRITE);
-                                when others => exit MAP_LOOP;
-                            end case;
-                        when KEY_LEN        =>
-                            case CHANNEL is
-                                when 'A'    => READ_VAL(SIGNALS.A.LEN);
-                                when others => exit MAP_LOOP;
-                            end case;
-                        when KEY_SIZE       =>
-                            case CHANNEL is
-                                when 'A'    => READ_VAL(SIGNALS.A.SIZE);
-                                when others => exit MAP_LOOP;
-                            end case;
-                        when KEY_BURST      =>
-                            case CHANNEL is
-                                when 'A'    => READ_VAL(SIGNALS.A.BURST);
-                                when others => exit MAP_LOOP;
-                            end case;
-                        when KEY_LOCK       =>
-                            case CHANNEL is
-                                when 'a'    => READ_VAL(SIGNALS.A.LOCK);
-                                when others => exit MAP_LOOP;
-                            end case;
-                        when KEY_CACHE      =>
-                            case CHANNEL is
-                                when 'A'    => READ_VAL(SIGNALS.A.CACHE);
-                                when others => exit MAP_LOOP;
-                            end case;
-                        when KEY_PROT       =>
-                            case CHANNEL is
-                                when 'A'    => READ_VAL(SIGNALS.A.PROT);
-                                when others => exit MAP_LOOP;
-                            end case;
-                        when KEY_STRB       =>
-                            case CHANNEL is
-                                when 'W'    => READ_VAL(SIGNALS.W.STRB(W_WIDTH/8-1 downto 0));
-                                when others => exit MAP_LOOP;
-                            end case;
-                        when KEY_AWRITE     => READ_VAL(SIGNALS.A.WRITE);
-                        when KEY_ALEN       => READ_VAL(SIGNALS.A.LEN);
-                        when KEY_ASIZE      => READ_VAL(SIGNALS.A.SIZE);
-                        when KEY_ABURST     => READ_VAL(SIGNALS.A.BURST);
-                        when KEY_ALOCK      => READ_VAL(SIGNALS.A.LOCK);
-                        when KEY_ACACHE     => READ_VAL(SIGNALS.A.CACHE);
-                        when KEY_APROT      => READ_VAL(SIGNALS.A.PROT);
-                        when KEY_AID        => READ_VAL(SIGNALS.A.ID(ID_WIDTH   -1 downto 0));
-                        when KEY_AVALID     => READ_VAL(SIGNALS.A.VALID);
-                        when KEY_AREADY     => READ_VAL(SIGNALS.A.READY);
-                        when KEY_RDATA      => READ_VAL(SIGNALS.R.DATA(R_WIDTH  -1 downto 0));
-                        when KEY_RRESP      => READ_VAL(SIGNALS.R.RESP);
-                        when KEY_RLAST      => READ_VAL(SIGNALS.R.LAST);
-                        when KEY_RID        => READ_VAL(SIGNALS.R.ID);
-                        when KEY_RVALID     => READ_VAL(SIGNALS.R.VALID);
-                        when KEY_RREADY     => READ_VAL(SIGNALS.R.READY);
-                        when KEY_WDATA      => READ_VAL(SIGNALS.W.DATA(W_WIDTH  -1 downto 0));
-                        when KEY_WSTRB      => READ_VAL(SIGNALS.W.STRB(W_WIDTH/8-1 downto 0));
-                        when KEY_WLAST      => READ_VAL(SIGNALS.W.LAST);
-                        when KEY_WID        => READ_VAL(SIGNALS.W.ID);
-                        when KEY_WVALID     => READ_VAL(SIGNALS.W.VALID);
-                        when KEY_WREADY     => READ_VAL(SIGNALS.W.READY);
-                        when KEY_BRESP      => READ_VAL(SIGNALS.B.RESP);
-                        when KEY_BID        => READ_VAL(SIGNALS.B.ID);
-                        when KEY_BVALID     => READ_VAL(SIGNALS.B.VALID);
-                        when KEY_BREADY     => READ_VAL(SIGNALS.B.READY);
-                        when others         => exit MAP_LOOP;
+                    case TO_READ_AXI4_SIGNAL(key_word, CHANNEL, R_ENABLE, W_ENABLE) is
+                        when READ_AID      => READ_VAL(SIGNALS.A.ID(ID_WIDTH   -1 downto 0));
+                        when READ_ADDR     => READ_VAL(SIGNALS.A.ADDR(A_WIDTH  -1 downto 0));
+                        when READ_AWRITE   => READ_VAL(SIGNALS.A.WRITE);
+                        when READ_ALEN     => READ_VAL(SIGNALS.A.LEN  );
+                        when READ_ASIZE    => READ_VAL(SIGNALS.A.SIZE );
+                        when READ_ABURST   => READ_VAL(SIGNALS.A.BURST);
+                        when READ_ALOCK    => READ_VAL(SIGNALS.A.LOCK);
+                        when READ_ACACHE   => READ_VAL(SIGNALS.A.CACHE);
+                        when READ_APROT    => READ_VAL(SIGNALS.A.PROT );
+                        when READ_AVALID   => READ_VAL(SIGNALS.A.VALID);
+                        when READ_AREADY   => READ_VAL(SIGNALS.A.READY);
+                        when READ_RID      => READ_VAL(SIGNALS.R.ID(ID_WIDTH   -1 downto 0));
+                        when READ_RDATA    => READ_VAL(SIGNALS.R.DATA(R_WIDTH  -1 downto 0));
+                        when READ_RRESP    => READ_VAL(SIGNALS.R.RESP );
+                        when READ_RLAST    => READ_VAL(SIGNALS.R.LAST );
+                        when READ_RVALID   => READ_VAL(SIGNALS.R.VALID);
+                        when READ_RREADY   => READ_VAL(SIGNALS.R.READY);
+                        when READ_WID      => READ_VAL(SIGNALS.W.ID(ID_WIDTH   -1 downto 0));
+                        when READ_WDATA    => READ_VAL(SIGNALS.W.DATA(W_WIDTH  -1 downto 0));
+                        when READ_WSTRB    => READ_VAL(SIGNALS.W.STRB(W_WIDTH/8-1 downto 0));
+                        when READ_WLAST    => READ_VAL(SIGNALS.W.LAST );
+                        when READ_WVALID   => READ_VAL(SIGNALS.W.VALID);
+                        when READ_WREADY   => READ_VAL(SIGNALS.W.READY);
+                        when READ_BID      => READ_VAL(SIGNALS.B.ID(ID_WIDTH   -1 downto 0));
+                        when READ_BRESP    => READ_VAL(SIGNALS.B.RESP );
+                        when READ_BVALID   => READ_VAL(SIGNALS.B.VALID);
+                        when READ_BREADY   => READ_VAL(SIGNALS.B.READY);
+                        when others        => exit MAP_LOOP;
                     end case;
-                when EVENT_MAP_END =>
-                 -- READ_EVENT(SELF, STREAM, EVENT_MAP_END, read_good);
-                    exit MAP_LOOP;
-                when others        =>
-                    exit MAP_LOOP;
+                when EVENT_MAP_END =>         exit MAP_LOOP;
+                when others        =>         exit MAP_LOOP;
             end case;
         end loop;
         CURR_EVENT := next_event;

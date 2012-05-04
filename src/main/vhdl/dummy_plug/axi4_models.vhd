@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_models.vhd
 --!     @brief   AXI4 Dummy Plug Component Package.
---!     @version 0.0.1
---!     @date    2012/5/1
+--!     @version 0.0.3
+--!     @date    2012/5/4
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -56,6 +56,10 @@ component  AXI4_MASTER_PLAYER
                           STRING;
         NAME            : --! @brief 固有名詞.
                           STRING;
+        READ            : --! @brief リードモードを指定する.
+                          boolean   := TRUE;
+        WRITE           : --! @brief ライトモードを指定する.
+                          boolean   := TRUE;
         OUTPUT_DELAY    : --! @brief 出力信号遅延時間
                           time    := 0 ns;
         AXI4_ID_WIDTH   : --! @brief AXI4 IS WIDTH :
@@ -142,6 +146,10 @@ component  AXI4_SLAVE_PLAYER
                           STRING;
         NAME            : --! @brief 固有名詞.
                           STRING;
+        READ            : --! @brief リードモードを指定する.
+                          boolean   := TRUE;
+        WRITE           : --! @brief ライトモードを指定する.
+                          boolean   := TRUE;
         OUTPUT_DELAY    : --! @brief 出力信号遅延時間
                           time    := 0 ns;
         AXI4_ID_WIDTH   : --! @brief AXI4 IS WIDTH :
@@ -215,6 +223,9 @@ component  AXI4_SLAVE_PLAYER
         FINISH          : out   std_logic
     );
 end component;
+-----------------------------------------------------------------------------------
+--! @brief   AXI4_SIGNAL_PRINTER :
+-----------------------------------------------------------------------------------
 component AXI4_SIGNAL_PRINTER
     -------------------------------------------------------------------------------
     -- ジェネリック変数.
@@ -275,6 +286,101 @@ component AXI4_SIGNAL_PRINTER
         RRESP           : in    AXI4_RESP_TYPE;
         RID             : in    std_logic_vector(AXI4_ID_WIDTH  -1 downto 0);
         RREADY          : in    std_logic;
+        --------------------------------------------------------------------------
+        -- ライトチャネルシグナル.
+        --------------------------------------------------------------------------
+        WVALID          : in    std_logic;
+        WLAST           : in    std_logic;
+        WDATA           : in    std_logic_vector(AXI4_W_WIDTH   -1 downto 0);
+        WSTRB           : in    std_logic_vector(AXI4_W_WIDTH/8 -1 downto 0);
+        WID             : in    std_logic_vector(AXI4_ID_WIDTH  -1 downto 0);
+        WREADY          : in    std_logic;
+        --------------------------------------------------------------------------
+        -- ライト応答チャネルシグナル.
+        --------------------------------------------------------------------------
+        BVALID          : in    std_logic;
+        BRESP           : in    AXI4_RESP_TYPE;
+        BID             : in    std_logic_vector(AXI4_ID_WIDTH  -1 downto 0);
+        BREADY          : in    std_logic
+    );
+end component;
+-----------------------------------------------------------------------------------
+--! @brief   AXI4_RW_SIGNAL_PRINTER :
+-----------------------------------------------------------------------------------
+component AXI4_RW_SIGNAL_PRINTER is
+    -------------------------------------------------------------------------------
+    -- ジェネリック変数.
+    -------------------------------------------------------------------------------
+    generic (
+        NAME            : --! @brief 固有名詞.
+                          STRING;
+        TAG             : --! @brief
+                          STRING;
+        TAG_WIDTH       : --! @brief タグを出力する際の文字幅.
+                          --!      * TAG_WIDTH>0 =>  TAG_WIDTH幅の右詰.
+                          --!      * TAG_WIDTH<0 => -TAG_WIDTH幅の左詰.
+                          --!      * TAG_WIDTH=0 => 出力しない.
+                          integer := 13;
+        TIME_WIDTH      : --! @brief 時間を出力する際の文字幅.
+                          --!      * TIME_WIDTH>0 =>  TAG_WIDTH幅の右詰.
+                          --!      * TIME_WIDTH<0 => -TAG_WIDTH幅の左詰.
+                          --!      * TIEM_WIDTH=0 => 出力しない.
+                          integer := 13;
+        AXI4_ID_WIDTH   : --! @brief AXI4 IS WIDTH :
+                          integer :=  4;
+        AXI4_A_WIDTH    : --! @brief AXI4 ADDR WIDTH :
+                          integer := 32;
+        AXI4_W_WIDTH    : --! @brief AXI4 WRITE DATA WIDTH :
+                          integer := 32;
+        AXI4_R_WIDTH    : --! @brief AXI4 READ DATA WIDTH :
+                          integer := 32
+    );
+    -------------------------------------------------------------------------------
+    -- 入出力ポートの定義.
+    -------------------------------------------------------------------------------
+    port(
+        --------------------------------------------------------------------------
+        -- グローバルシグナル.
+        --------------------------------------------------------------------------
+        ACLK            : in    std_logic;
+        ARESETn         : in    std_logic;
+        --------------------------------------------------------------------------
+        -- アドレスチャネルシグナル.
+        --------------------------------------------------------------------------
+        ARVALID         : in    std_logic;
+        ARADDR          : in    std_logic_vector(AXI4_A_WIDTH   -1 downto 0);
+        ARWRITE         : in    std_logic;
+        ARLEN           : in    AXI4_ALEN_TYPE;
+        ARSIZE          : in    AXI4_ASIZE_TYPE;
+        ARBURST         : in    AXI4_ABURST_TYPE;
+        ARLOCK          : in    AXI4_ALOCK_TYPE;
+        ARCACHE         : in    AXI4_ACACHE_TYPE;
+        ARPROT          : in    AXI4_APROT_TYPE;
+        ARID            : in    std_logic_vector(AXI4_ID_WIDTH  -1 downto 0);
+        ARREADY         : in    std_logic;
+        --------------------------------------------------------------------------
+        -- リードチャネルシグナル.
+        --------------------------------------------------------------------------
+        RVALID          : in    std_logic;
+        RLAST           : in    std_logic;
+        RDATA           : in    std_logic_vector(AXI4_R_WIDTH   -1 downto 0);
+        RRESP           : in    AXI4_RESP_TYPE;
+        RID             : in    std_logic_vector(AXI4_ID_WIDTH  -1 downto 0);
+        RREADY          : in    std_logic;
+        --------------------------------------------------------------------------
+        -- アドレスチャネルシグナル.
+        --------------------------------------------------------------------------
+        AWVALID         : in    std_logic;
+        AWADDR          : in    std_logic_vector(AXI4_A_WIDTH   -1 downto 0);
+        AWWRITE         : in    std_logic;
+        AWLEN           : in    AXI4_ALEN_TYPE;
+        AWSIZE          : in    AXI4_ASIZE_TYPE;
+        AWBURST         : in    AXI4_ABURST_TYPE;
+        AWLOCK          : in    AXI4_ALOCK_TYPE;
+        AWCACHE         : in    AXI4_ACACHE_TYPE;
+        AWPROT          : in    AXI4_APROT_TYPE;
+        AWID            : in    std_logic_vector(AXI4_ID_WIDTH  -1 downto 0);
+        AWREADY         : in    std_logic;
         --------------------------------------------------------------------------
         -- ライトチャネルシグナル.
         --------------------------------------------------------------------------

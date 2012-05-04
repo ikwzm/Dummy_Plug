@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    vocal.vhd
 --!     @brief   Package for Dummy Plug Message Output.
---!     @version 0.0.1
---!     @date    2012/5/1
+--!     @version 0.0.3
+--!     @date    2012/5/4
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -72,43 +72,43 @@ package VOCAL is
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にDEBUGメッセージを出力するサブプログラム.
     -------------------------------------------------------------------------------
-    procedure REPORT_DEBUG   (SELF:inout VOCAL_TYPE;message:in STRING);
+    procedure REPORT_DEBUG   (SELF:inout VOCAL_TYPE;MESSAGE:in STRING);
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にREMARKメッセージを出力するサブプログラム.
     -------------------------------------------------------------------------------
-    procedure REPORT_REMARK  (SELF:inout VOCAL_TYPE;message:in STRING);
+    procedure REPORT_REMARK  (SELF:inout VOCAL_TYPE;MESSAGE:in STRING);
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にNOTEメッセージを出力するサブプログラム.
     -------------------------------------------------------------------------------
-    procedure REPORT_NOTE    (SELF:inout VOCAL_TYPE;message:in STRING);
+    procedure REPORT_NOTE    (SELF:inout VOCAL_TYPE;MESSAGE:in STRING);
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にWARNINGメッセージを出力するサブプログラム.
     -------------------------------------------------------------------------------
-    procedure REPORT_WARNING (SELF:inout VOCAL_TYPE;message:in STRING);
+    procedure REPORT_WARNING (SELF:inout VOCAL_TYPE;MESSAGE:in STRING);
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にMISMATCHメッセージを出力するサブプログラム.
     -------------------------------------------------------------------------------
-    procedure REPORT_MISMATCH(SELF:inout VOCAL_TYPE;message:in STRING);
+    procedure REPORT_MISMATCH(SELF:inout VOCAL_TYPE;MESSAGE:in STRING);
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にERRORメッセージを出力するサブプログラム.
     -------------------------------------------------------------------------------
-    procedure REPORT_ERROR   (SELF:inout VOCAL_TYPE;message:in STRING);
+    procedure REPORT_ERROR   (SELF:inout VOCAL_TYPE;MESSAGE:in STRING);
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にFAILUREメッセージを出力するサブプログラム.
     -------------------------------------------------------------------------------
-    procedure REPORT_FAILURE (SELF:inout VOCAL_TYPE;message:in STRING);
+    procedure REPORT_FAILURE (SELF:inout VOCAL_TYPE;MESSAGE:in STRING);
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にシナリオリードエラーメッセージを出力するサブプログラム.
     -------------------------------------------------------------------------------
-    procedure REPORT_READ_ERROR(SELF:inout VOCAL_TYPE;message:in STRING);
+    procedure REPORT_READ_ERROR(SELF:inout VOCAL_TYPE;MESSAGE:in STRING);
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)に適当にメッセージを出力するサブプログラム.
     -------------------------------------------------------------------------------
-    procedure SAY  (SELF:inout VOCAL_TYPE;message:in STRING);
+    procedure SAY  (SELF:inout VOCAL_TYPE;MESSAGE:in STRING);
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)に適当にメッセージを出力するサブプログラム.
     -------------------------------------------------------------------------------
-    procedure SHOUT(SELF:inout VOCAL_TYPE;message:in STRING);
+    procedure SHOUT(SELF:inout VOCAL_TYPE;MESSAGE:in STRING);
 end VOCAL;
 -----------------------------------------------------------------------------------
 -- 
@@ -169,7 +169,7 @@ package body  VOCAL is
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にメッセージを出力するサブプログラム.
     -------------------------------------------------------------------------------
-    procedure REPORT_MESSAGE(SELF:inout VOCAL_TYPE; tag:inout LINE; message:in STRING) is
+    procedure REPORT_MESSAGE(SELF:inout VOCAL_TYPE; tag:inout LINE; MESSAGE:in STRING) is
         variable text_line   : LINE;
     begin
         if    (SELF.tag_field_width > 0) then
@@ -184,83 +184,83 @@ package body  VOCAL is
         elsif (SELF.time_field_width < 0) then
             WRITE(text_line, Now, LEFT , -SELF.time_field_width);
         end if;
-        WRITE(text_line, " (" & SELF.name(SELF.name'range) & ") " & message);
+        WRITE(text_line, " (" & SELF.name(SELF.name'range) & ") " & MESSAGE);
         WRITELINE(OUTPUT, text_line);
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にDEBUGメッセージを出力するサブプログラム.
     -------------------------------------------------------------------------------
-    procedure REPORT_DEBUG(SELF:inout VOCAL_TYPE;message:in STRING) is
+    procedure REPORT_DEBUG(SELF:inout VOCAL_TYPE;MESSAGE:in STRING) is
     begin
         if (SELF.enable_debug) then 
-            REPORT_MESSAGE(SELF, SELF.tag_debug, message);
+            REPORT_MESSAGE(SELF, SELF.tag_debug, MESSAGE);
         end if;
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にREMARKメッセージを出力するサブプログラム.
     -------------------------------------------------------------------------------
-    procedure REPORT_REMARK(SELF:inout VOCAL_TYPE;message:in STRING) is
+    procedure REPORT_REMARK(SELF:inout VOCAL_TYPE;MESSAGE:in STRING) is
     begin
         if (SELF.enable_remark) then 
-            REPORT_MESSAGE(SELF, SELF.tag_remark, message);
+            REPORT_MESSAGE(SELF, SELF.tag_remark, MESSAGE);
         end if;
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にNOTEメッセージを出力するサブプログラム.
     -------------------------------------------------------------------------------
-    procedure REPORT_NOTE(SELF:inout VOCAL_TYPE;message:in STRING) is
+    procedure REPORT_NOTE(SELF:inout VOCAL_TYPE;MESSAGE:in STRING) is
     begin
         if (SELF.enable_note) then 
-            REPORT_MESSAGE(SELF, SELF.tag_note, message);
+            REPORT_MESSAGE(SELF, SELF.tag_note, MESSAGE);
         end if;
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にWARNINGメッセージを出力するサブプログラム.
     -------------------------------------------------------------------------------
-    procedure REPORT_WARNING(SELF:inout VOCAL_TYPE;message:in STRING) is
+    procedure REPORT_WARNING(SELF:inout VOCAL_TYPE;MESSAGE:in STRING) is
     begin
         if (SELF.enable_warning) then 
-            REPORT_MESSAGE(SELF, SELF.tag_warning, message);
+            REPORT_MESSAGE(SELF, SELF.tag_warning, MESSAGE);
         end if;
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にMISMATCHメッセージを出力するサブプログラム.
     -------------------------------------------------------------------------------
-    procedure REPORT_MISMATCH(SELF:inout VOCAL_TYPE;message:in STRING) is
+    procedure REPORT_MISMATCH(SELF:inout VOCAL_TYPE;MESSAGE:in STRING) is
     begin
         if (SELF.enable_mismatch) then 
-            REPORT_MESSAGE(SELF, SELF.tag_mismatch, message);
+            REPORT_MESSAGE(SELF, SELF.tag_mismatch, MESSAGE);
         end if;
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にERRORメッセージを出力するサブプログラム.
     -------------------------------------------------------------------------------
-    procedure REPORT_ERROR(SELF:inout VOCAL_TYPE;message:in STRING) is
+    procedure REPORT_ERROR(SELF:inout VOCAL_TYPE;MESSAGE:in STRING) is
     begin
         if (SELF.enable_error) then 
-            REPORT_MESSAGE(SELF, SELF.tag_error, message);
+            REPORT_MESSAGE(SELF, SELF.tag_error, MESSAGE);
         end if;
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にFAILUREメッセージを出力するサブプログラム.
     -------------------------------------------------------------------------------
-    procedure REPORT_FAILURE(SELF:inout VOCAL_TYPE;message:in STRING) is
+    procedure REPORT_FAILURE(SELF:inout VOCAL_TYPE;MESSAGE:in STRING) is
     begin
         if (SELF.enable_failure) then 
-            REPORT_MESSAGE(SELF, SELF.tag_failure, message);
+            REPORT_MESSAGE(SELF, SELF.tag_failure, MESSAGE);
         end if;
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にシナリオリードエラーを出力するサブプログラム.
     -------------------------------------------------------------------------------
-    procedure REPORT_READ_ERROR(SELF:inout VOCAL_TYPE;message:in STRING) is
+    procedure REPORT_READ_ERROR(SELF:inout VOCAL_TYPE;MESSAGE:in STRING) is
     begin
-        REPORT_MESSAGE(SELF, SELF.tag_read_error, message);
+        REPORT_MESSAGE(SELF, SELF.tag_read_error, MESSAGE);
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)に適当にメッセージを出力するサブプログラム.
     -------------------------------------------------------------------------------
-    procedure SAY(SELF:inout VOCAL_TYPE;message:in STRING) is
+    procedure SAY(SELF:inout VOCAL_TYPE;MESSAGE:in STRING) is
         variable text_line   : LINE;
     begin
         if    (SELF.time_field_width > 0) then
@@ -277,13 +277,13 @@ package body  VOCAL is
             WRITE(text_line, SELF.name(SELF.name'range), LEFT , -SELF.name_field_width);
             WRITE(text_line, string'(" < "));
         end if;
-        WRITE(text_line, message);
+        WRITE(text_line, MESSAGE);
         WRITELINE(OUTPUT, text_line);
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)に適当にメッセージを出力するサブプログラム.
     -------------------------------------------------------------------------------
-    procedure SHOUT(SELF:inout VOCAL_TYPE;message:in STRING) is
+    procedure SHOUT(SELF:inout VOCAL_TYPE;MESSAGE:in STRING) is
         variable text_line   : LINE;
     begin
         if    (SELF.time_field_width > 0) then
@@ -300,7 +300,7 @@ package body  VOCAL is
             WRITE(text_line, SELF.name(SELF.name'range), LEFT , -SELF.name_field_width);
             WRITE(text_line, string'(" < "));
         end if;
-        WRITE(text_line, message);
+        WRITE(text_line, MESSAGE);
         WRITELINE(OUTPUT, text_line);
     end procedure;
 end VOCAL;

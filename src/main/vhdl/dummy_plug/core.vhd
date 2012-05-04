@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    core.vhd
 --!     @brief   Core Package for Dummy Plug.
---!     @version 0.0.1
---!     @date    2012/5/1
+--!     @version 0.0.3
+--!     @date    2012/5/4
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -222,17 +222,60 @@ package CORE is
     -------------------------------------------------------------------------------
     --! @brief コア変数のデバッグ用ダンプ
     -------------------------------------------------------------------------------
-    procedure REPORT_DEBUG(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-                 MESSAGE    : in    STRING
-    );
+    procedure REPORT_DEBUG     (SELF:inout CORE_TYPE;MESSAGE:in STRING);
+    -------------------------------------------------------------------------------
+    --! @brief 標準出力(OUTPUT)にREMARKメッセージを出力するサブプログラム.
+    -------------------------------------------------------------------------------
+    procedure REPORT_REMARK    (SELF:inout CORE_TYPE;MESSAGE:in STRING);
+    -------------------------------------------------------------------------------
+    --! @brief 標準出力(OUTPUT)にNOTEメッセージを出力するサブプログラム.
+    -------------------------------------------------------------------------------
+    procedure REPORT_NOTE      (SELF:inout CORE_TYPE;MESSAGE:in STRING);
+    -------------------------------------------------------------------------------
+    --! @brief 標準出力(OUTPUT)にWARNINGメッセージを出力するサブプログラム.
+    -------------------------------------------------------------------------------
+    procedure REPORT_WARNING   (SELF:inout CORE_TYPE;MESSAGE:in STRING);
+    -------------------------------------------------------------------------------
+    --! @brief 標準出力(OUTPUT)にMISMATCHメッセージを出力するサブプログラム.
+    -------------------------------------------------------------------------------
+    procedure REPORT_MISMATCH  (SELF:inout CORE_TYPE;MESSAGE:in STRING);
+    -------------------------------------------------------------------------------
+    --! @brief 標準出力(OUTPUT)にERRORメッセージを出力するサブプログラム.
+    -------------------------------------------------------------------------------
+    procedure REPORT_ERROR     (SELF:inout CORE_TYPE;MESSAGE:in STRING);
+    -------------------------------------------------------------------------------
+    --! @brief 標準出力(OUTPUT)にFAILUREメッセージを出力するサブプログラム.
+    -------------------------------------------------------------------------------
+    procedure REPORT_FAILURE   (SELF:inout CORE_TYPE;MESSAGE:in STRING);
+    -------------------------------------------------------------------------------
+    --! @brief 標準出力(OUTPUT)にシナリオリードエラーメッセージを出力するサブプログラム.
+    -------------------------------------------------------------------------------
+    procedure REPORT_READ_ERROR(SELF:inout CORE_TYPE;MESSAGE:in STRING);
     -------------------------------------------------------------------------------
     --! @brief 致命的エラーによる中断.
     -------------------------------------------------------------------------------
     procedure EXECUTE_ABORT(
         variable SELF       : inout CORE_TYPE;            --! コア変数.
-                 MESSAGE    : in    STRING
+                 MESSAGE    : in    STRING                --! メッセージ
     );
+    ------------------------------------------------------------------------------
+    -- 
+    ------------------------------------------------------------------------------
+    component MARCHAL
+        generic (
+            SCENARIO_FILE   : STRING;
+            NAME            : STRING;
+            SYNC_PLUG_NUM   : SYNC.SYNC_PLUG_NUM_TYPE;
+            SYNC_WIDTH      : integer;
+            FINISH_ABORT    : boolean
+        );
+        port(
+            CLK             : in    std_logic;
+            RESET           : out   std_logic;
+            SYNC            : inout SYNC.SYNC_SIG_VECTOR(SYNC_WIDTH-1 downto 0);
+            FINISH          : out   std_logic
+        );
+    end component;
 end CORE;
 -----------------------------------------------------------------------------------
 --! @brief Dummy Plug のコアパッケージ本体.
@@ -249,14 +292,60 @@ package body CORE is
     -------------------------------------------------------------------------------
     --! @brief コア変数のデバッグ用ダンプ
     -------------------------------------------------------------------------------
-    procedure REPORT_DEBUG(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-                 MESSAGE    : in    STRING
-    ) is
+    procedure REPORT_DEBUG     (SELF: inout CORE_TYPE;MESSAGE:in STRING) is
     begin
         if (SELF.debug > 0) then
             REPORT_DEBUG(SELF.vocal, MESSAGE);
         end if;
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief 標準出力(OUTPUT)にREMARKメッセージを出力するサブプログラム.
+    -------------------------------------------------------------------------------
+    procedure REPORT_REMARK    (SELF:inout CORE_TYPE;MESSAGE:in STRING) is
+    begin
+        REPORT_REMARK(SELF.vocal, MESSAGE);
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief 標準出力(OUTPUT)にNOTEメッセージを出力するサブプログラム.
+    -------------------------------------------------------------------------------
+    procedure REPORT_NOTE      (SELF:inout CORE_TYPE;MESSAGE:in STRING) is
+    begin
+        REPORT_NOTE(SELF.vocal, MESSAGE);
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief 標準出力(OUTPUT)にWARNINGメッセージを出力するサブプログラム.
+    -------------------------------------------------------------------------------
+    procedure REPORT_WARNING   (SELF:inout CORE_TYPE;MESSAGE:in STRING) is
+    begin
+        REPORT_WARNING(SELF.vocal, MESSAGE);
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief 標準出力(OUTPUT)にMISMATCHメッセージを出力するサブプログラム.
+    -------------------------------------------------------------------------------
+    procedure REPORT_MISMATCH  (SELF:inout CORE_TYPE;MESSAGE:in STRING) is
+    begin
+        REPORT_MISMATCH(SELF.vocal, MESSAGE);
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief 標準出力(OUTPUT)にERRORメッセージを出力するサブプログラム.
+    -------------------------------------------------------------------------------
+    procedure REPORT_ERROR     (SELF:inout CORE_TYPE;MESSAGE:in STRING) is
+    begin
+        REPORT_ERROR(SELF.vocal, MESSAGE);
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief 標準出力(OUTPUT)にFAILUREメッセージを出力するサブプログラム.
+    -------------------------------------------------------------------------------
+    procedure REPORT_FAILURE   (SELF:inout CORE_TYPE;MESSAGE:in STRING) is
+    begin
+        REPORT_FAILURE(SELF.vocal, MESSAGE);
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief 標準出力(OUTPUT)にシナリオリードエラーメッセージを出力するサブプログラム.
+    -------------------------------------------------------------------------------
+    procedure REPORT_READ_ERROR(SELF:inout CORE_TYPE;MESSAGE:in STRING) is
+    begin
+        REPORT_READ_ERROR(SELF.vocal, MESSAGE);
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief コア変数の初期化用定数を生成する関数.

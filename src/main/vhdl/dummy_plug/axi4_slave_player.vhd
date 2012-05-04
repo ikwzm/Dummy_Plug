@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_slave_player.vhd
 --!     @brief   AXI4 Slave Dummy Plug Player.
---!     @version 0.0.2
---!     @date    2012/5/2
+--!     @version 0.0.3
+--!     @date    2012/5/4
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -41,7 +41,7 @@ use     DUMMY_PLUG.AXI4_TYPES.all;
 use     DUMMY_PLUG.SYNC.SYNC_SIG_VECTOR;
 use     DUMMY_PLUG.SYNC.SYNC_PLUG_NUM_TYPE;
 -----------------------------------------------------------------------------------
---! @brief   AXI4_SLAVE_PLAYER :
+--! @brief   AXI4 Slave Dummy Plug Player.
 -----------------------------------------------------------------------------------
 entity  AXI4_SLAVE_PLAYER is
     -------------------------------------------------------------------------------
@@ -52,6 +52,10 @@ entity  AXI4_SLAVE_PLAYER is
                           STRING;
         NAME            : --! @brief 固有名詞.
                           STRING;
+        READ            : --! @brief リードモードを指定する.
+                          boolean   := TRUE;
+        WRITE           : --! @brief ライトモードを指定する.
+                          boolean   := TRUE;
         OUTPUT_DELAY    : --! @brief 出力信号遅延時間
                           time    := 0 ns;
         AXI4_ID_WIDTH   : --! @brief AXI4 IS WIDTH :
@@ -146,9 +150,11 @@ begin
         ---------------------------------------------------------------------------
         generic map(
             SCENARIO_FILE   => SCENARIO_FILE,
+            NAME            => NAME,
             MASTER          => FALSE,
             SLAVE           => TRUE,
-            NAME            => NAME,
+            READ            => READ,
+            WRITE           => WRITE,
             OUTPUT_DELAY    => OUTPUT_DELAY,
             AXI4_ID_WIDTH   => AXI4_ID_WIDTH,
             AXI4_A_WIDTH    => AXI4_A_WIDTH,

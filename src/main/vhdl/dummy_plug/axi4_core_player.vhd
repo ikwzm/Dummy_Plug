@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_core_player.vhd
 --!     @brief   AXI4 Master/Slave Core Dummy Plug Player.
---!     @version 0.0.2
---!     @date    2012/5/2
+--!     @version 0.0.3
+--!     @date    2012/5/4
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -52,12 +52,16 @@ entity  AXI4_CORE_PLAYER is
     generic (
         SCENARIO_FILE   : --! @brief シナリオファイルの名前.
                           STRING;
+        NAME            : --! @brief 固有名詞.
+                          STRING;
         MASTER          : --! @brief マスターモードを指定する.
                           boolean   := FALSE;
         SLAVE           : --! @brief スレーブモードを指定する.
                           boolean   := FALSE;
-        NAME            : --! @brief 固有名詞.
-                          STRING;
+        READ            : --! @brief リードモードを指定する.
+                          boolean   := TRUE;
+        WRITE           : --! @brief ライトモードを指定する.
+                          boolean   := TRUE;
         OUTPUT_DELAY    : --! @brief 出力信号遅延時間
                           time    := 0 ns;
         AXI4_ID_WIDTH   : --! @brief AXI4 IS WIDTH :
@@ -163,15 +167,10 @@ end AXI4_CORE_PLAYER;
 -----------------------------------------------------------------------------------
 library ieee;
 use     ieee.std_logic_1164.all;
-use     ieee.numeric_std.all;
-use     std.textio.all;
 library DUMMY_PLUG;
 use     DUMMY_PLUG.AXI4_TYPES.all;
 use     DUMMY_PLUG.AXI4_CORE.all;
-use     DUMMY_PLUG.CORE.all;
 use     DUMMY_PLUG.SYNC.all;
-use     DUMMY_PLUG.UTIL.all;
-use     DUMMY_PLUG.READER.all;
 -----------------------------------------------------------------------------------
 --! @brief  AXI4_CORE_PLAYER :
 -----------------------------------------------------------------------------------
@@ -205,11 +204,13 @@ begin
     M: AXI4_CHANNEL_PLAYER 
         generic map (
             SCENARIO_FILE   => SCENARIO_FILE,
+            NAME            => NAME,
+            FULL_NAME       => NAME,
             CHANNEL         => 'M',
             MASTER          => FALSE,
             SLAVE           => FALSE,
-            NAME            => NAME,
-            FULL_NAME       => NAME,
+            READ            => READ,
+            WRITE           => WRITE,
             OUTPUT_DELAY    => OUTPUT_DELAY,
             AXI4_ID_WIDTH   => AXI4_ID_WIDTH,
             AXI4_A_WIDTH    => AXI4_A_WIDTH,
@@ -307,11 +308,13 @@ begin
     A: AXI4_CHANNEL_PLAYER 
         generic map (
             SCENARIO_FILE   => SCENARIO_FILE,
+            NAME            => NAME,
+            FULL_NAME       => NAME & ".A",
             CHANNEL         => 'A',
             MASTER          => MASTER,
             SLAVE           => SLAVE,
-            NAME            => NAME,
-            FULL_NAME       => NAME & ".A",
+            READ            => READ,
+            WRITE           => WRITE,
             OUTPUT_DELAY    => OUTPUT_DELAY,
             AXI4_ID_WIDTH   => AXI4_ID_WIDTH,
             AXI4_A_WIDTH    => AXI4_A_WIDTH,
@@ -409,11 +412,13 @@ begin
     W: AXI4_CHANNEL_PLAYER 
         generic map (
             SCENARIO_FILE   => SCENARIO_FILE,
+            NAME            => NAME,
+            FULL_NAME       => NAME & ".W",
             CHANNEL         => 'W',
             MASTER          => MASTER,
             SLAVE           => SLAVE,
-            NAME            => NAME,
-            FULL_NAME       => NAME & ".W",
+            READ            => READ,
+            WRITE           => WRITE,
             OUTPUT_DELAY    => OUTPUT_DELAY,
             AXI4_ID_WIDTH   => AXI4_ID_WIDTH,
             AXI4_A_WIDTH    => AXI4_A_WIDTH,
@@ -511,11 +516,13 @@ begin
     R: AXI4_CHANNEL_PLAYER 
         generic map (
             SCENARIO_FILE   => SCENARIO_FILE,
+            NAME            => NAME,
+            FULL_NAME       => NAME & ".R",
             CHANNEL         => 'R',
             MASTER          => MASTER,
             SLAVE           => SLAVE,
-            NAME            => NAME,
-            FULL_NAME       => NAME & ".R",
+            READ            => READ,
+            WRITE           => WRITE,
             OUTPUT_DELAY    => OUTPUT_DELAY,
             AXI4_ID_WIDTH   => AXI4_ID_WIDTH,
             AXI4_A_WIDTH    => AXI4_A_WIDTH,
@@ -613,11 +620,13 @@ begin
     B: AXI4_CHANNEL_PLAYER 
         generic map (
             SCENARIO_FILE   => SCENARIO_FILE,
+            NAME            => NAME,
+            FULL_NAME       => NAME & ".B",
             CHANNEL         => 'B',
             MASTER          => MASTER,
             SLAVE           => SLAVE,
-            NAME            => NAME,
-            FULL_NAME       => NAME & ".B",
+            READ            => READ,
+            WRITE           => WRITE,
             OUTPUT_DELAY    => OUTPUT_DELAY,
             AXI4_ID_WIDTH   => AXI4_ID_WIDTH,
             AXI4_A_WIDTH    => AXI4_A_WIDTH,

@@ -83,13 +83,10 @@ end MARCHAL;
 -----------------------------------------------------------------------------------
 library ieee;
 use     ieee.std_logic_1164.all;
-use     ieee.numeric_std.all;
 use     std.textio.all;
 library DUMMY_PLUG;
 use     DUMMY_PLUG.CORE.all;
 use     DUMMY_PLUG.SYNC.all;
-use     DUMMY_PLUG.READER.all;
-use     DUMMY_PLUG.VOCAL.all;
 -----------------------------------------------------------------------------------
 --
 -----------------------------------------------------------------------------------

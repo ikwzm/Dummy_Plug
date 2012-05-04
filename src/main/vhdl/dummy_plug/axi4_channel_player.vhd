@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_channel_player.vhd
 --!     @brief   AXI4 A/R/W/B Channel Dummy Plug Player.
---!     @version 0.0.2
---!     @date    2012/5/2
+--!     @version 0.0.3
+--!     @date    2012/5/4
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -58,6 +58,10 @@ entity  AXI4_CHANNEL_PLAYER is
                           boolean   := FALSE;
         SLAVE           : --! @brief スレーブモードを指定する.
                           boolean   := FALSE;
+        READ            : --! @brief リードモードを指定する.
+                          boolean   := TRUE;
+        WRITE           : --! @brief ライトモードを指定する.
+                          boolean   := TRUE;
         NAME            : --! @brief ダミープラグの固有名詞.
                           STRING;
         FULL_NAME       : --! @brief メッセージ出力用の固有名詞.
@@ -172,7 +176,6 @@ end AXI4_CHANNEL_PLAYER;
 -----------------------------------------------------------------------------------
 library ieee;
 use     ieee.std_logic_1164.all;
-use     ieee.numeric_std.all;
 use     std.textio.all;
 library DUMMY_PLUG;
 use     DUMMY_PLUG.AXI4_TYPES.all;
@@ -378,26 +381,34 @@ begin
             if (MASTER) then
                 case CHANNEL is
                     when 'A' =>
-                        ADDR_O   <= out_signals.A.ADDR(ADDR_O'range) after OUTPUT_DELAY;
-                        AWRITE_O <= out_signals.A.WRITE              after OUTPUT_DELAY;
-                        AVALID_O <= out_signals.A.VALID              after OUTPUT_DELAY;
-                        ALEN_O   <= out_signals.A.LEN                after OUTPUT_DELAY;
-                        ASIZE_O  <= out_signals.A.SIZE               after OUTPUT_DELAY;
-                        ABURST_O <= out_signals.A.BURST              after OUTPUT_DELAY;
-                        ALOCK_O  <= out_signals.A.LOCK               after OUTPUT_DELAY;
-                        ACACHE_O <= out_signals.A.CACHE              after OUTPUT_DELAY;
-                        APROT_O  <= out_signals.A.PROT               after OUTPUT_DELAY;
-                        AID_O    <= out_signals.A.id(AID_O'range)    after OUTPUT_DELAY;
+                        if (READ or WRITE) then
+                            ADDR_O   <= out_signals.A.ADDR(ADDR_O'range) after OUTPUT_DELAY;
+                            AWRITE_O <= out_signals.A.WRITE              after OUTPUT_DELAY;
+                            AVALID_O <= out_signals.A.VALID              after OUTPUT_DELAY;
+                            ALEN_O   <= out_signals.A.LEN                after OUTPUT_DELAY;
+                            ASIZE_O  <= out_signals.A.SIZE               after OUTPUT_DELAY;
+                            ABURST_O <= out_signals.A.BURST              after OUTPUT_DELAY;
+                            ALOCK_O  <= out_signals.A.LOCK               after OUTPUT_DELAY;
+                            ACACHE_O <= out_signals.A.CACHE              after OUTPUT_DELAY;
+                            APROT_O  <= out_signals.A.PROT               after OUTPUT_DELAY;
+                            AID_O    <= out_signals.A.id(AID_O'range)    after OUTPUT_DELAY;
+                        end if;
                     when 'W' =>
-                        WDATA_O  <= out_signals.W.DATA(WDATA_O'range)after OUTPUT_DELAY;
-                        WLAST_O  <= out_signals.W.LAST               after OUTPUT_DELAY;
-                        WSTRB_O  <= out_signals.W.STRB(WSTRB_O'range)after OUTPUT_DELAY;
-                        WID_O    <= out_signals.W.ID(WID_O'range)    after OUTPUT_DELAY;
-                        WVALID_O <= out_signals.W.VALID              after OUTPUT_DELAY;
+                        if (WRITE) then
+                            WDATA_O  <= out_signals.W.DATA(WDATA_O'range)after OUTPUT_DELAY;
+                            WLAST_O  <= out_signals.W.LAST               after OUTPUT_DELAY;
+                            WSTRB_O  <= out_signals.W.STRB(WSTRB_O'range)after OUTPUT_DELAY;
+                            WID_O    <= out_signals.W.ID(WID_O'range)    after OUTPUT_DELAY;
+                            WVALID_O <= out_signals.W.VALID              after OUTPUT_DELAY;
+                        end if;
                     when 'R' =>
-                        RREADY_O <= out_signals.R.READY              after OUTPUT_DELAY;
+                        if (READ) then
+                            RREADY_O <= out_signals.R.READY              after OUTPUT_DELAY;
+                        end if;
                     when 'B' =>
-                        BREADY_O <= out_signals.B.READY              after OUTPUT_DELAY;
+                        if (WRITE) then
+                            BREADY_O <= out_signals.B.READY              after OUTPUT_DELAY;
+                        end if;
                     when others =>
                         null;
                 end case;
@@ -405,19 +416,27 @@ begin
             if (SLAVE) then
                 case CHANNEL is
                     when 'A' =>
-                        AREADY_O <= out_signals.A.READY              after OUTPUT_DELAY;
+                        if (READ or WRITE) then
+                            AREADY_O <= out_signals.A.READY              after OUTPUT_DELAY;
+                        end if;
                     when 'W' =>
-                        WREADY_O <= out_signals.W.READY              after OUTPUT_DELAY;
+                        if (WRITE) then
+                            WREADY_O <= out_signals.W.READY              after OUTPUT_DELAY;
+                        end if;
                     when 'R' =>
-                        RDATA_O  <= out_signals.R.DATA(RDATA_O'range)after OUTPUT_DELAY;
-                        RRESP_O  <= out_signals.R.RESP               after OUTPUT_DELAY;
-                        RLAST_O  <= out_signals.R.LAST               after OUTPUT_DELAY;
-                        RID_O    <= out_signals.R.ID(RID_O'range)    after OUTPUT_DELAY;
-                        RVALID_O <= out_signals.R.VALID              after OUTPUT_DELAY;
+                        if (READ) then
+                            RDATA_O  <= out_signals.R.DATA(RDATA_O'range)after OUTPUT_DELAY;
+                            RRESP_O  <= out_signals.R.RESP               after OUTPUT_DELAY;
+                            RLAST_O  <= out_signals.R.LAST               after OUTPUT_DELAY;
+                            RID_O    <= out_signals.R.ID(RID_O'range)    after OUTPUT_DELAY;
+                            RVALID_O <= out_signals.R.VALID              after OUTPUT_DELAY;
+                        end if;
                     when 'B' =>
-                        BRESP_O  <= out_signals.B.RESP               after OUTPUT_DELAY;
-                        BID_O    <= out_signals.B.ID(BID_O'range)    after OUTPUT_DELAY;
-                        BVALID_O <= out_signals.B.VALID              after OUTPUT_DELAY;
+                        if (WRITE) then
+                            BRESP_O  <= out_signals.B.RESP               after OUTPUT_DELAY;
+                            BID_O    <= out_signals.B.ID(BID_O'range)    after OUTPUT_DELAY;
+                            BVALID_O <= out_signals.B.VALID              after OUTPUT_DELAY;
+                        end if;
                     when others =>
                         null;
                 end case;
@@ -454,6 +473,8 @@ begin
                         SELF       => core            ,  -- In :
                         STREAM     => stream          ,  -- I/O:
                         CHANNEL    => CHANNEL         ,  -- In :
+                        R_ENABLE   => READ            ,  -- In :
+                        W_ENABLE   => WRITE           ,  -- In :
                         ID_WIDTH   => AXI4_ID_WIDTH   ,  -- In :
                         A_WIDTH    => AXI4_A_WIDTH    ,  -- In :
                         R_WIDTH    => AXI4_R_WIDTH    ,  -- In :
@@ -506,6 +527,8 @@ begin
                             SELF       => core            ,  -- In :
                             STREAM     => stream          ,  -- I/O:
                             CHANNEL    => CHANNEL         ,  -- In :
+                            R_ENABLE   => READ            ,  -- In :
+                            W_ENABLE   => WRITE           ,  -- In :
                             ID_WIDTH   => AXI4_ID_WIDTH   ,  -- In :
                             A_WIDTH    => AXI4_A_WIDTH    ,  -- In :
                             R_WIDTH    => AXI4_R_WIDTH    ,  -- In :
@@ -655,6 +678,8 @@ begin
                     SELF       => core            ,  -- In :
                     STREAM     => stream          ,  -- I/O:
                     CHANNEL    => CHANNEL         ,  -- In :
+                    R_ENABLE   => READ            ,  -- In :
+                    W_ENABLE   => WRITE           ,  -- In :
                     ID_WIDTH   => AXI4_ID_WIDTH   ,  -- In :
                     A_WIDTH    => AXI4_A_WIDTH    ,  -- In :
                     R_WIDTH    => AXI4_R_WIDTH    ,  -- In :

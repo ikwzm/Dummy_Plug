@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    sync.vhd
 --!     @brief   Package for Synchronize some dummy-plugs.
---!     @version 0.0.1
---!     @date    2012/5/1
+--!     @version 0.0.3
+--!     @date    2012/5/4
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -268,7 +268,6 @@ end MODEL;
 -----------------------------------------------------------------------------------
 library ieee;
 use     ieee.std_logic_1164.all;
-use     std.textio.all;
 library DUMMY_PLUG;
 use     DUMMY_PLUG.SYNC.all;
 -----------------------------------------------------------------------------------

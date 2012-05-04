@@ -44,6 +44,7 @@ use     DUMMY_PLUG.AXI4_MODELS.AXI4_MASTER_PLAYER;
 use     DUMMY_PLUG.AXI4_MODELS.AXI4_SLAVE_PLAYER;
 use     DUMMY_PLUG.AXI4_MODELS.AXI4_SIGNAL_PRINTER;
 use     DUMMY_PLUG.SYNC.all;
+use     DUMMY_PLUG.CORE.MARCHAL;
 entity  DUMMY_PLUG_AXI4_TEST_1 is
 end     DUMMY_PLUG_AXI4_TEST_1;
 architecture MODEL of DUMMY_PLUG_AXI4_TEST_1 is
@@ -113,24 +114,6 @@ architecture MODEL of DUMMY_PLUG_AXI4_TEST_1 is
     signal   N_FINISH        : std_logic;
     signal   M_FINISH        : std_logic;
     signal   S_FINISH        : std_logic;
-    ------------------------------------------------------------------------------
-    -- 
-    ------------------------------------------------------------------------------
-    component MARCHAL
-        generic (
-            SCENARIO_FILE   : STRING;
-            NAME            : STRING;
-            SYNC_PLUG_NUM   : SYNC_PLUG_NUM_TYPE;
-            SYNC_WIDTH      : integer;
-            FINISH_ABORT    : boolean
-        );
-        port(
-            CLK             : in    std_logic;
-            RESET           : out   std_logic;
-            SYNC            : inout SYNC_SIG_VECTOR(SYNC_WIDTH-1 downto 0);
-            FINISH          : out   std_logic
-        );
-    end component;
 begin
 
     ------------------------------------------------------------------------------
@@ -158,6 +141,8 @@ begin
         generic map (
             SCENARIO_FILE   => SCENARIO_FILE,
             NAME            => "MASTER",
+            READ            => TRUE,
+            WRITE           => TRUE,
             OUTPUT_DELAY    => DELAY,
             AXI4_ID_WIDTH   => AXI4_ID_WIDTH,
             AXI4_A_WIDTH    => AXI4_A_WIDTH,
@@ -226,6 +211,8 @@ begin
         generic map (
             SCENARIO_FILE   => SCENARIO_FILE,
             NAME            => "SLAVE",
+            READ            => TRUE,
+            WRITE           => TRUE,
             OUTPUT_DELAY    => DELAY,
             AXI4_ID_WIDTH   => AXI4_ID_WIDTH,
             AXI4_A_WIDTH    => AXI4_A_WIDTH,

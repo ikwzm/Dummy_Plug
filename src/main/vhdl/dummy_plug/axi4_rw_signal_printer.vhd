@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------------
---!     @file    axi4_signal_printer.vhd
---!     @brief   AXI4 Signal Printer Module.
+--!     @file    axi4_rw_signal_printer.vhd
+--!     @brief   AXI4 Read/Write Signal Printer Module.
 --!     @version 0.0.3
 --!     @date    2012/5/4
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
@@ -41,7 +41,7 @@ use     DUMMY_PLUG.AXI4_TYPES.all;
 -----------------------------------------------------------------------------------
 --! @brief   AXI4_SIGNAL_PRINTER :
 -----------------------------------------------------------------------------------
-entity  AXI4_SIGNAL_PRINTER is
+entity  AXI4_RW_SIGNAL_PRINTER is
     -------------------------------------------------------------------------------
     -- ジェネリック変数.
     -------------------------------------------------------------------------------
@@ -81,17 +81,17 @@ entity  AXI4_SIGNAL_PRINTER is
         --------------------------------------------------------------------------
         -- アドレスチャネルシグナル.
         --------------------------------------------------------------------------
-        AVALID          : in    std_logic;
-        ADDR            : in    std_logic_vector(AXI4_A_WIDTH   -1 downto 0);
-        AWRITE          : in    std_logic;
-        ALEN            : in    AXI4_ALEN_TYPE;
-        ASIZE           : in    AXI4_ASIZE_TYPE;
-        ABURST          : in    AXI4_ABURST_TYPE;
-        ALOCK           : in    AXI4_ALOCK_TYPE;
-        ACACHE          : in    AXI4_ACACHE_TYPE;
-        APROT           : in    AXI4_APROT_TYPE;
-        AID             : in    std_logic_vector(AXI4_ID_WIDTH  -1 downto 0);
-        AREADY          : in    std_logic;
+        ARVALID         : in    std_logic;
+        ARADDR          : in    std_logic_vector(AXI4_A_WIDTH   -1 downto 0);
+        ARWRITE         : in    std_logic;
+        ARLEN           : in    AXI4_ALEN_TYPE;
+        ARSIZE          : in    AXI4_ASIZE_TYPE;
+        ARBURST         : in    AXI4_ABURST_TYPE;
+        ARLOCK          : in    AXI4_ALOCK_TYPE;
+        ARCACHE         : in    AXI4_ACACHE_TYPE;
+        ARPROT          : in    AXI4_APROT_TYPE;
+        ARID            : in    std_logic_vector(AXI4_ID_WIDTH  -1 downto 0);
+        ARREADY         : in    std_logic;
         --------------------------------------------------------------------------
         -- リードチャネルシグナル.
         --------------------------------------------------------------------------
@@ -101,6 +101,20 @@ entity  AXI4_SIGNAL_PRINTER is
         RRESP           : in    AXI4_RESP_TYPE;
         RID             : in    std_logic_vector(AXI4_ID_WIDTH  -1 downto 0);
         RREADY          : in    std_logic;
+        --------------------------------------------------------------------------
+        -- アドレスチャネルシグナル.
+        --------------------------------------------------------------------------
+        AWVALID         : in    std_logic;
+        AWADDR          : in    std_logic_vector(AXI4_A_WIDTH   -1 downto 0);
+        AWWRITE         : in    std_logic;
+        AWLEN           : in    AXI4_ALEN_TYPE;
+        AWSIZE          : in    AXI4_ASIZE_TYPE;
+        AWBURST         : in    AXI4_ABURST_TYPE;
+        AWLOCK          : in    AXI4_ALOCK_TYPE;
+        AWCACHE         : in    AXI4_ACACHE_TYPE;
+        AWPROT          : in    AXI4_APROT_TYPE;
+        AWID            : in    std_logic_vector(AXI4_ID_WIDTH  -1 downto 0);
+        AWREADY         : in    std_logic;
         --------------------------------------------------------------------------
         -- ライトチャネルシグナル.
         --------------------------------------------------------------------------
@@ -118,7 +132,7 @@ entity  AXI4_SIGNAL_PRINTER is
         BID             : in    std_logic_vector(AXI4_ID_WIDTH  -1 downto 0);
         BREADY          : in    std_logic
     );
-end     AXI4_SIGNAL_PRINTER;
+end     AXI4_RW_SIGNAL_PRINTER;
 -----------------------------------------------------------------------------------
 --
 -----------------------------------------------------------------------------------
@@ -131,7 +145,7 @@ use     DUMMY_PLUG.AXI4_TYPES.all;
 -----------------------------------------------------------------------------------
 --! @brief   AXI4_SIGNAL_PRINTER :
 -----------------------------------------------------------------------------------
-architecture MODEL of AXI4_SIGNAL_PRINTER is
+architecture MODEL of AXI4_RW_SIGNAL_PRINTER is
 begin
     process
         variable  text_line      : LINE;
@@ -209,44 +223,56 @@ begin
         constant rdata_sp : string := strcont(' '    , AXI4_R_WIDTH  ,4);
         constant rdata_hl : string := strcont('-'    , AXI4_R_WIDTH  ,4);
     begin
-        p(string'("             |   ") & addr_sp & " A     A   A   A A|   " & wdata_sp & " " & wstrb_sp & "   W W|   " & rdata_sp & "     R R|     B B ");
-        p(string'("             |   ") & addr_sp & " W   A B A C A V R|   " & wdata_sp & " " & wstrb_sp & " W V R|   " & rdata_sp & " R R V R|   B V R ");
-        p(string'("             |   ") & addr_sp & " R A S U L A P A E|   " & wdata_sp & " " & wstrb_sp & " L A E|   " & rdata_sp & " R L A E|   R A E ");
-        p(string'("             |   ") & addr_sp & " I L I R O C R L A|   " & wdata_sp & " " & wstrb_sp & " A L A|   " & rdata_sp & " E A L A|   E L A "); 
-        p(string'("             |   ") & addr_sp & " T E Z S C H O I D|   " & wdata_sp & " " & wstrb_sp & " S I D|   " & rdata_sp & " S S I D|   S I D ");
-        p(string'("     TIME    |ID ") & addr_id & " E N E T K E T D Y|ID " & wdata_id & " " & wstrb_id & " T D Y|ID " & rdata_id & " P T D Y|ID P D Y ");
-        p(string'(" ------------+--+") & addr_hl & "+-----------------+--+" & wdata_hl & "+" & wstrb_hl & "+-----+--+" & rdata_hl & "+-------+--+------");
-        p(string'("             | M|") & addr_sp & "|M M M M M M M M S| M|" & wdata_sp & "|" & wstrb_sp & "|M M S| S|" & rdata_sp & "|S S S M| S|S S M ");
-        p(string'(" ------------+--|") & addr_hl & "+-----------------+--+" & wdata_hl & "+" & wstrb_hl & "+-----+--+" & rdata_hl & "+-------+--+------");
+        p(string'("             |   ") & addr_sp & " A     A   A   A A|   " & rdata_sp & "        ||   " & addr_sp & " A     A   A   A A|   " & wdata_sp & " " & wstrb_sp & "      |         ");
+        p(string'("             |   ") & addr_sp & " R   A R A R A R R|   " & rdata_sp & "     R R||   " & addr_sp & " W   A W A W A W W|   " & wdata_sp & " " & wstrb_sp & "   W W|     B B ");
+        p(string'("             |   ") & addr_sp & " W A R B R C R V R|   " & rdata_sp & " R R V R||   " & addr_sp & " W A W B W C W V R|   " & wdata_sp & " " & wstrb_sp & " W V R|   B V R ");
+        p(string'("             |   ") & addr_sp & " R R S U L A P A E|   " & rdata_sp & " R L A E||   " & addr_sp & " R W S U L A P A E|   " & wdata_sp & " " & wstrb_sp & " L A E|   R A E ");
+        p(string'("             |   ") & addr_sp & " I L I R O C R L A|   " & rdata_sp & " E A L A||   " & addr_sp & " I L I R O C R L A|   " & wdata_sp & " " & wstrb_sp & " A L A|   E L A "); 
+        p(string'("             |   ") & addr_sp & " T E Z S C H O I D|   " & rdata_sp & " S S I D||   " & addr_sp & " T E Z S C H O I D|   " & wdata_sp & " " & wstrb_sp & " S I D|   S I D ");
+        p(string'("     TIME    |ID ") & addr_id & " E N E T K E T D Y|ID " & rdata_id & " P T D Y||ID " & addr_id & " E N E T K E T D Y|ID " & wdata_id & " " & wstrb_id & " T D Y|ID P D Y ");
+        p(string'(" ------------+--+") & addr_hl & "+-----------------+--+" & rdata_hl & "+-------||--+" & addr_hl & "+-----------------+--+" & wdata_hl & "+" & wstrb_hl & "+-----+--+------");
+        p(string'("             | M|") & addr_sp & "|M M M M M M M M S| M|" & rdata_sp & "|S S S M|| S|" & addr_sp & "|M M M M M M M M S| M|" & wdata_sp & "|" & wstrb_sp & "|M M S| S|S S M ");
+        p(string'(" ------------+--|") & addr_hl & "+-----------------+--+" & rdata_hl & "+-------||--+" & addr_hl & "+-----------------+--+" & wdata_hl & "+" & wstrb_hl & "+-----+--+------");
         MAIN_LOOP:loop
             wait until (ACLK'event and ACLK = '1');
-            p(Now, string'("|") & HEX_TO_STRING(resize(AID,8)) &
-                   string'("|") & HEX_TO_STRING(ADDR  ) &
-                   string'("|") & BIN_TO_STRING(AWRITE) &
-                   string'(" ") & HEX_TO_STRING(ALEN  ) &
-                   string'(" ") & HEX_TO_STRING(ASIZE ) &
-                   string'(" ") & HEX_TO_STRING(ABURST) &
-                   string'(" ") & HEX_TO_STRING(ALOCK ) &
-                   string'(" ") & HEX_TO_STRING(ACACHE) &
-                   string'(" ") & HEX_TO_STRING(APROT ) &
-                   string'(" ") & BIN_TO_STRING(AVALID) &
-                   string'(" ") & BIN_TO_STRING(AREADY) &
-                   string'("|") & HEX_TO_STRING(resize(WID,8)) &
-                   string'("|") & HEX_TO_STRING(WDATA ) &
-                   string'("|") & BIN_TO_STRING(WSTRB ) &
-                   string'("|") & BIN_TO_STRING(WLAST ) &
-                   string'(" ") & BIN_TO_STRING(WVALID) &
-                   string'(" ") & BIN_TO_STRING(WREADY) &
+            p(Now, string'("|") & HEX_TO_STRING(resize(ARID,8)) &
+                   string'("|") & HEX_TO_STRING(ARADDR ) &
+                   string'("|") & BIN_TO_STRING(ARWRITE) &
+                   string'(" ") & HEX_TO_STRING(ARLEN  ) &
+                   string'(" ") & HEX_TO_STRING(ARSIZE ) &
+                   string'(" ") & HEX_TO_STRING(ARBURST) &
+                   string'(" ") & HEX_TO_STRING(ARLOCK ) &
+                   string'(" ") & HEX_TO_STRING(ARCACHE) &
+                   string'(" ") & HEX_TO_STRING(ARPROT ) &
+                   string'(" ") & BIN_TO_STRING(ARVALID) &
+                   string'(" ") & BIN_TO_STRING(ARREADY) &
                    string'("|") & HEX_TO_STRING(resize(RID,8)) &
-                   string'("|") & HEX_TO_STRING(RDATA ) &
-                   string'("|") & HEX_TO_STRING(RRESP ) &
-                   string'(" ") & BIN_TO_STRING(RLAST ) &
-                   string'(" ") & BIN_TO_STRING(RVALID) &
-                   string'(" ") & BIN_TO_STRING(RREADY) &
+                   string'("|") & HEX_TO_STRING(RDATA  ) &
+                   string'("|") & HEX_TO_STRING(RRESP  ) &
+                   string'(" ") & BIN_TO_STRING(RLAST  ) &
+                   string'(" ") & BIN_TO_STRING(RVALID ) &
+                   string'(" ") & BIN_TO_STRING(RREADY ) &
+                   string'("||")& HEX_TO_STRING(resize(AWID,8)) &
+                   string'("|") & HEX_TO_STRING(AWADDR ) &
+                   string'("|") & BIN_TO_STRING(AWWRITE) &
+                   string'(" ") & HEX_TO_STRING(AWLEN  ) &
+                   string'(" ") & HEX_TO_STRING(AWSIZE ) &
+                   string'(" ") & HEX_TO_STRING(AWBURST) &
+                   string'(" ") & HEX_TO_STRING(AWLOCK ) &
+                   string'(" ") & HEX_TO_STRING(AWCACHE) &
+                   string'(" ") & HEX_TO_STRING(AWPROT ) &
+                   string'(" ") & BIN_TO_STRING(AWVALID) &
+                   string'(" ") & BIN_TO_STRING(AWREADY) &
+                   string'("|") & HEX_TO_STRING(resize(WID,8)) &
+                   string'("|") & HEX_TO_STRING(WDATA  ) &
+                   string'("|") & BIN_TO_STRING(WSTRB  ) &
+                   string'("|") & BIN_TO_STRING(WLAST  ) &
+                   string'(" ") & BIN_TO_STRING(WVALID ) &
+                   string'(" ") & BIN_TO_STRING(WREADY ) &
                    string'("|") & HEX_TO_STRING(resize(BID,8)) &
-                   string'("|") & HEX_TO_STRING(BRESP ) &
-                   string'(" ") & BIN_TO_STRING(BVALID) &
-                   string'(" ") & BIN_TO_STRING(BREADY));
+                   string'("|") & HEX_TO_STRING(BRESP  ) &
+                   string'(" ") & BIN_TO_STRING(BVALID ) &
+                   string'(" ") & BIN_TO_STRING(BREADY ));
         end loop;
     end process;
 end MODEL;

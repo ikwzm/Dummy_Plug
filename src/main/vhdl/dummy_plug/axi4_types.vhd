@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
---!     @file    axi4_master_player.vhd
---!     @brief   AXI4 Master Bus Function Model
---!     @version 0.0.2
---!     @date    2012/5/2
+--!     @file    axi4_types.vhd
+--!     @brief   AXI4 Channel Signal Type Package.
+--!     @version 0.0.3
+--!     @date    2012/5/4
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
