@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_signal_printer.vhd
 --!     @brief   AXI4 Signal Printer Module.
---!     @version 0.0.3
---!     @date    2012/5/4
+--!     @version 0.0.4
+--!     @date    2012/5/7
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -60,14 +60,8 @@ entity  AXI4_SIGNAL_PRINTER is
                           --!      * TIME_WIDTH<0 => -TAG_WIDTH幅の左詰.
                           --!      * TIEM_WIDTH=0 => 出力しない.
                           integer := 13;
-        AXI4_ID_WIDTH   : --! @brief AXI4 IS WIDTH :
-                          integer :=  4;
-        AXI4_A_WIDTH    : --! @brief AXI4 ADDR WIDTH :
-                          integer := 32;
-        AXI4_W_WIDTH    : --! @brief AXI4 WRITE DATA WIDTH :
-                          integer := 32;
-        AXI4_R_WIDTH    : --! @brief AXI4 READ DATA WIDTH :
-                          integer := 32
+        WIDTH           : --! @brief AXI4 チャネルの可変長信号のビット幅.
+                          AXI4_SIGNAL_WIDTH_TYPE
     );
     -------------------------------------------------------------------------------
     -- 入出力ポートの定義.
@@ -79,43 +73,64 @@ entity  AXI4_SIGNAL_PRINTER is
         ACLK            : in    std_logic;
         ARESETn         : in    std_logic;
         --------------------------------------------------------------------------
-        -- アドレスチャネルシグナル.
+        -- リードアドレスチャネルシグナル.
         --------------------------------------------------------------------------
-        AVALID          : in    std_logic;
-        ADDR            : in    std_logic_vector(AXI4_A_WIDTH   -1 downto 0);
-        AWRITE          : in    std_logic;
-        ALEN            : in    AXI4_ALEN_TYPE;
-        ASIZE           : in    AXI4_ASIZE_TYPE;
-        ABURST          : in    AXI4_ABURST_TYPE;
-        ALOCK           : in    AXI4_ALOCK_TYPE;
-        ACACHE          : in    AXI4_ACACHE_TYPE;
-        APROT           : in    AXI4_APROT_TYPE;
-        AID             : in    std_logic_vector(AXI4_ID_WIDTH  -1 downto 0);
-        AREADY          : in    std_logic;
+        ARADDR          : in    std_logic_vector(WIDTH.ARADDR -1 downto 0);
+        ARLEN           : in    AXI4_ALEN_TYPE;
+        ARSIZE          : in    AXI4_ASIZE_TYPE;
+        ARBURST         : in    AXI4_ABURST_TYPE;
+        ARLOCK          : in    AXI4_ALOCK_TYPE;
+        ARCACHE         : in    AXI4_ACACHE_TYPE;
+        ARPROT          : in    AXI4_APROT_TYPE;
+        ARQOS           : in    AXI4_AQOS_TYPE;
+        ARREGION        : in    AXI4_AREGION_TYPE;
+        ARUSER          : in    std_logic_vector(WIDTH.ARUSER -1 downto 0);
+        ARID            : in    std_logic_vector(WIDTH.ID     -1 downto 0);
+        ARVALID         : in    std_logic;
+        ARREADY         : in    std_logic;
         --------------------------------------------------------------------------
         -- リードチャネルシグナル.
         --------------------------------------------------------------------------
-        RVALID          : in    std_logic;
         RLAST           : in    std_logic;
-        RDATA           : in    std_logic_vector(AXI4_R_WIDTH   -1 downto 0);
+        RDATA           : in    std_logic_vector(WIDTH.RDATA  -1 downto 0);
         RRESP           : in    AXI4_RESP_TYPE;
-        RID             : in    std_logic_vector(AXI4_ID_WIDTH  -1 downto 0);
+        RUSER           : in    std_logic_vector(WIDTH.RUSER  -1 downto 0);
+        RID             : in    std_logic_vector(WIDTH.ID     -1 downto 0);
+        RVALID          : in    std_logic;
         RREADY          : in    std_logic;
         --------------------------------------------------------------------------
-        -- ライトチャネルシグナル.
+        -- ライトアドレスチャネルシグナル.
         --------------------------------------------------------------------------
-        WVALID          : in    std_logic;
+        AWADDR          : in    std_logic_vector(WIDTH.AWADDR -1 downto 0);
+        AWLEN           : in    AXI4_ALEN_TYPE;
+        AWSIZE          : in    AXI4_ASIZE_TYPE;
+        AWBURST         : in    AXI4_ABURST_TYPE;
+        AWLOCK          : in    AXI4_ALOCK_TYPE;
+        AWCACHE         : in    AXI4_ACACHE_TYPE;
+        AWPROT          : in    AXI4_APROT_TYPE;
+        AWQOS           : in    AXI4_AQOS_TYPE;
+        AWREGION        : in    AXI4_AREGION_TYPE;
+        AWUSER          : in    std_logic_vector(WIDTH.AWUSER -1 downto 0);
+        AWID            : in    std_logic_vector(WIDTH.ID     -1 downto 0);
+        AWVALID         : in    std_logic;
+        AWREADY         : in    std_logic;
+        --------------------------------------------------------------------------
+        -- ライトデータチャネルシグナル.
+        --------------------------------------------------------------------------
         WLAST           : in    std_logic;
-        WDATA           : in    std_logic_vector(AXI4_W_WIDTH   -1 downto 0);
-        WSTRB           : in    std_logic_vector(AXI4_W_WIDTH/8 -1 downto 0);
-        WID             : in    std_logic_vector(AXI4_ID_WIDTH  -1 downto 0);
+        WDATA           : in    std_logic_vector(WIDTH.WDATA  -1 downto 0);
+        WSTRB           : in    std_logic_vector(WIDTH.WDATA/8-1 downto 0);
+        WUSER           : in    std_logic_vector(WIDTH.WUSER  -1 downto 0);
+        WID             : in    std_logic_vector(WIDTH.ID     -1 downto 0);
+        WVALID          : in    std_logic;
         WREADY          : in    std_logic;
         --------------------------------------------------------------------------
         -- ライト応答チャネルシグナル.
         --------------------------------------------------------------------------
-        BVALID          : in    std_logic;
         BRESP           : in    AXI4_RESP_TYPE;
-        BID             : in    std_logic_vector(AXI4_ID_WIDTH  -1 downto 0);
+        BUSER           : in    std_logic_vector(WIDTH.BUSER  -1 downto 0);
+        BID             : in    std_logic_vector(WIDTH.ID     -1 downto 0);
+        BVALID          : in    std_logic;
         BREADY          : in    std_logic
     );
 end     AXI4_SIGNAL_PRINTER;
@@ -196,57 +211,79 @@ begin
             end loop;
             return val_buf;
         end function;
-        constant addr_id  : string := strcont("ADDR" , AXI4_A_WIDTH  ,4);
-        constant addr_sp  : string := strcont(' '    , AXI4_A_WIDTH  ,4);
-        constant addr_hl  : string := strcont('-'    , AXI4_A_WIDTH  ,4);
-        constant wdata_id : string := strcont("WDATA", AXI4_W_WIDTH  ,4);
-        constant wdata_sp : string := strcont(' '    , AXI4_W_WIDTH  ,4);
-        constant wdata_hl : string := strcont('-'    , AXI4_W_WIDTH  ,4);
-        constant wstrb_id : string := strcont("WSTB" , AXI4_W_WIDTH/8,1);
-        constant wstrb_sp : string := strcont(' '    , AXI4_W_WIDTH/8,1);
-        constant wstrb_hl : string := strcont('-'    , AXI4_W_WIDTH/8,1);
-        constant rdata_id : string := strcont("RDATA", AXI4_R_WIDTH  ,4);
-        constant rdata_sp : string := strcont(' '    , AXI4_R_WIDTH  ,4);
-        constant rdata_hl : string := strcont('-'    , AXI4_R_WIDTH  ,4);
+        constant raddr_id : string := strcont("ARADDR", ARADDR'length  ,4);
+        constant raddr_sp : string := strcont(' '     , ARADDR'length  ,4);
+        constant raddr_hl : string := strcont('-'     , ARADDR'length  ,4);
+        constant raddr_fm : string := strcont('h'     , ARADDR'length  ,4);
+        constant rdata_id : string := strcont("RDATA" , RDATA'length   ,4);
+        constant rdata_sp : string := strcont(' '     , RDATA'length   ,4);
+        constant rdata_hl : string := strcont('-'     , RDATA'length   ,4);
+        constant rdata_fm : string := strcont('h'     , RDATA'length   ,4);
+        constant waddr_id : string := strcont("AWADDR", AWADDR'length  ,4);
+        constant waddr_sp : string := strcont(' '     , AWADDR'length  ,4);
+        constant waddr_hl : string := strcont('-'     , AWADDR'length  ,4);
+        constant waddr_fm : string := strcont('h'     , AWADDR'length  ,4);
+        constant wdata_id : string := strcont("WDATA" , WDATA'length   ,4);
+        constant wdata_sp : string := strcont(' '     , WDATA'length   ,4);
+        constant wdata_hl : string := strcont('-'     , WDATA'length   ,4);
+        constant wdata_fm : string := strcont('h'     , WDATA'length   ,4);
+        constant wstrb_id : string := strcont("WSTB"  , WSTRB'length   ,1);
+        constant wstrb_sp : string := strcont(' '     , WSTRB'length   ,1);
+        constant wstrb_hl : string := strcont('-'     , WSTRB'length   ,1);
+        constant wstrb_fm : string := strcont('b'     , WSTRB'length   ,1);
     begin
-        p(string'("             |   ") & addr_sp & " A     A   A   A A|   " & wdata_sp & " " & wstrb_sp & "   W W|   " & rdata_sp & "     R R|     B B ");
-        p(string'("             |   ") & addr_sp & " W   A B A C A V R|   " & wdata_sp & " " & wstrb_sp & " W V R|   " & rdata_sp & " R R V R|   B V R ");
-        p(string'("             |   ") & addr_sp & " R A S U L A P A E|   " & wdata_sp & " " & wstrb_sp & " L A E|   " & rdata_sp & " R L A E|   R A E ");
-        p(string'("             |   ") & addr_sp & " I L I R O C R L A|   " & wdata_sp & " " & wstrb_sp & " A L A|   " & rdata_sp & " E A L A|   E L A "); 
-        p(string'("             |   ") & addr_sp & " T E Z S C H O I D|   " & wdata_sp & " " & wstrb_sp & " S I D|   " & rdata_sp & " S S I D|   S I D ");
-        p(string'("     TIME    |ID ") & addr_id & " E N E T K E T D Y|ID " & wdata_id & " " & wstrb_id & " T D Y|ID " & rdata_id & " P T D Y|ID P D Y ");
-        p(string'(" ------------+--+") & addr_hl & "+-----------------+--+" & wdata_hl & "+" & wstrb_hl & "+-----+--+" & rdata_hl & "+-------+--+------");
-        p(string'("             | M|") & addr_sp & "|M M M M M M M M S| M|" & wdata_sp & "|" & wstrb_sp & "|M M S| S|" & rdata_sp & "|S S S M| S|S S M ");
-        p(string'(" ------------+--|") & addr_hl & "+-----------------+--+" & wdata_hl & "+" & wstrb_hl & "+-----+--+" & rdata_hl & "+-------+--+------");
+        p(string'("             |   ") & raddr_sp & "      A   A     A A|   " & rdata_sp & "        ||   " & waddr_sp & "      A   A     A A|   " & wdata_sp & " " & wstrb_sp & "      |         ");
+        p(string'("             |   ") & raddr_sp & "    A R A R A   R R|   " & rdata_sp & "     R R||   " & waddr_sp & "    A W A W A   W W|   " & wdata_sp & " " & wstrb_sp & "   W W|     B B ");
+        p(string'("             |   ") & raddr_sp & "  A R B R C R A V R|   " & rdata_sp & " R R V R||   " & waddr_sp & "  A W B W C W A V R|   " & wdata_sp & " " & wstrb_sp & " W V R|   B V R ");
+        p(string'("             |   ") & raddr_sp & "  R S U L A P R A E|   " & rdata_sp & " R L A E||   " & waddr_sp & "  W S U L A P W A E|   " & wdata_sp & " " & wstrb_sp & " L A E|   R A E ");
+        p(string'("             |   ") & raddr_sp & "  L I R O C R Q L A|   " & rdata_sp & " E A L A||   " & waddr_sp & "  L I R O C R Q L A|   " & wdata_sp & " " & wstrb_sp & " A L A|   E L A "); 
+        p(string'("             |   ") & raddr_sp & "  E Z S C H O O I D|   " & rdata_sp & " S S I D||   " & waddr_sp & "  E Z S C H O O I D|   " & wdata_sp & " " & wstrb_sp & " S I D|   S I D ");
+        p(string'("     TIME    |ID ") & raddr_id & "  N E T K E T S D Y|ID " & rdata_id & " P T D Y||ID " & waddr_id & "  N E T K E T S D Y|ID " & wdata_id & " " & wstrb_id & " T D Y|ID P D Y ");
+        p(string'(" ------------+--+") & raddr_hl & "+------------------+--+" & rdata_hl & "+-------||--+" & waddr_hl & "+------------------+--+" & wdata_hl & "+" & wstrb_hl & "+-----+--+------");
+        p(string'("             | M|") & raddr_sp & "| M M M M M M M M S| M|" & rdata_sp & "|S S S M|| S|" & waddr_sp & "| M M M M M M M M S| M|" & wdata_sp & "|" & wstrb_sp & "|M M S| S|S S M ");
+        p(string'(" ------------+--|") & raddr_hl & "+------------------+--+" & rdata_hl & "+-------||--+" & waddr_hl & "+------------------+--+" & wdata_hl & "+" & wstrb_hl & "+-----+--+------");
+        p(string'("             |hh|") & raddr_fm & "|hh h h h h h h b b|hh|" & rdata_fm & "|h b b b||hh|" & waddr_fm & "|hh h h h h h h b b|hh|" & wdata_fm & "|" & wstrb_fm & "|b b b|hh|h b b ");
+        p(string'(" ------------+--|") & raddr_hl & "+------------------+--+" & rdata_hl & "+-------||--+" & waddr_hl & "+------------------+--+" & wdata_hl & "+" & wstrb_hl & "+-----+--+------");
         MAIN_LOOP:loop
             wait until (ACLK'event and ACLK = '1');
-            p(Now, string'("|") & HEX_TO_STRING(resize(AID,8)) &
-                   string'("|") & HEX_TO_STRING(ADDR  ) &
-                   string'("|") & BIN_TO_STRING(AWRITE) &
-                   string'(" ") & HEX_TO_STRING(ALEN  ) &
-                   string'(" ") & HEX_TO_STRING(ASIZE ) &
-                   string'(" ") & HEX_TO_STRING(ABURST) &
-                   string'(" ") & HEX_TO_STRING(ALOCK ) &
-                   string'(" ") & HEX_TO_STRING(ACACHE) &
-                   string'(" ") & HEX_TO_STRING(APROT ) &
-                   string'(" ") & BIN_TO_STRING(AVALID) &
-                   string'(" ") & BIN_TO_STRING(AREADY) &
-                   string'("|") & HEX_TO_STRING(resize(WID,8)) &
-                   string'("|") & HEX_TO_STRING(WDATA ) &
-                   string'("|") & BIN_TO_STRING(WSTRB ) &
-                   string'("|") & BIN_TO_STRING(WLAST ) &
-                   string'(" ") & BIN_TO_STRING(WVALID) &
-                   string'(" ") & BIN_TO_STRING(WREADY) &
+            p(Now, string'("|") & HEX_TO_STRING(resize(ARID,8)) &
+                   string'("|") & HEX_TO_STRING(ARADDR ) &
+                   string'("|") & HEX_TO_STRING(ARLEN  ) &
+                   string'(" ") & HEX_TO_STRING(ARSIZE ) &
+                   string'(" ") & HEX_TO_STRING(ARBURST) &
+                   string'(" ") & HEX_TO_STRING(ARLOCK ) &
+                   string'(" ") & HEX_TO_STRING(ARCACHE) &
+                   string'(" ") & HEX_TO_STRING(ARPROT ) &
+                   string'(" ") & HEX_TO_STRING(ARQOS  ) &
+                   string'(" ") & BIN_TO_STRING(ARVALID) &
+                   string'(" ") & BIN_TO_STRING(ARREADY) &
                    string'("|") & HEX_TO_STRING(resize(RID,8)) &
-                   string'("|") & HEX_TO_STRING(RDATA ) &
-                   string'("|") & HEX_TO_STRING(RRESP ) &
-                   string'(" ") & BIN_TO_STRING(RLAST ) &
-                   string'(" ") & BIN_TO_STRING(RVALID) &
-                   string'(" ") & BIN_TO_STRING(RREADY) &
+                   string'("|") & HEX_TO_STRING(RDATA  ) &
+                   string'("|") & HEX_TO_STRING(RRESP  ) &
+                   string'(" ") & BIN_TO_STRING(RLAST  ) &
+                   string'(" ") & BIN_TO_STRING(RVALID ) &
+                   string'(" ") & BIN_TO_STRING(RREADY ) &
+                   string'("||")& HEX_TO_STRING(resize(AWID,8)) &
+                   string'("|") & HEX_TO_STRING(AWADDR ) &
+                   string'("|") & HEX_TO_STRING(AWLEN  ) &
+                   string'(" ") & HEX_TO_STRING(AWSIZE ) &
+                   string'(" ") & HEX_TO_STRING(AWBURST) &
+                   string'(" ") & HEX_TO_STRING(AWLOCK ) &
+                   string'(" ") & HEX_TO_STRING(AWCACHE) &
+                   string'(" ") & HEX_TO_STRING(AWPROT ) &
+                   string'(" ") & HEX_TO_STRING(AWQOS  ) &
+                   string'(" ") & BIN_TO_STRING(AWVALID) &
+                   string'(" ") & BIN_TO_STRING(AWREADY) &
+                   string'("|") & HEX_TO_STRING(resize(WID,8)) &
+                   string'("|") & HEX_TO_STRING(WDATA  ) &
+                   string'("|") & BIN_TO_STRING(WSTRB  ) &
+                   string'("|") & BIN_TO_STRING(WLAST  ) &
+                   string'(" ") & BIN_TO_STRING(WVALID ) &
+                   string'(" ") & BIN_TO_STRING(WREADY ) &
                    string'("|") & HEX_TO_STRING(resize(BID,8)) &
-                   string'("|") & HEX_TO_STRING(BRESP ) &
-                   string'(" ") & BIN_TO_STRING(BVALID) &
-                   string'(" ") & BIN_TO_STRING(BREADY));
+                   string'("|") & HEX_TO_STRING(BRESP  ) &
+                   string'(" ") & BIN_TO_STRING(BVALID ) &
+                   string'(" ") & BIN_TO_STRING(BREADY ));
         end loop;
     end process;
 end MODEL;

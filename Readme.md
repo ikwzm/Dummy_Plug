@@ -1,3 +1,4 @@
+
 *Dummy Plug*
 ============
 
@@ -20,71 +21,78 @@ For example, when the master performs a write transaction will write the scenari
         - - MASTER                                # Name of Dummy Plug.
           - SAY: >                                # SAY Operation. Print String to STDOUT
             AIX DUMMU-PLUG SAMPLE SCENARIO 1 START
-        - - MASTER                                # Name of Dummy Plug.
-          - A:                                    # Address Channel Action.
-            - AVALID : 0                          # AVALID <= '0'
+          - AW:                                   # Write Address Channel Action.
+            - VALID  : 0                          # AWVALID <= 0
+              ADDR   : "32'h00000000"             # AWADDR  <= 0x00000000
+              SIZE   : "'b000"                    # AWSIZE  <= 000
+              LEN    : 0                          # AWLEN   <= 0
+              AID    : 0                          # AWID    <= 0
             - WAIT   : 10                         # wait for 10 clocks.
-            - ADDR   : "32'h00000010"             # ADDR   <= "00000010"
-              AWRITE : 1                          # AWRITE <= '1'
-              ASIZE  : "'b010"                    # ASIZE  <= 010
-              AID    : 7                          # AID    <= 7
-              AVALID : 1                          # AVALID <= '1'
-            - WAIT   : {AVALID: 1, AREADY: 1}     # wait until AVALID = '1' and AREADY = '1'
-            - AVALID : 0                          # AVALID <= '0'
-            - WAIT   : {BVALID: 1, BREADY: 1}     # wait until BVALID = '1' and BREADY = '1'
-          - W:                                    # Write Channel Action.
-            - WVALID : 0                          # WVALID <= '0';
-            - WAIT   : {AVALID: 1, AREADY: 1}     # wait until AVALID = '1' and AREADY = '1'
-            - WDATA  : "32'h76543210"             # WDATA  <= "76543210"
-              WSTRB  : "4'b1111"                  # WSTRB  <= "1111"
-              WLAST  : 1                          # WLAST  <= '1'
-              WID    : 7                          # WID    <= 7
-              WVALID : 1                          # WVALID <= '1'
-            - WAIT   : {WVALID: 1, WREADY: 1}     # wait until WVALID = '1' and WREADY = '1'
-            - WVALID : 0                          # WVALID <= '0'
+            - ADDR   : "32'h00000010"             # AWADDR  <= 0x00000010
+              SIZE   : "'b010"                    # AWSIZE  <= 010
+              LEN    : 0                          # AWLEN   <= 0
+              ID     : 7                          # AWID    <= 7
+              VALID  : 1                          # AWVALID <= 1
+            - WAIT   : {VALID : 1, READY : 1}     # wait until AWVALID = 1 and AWREADY = 1
+            - VALID  : 0                          # AWVALID <= 0
+            - WAIT   : {BVALID: 1, BREADY: 1}     # wait until BVALID = 1 and BREADY = 1
+          - W:                                    # Write Data Channel Action.
+            - DATA   : 0                          # WDATA  <= 0x00000000
+              STRB   : 0                          # WSTRB  <= 0000
+              LAST   : 0                          # WLAST  <= 0
+              ID     : 0                          # WID    <= 0
+              VALID  : 0                          # WVALID <= 0;
+            - WAIT   : {AWVALID: 1, AWREADY: 1}   # wait until AWVALID = 1 and AWREADY = 1
+            - DATA   : "32'h76543210"             # WDATA  <= 0x76543210
+              STRB   : "4'b1111"                  # WSTRB  <= 1111
+              LAST   : 1                          # WLAST  <= 1
+              ID     : 7                          # WID    <= 7
+              VALID  : 1                          # WVALID <= 1
+            - WAIT   : {VALID: 1, READY: 1}       # wait until WVALID = 1 and WREADY = 1
+            - WVALID : 0                          # WVALID <= 0
           - B:                                    # Write Responce Channel Action.
-            - BVALID : 0                          # BVALID <= '0'
-            - WAIT   : {AVALID: 1, AREADY: 1}     # wait until AVALID = '1' and AREADY = '1'
-            - BVALID : 1                          # BVALID <= '1'
-            - WAIT   : {BVALID: 1, BREADY: 1}     # wait until BVALID = '1' and BREADY = '1'
-            - CHECK  :                            # 
-                BRESP  : "2'b01"                  # 
-                BID    : 7                        #
-            - BVALID : 0                          # BVALID <= '0'
+            - READY  : 0                          # BREADY <= 0
+            - WAIT   : {AWVALID: 1, AWREADY: 1}   # wait until AWVALID = 1 and AWREADY = 1
+            - READY  : 1                          # BREADY <= 1
+            - WAIT   : {VALID: 1, READY: 1}       # wait until BVALID = 1 and BREADY = 1
+            - CHECK  :                            # check BRESP and BID
+                RESP   : "2'b01"                  # 
+                ID     : 7                        #
+            - READY  : 0                          # BREADY <= 0
         - - SLAVE                                 # Name of Dummy Plug.
-          - A:                                    # Address Channel Action.
-            - AREADY : 0                          # AREADY <= '0'
-            - WAIT   : {AVALID: 1, TIMEOUT: 10}   # wait until AVALID = 1 TIMEOUT 10 clock.
-            - AREADY : 1                          # AREADY <= '1'
-            - WAIT   : {AVALID: 1, AREADY: 1}     # wait until AVALID = 1 and AREADY = 1
-            - CHECK  :                            # 
+          - AW:                                   # Write Address Channel Action.
+            - READY  : 0                          # AWREADY <= 0
+            - WAIT   : {VALID: 1, TIMEOUT: 10}    # wait until AWVALID = 1
+            - READY  : 1                          # AWREADY <= 1
+            - WAIT   : {VALID: 1, READY: 1}       # wait until AWVALID = 1 and AWREADY = 1
+            - CHECK  :                            # check AWADDR, AWLEN, AWSIZE, AWID
                 ADDR   : "32'h00000010"           # 
-                AWRITE : 1                        #
-                ASIZE  : "'b010"                  #
-                AID    : 7                        #
-            - AREADY : 0                          # AREADY <= '0'
-          - W:                                    # Write Channel Action.
-            - WREADY : 0                          # WREADY <= '0'
-            - WAIT   : {AVALID: 1, AREADY: 1}     # wait until AVALID = 1 and AREADY = 1
-            - WREADY : 1                          # WREADY <= '1'
-            - WAIT   : {WVALID: 1, WREADY: 1}     # wait until WVALID = 1 and WREADY = 1 
-            - CHECK  :                            # 
-                WDATA  : "32'h76543210"           # 
-                WSTRB  : "4'b1111"                #
-                WLAST  : 1                        #
-                WID    : 7                        #
-            - WREADY : 0                          # WREADY <= '0'
+                SIZE   : "'b010"                  #
+                LEN    : 0                        #
+                ID     : 7                        #
+            - READY  : 0                          # AWREADY <= 0
+          - W:                                    # Write Data Channel Action.
+            - READY  : 0                          # WREADY <= 0
+            - WAIT   : {AWVALID: 1, AWREADY: 1}   # wait until AWVALID = 1 and AWREADY = 1
+            - READY  : 1                          # WREADY <= 1
+            - WAIT   : {VALID: 1, READY: 1}       # wait until WVALID = 1 and WREADY = 1
+            - CHECK  :                            # check WDATA, WSTRB, WLAST, WID
+                DATA   : "32'h76543210"           # 
+                STRB   : "4'b1111"                #
+                LAST   : 1                        #
+                ID     : 7                        #
+            - READY  : 0                          # WREADY <= '0'
           - B:                                    # Write Responce Channel Action.
-            - BVALID : 0                          # BVALID <= '0'
-            - WAIT   : {WVALID: 1, WREADY: 1}     # wait until WVALID = '1' and WREADY = '1'
-            - BVALID : 1                          # BVALID <= '1'
-              BRESP  : "2'b01"                    # BRESP  <= "01"
-              BID    : 7                          # BID    <= 7
-            - WAIT   : {BVALID: 1, BREADY: 1}     # wait until BVALID = '1' and BREADY = '1'
-            - BVALID : 0                          # BVALID <= '1'
-              BRESP  : "2'b00"                    # BRESP  <= "00"
-        ---                                       # Synchronize All Dummy Plug.
-        - - MASTER                                # Name of Dummy Plug.
+            - VALID  : 0                          # BVALID <= 0
+            - WAIT   : {WVALID: 1, WREADY: 1}     # wait until WVALID = 1 and WREADY = 1
+            - VALID  : 1                          # BVALID <= 1
+              RESP   : "2'b01"                    # BRESP  <= 01
+              ID     : 7                          # BID    <= 7
+            - WAIT   : {VALID: 1, READY: 1}       # wait until BVALID = 1 and BREADY = 1
+            - VALID  : 0                          # BVALID <= 1
+              RESP   : "2'b00"                    # BRESP  <= 00
+        ---                                       # 
+        - - Master                                # Name of Dummy Plug.
           - SAY: >                                # SAY Operation. Print String to STDOUT
             AIX DUMMU-PLUG SAMPLE SCENARIO 1 DONE
         ---

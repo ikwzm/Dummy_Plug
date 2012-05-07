@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    reader.vhd
 --!     @brief   Package for Dummy Plug Scenario Reader.
---!     @version 0.0.3
---!     @date    2012/5/4
+--!     @version 0.0.4
+--!     @date    2012/5/7
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -2662,7 +2662,12 @@ package body  READER is
         variable indent     :       INDENT_TYPE;
         variable next_event :       EVENT_TYPE;
         variable dummy_len  :       integer;
-    begin 
+    begin
+        if (EVENT = EVENT_ERROR) then
+            DEBUG_DUMP(SELF, string'("READ_EVENT INTERNAL ERROR"));
+            assert (FALSE) report "READ_EVENT INTERNAL ERROR"
+            severity FAILURE;
+        end if;
         get_struct_state(SELF, state, indent);
         SEEK_EVENT(SELF, STREAM, next_event);
         if (EVENT /= next_event) then
@@ -2791,6 +2796,7 @@ package body  READER is
             when others           => skip_done := TRUE;
         end case;
         while (skip_done = FALSE) loop
+            -- DEBUG_DUMP(SELF, string'("SKIP_EVENT LOOP"));
             get_struct_state(SELF, state, indent);
             SEEK_EVENT(SELF, STREAM, next_event);
             if (next_event = end_event) then
@@ -2832,8 +2838,13 @@ package body  READER is
     ) is
         variable skip_buf   :       string(1 to 1);  --! どうせ捨てるので少なくてもかまわない.
         variable skip_len   :       integer;
+        variable skip_good  :       boolean;
     begin
-        SKIP_EVENT(SELF, STREAM, EVENT, skip_buf, skip_len, GOOD);
+        SKIP_EVENT(SELF, STREAM, EVENT, skip_buf, skip_len, skip_good);
+        GOOD := skip_good;
+        if (skip_good = FALSE) then
+            DEBUG_DUMP(SELF, string'("SKIP_EVENT ERROR"));
+        end if;
     end procedure;
     ------------------------------------------------------------------------------
     --! @brief イベントに対応した文字列.

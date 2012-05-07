@@ -98,6 +98,7 @@ architecture MODEL of MARCHAL is
     signal    sync_ack          : SYNC_ACK_VECTOR(SYNC'range);
     signal    sync_rst          : std_logic := '0';
     signal    sync_clr          : std_logic := '0';
+    signal    sync_debug        : boolean   := FALSE;
 begin
     -------------------------------------------------------------------------------
     --
@@ -160,14 +161,20 @@ begin
     --! @ SYNC制御
     -------------------------------------------------------------------------------
     SYNC_DRIVER: for i in SYNC'range generate
-        U: SYNC_SIG_DRIVER generic map (SYNC_PLUG_NUM) port map (
-           CLK  => CLK,
-           RST  => sync_rst,
-           CLR  => sync_clr,
-           SYNC => SYNC(i),
-           REQ  => sync_req(i),
-           ACK  => sync_ack(i)
-       );
+        UNIT: SYNC_SIG_DRIVER
+            generic map (
+                NAME     => string'("MARCHAL:SYNC"),
+                PLUG_NUM => SYNC_PLUG_NUM
+            )
+            port map (
+                CLK      => CLK ,                -- In :
+                RST      => sync_rst,            -- In :
+                CLR      => sync_clr,            -- In :
+                DEBUG    => sync_debug,          -- In :
+                SYNC     => SYNC(i),             -- I/O:
+                REQ      => sync_req(i),         -- In :
+                ACK      => sync_ack(i)          -- Out:
+            );
     end generate;
 end MODEL;
 -----------------------------------------------------------------------------------

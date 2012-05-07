@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    core.vhd
 --!     @brief   Core Package for Dummy Plug.
---!     @version 0.0.3
---!     @date    2012/5/4
+--!     @version 0.0.4
+--!     @date    2012/5/7
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -497,6 +497,8 @@ package body CORE is
                         FOUND := TRUE;
                     end if;
                     exit when (seq_level = 0);
+                when EVENT_ERROR     =>
+                    EXECUTE_ABORT(SELF, string'("Check_My_Name:Read Error"));
                 when others =>
                     SKIP_EVENT(SELF, STREAM, get_event, read_good);
             end case;
@@ -519,6 +521,11 @@ package body CORE is
         CHECK_LOOP: loop
             SEEK_EVENT(SELF, STREAM, next_event);
             case next_event is
+                -------------------------------------------------------------------
+                -- エラーだった場合.
+                -------------------------------------------------------------------
+                when EVENT_ERROR =>
+                    EXECUTE_ABORT(SELF, string'("Check_First_Node:Read Error"));
                 -------------------------------------------------------------------
                 -- 最初のノードがマップだった場合.
                 -- * 例１ ID: {...}
@@ -648,6 +655,9 @@ package body CORE is
         SELF.vocal.enable_debug := TRUE;
         MAIN_LOOP: loop
             SEEK_EVENT(SELF, STREAM, next_event);
+            if (next_event = EVENT_ERROR) then
+                EXECUTE_ABORT(SELF, string'("READ_OPERATION:Read Error"));
+            end if;
             case SELF.curr_state is
                 -------------------------------------------------------------------
                 -- 初期状態.
@@ -884,7 +894,14 @@ package body CORE is
         variable read_good  :       boolean;
     begin
         SEEK_EVENT(SELF, STREAM, next_event);
-        SKIP_EVENT(SELF, STREAM, next_event, read_good);
+        if (next_event /= EVENT_ERROR) then
+            SKIP_EVENT(SELF, STREAM, next_event, read_good);
+            if (read_good = FALSE) then
+                EXECUTE_ABORT(SELF, string'("EXECUTE SKIP:Read Error"));
+            end if;
+        else
+                EXECUTE_ABORT(SELF, string'("EXECUTE SKIP:Read Error"));
+        end if;
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 不正なSCALARオペレーションを警告して読み飛ばす.

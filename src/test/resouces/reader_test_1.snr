@@ -99,4 +99,7 @@ e : 1   # out of document
        - {ID: 4, ADDR: "0x00000020", WRITE: 0,
           DATA: [0x00, 0x01, 0x02, 0x03]
          }
+--- # reader_test_1 9
+  - WAIT: {VALID: 0, READY: 0}
+  - WAIT: {VALID: 1, READY: 0}
 --- # reader_test_1 end

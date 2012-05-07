@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    vocal.vhd
 --!     @brief   Package for Dummy Plug Message Output.
---!     @version 0.0.3
---!     @date    2012/5/4
+--!     @version 0.0.4
+--!     @date    2012/5/7
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --

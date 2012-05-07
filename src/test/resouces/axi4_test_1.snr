@@ -25,33 +25,49 @@
   - SAY: >
        AIX DUMMU-PLUG SAMPLE SCENARIO 1 1 DONE
 ---
+- MASTER:
+  - DEBUG: 0
+  - AW : [{DEBUG : 0}]
+  - AR : [{DEBUG : 0}]
+  - R  : [{DEBUG : 0}]
+  - W  : [{DEBUG : 0}]
+  - B  : [{DEBUG : 0}]
+- SLAVE:
+  - DEBUG: 0
+  - AW : [{DEBUG : 0}]
+  - AR : [{DEBUG : 0}]
+  - R  : [{DEBUG : 0}]
+  - W  : [{DEBUG : 0}]
+  - B  : [{DEBUG : 0}]
+---
 - - [MARCHAL,MASTER,SLAVE]
   - SAY: >
        AIX DUMMU-PLUG SAMPLE SCENARIO 1 2 START
 - - [MASTER,SLAVE]
-  - A:
+  - AW:
     - VALID : 0
       READY : 0
     - WAIT  : 10
     - ADDR  : "32'h00000010"
-      WRITE : 1
       SIZE  : "'b010"
-      VALID : 1
-      READY : 1
-    - WAIT  : {AVALID: 1, AREADY: 1}
-    - VALID : 0
-      READY : 0
-    - WAIT  : {BVALID: 1, BREADY: 1}
-    - ADDR  : "32'h00000012"
-      SIZE  : "'b001"
-      WRITE : 0
       VALID : 1
       READY : 1
     - WAIT  : {VALID: 1, READY: 1}
     - VALID : 0
       READY : 0
+  - AR:
+    - VALID : 0
+      READY : 0
+    - WAIT  : {BVALID: 1, BREADY: 1, TIMEOUT: 100}
+    - ADDR  : "32'h00000012"
+      SIZE  : "'b001"
+      VALID : 1
+      READY : 1
+    - WAIT  : {VALID : 1, READY : 1}
+    - VALID : 0
+      READY : 0
   - W:
-    - WAIT  : {AVALID: 1, AREADY: 1, AWRITE: 1}
+    - WAIT  : {AWVALID: 1, AWREADY: 1}
     - DATA  : "32'h76543210"
       LAST  : 0
       VALID : 1
@@ -75,111 +91,222 @@
     - VALID : 0
       READY : 0
   - R:
-    - RVALID : 0
-      RREADY : 0
-    - WAIT   : {AVALID: 1, AREADY: 1, AWRITE: 0}
-    - RDATA  : "32'h00010203"
-      RLAST  : 0
-      RRESP  : 0
-      RVALID : 1
-      RREADY : 1
+    - VALID : 0
+      READY : 0
+    - WAIT  : {ARVALID: 1, ARREADY: 1}
+    - DATA  : "32'h00010203"
+      LAST  : 0
+      RESP  : 0
+      VALID : 1
+      READY : 1
+    - WAIT  : {RVALID: 1, RREADY: 1}
+    - DATA  : "32'h04050607"
+      LAST  : 1
+      RESP  : 0
+      VALID : 1
+      READY : 1
     - WAIT   : {RVALID: 1, RREADY: 1}
-    - RDATA  : "32'h04050607"
-      RLAST  : 1
-      RRESP  : 0
-      RVALID : 1
-      RREADY : 1
-    - WAIT   : {RVALID: 1, RREADY: 1}
-    - RVALID : 0
-      RREADY : 0
+    - VALID : 0
+      READY : 0
+      DATA  : "32'h00000000"
+      ID    : 0
+      LAST  : 0
+      RESP  : 0
 ---
 - - [MARCHAL,MASTER,SLAVE]
   - SAY: >
        AIX DUMMU-PLUG SAMPLE SCENARIO 1 2 DONE
 ---
-- - MARCHAL
+- MARCHAL:
   - SAY: |
-       AIX DUMMU-PLUG SAMPLE SCENARIO 1 3 
-- - MASTER                                # マスター用ダミープラグの名前. 
-  - A:                                    # アドレスチャネルの挙動.
-    - AVALID : 0                          # AVALID <= '0'
-      ADDR   : "32'h00000000"             # ADDR   <= "00000000"
-      AWRITE : 0                          # AWRITE <= '0'
-      ASIZE  : "'b000"                    # ASIZE  <= 000
-      AID    : 0                          # AID    <= 0
-    - WAIT   : 10                         # 10クロック待つ.
-    - ADDR   : "32'h00000010"             # ADDR   <= "00000010"
-      AWRITE : 1                          # AWRITE <= '1'
-      ASIZE  : "'b010"                    # ASIZE  <= 010
-      AID    : 7                          # AID    <= 7
-      AVALID : 1                          # AVALID <= '1'
-    - WAIT   : {AVALID: 1, AREADY: 1}     # AVALID = '1' and AREADY = '1'まで待つ.
-    - AVALID : 0                          # AVALID <= '0'
-    - WAIT   : {BVALID: 1, BREADY: 1}     # BVALID = '1' and BREADY = '1'まで待つ.
+       AIX DUMMU-PLUG SAMPLE SCENARIO 1 3 START
+- MASTER:                                 # マスター用ダミープラグの名前. 
+  - AW:                                   # アドレスチャネルの挙動.
+    - AWVALID : 0                         # AWVALID <= 0
+      AWADDR  : "32'h00000000"            # AWADDR  <= 00000000
+      AWSIZE  : "'b000"                   # AWSIZE  <= 000
+      AWLEN   : 0                         # AWLEN   <= 0
+      AWBURST : 0                         # AWBURST <= 0
+      AWLOCK  : 0                         # AWLOCK  <= 0
+      AWPROT  : 0                         # AWPROT  <= 0
+      AWQOS   : 0                         # AWQOS   <= 0
+      AWID    : 0                         # AWID    <= 0
+    - WAIT    : 10                        # 10クロック待つ.
+    - AWADDR  : "32'h00000010"            # AWADDR  <= 00000010
+      AWSIZE  : "'b010"                   # AWSIZE  <= 010
+      AWLEN   : 1                         # AWLEN   <= 1
+      AWBURST : 1                         # AWBURST <= 1
+      AWLOCK  : 2                         # AWLOCK  <= 2
+      AWPROT  : 3                         # AWPROT  <= 3
+      AWQOS   : 3                         # AWQOS   <= 3
+      AWID    : 7                         # AWID    <= 7
+      AWVALID : 1                         # AWVALID <= 1
+    - WAIT    : {AWVALID: 1, AWREADY: 1}  # AWVALID = 1 and AWREADY = 1まで待つ.
+    - AWVALID : 0                         # AWVALID <= 0
+    - WAIT    : {BVALID:  1, BREADY:  1}  # BVALID = 1 and BREADY = 1まで待つ.
   - W:                                    # ライトチャネルの挙動.
-    - WDATA  : 0                          # WDATA  <= "00000000"
-      WSTRB  : 0                          # WSTRB  <= "0000"
-      WLAST  : 0                          # WLAST  <= '0'
-      WID    : 0                          # WID    <= 0
-      WVALID : 0                          # WVALID <= '0';
-    - WAIT   : {AVALID: 1, AREADY: 1}     # AVALID = '1' and AREADY = '1'まで待つ.
-    - WDATA  : "32'h76543210"             # WDATA  <= "76543210"
-      WSTRB  : "4'b1111"                  # WSTRB  <= "1111"
-      WLAST  : 1                          # WLAST  <= '1'
-      WID    : 7                          # WID    <= 7
-      WVALID : 1                          # WVALID <= '1'
-    - WAIT   : {WVALID: 1, WREADY: 1}     # WVALID = '1' and WREADY = '1'まで待つ.
-    - WVALID : 0                          # WVALID <= '0'
+    - WDATA   : 0                         # WDATA   <= 0x00000000
+      WSTRB   : 0                         # WSTRB   <= 0000
+      WLAST   : 0                         # WLAST   <= 0
+      WID     : 0                         # WID     <= 0
+      WVALID  : 0                         # WVALID  <= 0;
+    - WAIT    : {AWVALID: 1, AWREADY: 1}  # AWVALID = 1 and AWREADY = 1まで待つ.
+    - WDATA   : "32'h76543210"            # WDATA   <= 0x76543210
+      WSTRB   : "4'b1111"                 # WSTRB   <= 1111
+      WLAST   : 1                         # WLAST   <= 1
+      WID     : 7                         # WID     <= 7
+      WVALID  : 1                         # WVALID  <= 1
+    - WAIT    : {WVALID: 1, WREADY: 1}    # WVALID = 1 and WREADY = 1まで待つ.
+    - WDATA   : "32'h00000000"            # WDATA   <= 0x00000000
+      WSTRB   : "4'b0000"                 # WSTRB   <= 0000
+      WLAST   : 0                         # WLAST   <= 0
+      WID     : 0                         # WID     <= 0
+      WVALID  : 0                         # WVALID  <= 0
   - B:                                    # ライト応答チャネルの挙動.
-    - BREADY : 0                          # BVALID <= '0'
-    - WAIT   : {AVALID: 1, AREADY: 1}     # AVALID = '1' and AREADY = '1'まで待つ.
-    - BREADY : 1                          # BVALID <= '1'
-    - WAIT   : {BVALID: 1, BREADY: 1}     # BVALID = '1' and BREADY = '1'まで待つ.
-    - CHECK  :                            # BRESP, BID が
+    - BREADY  : 0                         # BVALID <= 0
+    - WAIT    : {AWVALID: 1, AWREADY: 1}  # AWVALID = 1 and AWREADY = 1まで待つ.
+    - BREADY  : 1                         # BVALID <= 1
+    - WAIT    : {BVALID: 1, BREADY: 1}    # BVALID = 1 and BREADY = 1まで待つ.
+    - CHECK   :                           # BRESP, BID が
         BRESP  : "2'b01"                  # 指定された値になっているか調べる.
         BID    : 7                        #
-    - BREADY : 0                          # BVALID <= '0'
-- - SLAVE                                 # スレーブ用ダミープラグの名前. 
-  - A:                                    # アドレスチャネルの挙動.
-    - AREADY : 0                          # AREADY <= '0'
-    - WAIT   : {AVALID: 1, TIMEOUT: 10}   # AVALID = 1 まで待つ.ただし10クロック以内.
-    - AREADY : 1                          # AREADY <= '1'
-    - WAIT   : {AVALID: 1, AREADY: 1}     # AVALID = 1 and AREADY = 1 まで待つ.
-    - CHECK  :                            # ADDR, AWRITE, ASIZE, AID が
-        ADDR   : "32'h00000010"           # 指定した値になっているか調べる.
-        AWRITE : 1                        #
-        ASIZE  : "'b010"                  #
-        AID    : 7                        #
-    - AREADY : 0                          # AREADY <= '0'
+    - BREADY  : 0                         # BVALID <= 0
+- SLAVE:                                  # スレーブ用ダミープラグの名前. 
+  - AW:                                   # アドレスチャネルの挙動.
+    - AWREADY : 0                         # AWREADY <= 0
+    - WAIT    : {AWVALID: 1, TIMEOUT: 10} # AWVALID = 1 まで待つ.ただし10クロック以内.
+    - AWREADY : 1                         # AWREADY <= 1
+    - WAIT    : {AWVALID: 1, AWREADY: 1}  # AWVALID = 1 and AWREADY = 1 まで待つ.
+    - CHECK   :                           # AWADDR, AWSIZE, AWID が
+        AWADDR  : "32'h00000010"          # 指定した値になっているか調べる.
+        AWSIZE  : "'b010"                 #
+        AWID    : 7                       #
+        AWLEN   : 1                       # 
+        AWBURST : 1                       # 
+        AWLOCK  : 2                       # 
+        AWPROT  : 3                       # 
+        AWQOS   : 3                       # 
+    - AWREADY : 0                         # AWREADY <= 0
   - W:                                    # ライトチャネルの挙動.
-    - WREADY : 0                          # WREADY <= '0'
-    - WAIT   : {AVALID: 1, AREADY: 1}     # AVALID = 1 and AREADY = 1 まで待つ.
-    - WREADY : 1                          # WREADY <= '1'
-    - WAIT   : {WVALID: 1, WREADY: 1}     # WVALID = 1 and WREADY = 1 まで待つ.
-    - CHECK  :                            # WDATA, WSTRB, WLAST, WID　が
+    - WREADY  : 0                         # WREADY <= 0
+    - WAIT    : {AWVALID: 1, AWREADY: 1}  # AWVALID = 1 and AWREADY = 1 まで待つ.
+    - WREADY  : 1                         # WREADY <= '1'
+    - WAIT    : {WVALID : 1, WREADY : 1}  # WVALID = 1 and WREADY = 1 まで待つ.
+    - CHECK   :                           # WDATA, WSTRB, WLAST, WID　が
         WDATA  : "32'h76543210"           # 指定された値になっているか調べる.
         WSTRB  : "4'b1111"                #
         WLAST  : 1                        #
         WID    : 7                        #
-    - WREADY : 0                          # WREADY <= '0'
+    - WREADY  : 0                         # WREADY <= 0
+    - WAIT    : 1                         # 1クロック待つ.
+    - CHECK   :                           # WDATA, WSTRB, WLAST, WID　が
+        WDATA  : "32'h00000000"           # 指定された値になっているか調べる.
+        WSTRB  : "4'b0000"                #
+        WLAST  : 0                        #
+        WID    : 0                        #
+        WVALID : 0                        #
   - B:                                    # ライト応答チャネルの挙動.
-    - BVALID : 0                          # BVALID <= '0'
-    - WAIT   : {WVALID: 1, WREADY: 1}     # WVALID = '1' and WREADY = '1'まで待つ.
-    - BVALID : 1                          # BVALID <= '1'
-      BRESP  : "2'b01"                    # BRESP  <= "01"
-      BID    : 7                          # BID    <= 7
-    - WAIT   : {BVALID: 1, BREADY: 1}     # BVALID = '1' and BREADY = '1'まで待つ.
-    - BVALID : 0                          # BVALID <= '1'
-      BRESP  : "2'b00"                    # BRESP  <= "00"
+    - BVALID  : 0                         # BVALID <= 0
+    - WAIT    : {WVALID: 1, WREADY: 1}    # WVALID = 1 and WREADY = 1まで待つ.
+    - BVALID  : 1                         # BVALID <= 1
+      BRESP   : "2'b01"                   # BRESP  <= 01
+      BID     : 7                         # BID    <= 7
+    - WAIT    : {BVALID: 1, BREADY: 1}    # BVALID = 1 and BREADY = 1まで待つ.
+    - BVALID  : 0                         # BVALID <= 1
+      BRESP   : "2'b00"                   # BRESP  <= 00
 ---                                       # これで全てのダミープラグが同期.
 - - MARCHAL                               # ダミープラグの名前. 
   - SAY: >                                # SAYコマンド. 文字列をコンソールに出力.
-    AIX DUMMU-PLUG SAMPLE SCENARIO 1 DONE
-
+       AIX DUMMU-PLUG SAMPLE SCENARIO 1 3 DONE
 ---
-- - [MARCHAL,MASTER,SLAVE]
+- MARCHAL:
   - SAY: >
-       AIX DUMMU-PLUG SAMPLE SCENARIO 1 4
+       AIX DUMMU-PLUG SAMPLE SCENARIO 1 4 START
+- MASTER:                                 # マスター用ダミープラグの名前. 
+  - AR:                                   # アドレスチャネルの挙動.
+    - ARVALID : 0                         # ARVALID <= 0
+      ARADDR  : "32'h00000000"            # ARADDR  <= 00000000
+      ARSIZE  : "'b000"                   # ARSIZE  <= 000
+      ARLEN   : 0                         # ARLEN   <= 0
+      ARBURST : 0                         # ARBURST <= 0
+      ARLOCK  : 0                         # ARLOCK  <= 0
+      ARPROT  : 0                         # ARPROT  <= 0
+      ARQOS   : 0                         # ARQOS   <= 0
+      ARID    : 0                         # ARID    <= 0
+    - WAIT    : 10                        # 10クロック待つ.
+    - ARADDR  : "32'h00043210"            # ARADDR  <= 00043210
+      ARSIZE  : "'b010"                   # ARSIZE  <= 010
+      ARID    : 7                         # ARID    <= 7
+      ARSIZE  : "'b010"                   # ARSIZE  <= 010
+      ARLEN   : 1                         # ARLEN   <= 1
+      ARBURST : 1                         # ARBURST <= 1
+      ARLOCK  : 3                         # ARLOCK  <= 3
+      ARPROT  : 2                         # ARPROT  <= 2
+      ARQOS   : 1                         # ARQOS   <= 1
+      ARID    : 7                         # ARID    <= 7
+      ARVALID : 1                         # ARVALID <= 1
+    - WAIT    : {ARVALID: 1, ARREADY: 1}  # ARVALID = 1 and ARREADY = 1まで待つ.
+    - ARVALID : 0                         # ARVALID <= 0
+    - WAIT    : {RVALID:  1, RREADY: 1, RLAST: 1, TIMEOUT: 100}
+  - R:
+    - RREADY  : 0
+    - WAIT    : {ARVALID: 1, TIMEOUT: 100}
+    - RREADY  : 1
+    - WAIT    : {RVALID: 1, RREADY: 1, TIMEOUT: 100}
+    - CHECK   :
+        RDATA   : "32'hFEDCBA98"
+        RLAST   : 0
+        RRESP   : 0
+    - WAIT    : {RVALID: 1, RREADY: 1, TIMEOUT: 100}
+    - CHECK   :
+        RDATA   : "32'h01234567"
+        RLAST   : 1
+        RRESP   : 1
+    - RREADY  : 0
+- SLAVE:                                  # スレーブ用ダミープラグの名前. 
+  - AR:                                   # アドレスチャネルの挙動.
+    - ARREADY : 0                         # ARREADY <= 0
+    - WAIT    : {ARVALID: 1, TIMEOUT: 10} # ARVALID = 1 まで待つ.ただし10クロック以内.
+    - ARREADY : 1                         # ARREADY <= 1
+    - WAIT    : {ARVALID: 1, ARREADY: 1}  # ARVALID = 1 and ARREADY = 1 まで待つ.
+    - CHECK   :                           # AWADDR, AWSIZE, AWID が
+        ARADDR  : "32'h00043210"          # 指定した値になっているか調べる.
+        ARSIZE  : "'b010"                 #
+        ARLEN   : 1                       # 
+        ARBURST : 1                       # 
+        ARLOCK  : 3                       # 
+        ARPROT  : 2                       # 
+        ARQOS   : 1                       # 
+        ARID    : 7                       #
+    - ARREADY : 0                         # ARREADY <= 0
+  - R:                                    # リードチャネルの挙動.
+    - RVALID  : 0
+      RDATA   : "32'h00000000"
+      RLAST   : 0
+      RRESP   : 0
+    - WAIT    : {ARVALID: 1, TIMEOUT: 100}
+    - WAIT    : 5
+    - RVALID  : 1
+      RDATA   : "32'hFEDCBA98"
+      RLAST   : 0
+      RRESP   : 0
+    - WAIT    : {RVALID: 1, RREADY: 1, TIMEOUT: 100}
+    - RVALID  : 0
+      RDATA   : "32'h00000000"
+    - WAIT    : 2
+    - RVALID  : 1
+      RDATA   : "32'h01234567"
+      RLAST   : 1
+      RRESP   : 1
+    - WAIT    : {RVALID: 1, RREADY: 1, TIMEOUT: 100}
+    - RVALID  : 0
+      RDATA   : "32'h00000000"
+      RLAST   : 0
+      RRESP   : 0
+---
+- MARCHAL:
+  - SAY: >
+       AIX DUMMU-PLUG SAMPLE SCENARIO 1 4 DONE
 ---
 - - [MARCHAL,MASTER,SLAVE]
   - SAY: >

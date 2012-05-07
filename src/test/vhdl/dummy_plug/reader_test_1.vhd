@@ -53,6 +53,8 @@ begin
         variable  debug     : boolean := FALSE;
         file      stream    : TEXT;
         variable  r         : READER.READER_TYPE := READER.NEW_READER(NAME,TEST_FILE);
+        variable  get_event : READER.EVENT_TYPE;
+        variable  good      : boolean;
         --------------------------------------------------------------------------
         -- 
         --------------------------------------------------------------------------
@@ -508,6 +510,27 @@ begin
         event(READER.EVENT_SEQ_END                   );
         event(READER.EVENT_MAP_END                   );
         event(READER.EVENT_SEQ_END                   );
+        event(READER.EVENT_MAP_END                   );
+        event(READER.EVENT_SEQ_END                   );
+        event(READER.EVENT_DOC_END                   );
+        --------------------------------------------------------------------------
+        -- reader_test_1 8
+        --------------------------------------------------------------------------
+        event(READER.EVENT_DOC_BEGIN                 );
+        event(READER.EVENT_SEQ_BEGIN                 );
+        event(READER.EVENT_MAP_BEGIN                 );
+        event(READER.EVENT_SCALAR   ,"WAIT"          );
+        event(READER.EVENT_MAP_BEGIN                 );
+        event(READER.EVENT_SCALAR   ,"VALID"         );
+        event(READER.EVENT_SCALAR   ,0               );
+        event(READER.EVENT_SCALAR   ,"READY"         );
+        event(READER.EVENT_SCALAR   ,0               );
+        event(READER.EVENT_MAP_END                   );
+        event(READER.EVENT_MAP_END                   );
+        event(READER.EVENT_MAP_BEGIN                 );
+        event(READER.EVENT_SCALAR   ,"WAIT"          );
+        READER.SEEK_EVENT(r, stream, get_event);
+        SKIP_EVENT(r, stream, get_event, good);
         event(READER.EVENT_MAP_END                   );
         event(READER.EVENT_SEQ_END                   );
         event(READER.EVENT_DOC_END                   );
