@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    sync_alt.vhd
 --!     @brief   Package for Synchronize some dummy-plugs.
---!     @version 0.0.3
---!     @date    2012/5/4
+--!     @version 0.0.4
+--!     @date    2012/5/7
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -93,12 +93,14 @@ package SYNC is
     -------------------------------------------------------------------------------
     component SYNC_SIG_DRIVER
         generic (
+                 NAME     :       STRING;
                  PLUG_NUM :       SYNC_PLUG_NUM_TYPE
         );
         port (
                  CLK      : in    std_logic;
                  RST      : in    std_logic;
                  CLR      : in    std_logic;
+                 DEBUG    : in    boolean;
                  SYNC     : inout SYNC_SIG_TYPE;
                  REQ      : in    SYNC_REQ_TYPE;
                  ACK      : out   SYNC_ACK_TYPE
@@ -109,15 +111,25 @@ package SYNC is
     -------------------------------------------------------------------------------
     component SYNC_LOCAL_HUB
         generic (
+                 NAME     :       STRING;
                  PLUG_SIZE:       SYNC_PLUG_NUM_TYPE
         );
         port (
                  CLK      : in    std_logic;
                  RST      : in    std_logic;
                  CLR      : in    std_logic;
+                 DEBUG    : in    boolean;
+                 SYNC     : inout SYNC_SIG_TYPE;
                  REQ      : in    SYNC_REQ_VECTOR(1 to PLUG_SIZE);
                  ACK      : out   SYNC_ACK_VECTOR(1 to PLUG_SIZE)
         );
+    end component;
+    -------------------------------------------------------------------------------
+    --! @brief 同期信号の値を標準出力に出力するコンポーネント.
+    -------------------------------------------------------------------------------
+    component SYNC_PRINT
+        generic( NAME     :       STRING);
+        port   ( SYNC     : in    SYNC_SIG_TYPE);
     end component;
 end package;
 -----------------------------------------------------------------------------------
@@ -219,17 +231,20 @@ library ieee;
 use     ieee.std_logic_1164.all;
 library DUMMY_PLUG;
 use     DUMMY_PLUG.SYNC.all;
+use     DUMMY_PLUG.UTIL.INTEGER_TO_STRING;
 -----------------------------------------------------------------------------------
 --! @brief モデル間同期(SYNC)信号を制御するコンポーネント.
 -----------------------------------------------------------------------------------
 entity  SYNC_SIG_DRIVER is
     generic (
+        NAME     :       STRING;
         PLUG_NUM :       SYNC_PLUG_NUM_TYPE
     );
     port (
         CLK      : in    std_logic;
         RST      : in    std_logic;
         CLR      : in    std_logic;
+        DEBUG    : in    boolean;
         SYNC     : inout SYNC_SIG_TYPE;
         REQ      : in    SYNC_REQ_TYPE;
         ACK      : out   SYNC_ACK_TYPE
@@ -237,10 +252,14 @@ entity  SYNC_SIG_DRIVER is
 end     SYNC_SIG_DRIVER;
 architecture MODEL of SYNC_SIG_DRIVER is
   component SYNC_SIG_DRIVER_SUB_UNIT
+    generic (
+        NAME     :       STRING
+    );
     port (
         CLK      : in    std_logic;
         RST      : in    std_logic;
         CLR      : in    std_logic;
+        DEBUG    : in    boolean;
         SYNC_I   : in    SYNC_SIG_TYPE;
         SYNC_O   : out   std_logic;
         REQ      : in    integer  ;
@@ -248,15 +267,20 @@ architecture MODEL of SYNC_SIG_DRIVER is
     );
   end component;
 begin
-    U: SYNC_SIG_DRIVER_SUB_UNIT port map(
-        CLK      => CLK,
-        RST      => RST,
-        CLR      => CLR,
-        SYNC_I   => SYNC,
-        SYNC_O   => SYNC(PLUG_NUM),
-        REQ      => REQ,
-        ACK      => ACK
-    );
+    U: SYNC_SIG_DRIVER_SUB_UNIT
+        generic map (
+            NAME     => NAME & "(" & INTEGER_TO_STRING(PLUG_NUM) & ")"
+        )
+        port map(
+            CLK      => CLK,
+            RST      => RST,
+            CLR      => CLR,
+            DEBUG    => DEBUG,
+            SYNC_I   => SYNC,
+            SYNC_O   => SYNC(PLUG_NUM),
+            REQ      => REQ,
+            ACK      => ACK
+        );
 end MODEL;
 -----------------------------------------------------------------------------------
 -- SYNC_SIG_DRIVER_SUB_UNIT :
@@ -270,10 +294,14 @@ use     DUMMY_PLUG.SYNC.all;
 --! @brief モデル間同期(SYNC)信号を制御するコンポーネントのサブユニット.
 -----------------------------------------------------------------------------------
 entity  SYNC_SIG_DRIVER_SUB_UNIT is
+    generic (
+        NAME     :       STRING
+    );
     port (
         CLK      : in    std_logic;
         RST      : in    std_logic;
         CLR      : in    std_logic;
+        DEBUG    : in    boolean;
         SYNC_I   : in    SYNC_SIG_TYPE;
         SYNC_O   : out   std_logic;
         REQ      : in    SYNC_REQ_TYPE;
@@ -298,6 +326,16 @@ architecture MODEL of SYNC_SIG_DRIVER_SUB_UNIT is
             return false;
         end if;
     end function;
+    procedure REPORT_DEBUG(MESSAGE: STRING) is
+        variable text_line  : line;
+    begin
+        if (DEBUG) then
+            WRITE(text_line, Now, RIGHT,  13);
+            WRITE(text_line, string'(" (") & NAME & ") SYNC_SIG_DRIVER:");
+            WRITE(text_line, MESSAGE);
+            WRITELINE(OUTPUT, text_line);
+        end if;
+    end procedure;
 begin
     process 
         variable sync_delay : integer;
@@ -306,6 +344,7 @@ begin
         ACK    <= '0';
         SYNC_LOOP: loop
             if (REQ > 0) then
+                REPORT_DEBUG(string'("REQ>0"));
                 sync_delay := REQ;
                 if (sync_delay >= 2) then
                     for i in 2 to sync_delay loop
@@ -313,14 +352,20 @@ begin
                     end loop;
                 end if;
                 SYNC_O <= 'H';
+                REPORT_DEBUG(string'("WAIT SYNC START"));
                 wait until (ALL_ONE(SYNC_I));
+                REPORT_DEBUG(string'("WAIT SYNC DONE"));
                 SYNC_O <= '0';
                 ACK    <= '1';
+                REPORT_DEBUG(string'("WAIT REQ START"));
                 wait until (REQ = 0);
+                REPORT_DEBUG(string'("WAIT REQ DONE"));
                 ACK    <= '0';
             elsif (REQ = 0) then
+                REPORT_DEBUG(string'("REQ=0"));
                 SYNC_O <= '0';
             else
+                REPORT_DEBUG(string'("REQ<0"));
                 SYNC_O <= 'Z';
             end if;
             wait on REQ;
@@ -334,34 +379,72 @@ library ieee;
 use     ieee.std_logic_1164.all;
 library DUMMY_PLUG;
 use     DUMMY_PLUG.SYNC.all;
+use     DUMMY_PLUG.UTIL.INTEGER_TO_STRING;
 -----------------------------------------------------------------------------------
 --! @brief モジュール内でローカルにモデル間同期するためのコンポーネント.
 -----------------------------------------------------------------------------------
 entity SYNC_LOCAL_HUB is
     generic (
+        NAME     :       STRING;
         PLUG_SIZE:       SYNC_PLUG_NUM_TYPE
     );
     port (
         CLK      : in    std_logic;
         RST      : in    std_logic;
         CLR      : in    std_logic;
+        DEBUG    : in    boolean;
+        SYNC     : inout SYNC_SIG_TYPE;
         REQ      : in    SYNC_REQ_VECTOR(1 to PLUG_SIZE);
         ACK      : out   SYNC_ACK_VECTOR(1 to PLUG_SIZE)
     );
 end SYNC_LOCAL_HUB;
 architecture MODEL of SYNC_LOCAL_HUB is
-    signal   sync     : SYNC_SIG_TYPE;
 begin
     PLUG : for i in 1 to PLUG_SIZE generate
-        DRIVER : SYNC_SIG_DRIVER generic map (i) port map (
-            CLK      => CLK   ,   --! In  : 
-            RST      => RST   ,   --! In  : 
-            CLR      => CLR   ,   --! In  : 
-            SYNC     => sync  ,   --! I/O : 
-            REQ      => REQ(i),   --! In  : 
-            ACK      => ACK(i)    --! Out : 
-        );
+        DRIVER : SYNC_SIG_DRIVER
+            generic map (
+                NAME     => NAME & "(" & INTEGER_TO_STRING(i) & ")",
+                PLUG_NUM => i
+            )
+            port map (
+                CLK      => CLK   ,   --! In  : 
+                RST      => RST   ,   --! In  : 
+                CLR      => CLR   ,   --! In  : 
+                DEBUG    => DEBUG ,   --! In  : 
+                SYNC     => sync  ,   --! I/O : 
+                REQ      => REQ(i),   --! In  : 
+                ACK      => ACK(i)    --! Out : 
+            );
     end generate;
+end MODEL;
+-----------------------------------------------------------------------------------
+-- 
+-----------------------------------------------------------------------------------
+library ieee;
+use     ieee.std_logic_1164.all;
+use     std.textio.all;
+library DUMMY_PLUG;
+use     DUMMY_PLUG.SYNC.all;
+use     DUMMY_PLUG.UTIL.BIN_TO_STRING;
+-----------------------------------------------------------------------------------
+--! @brief 同期信号の値を標準出力に出力するコンポーネント.
+-----------------------------------------------------------------------------------
+entity  SYNC_PRINT is
+    generic(NAME:    STRING       );
+    port   (SYNC: in SYNC_SIG_TYPE);
+end SYNC_PRINT;
+architecture MODEL of SYNC_PRINT is
+begin
+    process (SYNC)
+        variable text_line : line;
+    begin
+        WRITE(text_line, Now, RIGHT,  13);
+        WRITE(text_line, string'(" (") & NAME & ") ");
+        for i in SYNC'range loop
+            WRITE(text_line, BIN_TO_STRING(SYNC(i)));
+        end loop;
+        WRITELINE(OUTPUT, text_line);
+    end process;
 end MODEL;
 ----------------------------------------------------------------------------------
 --
