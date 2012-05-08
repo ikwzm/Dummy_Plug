@@ -373,18 +373,12 @@ begin
         -- キーワードの定義.
         ---------------------------------------------------------------------------
         subtype   KEYWORD_TYPE is STRING(1 to 5);
-        function  GENERATE_KEY_CHANNEL return KEYWORD_TYPE is
-        begin
-            case CHANNEL is
-                when AXI4_CHANNEL_AR => return string'("AR   ");
-                when AXI4_CHANNEL_AW => return string'("AW   ");
-                when AXI4_CHANNEL_R  => return string'("R    ");
-                when AXI4_CHANNEL_W  => return string'("W    ");
-                when AXI4_CHANNEL_B  => return string'("B    ");
-                when others          => return string'("     ");
-            end case;
-        end function;
-        constant  KEY_CHANNEL   : KEYWORD_TYPE := GENERATE_KEY_CHANNEL;
+        constant  KEY_NULL      : KEYWORD_TYPE := "     ";
+        constant  KEY_AR        : KEYWORD_TYPE := "AR   ";
+        constant  KEY_AW        : KEYWORD_TYPE := "AW   ";
+        constant  KEY_W         : KEYWORD_TYPE := "W    ";
+        constant  KEY_R         : KEYWORD_TYPE := "R    ";
+        constant  KEY_B         : KEYWORD_TYPE := "B    ";
         constant  KEY_SAY       : KEYWORD_TYPE := "SAY  ";
         constant  KEY_SYNC      : KEYWORD_TYPE := "SYNC ";
         constant  KEY_WAIT      : KEYWORD_TYPE := "WAIT ";
@@ -393,6 +387,18 @@ begin
         constant  KEY_PORT      : KEYWORD_TYPE := "PORT ";
         constant  KEY_LOCAL     : KEYWORD_TYPE := "LOCAL";
         constant  KEY_TIMEOUT   : KEYWORD_TYPE := "TIMEO";
+        function  GENERATE_KEY_CHANNEL return KEYWORD_TYPE is
+        begin
+            case CHANNEL is
+                when AXI4_CHANNEL_AR => return KEY_AR;
+                when AXI4_CHANNEL_AW => return KEY_AW;
+                when AXI4_CHANNEL_R  => return KEY_R;
+                when AXI4_CHANNEL_W  => return KEY_W;
+                when AXI4_CHANNEL_B  => return KEY_B;
+                when others          => return KEY_NULL;
+            end case;
+        end function;
+        constant  KEY_CHANNEL   : KEYWORD_TYPE := GENERATE_KEY_CHANNEL;
         ---------------------------------------------------------------------------
         -- 各種変数の定義.
         ---------------------------------------------------------------------------
@@ -897,17 +903,22 @@ begin
                     when OP_MAP    =>
                         REPORT_DEBUG(core, string'("MAIN_LOOP:OP_MAP(") & keyword & ")");
                         case keyword is
+                            when KEY_AR    |
+                                 KEY_AW    |
+                                 KEY_R     |
+                                 KEY_W     |
+                                 KEY_B     => EXECUTE_SKIP(core, stream);
                             when KEY_SAY   => EXECUTE_SAY (core, stream);
                             when KEY_SYNC  => EXECUTE_SYNC(operation);
                             when KEY_WAIT  => EXECUTE_WAIT;
                             when KEY_DEBUG => EXECUTE_DEBUG;
                             when KEY_CHECK => EXECUTE_CHECK;
-                            when others    => EXECUTE_SKIP(core, stream);
+                            when others    => EXECUTE_UNDEFINED_MAP_KEY(keyword);
                         end case;
                     when OP_SCALAR =>
                         case keyword is
                             when KEY_SYNC  => EXECUTE_SYNC(operation);
-                            when others    => null;
+                            when others    => EXECUTE_UNDEFINED_SCALAR(keyword);
                         end case;
                     when OP_FINISH => exit;
                     when others    => null;
@@ -934,7 +945,7 @@ begin
                         if (keyword = KEY_SYNC) then
                             LOCAL_SYNC;
                         else
-                            EXECUTE_UNDEFINED_SCALAR(core, stream, keyword);
+                            EXECUTE_UNDEFINED_SCALAR(keyword);
                         end if;
                     when OP_FINISH      => exit;
                     when others         => null;

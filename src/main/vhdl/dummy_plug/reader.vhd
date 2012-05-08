@@ -2816,10 +2816,17 @@ package body  READER is
                 when EVENT_STREAM_END =>
                     READ_EVENT(SELF, STREAM, next_event, read_good);
                     skip_done := TRUE;
+                when EVENT_ERROR     =>
+                    read_good := FALSE;
+                    skip_done := TRUE;
                 when others => 
                     READ_EVENT(SELF, STREAM, next_event, read_good);
             end case;
         end loop;
+        if (read_good = FALSE) then
+            GOOD := FALSE;
+            return;
+        end if;
         get_struct_state(SELF, state, indent);
         SEEK_EVENT(SELF, STREAM, next_event);
         case next_event is
@@ -2844,13 +2851,8 @@ package body  READER is
     ) is
         variable skip_buf   :       string(1 to 1);  --! どうせ捨てるので少なくてもかまわない.
         variable skip_len   :       integer;
-        variable skip_good  :       boolean;
     begin
-        SKIP_EVENT(SELF, STREAM, EVENT, skip_buf, skip_len, skip_good);
-        GOOD := skip_good;
-        if (skip_good = FALSE) then
-            DEBUG_DUMP(SELF, string'("SKIP_EVENT ERROR"));
-        end if;
+        SKIP_EVENT(SELF, STREAM, EVENT, skip_buf, skip_len, GOOD);
     end procedure;
     ------------------------------------------------------------------------------
     --! @brief イベントに対応した文字列.
@@ -2960,26 +2962,26 @@ package body  READER is
         variable mapkey     :       MAPKEY_MODE;
     begin
         get_struct_state(SELF, state, indent, mapkey);
-        WRITE(line, "name       : " & SELF.name     (SELF.name'range)     );
+        WRITE(line, "   name       : " & SELF.name     (SELF.name'range)     );
         WRITELINE(OUTPUT, line);
-        WRITE(line, "stream_name  : " & SELF.stream_name(SELF.stream_name'range) &
-                                  "(" & INTEGER_TO_STRING(SELF.line_num) &
-                                  "," & INTEGER_TO_STRING(SELF.text_pos) &
-                                  "," & INTEGER_TO_STRING(SELF.text_end) & ")");
+        WRITE(line, "   stream_name: " & SELF.stream_name(SELF.stream_name'range) &
+                                   "(" & INTEGER_TO_STRING(SELF.line_num) &
+                                   "," & INTEGER_TO_STRING(SELF.text_pos) &
+                                   "," & INTEGER_TO_STRING(SELF.text_end) & ")");
         WRITELINE(OUTPUT, line);
-        WRITE(line, "curr_state : " & struct_state_to_string(state,indent,mapkey));
+        WRITE(line, "   curr_state : " & struct_state_to_string(state,indent,mapkey));
         WRITELINE(OUTPUT, line);
         for i in SELF.state_top-1 downto SELF.state_stack'low loop
             unpack_struct_state_value(SELF.state_stack(i),state,indent,mapkey);
-            WRITE(line, "prev_state : " & struct_state_to_string(state,indent,mapkey));
+            WRITE(line, "   prev_state : " & struct_state_to_string(state,indent,mapkey));
             WRITELINE(OUTPUT, line);
         end loop;
         if (SELF.text_line = null) then
-            WRITE(line, string'("text_line  : null "));
+            WRITE(line, string'("   text_line  : null "));
         else
-            WRITE(line, "text_line  : " & SELF.text_line(SELF.text_line'range));
+            WRITE(line, "   text_line  : " & SELF.text_line(SELF.text_line'range));
             WRITELINE(OUTPUT, line);
-            WRITE(line, string'("            |"));
+            WRITE(line, string'("               |"));
             for i in SELF.text_line'low to SELF.text_line'high loop
                 if (i = POS) then
                     WRITE(line, string'("^"));
