@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    core.vhd
 --!     @brief   Core Package for Dummy Plug.
---!     @version 0.0.4
---!     @date    2012/5/7
+--!     @version 0.0.5
+--!     @date    2012/5/8
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -160,8 +160,7 @@ package CORE is
     procedure READ_EVENT(
         variable SELF       : inout CORE_TYPE;            --! コア変数.
         file     STREAM     :       TEXT;                 --! 入力ストリーム.
-                 EVENT      : in    READER.EVENT_TYPE;    --! 読み取るイベント.
-                 GOOD       : out   boolean               --! 正常に読み取れたことを示す.
+                 EVENT      : in    READER.EVENT_TYPE     --! 読み取るイベント.
     );
     -------------------------------------------------------------------------------
     --! @brief ストリームからEVENTを読み飛ばすサブプログラム.
@@ -171,8 +170,7 @@ package CORE is
     procedure SKIP_EVENT(
         variable SELF       : inout CORE_TYPE;            --! コア変数.
         file     STREAM     :       TEXT;                 --! 入力ストリーム.
-                 EVENT      : in    READER.EVENT_TYPE;    --! 読み飛ばすイベント.
-                 GOOD       : out   boolean               --! 正常に読み取れたことを示す.
+                 EVENT      : in    READER.EVENT_TYPE     --! 読み飛ばすイベント.
     );
     -------------------------------------------------------------------------------
     --! @brief ストリームから読んだスカラーとキーワードがマッチするかどうか調べる.
@@ -425,12 +423,15 @@ package body CORE is
     procedure READ_EVENT(
         variable SELF       : inout CORE_TYPE;            --! コア変数.
         file     STREAM     :       TEXT;                 --! 入力ストリーム.
-                 EVENT      : in    EVENT_TYPE;           --! 読み取るイベント.
-                 GOOD       : out   boolean               --! 正常に読み取れたことを示す.
+                 EVENT      : in    EVENT_TYPE            --! 読み取るイベント.
     ) is
         variable read_len   :       integer;
+        variable read_good  :       boolean;
     begin 
-        READ_EVENT(SELF.reader, STREAM, EVENT, SELF.str_buf, SELF.str_len, read_len, GOOD);
+        READ_EVENT(SELF.reader, STREAM, EVENT, SELF.str_buf, SELF.str_len, read_len, read_good);
+        if (read_good = FALSE) then
+            EXECUTE_ABORT(SELF, string'("READ_EVENT:Read Error"));
+        end if;
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief ストリームからEVENTを読み飛ばすサブプログラム.
@@ -440,11 +441,14 @@ package body CORE is
     procedure SKIP_EVENT(
         variable SELF       : inout CORE_TYPE;            --! コア変数.
         file     STREAM     :       TEXT;                 --! 入力ストリーム.
-                 EVENT      : in    EVENT_TYPE;           --! 読み飛ばすイベント.
-                 GOOD       : out   boolean               --! 正常に読み取れたことを示す.
+                 EVENT      : in    EVENT_TYPE            --! 読み飛ばすイベント.
     ) is
+        variable skip_good  :       boolean;
     begin
-        SKIP_EVENT(SELF.reader, STREAM, EVENT, GOOD);
+        SKIP_EVENT(SELF.reader, STREAM, EVENT, skip_good);
+        if (skip_good = FALSE) then
+            EXECUTE_ABORT(SELF, string'("SKIP_EVENT:Read Error"));
+        end if;
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief ストリームから読んだスカラーとキーワードがマッチするかどうか調べる.
@@ -471,8 +475,6 @@ package body CORE is
         variable FOUND      : out   boolean               --! 名前があるかどうかを返す.
     ) is
         variable get_event  :       EVENT_TYPE;
-        variable read_good  :       boolean;
-        variable read_len   :       integer;
         variable seq_level  :       integer;
         variable match      :       boolean;
     begin
@@ -482,16 +484,16 @@ package body CORE is
             SEEK_EVENT(SELF, STREAM, get_event);
             case get_event is
                 when EVENT_SEQ_BEGIN  =>
-                    READ_EVENT(SELF, STREAM, get_event, read_good);
+                    READ_EVENT(SELF, STREAM, get_event);
                     seq_level := seq_level + 1;
                 when EVENT_SEQ_END    =>
                     if (seq_level > 0) then
-                        READ_EVENT(SELF, STREAM, get_event, read_good);
+                        READ_EVENT(SELF, STREAM, get_event);
                         seq_level := seq_level - 1;
                     end if;
                     exit when (seq_level = 0);
                 when EVENT_SCALAR     =>
-                    READ_EVENT(SELF, STREAM, get_event, read_good);
+                    READ_EVENT(SELF, STREAM, get_event);
                     MATCH_KEY_WORD(SELF, SELF.name(SELF.name'range), match);
                     if (match) then
                         FOUND := TRUE;
@@ -500,7 +502,7 @@ package body CORE is
                 when EVENT_ERROR     =>
                     EXECUTE_ABORT(SELF, string'("Check_My_Name:Read Error"));
                 when others =>
-                    SKIP_EVENT(SELF, STREAM, get_event, read_good);
+                    SKIP_EVENT(SELF, STREAM, get_event);
             end case;
         end loop;
     end procedure;
@@ -514,8 +516,6 @@ package body CORE is
         variable NEXT_STATE : out   STATE_TYPE            --! 次に遷移する状態.
     ) is
         variable next_event :       EVENT_TYPE;
-        variable read_good  :       boolean;
-        variable skip_good  :       boolean;
         variable found      :       boolean;
     begin
         CHECK_LOOP: loop
@@ -532,19 +532,19 @@ package body CORE is
                 -- * 例２ ID: [{...},{...}]
                 -------------------------------------------------------------------
                 when EVENT_MAP_BEGIN =>
-                    READ_EVENT(SELF, STREAM, next_event, read_good);
+                    READ_EVENT(SELF, STREAM, next_event);
                     check_my_name(SELF, STREAM, found);
                     if (found) then
                         SEEK_EVENT(SELF, STREAM, next_event);
                         if (next_event = EVENT_SEQ_BEGIN) then
-                            READ_EVENT(SELF, STREAM, next_event, read_good);
+                            READ_EVENT(SELF, STREAM, next_event);
                             NEXT_STATE := STATE_MAP_SEQ;
                         else
                             NEXT_STATE := STATE_MAP_VAL;
                         end if;
                     else
                         SEEK_EVENT(SELF, STREAM, next_event);
-                        SKIP_EVENT(SELF, STREAM, next_event, skip_good);
+                        SKIP_EVENT(SELF, STREAM, next_event);
                         NEXT_STATE := STATE_TOP_SEQ;
                     end if;
                     exit;
@@ -553,7 +553,7 @@ package body CORE is
                 -- * 例１ [ID, {...}]
                 -------------------------------------------------------------------
                 when EVENT_SEQ_BEGIN =>
-                    READ_EVENT(SELF, STREAM, next_event, read_good);
+                    READ_EVENT(SELF, STREAM, next_event);
                     check_my_name(SELF, STREAM, found);
                     if (found) then
                         NEXT_STATE := STATE_SEQ_VAL;
@@ -565,13 +565,13 @@ package body CORE is
                 -- 最初のノードがTAG PROPERTYまたはアンカーの場合は単純に読み飛ばす.
                 -------------------------------------------------------------------
                 when EVENT_TAG_PROP | EVENT_ANCHOR =>
-                    SKIP_EVENT(SELF, STREAM, next_event, skip_good);
+                    SKIP_EVENT(SELF, STREAM, next_event);
                     next;
                 -------------------------------------------------------------------
                 -- 最初のノードがマップでもシーケンスでもなかった場合はエラー.
                 -------------------------------------------------------------------
                 when others =>
-                    SKIP_EVENT(SELF, STREAM, next_event, skip_good);
+                    SKIP_EVENT(SELF, STREAM, next_event);
                     NEXT_STATE := STATE_TOP_SEQ;
                     exit;
             end case;
@@ -640,9 +640,6 @@ package body CORE is
     ) is
         variable next_event :       EVENT_TYPE;
         variable next_state :       STATE_TYPE;
-        variable read_good  :       boolean;
-        variable skip_good  :       boolean;
-        variable read_len   : integer;
         procedure REPORT_DEBUG(state:in STRING;event:EVENT_TYPE) is
         begin
             REPORT_DEBUG(SELF, string'("CORE_MAIN(state=") & state & 
@@ -666,17 +663,17 @@ package body CORE is
                     REPORT_DEBUG(string'("STATE_STREAM"),next_event);
                     case next_event is
                         when EVENT_DOC_BEGIN  => 
-                            READ_EVENT(SELF, STREAM, next_event, read_good);
+                            READ_EVENT(SELF, STREAM, next_event);
                             SELF.curr_state := STATE_DOCUMENT;
                             OPERATION       := OP_DOC_BEGIN;
                             exit;
                         when EVENT_STREAM_END =>
-                            READ_EVENT(SELF, STREAM, next_event, read_good);
+                            READ_EVENT(SELF, STREAM, next_event);
                             SELF.curr_state := STATE_NULL;
                             OPERATION       := OP_FINISH;
                             exit;
                         when others =>
-                            SKIP_EVENT(SELF, STREAM, next_event, skip_good);
+                            SKIP_EVENT(SELF, STREAM, next_event);
                     end case;
                 -------------------------------------------------------------------
                 -- ドキュメント処理中.
@@ -685,15 +682,15 @@ package body CORE is
                     REPORT_DEBUG(string'("STATE_DOCUMENT"), next_event);
                     case next_event is
                         when EVENT_SEQ_BEGIN =>
-                            READ_EVENT(SELF, STREAM, next_event, read_good);
+                            READ_EVENT(SELF, STREAM, next_event);
                             SELF.curr_state := STATE_TOP_SEQ;
                         when EVENT_DOC_END   =>
-                            READ_EVENT(SELF, STREAM, next_event, read_good);
+                            READ_EVENT(SELF, STREAM, next_event);
                             SELF.curr_state := STATE_STREAM;
                             OPERATION       := OP_DOC_END;
                             exit;
                         when others =>
-                            READ_EVENT(SELF, STREAM, next_event, read_good);
+                            READ_EVENT(SELF, STREAM, next_event);
                             -- ERROR
                     end case;
                 -------------------------------------------------------------------
@@ -708,7 +705,7 @@ package body CORE is
                     REPORT_DEBUG(string'("STATE_TOP_SEQ"), next_event);
                     case next_event is
                         when EVENT_SEQ_END =>
-                            READ_EVENT(SELF, STREAM, next_event, read_good);
+                            READ_EVENT(SELF, STREAM, next_event);
                             SELF.curr_state := STATE_DOCUMENT;
                         when others =>
                             check_first_node(SELF, STREAM, next_state);
@@ -721,23 +718,23 @@ package body CORE is
                     REPORT_DEBUG(string'("STATE_MAP_VAL"), next_event);
                     case next_event is
                         when EVENT_MAP_BEGIN =>
-                            READ_EVENT(SELF, STREAM, next_event, read_good);
+                            READ_EVENT(SELF, STREAM, next_event);
                             SEEK_EVENT(SELF, STREAM, next_event);
-                            READ_EVENT(SELF, STREAM, next_event, read_good);
+                            READ_EVENT(SELF, STREAM, next_event);
                             COPY_KEY_WORD(SELF, OP_WORD);
                             SELF.curr_state := STATE_OP_MAP;
                             SELF.prev_state := STATE_MAP_END;
                             OPERATION       := OP_MAP;
                             exit;
                         when EVENT_SCALAR =>
-                            READ_EVENT(SELF, STREAM, next_event, read_good);
+                            READ_EVENT(SELF, STREAM, next_event);
                             COPY_KEY_WORD(SELF, OP_WORD);
                             SELF.curr_state := STATE_OP_SCALAR;
                             SELF.prev_state := STATE_TOP_SEQ;
                             OPERATION       := OP_SCALAR;
                             exit;
                         when others =>
-                            SKIP_EVENT(SELF, STREAM, next_event, skip_good);
+                            SKIP_EVENT(SELF, STREAM, next_event);
                     end case;
                 -------------------------------------------------------------------
                 -- ID:[{...},{...}] を処理する状態.
@@ -746,26 +743,26 @@ package body CORE is
                     REPORT_DEBUG(string'("STATE_MAP_SEQ"), next_event);
                     case next_event is
                         when EVENT_SEQ_END =>
-                            READ_EVENT(SELF, STREAM, next_event, read_good);
+                            READ_EVENT(SELF, STREAM, next_event);
                             SELF.curr_state := STATE_MAP_END;
                         when EVENT_MAP_BEGIN =>
-                            READ_EVENT(SELF, STREAM, next_event, read_good);
+                            READ_EVENT(SELF, STREAM, next_event);
                             SEEK_EVENT(SELF, STREAM, next_event);
-                            READ_EVENT(SELF, STREAM, next_event, read_good);
+                            READ_EVENT(SELF, STREAM, next_event);
                             COPY_KEY_WORD(SELF, OP_WORD);
                             SELF.curr_state := STATE_OP_MAP;
                             SELF.prev_state := STATE_MAP_SEQ;
                             OPERATION       := OP_MAP;
                             exit;
                         when EVENT_SCALAR =>
-                            READ_EVENT(SELF, STREAM, next_event, read_good);
+                            READ_EVENT(SELF, STREAM, next_event);
                             COPY_KEY_WORD(SELF, OP_WORD);
                             SELF.curr_state := STATE_OP_SCALAR;
                             SELF.prev_state := STATE_MAP_SEQ;
                             OPERATION       := OP_SCALAR;
                             exit;
                         when others =>
-                            SKIP_EVENT(SELF, STREAM, next_event, skip_good);
+                            SKIP_EVENT(SELF, STREAM, next_event);
                     end case;
                 -------------------------------------------------------------------
                 -- [ID,{...},{...}] を処理する状態.
@@ -774,26 +771,26 @@ package body CORE is
                     REPORT_DEBUG(string'("STATE_SEQ_VAL"), next_event);
                     case next_event is
                         when EVENT_SEQ_END =>
-                            READ_EVENT(SELF, STREAM, next_event, read_good);
+                            READ_EVENT(SELF, STREAM, next_event);
                             SELF.curr_state := STATE_TOP_SEQ;
                         when EVENT_MAP_BEGIN =>
-                            READ_EVENT(SELF, STREAM, next_event, read_good);
+                            READ_EVENT(SELF, STREAM, next_event);
                             SEEK_EVENT(SELF, STREAM, next_event);
-                            READ_EVENT(SELF, STREAM, next_event, read_good);
+                            READ_EVENT(SELF, STREAM, next_event);
                             COPY_KEY_WORD(SELF, OP_WORD);
                             SELF.curr_state := STATE_OP_MAP;
                             SELF.prev_state := STATE_SEQ_VAL;
                             OPERATION       := OP_MAP;
                             exit;
                         when EVENT_SCALAR =>
-                            READ_EVENT(SELF, STREAM, next_event, read_good);
+                            READ_EVENT(SELF, STREAM, next_event);
                             COPY_KEY_WORD(SELF, OP_WORD);
                             SELF.curr_state := STATE_OP_SCALAR;
                             SELF.prev_state := STATE_SEQ_VAL;
                             OPERATION       := OP_SCALAR;
                             exit;
                         when others =>
-                            SKIP_EVENT(SELF, STREAM, next_event, skip_good);
+                            SKIP_EVENT(SELF, STREAM, next_event);
                     end case;
                 -------------------------------------------------------------------
                 -- [ID,{...},{...}]を読み飛ばす状態.
@@ -802,10 +799,10 @@ package body CORE is
                     REPORT_DEBUG(string'("STATE_SEQ_SKIP"), next_event);
                     case next_event is
                         when EVENT_SEQ_END =>
-                            READ_EVENT(SELF, STREAM, next_event, read_good);
+                            READ_EVENT(SELF, STREAM, next_event);
                             SELF.curr_state := STATE_TOP_SEQ;
                         when others => 
-                            SKIP_EVENT(SELF, STREAM, next_event, skip_good);
+                            SKIP_EVENT(SELF, STREAM, next_event);
                     end case;
                 -------------------------------------------------------------------
                 -- {ID: {...}} または {ID: [{...},{...}]}の最後のEVENT_MAP_ENDを
@@ -815,10 +812,10 @@ package body CORE is
                     REPORT_DEBUG(string'("STATE_MAP_END"), next_event);
                     case next_event is
                         when EVENT_MAP_END =>
-                            READ_EVENT(SELF, STREAM, next_event, read_good);
+                            READ_EVENT(SELF, STREAM, next_event);
                             SELF.curr_state := STATE_TOP_SEQ;
                         when others =>
-                            SKIP_EVENT(SELF, STREAM, next_event, skip_good);
+                            SKIP_EVENT(SELF, STREAM, next_event);
                             SELF.curr_state := STATE_TOP_SEQ;
                             -- ERROR
                     end case;
@@ -829,10 +826,10 @@ package body CORE is
                     REPORT_DEBUG(string'("STATE_OP_MAP"), next_event);
                     case next_event is
                         when EVENT_MAP_END =>
-                            READ_EVENT(SELF, STREAM, next_event, read_good);
+                            READ_EVENT(SELF, STREAM, next_event);
                             SELF.curr_state := SELF.prev_state;
                         when others =>
-                            READ_EVENT(SELF, STREAM, next_event, read_good);
+                            READ_EVENT(SELF, STREAM, next_event);
                             SELF.curr_state := SELF.prev_state;
                             -- ERROR
                     end case;
@@ -872,15 +869,13 @@ package body CORE is
         file     STREAM     :       TEXT                  --! 入力ストリーム.
     ) is
         variable next_event :       EVENT_TYPE;
-        variable read_good  :       boolean;
-        variable skip_good  :       boolean;
     begin
         SEEK_EVENT(SELF, STREAM, next_event);
         if (next_event = EVENT_SCALAR) then
-            READ_EVENT(SELF, STREAM, next_event, read_good);
+            READ_EVENT(SELF, STREAM, next_event);
             SAY(SELF.vocal, SELF.str_buf(1 to SELF.str_len));
         else
-            SKIP_EVENT(SELF, STREAM, next_event, skip_good);
+            SKIP_EVENT(SELF, STREAM, next_event);
         end if;
     end procedure;
     -------------------------------------------------------------------------------
@@ -891,16 +886,12 @@ package body CORE is
         file     STREAM     :       TEXT                  --! 入力ストリーム.
     ) is
         variable next_event :       EVENT_TYPE;
-        variable read_good  :       boolean;
     begin
         SEEK_EVENT(SELF, STREAM, next_event);
         if (next_event /= EVENT_ERROR) then
-            SKIP_EVENT(SELF, STREAM, next_event, read_good);
-            if (read_good = FALSE) then
-                EXECUTE_ABORT(SELF, string'("EXECUTE SKIP:Read Error"));
-            end if;
+            SKIP_EVENT(SELF, STREAM, next_event);
         else
-                EXECUTE_ABORT(SELF, string'("EXECUTE SKIP:Read Error"));
+            EXECUTE_ABORT(SELF, string'("EXECUTE SKIP:Read Error"));
         end if;
     end procedure;
     -------------------------------------------------------------------------------
@@ -925,12 +916,11 @@ package body CORE is
                  OP_WORD    : in    STRING
    ) is
         variable next_event :       EVENT_TYPE;
-        variable read_good  :       boolean;
     begin
         REPORT_READ_ERROR(SELF.vocal, string'("Undefined Scalar Operation(") & OP_WORD & ")");
         DEBUG_DUMP(SELF.reader);
         SEEK_EVENT(SELF, STREAM, next_event);
-        SKIP_EVENT(SELF, STREAM, next_event, read_good);
+        SKIP_EVENT(SELF, STREAM, next_event);
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 致命的エラーによる中断.

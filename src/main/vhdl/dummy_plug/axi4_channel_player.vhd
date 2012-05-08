@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_channel_player.vhd
 --!     @brief   AXI4 A/R/W/B Channel Dummy Plug Player.
---!     @version 0.0.4
---!     @date    2012/5/7
+--!     @version 0.0.5
+--!     @date    2012/5/8
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -577,8 +577,6 @@ begin
         --! @brief DEBUGオペレーション.
         ---------------------------------------------------------------------------
         procedure EXECUTE_DEBUG is
-            variable read_good  : boolean;
-            variable skip_good  : boolean;
             variable scan_len   : integer;
             variable debug      : integer;
             variable next_event : EVENT_TYPE;
@@ -586,22 +584,20 @@ begin
             SEEK_EVENT(core, stream, next_event);
             case next_event is
                 when EVENT_SCALAR =>
-                    READ_EVENT(core, stream, EVENT_SCALAR, read_good);
+                    READ_EVENT(core, stream, EVENT_SCALAR);
                     SCAN_INTEGER(debug, scan_len);
-                    if (read_good = TRUE or scan_len > 0) then
+                    if (scan_len > 0) then
                         core.debug := debug;
                         REPORT_DEBUG(core, string'("EXECUTE_DEBUG ON"));
                     end if;
                 when others =>
-                    SKIP_EVENT(core, stream, next_event,   skip_good);
+                    SKIP_EVENT(core, stream, next_event);
             end case;
         end procedure;
         ---------------------------------------------------------------------------
         --! @brief CHECKオペレーション.信号が指定された値になっているかチェック.
         ---------------------------------------------------------------------------
         procedure EXECUTE_CHECK is
-            variable read_good  : boolean;
-            variable skip_good  : boolean;
             variable next_event : EVENT_TYPE;
             variable match      : boolean;
         begin
@@ -609,7 +605,7 @@ begin
             SEEK_EVENT(core, stream, next_event);
             case next_event is
                 when EVENT_MAP_BEGIN =>
-                    READ_EVENT(core, stream, EVENT_MAP_BEGIN, read_good);
+                    READ_EVENT(core, stream, EVENT_MAP_BEGIN);
                     chk_signals := AXI4_CHANNEL_SIGNAL_DONTCARE;
                     READ_AXI4_CHANNEL(
                         CORE       => core            ,  -- In :
@@ -620,10 +616,10 @@ begin
                     assert (next_event = EVENT_MAP_END)
                         report "Internal Read Error in " & FULL_NAME & " EXECUTE_CHECK"
                         severity FAILURE;
-                    READ_EVENT(core, stream, EVENT_MAP_END, read_good);
+                    READ_EVENT(core, stream, EVENT_MAP_END);
                     MATCH_AXI4_CHANNEL(core, chk_signals, match);
                 when others =>
-                    SKIP_EVENT(core, stream, next_event,    skip_good);
+                    SKIP_EVENT(core, stream, next_event);
                     -- ERROR
             end case;
             REPORT_DEBUG(core, string'("EXECUTE_CHECK END"));
@@ -632,8 +628,6 @@ begin
         --! @brief  WAITオペレーション. 指定された条件まで待機.
         ---------------------------------------------------------------------------
         procedure EXECUTE_WAIT is
-            variable read_good  : boolean;
-            variable skip_good  : boolean;
             variable next_event : EVENT_TYPE;
             variable wait_count : integer;
             variable scan_len   : integer;
@@ -645,9 +639,9 @@ begin
             SEEK_EVENT(core, stream, next_event);
             case next_event is
                 when EVENT_SCALAR =>
-                    READ_EVENT(core, stream, EVENT_SCALAR, read_good);
+                    READ_EVENT(core, stream, EVENT_SCALAR);
                     SCAN_INTEGER(wait_count, scan_len);
-                    if (read_good = FALSE or scan_len = 0) then
+                    if (scan_len = 0) then
                         wait_count := 1;
                     end if;
                     if (wait_count > 0) then
@@ -657,7 +651,7 @@ begin
                     end if;
                     wait_count := 0;
                 when EVENT_MAP_BEGIN =>
-                    READ_EVENT(core, stream, EVENT_MAP_BEGIN, read_good);
+                    READ_EVENT(core, stream, EVENT_MAP_BEGIN);
                     chk_signals := AXI4_CHANNEL_SIGNAL_DONTCARE;
                     MAP_LOOP: loop
                         REPORT_DEBUG(core, string'("EXECUTE_WAIT MAP_LOOP"));
@@ -673,13 +667,12 @@ begin
                                 case keyword is
                                     when KEY_TIMEOUT =>
                                         SEEK_EVENT(core, stream, next_event);
-                                        read_good := TRUE;
                                         scan_len  := 0;
                                         if (next_event = EVENT_SCALAR) then
-                                            READ_EVENT(core, stream, next_event, read_good);
+                                            READ_EVENT(core, stream, next_event);
                                             SCAN_INTEGER(timeout, scan_len);
                                         end if;
-                                        if (read_good = FALSE or scan_len = 0) then
+                                        if (scan_len = 0) then
                                             timeout := 10000000;
                                         end if;
                                     when others    => EXECUTE_UNDEFINED_MAP_KEY(keyword);
@@ -687,7 +680,7 @@ begin
                             when EVENT_MAP_END =>
                                 exit MAP_LOOP;
                             when others        =>
-                                SKIP_EVENT(core, stream, next_event,    skip_good);
+                                SKIP_EVENT(core, stream, next_event);
                                 -- ERROR
                         end case;
                     end loop;
@@ -702,7 +695,7 @@ begin
                         end if;
                     end loop;
                 when others =>
-                    SKIP_EVENT(core, stream, next_event,    skip_good);
+                    SKIP_EVENT(core, stream, next_event);
                     -- ERROR
             end case;
             REPORT_DEBUG(core, string'("EXECUTE_WAIT END"));
@@ -711,8 +704,6 @@ begin
         --! @brief  SYNCオペレーション. 
         ---------------------------------------------------------------------------
         procedure EXECUTE_SYNC(operation: in OPERATION_TYPE) is
-            variable read_good  : boolean;
-            variable skip_good  : boolean;
             variable next_event : EVENT_TYPE;
             variable port_num   : integer;
             variable wait_num   : integer;
@@ -734,15 +725,15 @@ begin
                         SEEK_EVENT(core, stream, next_event);
                         case next_event is
                             when EVENT_MAP_BEGIN =>
-                                READ_EVENT(core, stream, next_event, read_good);
+                                READ_EVENT(core, stream, next_event);
                                 map_level := map_level + 1;
                                 state     := STATE_MAP_KEY;
                             when EVENT_MAP_END   =>
-                                READ_EVENT(core, stream, next_event, read_good);
+                                READ_EVENT(core, stream, next_event);
                                 map_level := map_level - 1;
                                 state     := STATE_NULL;
                             when EVENT_SCALAR    =>
-                                READ_EVENT(core, stream, next_event, read_good);
+                                READ_EVENT(core, stream, next_event);
                                 case state is
                                     when STATE_MAP_KEY =>
                                         COPY_KEY_WORD(core, keyword);
@@ -772,15 +763,17 @@ begin
                                     when others =>
                                         state := STATE_MAP_KEY;
                                 end case;
+                            when EVENT_ERROR =>
+                                EXECUTE_ABORT(core, string'("EXECUTE_SYNC:Read Error"));
                             when others =>
-                                SKIP_EVENT(core, stream, next_event, skip_good);
+                                SKIP_EVENT(core, stream, next_event);
                         end case;
                         exit when (map_level = 0);
                     end loop;
-                    assert (next_event = EVENT_MAP_END)
-                        report "Internal Read Error in " & FULL_NAME & " EXECUTE_WAIT"
-                        severity FAILURE;
-                    READ_EVENT(core, stream, EVENT_MAP_END, read_good);
+                    if (next_event /= EVENT_MAP_END) then
+                        EXECUTE_ABORT(core, string'("EXECUTE_SYNC:Read Error"));
+                    end if;
+                    READ_EVENT(core, stream, EVENT_MAP_END);
                 when OP_DOC_BEGIN => null;
                 when OP_SCALAR    => null;
                 when others       => null;
@@ -795,20 +788,17 @@ begin
         --! @brief チャネルオペレーション(SCALAR)実行サブプログラム.
         ---------------------------------------------------------------------------
         procedure EXECUTE_CHANNEL_SCALAR_OPERATION is
-            variable skip_good : boolean;
         begin 
-            SKIP_EVENT(core, stream, EVENT_SCALAR, skip_good);
+            SKIP_EVENT(core, stream, EVENT_SCALAR);
         end procedure;
         ---------------------------------------------------------------------------
         --! @brief チャネルオペレーション(MAP)実行サブプログラム.
         ---------------------------------------------------------------------------
         procedure EXECUTE_CHANNEL_MAP_OPERATION is
             variable next_event : EVENT_TYPE;
-            variable read_good  : boolean;
-            variable skip_good  : boolean;
         begin
             REPORT_DEBUG(core, string'("EXECUTE_CHANNEL_MAP_OPERATION BEGIN"));
-            READ_EVENT(core, stream, EVENT_MAP_BEGIN, read_good);
+            READ_EVENT(core, stream, EVENT_MAP_BEGIN);
             MAP_LOOP: loop
                 READ_AXI4_CHANNEL(
                     CORE       => core            ,  -- In :
@@ -829,8 +819,10 @@ begin
                         end case;
                     when EVENT_MAP_END =>
                         exit MAP_LOOP;
+                    when EVENT_ERROR =>
+                        EXECUTE_ABORT(core, string'("EXECUTE_CHANNEL_MAP_OPERATION:Read Error"));
                     when others        =>
-                        SKIP_EVENT(core, stream, next_event,    skip_good);
+                        SKIP_EVENT(core, stream, next_event);
                         -- ERROR
                 end case;
             end loop;
@@ -841,8 +833,6 @@ begin
         ---------------------------------------------------------------------------
         procedure EXECUTE_CHANNEL_OPERATION is
             variable next_event : EVENT_TYPE;
-            variable read_good  : boolean;
-            variable skip_good  : boolean;
             variable seq_level  : integer;
         begin
             REPORT_DEBUG(core, string'("EXECUTE_CHANNEL_OPERATION BEGIN"));
@@ -851,17 +841,19 @@ begin
                 SEEK_EVENT(core, stream, next_event);
                 case next_event is
                     when EVENT_SEQ_BEGIN =>
-                        READ_EVENT(core, stream, EVENT_SEQ_BEGIN, read_good);
+                        READ_EVENT(core, stream, EVENT_SEQ_BEGIN);
                         seq_level := seq_level + 1;
                     when EVENT_SEQ_END   =>
-                        READ_EVENT(core, stream, EVENT_SEQ_END,   read_good);
+                        READ_EVENT(core, stream, EVENT_SEQ_END  );
                         seq_level := seq_level - 1;
                     when EVENT_MAP_BEGIN =>
                         EXECUTE_CHANNEL_MAP_OPERATION;
                     when EVENT_SCALAR    =>
                         EXECUTE_CHANNEL_SCALAR_OPERATION;
+                    when EVENT_ERROR     =>
+                        EXECUTE_ABORT(core, string'("EXECUTE_CHANNEL_OPERATION:Read Error"));
                     when others          =>
-                        SKIP_EVENT(core, stream, next_event,      skip_good);
+                        SKIP_EVENT(core, stream, next_event);
                         -- ERROR
                 end case;
                 exit when (seq_level <= 0);

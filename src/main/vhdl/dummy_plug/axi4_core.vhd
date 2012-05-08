@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_core.vhd
 --!     @brief   AXI4 Dummy Plug Core Package.
---!     @version 0.0.4
---!     @date    2012/5/7
+--!     @version 0.0.5
+--!     @date    2012/5/8
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -1274,15 +1274,12 @@ package body AXI4_CORE is
                  CURR_EVENT : out   READER.EVENT_TYPE
     ) is
         variable next_event :       EVENT_TYPE;
-        variable read_good  :       boolean;
-        variable skip_good  :       boolean;
         variable key_word   :       KEY_TYPE;
         procedure READ_VAL(VAL: out std_logic_vector) is
-            variable read_good : boolean;
             variable read_len  : integer;
             variable val_size  : integer;
         begin
-            READ_EVENT(SELF, STREAM, EVENT_SCALAR, read_good);
+            READ_EVENT(SELF, STREAM, EVENT_SCALAR);
             STRING_TO_STD_LOGIC_VECTOR(
               STR  => SELF.str_buf(1 to SELF.str_len),
               VAL  => VAL,
@@ -1291,12 +1288,11 @@ package body AXI4_CORE is
             );
         end procedure;
         procedure READ_VAL(VAL: out std_logic) is
-            variable read_good : boolean;
             variable read_len  : integer;
             variable val_size  : integer;
             variable vec       : std_logic_vector(0 downto 0);
         begin
-            READ_EVENT(SELF, STREAM, EVENT_SCALAR, read_good);
+            READ_EVENT(SELF, STREAM, EVENT_SCALAR);
             STRING_TO_STD_LOGIC_VECTOR(
               STR  => SELF.str_buf(1 to SELF.str_len),
               VAL  => vec,
@@ -1310,7 +1306,7 @@ package body AXI4_CORE is
             SEEK_EVENT(SELF, STREAM, next_event);
             case next_event is
                 when EVENT_SCALAR  =>
-                    READ_EVENT(SELF, STREAM, EVENT_SCALAR , read_good);
+                    READ_EVENT(SELF, STREAM, EVENT_SCALAR);
                     COPY_KEY_WORD(SELF, key_word);
                     case to_read_axi4_signal(key_word, CHANNEL, READ, WRITE) is
                         when READ_ARID     => READ_VAL(SIGNALS.AR.ID  (WIDTH.ID     -1 downto 0));
