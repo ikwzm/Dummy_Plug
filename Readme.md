@@ -1,14 +1,13 @@
-
 *Dummy Plug*
 ============
 
 ##Notice##
 
-*Dummy Plug* is at the moment(2012/5/3) but is not officially released yet.
+*Dummy Plug* is at the moment(2012/5/9) but is not officially released yet.
 
 ##What's *Dummy Plug*##
 
-*Dummy Plug* is a simple bus function model library written by VHDL Only.  
+*Dummy Plug* is a simple bus functional model library written by VHDL Only.  
 
 This models corresponds to the master and slave model of AXI4. 
 
