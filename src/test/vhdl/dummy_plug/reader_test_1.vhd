@@ -192,6 +192,10 @@ begin
         event(READER.EVENT_SCALAR   , "A"            );
         event(READER.EVENT_MAP_END                   );
         event(READER.EVENT_SCALAR   , 4              );
+        event(READER.EVENT_SCALAR   , 16#01234567#   );
+        event(READER.EVENT_SCALAR   , 16#89AB#       );
+        event(READER.EVENT_SCALAR   , 16#CDEF#       );
+        event(READER.EVENT_SCALAR   ,  8#76543210#   );
         event(READER.EVENT_SEQ_END                   );
         event(READER.EVENT_DOC_END                   );
         --------------------------------------------------------------------------

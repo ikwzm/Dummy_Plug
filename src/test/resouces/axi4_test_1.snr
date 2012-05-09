@@ -48,7 +48,7 @@
     - VALID : 0
       READY : 0
     - WAIT  : 10
-    - ADDR  : "32'h00000010"
+    - ADDR  : 0x00000010
       SIZE  : "'b010"
       VALID : 1
       READY : 1
@@ -59,7 +59,7 @@
     - VALID : 0
       READY : 0
     - WAIT  : {BVALID: 1, BREADY: 1, TIMEOUT: 100}
-    - ADDR  : "32'h00000012"
+    - ADDR  : 0x00000012
       SIZE  : "'b001"
       VALID : 1
       READY : 1
@@ -68,17 +68,19 @@
       READY : 0
   - W:
     - WAIT  : {AWVALID: 1, AWREADY: 1}
-    - DATA  : "32'h76543210"
+    - DATA  : 0x76543210
       LAST  : 0
       VALID : 1
       READY : 1
     - WAIT  : {VALID: 1, READY : 1}
-    - DATA  : "32'h76543210"
+    - DATA  : 0xFEDCBA89
       LAST  : 1
       VALID : 1
       READY : 1
     - WAIT  : {VALID: 1, READY : 1}
-    - VALID : 0
+    - DATA  : 0
+      LAST  : 0
+      VALID : 0
       READY : 0
   - B:
     - RESP  : 0
@@ -94,13 +96,13 @@
     - VALID : 0
       READY : 0
     - WAIT  : {ARVALID: 1, ARREADY: 1}
-    - DATA  : "32'h00010203"
+    - DATA  : 0x00010203
       LAST  : 0
       RESP  : 0
       VALID : 1
       READY : 1
     - WAIT  : {RVALID: 1, RREADY: 1}
-    - DATA  : "32'h04050607"
+    - DATA  : 0x04050607
       LAST  : 1
       RESP  : 0
       VALID : 1
@@ -108,7 +110,7 @@
     - WAIT   : {RVALID: 1, RREADY: 1}
     - VALID : 0
       READY : 0
-      DATA  : "32'h00000000"
+      DATA  : 0
       ID    : 0
       LAST  : 0
       RESP  : 0
