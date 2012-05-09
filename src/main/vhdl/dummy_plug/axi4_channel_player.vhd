@@ -2,7 +2,7 @@
 --!     @file    axi4_channel_player.vhd
 --!     @brief   AXI4 A/R/W/B Channel Dummy Plug Player.
 --!     @version 0.0.5
---!     @date    2012/5/8
+--!     @date    2012/5/9
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -224,6 +224,59 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
     -------------------------------------------------------------------------------
     --! 
     -------------------------------------------------------------------------------
+    procedure  WAIT_ON_AXI4_SIGNALS is
+    begin
+        wait on 
+            ACLK       , -- In  :
+            ARADDR_I   , -- In  :
+            ARLEN_I    , -- In  :
+            ARSIZE_I   , -- In  :
+            ARBURST_I  , -- In  :
+            ARLOCK_I   , -- In  :
+            ARCACHE_I  , -- In  :
+            ARPROT_I   , -- In  :
+            ARQOS_I    , -- In  :
+            ARREGION_I , -- In  :
+            ARUSER_I   , -- In  :
+            ARID_I     , -- In  :
+            ARVALID_I  , -- In  :
+            ARREADY_I  , -- In  :
+            AWADDR_I   , -- In  :
+            AWLEN_I    , -- In  :
+            AWSIZE_I   , -- In  :
+            AWBURST_I  , -- In  :
+            AWLOCK_I   , -- In  :
+            AWCACHE_I  , -- In  :
+            AWPROT_I   , -- In  :
+            AWQOS_I    , -- In  :
+            AWREGION_I , -- In  :
+            AWUSER_I   , -- In  :
+            AWID_I     , -- In  :
+            AWVALID_I  , -- In  :
+            AWREADY_I  , -- In  :
+            RLAST_I    , -- In  :
+            RDATA_I    , -- In  :
+            RRESP_I    , -- In  :
+            RUSER_I    , -- In  :
+            RID_I      , -- In  :
+            RVALID_I   , -- In  :
+            RREADY_I   , -- In  :
+            WLAST_I    , -- In  :
+            WDATA_I    , -- In  :
+            WSTRB_I    , -- In  :
+            WUSER_I    , -- In  :
+            WID_I      , -- In  :
+            WVALID_I   , -- In  :
+            WREADY_I   , -- In  :
+            BRESP_I    , -- In  :
+            BUSER_I    , -- In  :
+            BID_I      , -- In  :
+            BVALID_I   , -- In  :
+            BREADY_I   ; -- In  :
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! 
+    -------------------------------------------------------------------------------
     procedure  MATCH_AXI4_CHANNEL(
                  SIGNALS    : in    AXI4_CHANNEL_SIGNAL_TYPE;
                  MATCH      : out   boolean
@@ -387,6 +440,7 @@ begin
         constant  KEY_PORT      : KEYWORD_TYPE := "PORT ";
         constant  KEY_LOCAL     : KEYWORD_TYPE := "LOCAL";
         constant  KEY_TIMEOUT   : KEYWORD_TYPE := "TIMEO";
+        constant  KEY_WAIT_ON   : KEYWORD_TYPE := "ON   ";
         function  GENERATE_KEY_CHANNEL return KEYWORD_TYPE is
         begin
             case CHANNEL is
@@ -638,10 +692,12 @@ begin
             variable wait_count : integer;
             variable scan_len   : integer;
             variable timeout    : integer;
+            variable wait_mode  : integer;
             variable match      : boolean;
         begin
             REPORT_DEBUG(core, string'("EXECUTE_WAIT BEGIN"));
-            timeout := 10000000;
+            timeout   := DEFAULT_WAIT_TIMEOUT;
+            wait_mode := 0;
             SEEK_EVENT(core, stream, next_event);
             case next_event is
                 when EVENT_SCALAR =>
@@ -679,7 +735,17 @@ begin
                                             SCAN_INTEGER(timeout, scan_len);
                                         end if;
                                         if (scan_len = 0) then
-                                            timeout := 10000000;
+                                            timeout := DEFAULT_WAIT_TIMEOUT;
+                                        end if;
+                                    when KEY_WAIT_ON =>
+                                        SEEK_EVENT(core, stream, next_event);
+                                        scan_len  := 0;
+                                        if (next_event = EVENT_SCALAR) then
+                                            READ_EVENT(core, stream, next_event);
+                                            SCAN_INTEGER(wait_mode, scan_len);
+                                        end if;
+                                        if (scan_len = 0) then
+                                            wait_mode := 1;
                                         end if;
                                     when others    => EXECUTE_UNDEFINED_MAP_KEY(keyword);
                                 end case;
@@ -690,16 +756,31 @@ begin
                                 -- ERROR
                         end case;
                     end loop;
-                    CHK_LOOP:loop
-                        REPORT_DEBUG(core, string'("EXECUTE_WAIT CHK_LOOP"));
-                        wait until (ACLK'event and ACLK = '1');
-                        MATCH_AXI4_CHANNEL(chk_signals, match);
-                        exit when(match);
-                        timeout := timeout - 1;
-                        if (timeout < 0) then
-                            EXECUTE_ABORT(core, string'("WAIT Time Out!"));
-                        end if;
-                    end loop;
+                    if (wait_mode > 0) then
+                        SIG_LOOP:loop
+                            REPORT_DEBUG(core, string'("EXECUTE_WAIT SIG_LOOP"));
+                            WAIT_ON_AXI4_SIGNALS;
+                            MATCH_AXI4_CHANNEL(chk_signals, match);
+                            exit when(match);
+                            if (ACLK'event and ACLK = '1') then
+                                timeout := timeout - 1;
+                                if (timeout < 0) then
+                                    EXECUTE_ABORT(core, string'("WAIT Time Out!"));
+                                end if;
+                            end if;
+                        end loop;
+                    else
+                        CLK_LOOP:loop
+                            REPORT_DEBUG(core, string'("EXECUTE_WAIT CLK_LOOP"));
+                            wait until (ACLK'event and ACLK = '1');
+                            MATCH_AXI4_CHANNEL(chk_signals, match);
+                            exit when(match);
+                            timeout := timeout - 1;
+                            if (timeout < 0) then
+                                EXECUTE_ABORT(core, string'("WAIT Time Out!"));
+                            end if;
+                        end loop;
+                    end if;
                 when others =>
                     SKIP_EVENT(core, stream, next_event);
                     -- ERROR
