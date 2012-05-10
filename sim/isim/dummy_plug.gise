@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<generated_project xmlns="http://www.xilinx.com/XMLSchema" xmlns:xil_pn="http://www.xilinx.com/XMLSchema">
+
+  <!--                                                          -->
+
+  <!--             For tool use only. Do not edit.              -->
+
+  <!--                                                          -->
+
+  <!-- ProjectNavigator created generated project file.         -->
+
+  <!-- For use in tracking generated file and other information -->
+
+  <!-- allowing preservation of process status.                 -->
+
+  <!--                                                          -->
+
+  <!-- Copyright (c) 1995-2011 Xilinx, Inc.  All rights reserved. -->
+
+  <version xmlns="http://www.xilinx.com/XMLSchema">11.1</version>
+
+  <sourceproject xmlns="http://www.xilinx.com/XMLSchema" xil_pn:fileType="FILE_XISE" xil_pn:name="dummy_plug.xise"/>
+
+  <files xmlns="http://www.xilinx.com/XMLSchema">
+    <file xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="DUMMY_PLUG_AXI4_TEST_1_beh.prj"/>
+    <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_ISIM_EXE" xil_pn:name="DUMMY_PLUG_AXI4_TEST_1_isim_beh.exe"/>
+    <file xil_pn:fileType="FILE_ISIM_MISC" xil_pn:name="DUMMY_PLUG_AXI4_TEST_1_isim_beh.wdb"/>
+    <file xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="DUMMY_PLUG_AXI4_TEST_1_stx_beh.prj"/>
+    <file xil_pn:fileType="FILE_LOG" xil_pn:name="fuse.log"/>
+    <file xil_pn:fileType="FILE_DIRECTORY" xil_pn:name="isim"/>
+    <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_CMD" xil_pn:name="isim.cmd"/>
+    <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_LOG" xil_pn:name="isim.log"/>
+    <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_INI" xil_pn:name="xilinxsim.ini"/>
+  </files>
+
+  <transforms xmlns="http://www.xilinx.com/XMLSchema">
+    <transform xil_pn:end_ts="1336649587" xil_pn:name="TRAN_copyInitialToAbstractSimulation" xil_pn:start_ts="1336649587">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+    </transform>
+    <transform xil_pn:end_ts="1336664263" xil_pn:in_ck="3678164743040198419" xil_pn:name="TRAN_copyAbstractToPostAbstractSimulation" xil_pn:start_ts="1336664263">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <outfile xil_pn:name="../../src/main/vhdl/dummy_plug/axi3_signal_printer.vhd"/>
+      <outfile xil_pn:name="../../src/main/vhdl/dummy_plug/axi4_channel_player.vhd"/>
+      <outfile xil_pn:name="../../src/main/vhdl/dummy_plug/axi4_core.vhd"/>
+      <outfile xil_pn:name="../../src/main/vhdl/dummy_plug/axi4_master_player.vhd"/>
+      <outfile xil_pn:name="../../src/main/vhdl/dummy_plug/axi4_models.vhd"/>
+      <outfile xil_pn:name="../../src/main/vhdl/dummy_plug/axi4_signal_printer.vhd"/>
+      <outfile xil_pn:name="../../src/main/vhdl/dummy_plug/axi4_slave_player.vhd"/>
+      <outfile xil_pn:name="../../src/main/vhdl/dummy_plug/axi4_types.vhd"/>
+      <outfile xil_pn:name="../../src/main/vhdl/dummy_plug/core.vhd"/>
+      <outfile xil_pn:name="../../src/main/vhdl/dummy_plug/marchal.vhd"/>
+      <outfile xil_pn:name="../../src/main/vhdl/dummy_plug/reader.vhd"/>
+      <outfile xil_pn:name="../../src/main/vhdl/dummy_plug/sync.vhd"/>
+      <outfile xil_pn:name="../../src/main/vhdl/dummy_plug/util.vhd"/>
+      <outfile xil_pn:name="../../src/main/vhdl/dummy_plug/vocal.vhd"/>
+      <outfile xil_pn:name="../../src/test/vhdl/dummy_plug/axi4_test_1.vhd"/>
+    </transform>
+    <transform xil_pn:end_ts="1336649587" xil_pn:name="TRAN_xawsToSimhdl" xil_pn:prop_ck="-4324974469089507266" xil_pn:start_ts="1336649587">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+    </transform>
+    <transform xil_pn:end_ts="1336649587" xil_pn:name="TRAN_schematicsToHdlSim" xil_pn:prop_ck="417837097389086908" xil_pn:start_ts="1336649587">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+    </transform>
+    <transform xil_pn:end_ts="1336649587" xil_pn:name="TRAN_regenerateCoresSim" xil_pn:prop_ck="-8569580105276917487" xil_pn:start_ts="1336649587">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+    </transform>
+    <transform xil_pn:end_ts="1336664263" xil_pn:in_ck="3678164743040198419" xil_pn:name="TRAN_copyPostAbstractToPreSimulation" xil_pn:start_ts="1336664263">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <outfile xil_pn:name="../../src/main/vhdl/dummy_plug/axi3_signal_printer.vhd"/>
+      <outfile xil_pn:name="../../src/main/vhdl/dummy_plug/axi4_channel_player.vhd"/>
+      <outfile xil_pn:name="../../src/main/vhdl/dummy_plug/axi4_core.vhd"/>
+      <outfile xil_pn:name="../../src/main/vhdl/dummy_plug/axi4_master_player.vhd"/>
+      <outfile xil_pn:name="../../src/main/vhdl/dummy_plug/axi4_models.vhd"/>
+      <outfile xil_pn:name="../../src/main/vhdl/dummy_plug/axi4_signal_printer.vhd"/>
+      <outfile xil_pn:name="../../src/main/vhdl/dummy_plug/axi4_slave_player.vhd"/>
+      <outfile xil_pn:name="../../src/main/vhdl/dummy_plug/axi4_types.vhd"/>
+      <outfile xil_pn:name="../../src/main/vhdl/dummy_plug/core.vhd"/>
+      <outfile xil_pn:name="../../src/main/vhdl/dummy_plug/marchal.vhd"/>
+      <outfile xil_pn:name="../../src/main/vhdl/dummy_plug/reader.vhd"/>
+      <outfile xil_pn:name="../../src/main/vhdl/dummy_plug/sync.vhd"/>
+      <outfile xil_pn:name="../../src/main/vhdl/dummy_plug/util.vhd"/>
+      <outfile xil_pn:name="../../src/main/vhdl/dummy_plug/vocal.vhd"/>
+      <outfile xil_pn:name="../../src/test/vhdl/dummy_plug/axi4_test_1.vhd"/>
+    </transform>
+    <transform xil_pn:end_ts="1336667018" xil_pn:in_ck="3678164743040198419" xil_pn:name="TRAN_ISimulateBehavioralModelRunFuse" xil_pn:prop_ck="-4907291341391490394" xil_pn:start_ts="1336667002">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <outfile xil_pn:name="DUMMY_PLUG_AXI4_TEST_1_beh.prj"/>
+      <outfile xil_pn:name="DUMMY_PLUG_AXI4_TEST_1_isim_beh.exe"/>
+      <outfile xil_pn:name="fuse.log"/>
+      <outfile xil_pn:name="isim"/>
+      <outfile xil_pn:name="xilinxsim.ini"/>
+    </transform>
+    <transform xil_pn:end_ts="1336667019" xil_pn:in_ck="-8728032256243258442" xil_pn:name="TRAN_ISimulateBehavioralModel" xil_pn:prop_ck="-5871719553252761384" xil_pn:start_ts="1336667018">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="OutputChanged"/>
+      <outfile xil_pn:name="DUMMY_PLUG_AXI4_TEST_1_isim_beh.wdb"/>
+      <outfile xil_pn:name="isim.cmd"/>
+      <outfile xil_pn:name="isim.log"/>
+    </transform>
+  </transforms>
+
+</generated_project>
