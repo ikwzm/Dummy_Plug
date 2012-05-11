@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    marchal.vhd
 --!     @brief   Marchal Dummy Plug Player.
---!     @version 0.0.1
---!     @date    2012/5/1
+--!     @version 0.0.5
+--!     @date    2012/5/11
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -107,8 +107,10 @@ begin
         file      stream        : TEXT;
         variable  core          : CORE_TYPE;
         variable  operation     : OPERATION_TYPE;
-        variable  op_code       : STRING(1 to 3);
-        constant  OP_SAY        : STRING(1 to 3) := "SAY";
+        variable  keyword       : STRING(1 to 3);
+        constant  KEY_SAY       : STRING(1 to 3) := "SAY";
+        constant  KEY_DEBUG     : STRING(1 to 3) := "DEB";
+        constant  KEY_REPORT    : STRING(1 to 3) := "REP";
     begin
         ---------------------------------------------------------------------------
         --! ダミープラグコアの初期化.
@@ -137,14 +139,16 @@ begin
         ---------------------------------------------------------------------------
         core.debug := 0;
         MAIN_LOOP: while (operation /= OP_FINISH) loop
-            READ_OPERATION(core, stream, operation, op_code);
+            READ_OPERATION(core, stream, operation, keyword);
             case operation is
                 when OP_DOC_BEGIN =>
                     CORE_SYNC(core, 0, 2, sync_req, sync_ack);
                 when OP_MAP    =>
-                    case op_code is
-                        when OP_SAY => EXECUTE_SAY (core, stream);
-                        when others => EXECUTE_SKIP(core, stream);
+                    case keyword is
+                        when KEY_SAY    => EXECUTE_SAY   (core, stream);
+                        when KEY_DEBUG  => EXECUTE_DEBUG (core, stream);
+                        when KEY_REPORT => EXECUTE_REPORT(core, stream);
+                        when others     => EXECUTE_SKIP  (core, stream);
                     end case;
                 when OP_SCALAR =>
                 when OP_FINISH => exit;

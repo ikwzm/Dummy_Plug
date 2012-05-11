@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    reader_test_1.vhd
 --!     @brief   TEST BENCH No.1 for DUMMY_PLUG.READER
---!     @version 0.0.1
---!     @date    2012/5/1
+--!     @version 0.0.5
+--!     @date    2012/5/11
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -42,6 +42,7 @@ library DUMMY_PLUG;
 use     DUMMY_PLUG.READER;
 use     DUMMY_PLUG.READER.all;
 use     DUMMY_PLUG.UTIL.HEX_TO_STRING;
+use     DUMMY_PLUG.UTIL.BOOLEAN_TO_STRING;
 entity  DUMMY_PLUG_READER_TEST_1 is
 end     DUMMY_PLUG_READER_TEST_1;
 architecture MODEL of DUMMY_PLUG_READER_TEST_1 is
@@ -173,9 +174,50 @@ begin
                          get_value(1 to get_len) & """/=""" & exp_value & """"
                 severity FAILURE;
         end procedure;
+        --------------------------------------------------------------------------
+        -- 
+        --------------------------------------------------------------------------
+        procedure event(
+                      exp_event     : in  READER.EVENT_TYPE;
+                      exp_value     : in  boolean
+        ) is
+            variable  get_event     :     READER.EVENT_TYPE;
+            variable  get_value     :     boolean;
+            variable  get_good      :     boolean;
+        begin
+            if (debug) then
+                WRITE(text_line, NAME & "::event(" & READER.EVENT_TO_STRING(exp_event) & ") begin");
+                WRITELINE(OUTPUT, text_line);
+                READER.DEBUG_DUMP(r);
+                r.debug_mode := 1;
+            else
+                r.debug_mode := 0;
+            end if;
+            READER.SEEK_EVENT(r, stream, get_event);
+            assert(get_event = exp_event)
+                report   NAME & " Mismatch SEEK_EVENT=>" &
+                         READER.EVENT_TO_STRING(get_event) & " /= "&
+                         READER.EVENT_TO_STRING(exp_event)
+                severity FAILURE;
+            READER.READ_BOOLEAN (r, stream, get_value, get_good);
+            if (debug) then
+                READER.DEBUG_DUMP(r);
+                WRITE(text_line, NAME & "::READ_BOOLEAN=>""" & BOOLEAN_TO_STRING(get_value) & """");
+                WRITELINE(OUTPUT, text_line);
+                WRITE(text_line, NAME & "::event end");
+                WRITELINE(OUTPUT, text_line);
+            end if;
+            assert(get_good)
+                report   NAME & " Error READ " & READER.EVENT_TO_STRING(exp_event)
+                severity FAILURE;
+            assert(get_value = exp_value)
+                report   NAME & " Mismatch READ_" & READER.EVENT_TO_STRING(exp_event) & """" &
+                         BOOLEAN_TO_STRING(get_value) & """/=""" & BOOLEAN_TO_STRING(exp_value) & """"
+                severity FAILURE;
+        end procedure;
     begin
         --------------------------------------------------------------------------
-        -- ファイルをオープン
+        -- 
         --------------------------------------------------------------------------
         file_open(stream, TEST_FILE, READ_MODE);
         --------------------------------------------------------------------------
@@ -196,6 +238,32 @@ begin
         event(READER.EVENT_SCALAR   , 16#89AB#       );
         event(READER.EVENT_SCALAR   , 16#CDEF#       );
         event(READER.EVENT_SCALAR   ,  8#76543210#   );
+        event(READER.EVENT_SEQ_BEGIN                 );
+        event(READER.EVENT_SCALAR   , TRUE           );
+        event(READER.EVENT_SCALAR   , TRUE           );
+        event(READER.EVENT_SCALAR   , TRUE           );
+        event(READER.EVENT_SCALAR   , TRUE           );
+        event(READER.EVENT_SCALAR   , TRUE           );
+        event(READER.EVENT_SCALAR   , TRUE           );
+        event(READER.EVENT_SCALAR   , TRUE           );
+        event(READER.EVENT_SCALAR   , TRUE           );
+        event(READER.EVENT_SCALAR   , TRUE           );
+        event(READER.EVENT_SCALAR   , TRUE           );
+        event(READER.EVENT_SCALAR   , TRUE           );
+        event(READER.EVENT_SEQ_END                   );
+        event(READER.EVENT_SEQ_BEGIN                 );
+        event(READER.EVENT_SCALAR   , FALSE          );
+        event(READER.EVENT_SCALAR   , FALSE          );
+        event(READER.EVENT_SCALAR   , FALSE          );
+        event(READER.EVENT_SCALAR   , FALSE          );
+        event(READER.EVENT_SCALAR   , FALSE          );
+        event(READER.EVENT_SCALAR   , FALSE          );
+        event(READER.EVENT_SCALAR   , FALSE          );
+        event(READER.EVENT_SCALAR   , FALSE          );
+        event(READER.EVENT_SCALAR   , FALSE          );
+        event(READER.EVENT_SCALAR   , FALSE          );
+        event(READER.EVENT_SCALAR   , FALSE          );
+        event(READER.EVENT_SEQ_END                   );
         event(READER.EVENT_SEQ_END                   );
         event(READER.EVENT_DOC_END                   );
         --------------------------------------------------------------------------

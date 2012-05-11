@@ -2,7 +2,7 @@
 --!     @file    axi4_channel_player.vhd
 --!     @brief   AXI4 A/R/W/B Channel Dummy Plug Player.
 --!     @version 0.0.5
---!     @date    2012/5/9
+--!     @date    2012/5/12
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -441,6 +441,7 @@ begin
         constant  KEY_LOCAL     : KEYWORD_TYPE := "LOCAL";
         constant  KEY_TIMEOUT   : KEYWORD_TYPE := "TIMEO";
         constant  KEY_WAIT_ON   : KEYWORD_TYPE := "ON   ";
+        constant  KEY_REPORT    : KEYWORD_TYPE := "REPOR";
         function  GENERATE_KEY_CHANNEL return KEYWORD_TYPE is
         begin
             case CHANNEL is
@@ -624,44 +625,25 @@ begin
         --! @brief ローカル同期オペレーション.
         ---------------------------------------------------------------------------
         procedure LOCAL_SYNC is
+            constant PROC_NAME  : string := "LOCAL_SYNC";
             variable sync_count : SYNC_REQ_VECTOR(SYNC_LOCAL_REQ'range);
         begin
-            REPORT_DEBUG(core, string'("LOCAL_SYNC BEGIN"));
+            REPORT_DEBUG(core, PROC_NAME, "BEGIN");
             sync_count(SYNC_LOCAL_PORT) := SYNC_LOCAL_WAIT;
             SYNC_BEGIN(SYNC_LOCAL_REQ,                 sync_count);
-            REPORT_DEBUG(core, string'("LOCAL_SYNC WAIT"));
+            REPORT_DEBUG(core, PROC_NAME, "SYNC");
             SYNC_END  (SYNC_LOCAL_REQ, SYNC_LOCAL_ACK, sync_count);
-            REPORT_DEBUG(core, string'("LOCAL_SYNC END"));
-        end procedure;
-        ---------------------------------------------------------------------------
-        --! @brief DEBUGオペレーション.
-        ---------------------------------------------------------------------------
-        procedure EXECUTE_DEBUG is
-            variable scan_len   : integer;
-            variable debug      : integer;
-            variable next_event : EVENT_TYPE;
-        begin
-            SEEK_EVENT(core, stream, next_event);
-            case next_event is
-                when EVENT_SCALAR =>
-                    READ_EVENT(core, stream, EVENT_SCALAR);
-                    SCAN_INTEGER(debug, scan_len);
-                    if (scan_len > 0) then
-                        core.debug := debug;
-                        REPORT_DEBUG(core, string'("EXECUTE_DEBUG ON"));
-                    end if;
-                when others =>
-                    SKIP_EVENT(core, stream, next_event);
-            end case;
+            REPORT_DEBUG(core, PROC_NAME, "END");
         end procedure;
         ---------------------------------------------------------------------------
         --! @brief CHECKオペレーション.信号が指定された値になっているかチェック.
         ---------------------------------------------------------------------------
         procedure EXECUTE_CHECK is
+            constant PROC_NAME  : string := "EXECUTE_CHECK";
             variable next_event : EVENT_TYPE;
             variable match      : boolean;
         begin
-            REPORT_DEBUG(core, string'("EXECUTE_CHECK BEGIN"));
+            REPORT_DEBUG(core, PROC_NAME, "BEGIN");
             SEEK_EVENT(core, stream, next_event);
             case next_event is
                 when EVENT_MAP_BEGIN =>
@@ -674,7 +656,7 @@ begin
                         EVENT      => next_event         -- Out:
                     );
                     assert (next_event = EVENT_MAP_END)
-                        report "Internal Read Error in " & FULL_NAME & " EXECUTE_CHECK"
+                        report "Internal Read Error in " & FULL_NAME & " " & PROC_NAME
                         severity FAILURE;
                     READ_EVENT(core, stream, EVENT_MAP_END);
                     MATCH_AXI4_CHANNEL(core, chk_signals, match);
@@ -682,12 +664,13 @@ begin
                     SKIP_EVENT(core, stream, next_event);
                     -- ERROR
             end case;
-            REPORT_DEBUG(core, string'("EXECUTE_CHECK END"));
+            REPORT_DEBUG(core, PROC_NAME, "END");
         end procedure;
         ---------------------------------------------------------------------------
         --! @brief  WAITオペレーション. 指定された条件まで待機.
         ---------------------------------------------------------------------------
         procedure EXECUTE_WAIT is
+            constant PROC_NAME  : string := "EXECUTE_WAIT";
             variable next_event : EVENT_TYPE;
             variable wait_count : integer;
             variable scan_len   : integer;
@@ -695,7 +678,7 @@ begin
             variable wait_mode  : integer;
             variable match      : boolean;
         begin
-            REPORT_DEBUG(core, string'("EXECUTE_WAIT BEGIN"));
+            REPORT_DEBUG(core, PROC_NAME, "BEGIN");
             timeout   := DEFAULT_WAIT_TIMEOUT;
             wait_mode := 0;
             SEEK_EVENT(core, stream, next_event);
@@ -716,7 +699,7 @@ begin
                     READ_EVENT(core, stream, EVENT_MAP_BEGIN);
                     chk_signals := AXI4_CHANNEL_SIGNAL_DONTCARE;
                     MAP_LOOP: loop
-                        REPORT_DEBUG(core, string'("EXECUTE_WAIT MAP_LOOP"));
+                        REPORT_DEBUG(core, PROC_NAME, "MAP_LOOP");
                         READ_AXI4_CHANNEL(
                             CORE       => core            ,  -- In :
                             STREAM     => stream          ,  -- I/O:
@@ -752,45 +735,44 @@ begin
                             when EVENT_MAP_END =>
                                 exit MAP_LOOP;
                             when others        =>
-                                SKIP_EVENT(core, stream, next_event);
-                                -- ERROR
+                                READ_ERROR(core, PROC_NAME, "READ_AXI4_CHANNEL NG");
                         end case;
                     end loop;
                     if (wait_mode > 0) then
                         SIG_LOOP:loop
-                            REPORT_DEBUG(core, string'("EXECUTE_WAIT SIG_LOOP"));
+                            REPORT_DEBUG(core, PROC_NAME, "SIG_LOOP");
                             WAIT_ON_AXI4_SIGNALS;
                             MATCH_AXI4_CHANNEL(chk_signals, match);
                             exit when(match);
                             if (ACLK'event and ACLK = '1') then
                                 timeout := timeout - 1;
                                 if (timeout < 0) then
-                                    EXECUTE_ABORT(core, string'("WAIT Time Out!"));
+                                    EXECUTE_ABORT(core, PROC_NAME, "Time Out!");
                                 end if;
                             end if;
                         end loop;
                     else
                         CLK_LOOP:loop
-                            REPORT_DEBUG(core, string'("EXECUTE_WAIT CLK_LOOP"));
+                            REPORT_DEBUG(core, PROC_NAME, "CLK_LOOP");
                             wait until (ACLK'event and ACLK = '1');
                             MATCH_AXI4_CHANNEL(chk_signals, match);
                             exit when(match);
                             timeout := timeout - 1;
                             if (timeout < 0) then
-                                EXECUTE_ABORT(core, string'("WAIT Time Out!"));
+                                EXECUTE_ABORT(core, PROC_NAME, "Time Out!");
                             end if;
                         end loop;
                     end if;
                 when others =>
-                    SKIP_EVENT(core, stream, next_event);
-                    -- ERROR
+                    READ_ERROR(core, PROC_NAME, "SEEK_EVENT NG");
             end case;
-            REPORT_DEBUG(core, string'("EXECUTE_WAIT END"));
+            REPORT_DEBUG(core, PROC_NAME, "END");
         end procedure;
         ---------------------------------------------------------------------------
         --! @brief  SYNCオペレーション. 
         ---------------------------------------------------------------------------
         procedure EXECUTE_SYNC(operation: in OPERATION_TYPE) is
+            constant PROC_NAME  : string := "EXECUTE_SYNC";
             variable next_event : EVENT_TYPE;
             variable port_num   : integer;
             variable wait_num   : integer;
@@ -801,7 +783,7 @@ begin
                                     STATE_MAP_KEY, STATE_MAP_PORT, STATE_MAP_WAIT, STATE_ERROR);
             variable state      : STATE_TYPE;
         begin
-            REPORT_DEBUG(core, string'("EXECUTE_SYNC BEGIN"));
+            REPORT_DEBUG(core, PROC_NAME, "BEGIN");
             port_num := 0;
             wait_num := 2;
             case operation is
@@ -851,25 +833,28 @@ begin
                                         state := STATE_MAP_KEY;
                                 end case;
                             when EVENT_ERROR =>
-                                EXECUTE_ABORT(core, string'("EXECUTE_SYNC:Read Error"));
+                                READ_ERROR(core, PROC_NAME, "SEEK_EVENT NG");
                             when others =>
                                 SKIP_EVENT(core, stream, next_event);
                         end case;
                         exit when (map_level = 0);
                     end loop;
                     if (next_event /= EVENT_MAP_END) then
-                        EXECUTE_ABORT(core, string'("EXECUTE_SYNC:Read Error"));
+                        READ_ERROR(core, PROC_NAME, "need EVENT_MAP_END but " &
+                                                     EVENT_TO_STRING(next_event));
                     end if;
                     READ_EVENT(core, stream, EVENT_MAP_END);
                 when OP_DOC_BEGIN => null;
                 when OP_SCALAR    => null;
                 when others       => null;
             end case;
+            REPORT_DEBUG(core, PROC_NAME, "PORT=" & INTEGER_TO_STRING(port_num) &
+                                         " WAIT=" & INTEGER_TO_STRING(wait_num));
             LOCAL_SYNC;
             if (port_num >= 0) then
                 CORE_SYNC(core, port_num, wait_num, SYNC_REQ, SYNC_ACK);
             end if;
-            REPORT_DEBUG(core, string'("EXECUTE_SYNC END"));
+            REPORT_DEBUG(core, PROC_NAME, "END");
         end procedure;
         ---------------------------------------------------------------------------
         --! @brief チャネルオペレーション(SCALAR)実行サブプログラム.
@@ -882,9 +867,10 @@ begin
         --! @brief チャネルオペレーション(MAP)実行サブプログラム.
         ---------------------------------------------------------------------------
         procedure EXECUTE_CHANNEL_MAP_OPERATION is
+            constant PROC_NAME  : string := "EXECUTE_CHANNEL_MAP_OPERATION";
             variable next_event : EVENT_TYPE;
         begin
-            REPORT_DEBUG(core, string'("EXECUTE_CHANNEL_MAP_OPERATION BEGIN"));
+            REPORT_DEBUG(core, PROC_NAME, "BEGIN");
             READ_EVENT(core, stream, EVENT_MAP_BEGIN);
             MAP_LOOP: loop
                 READ_AXI4_CHANNEL(
@@ -898,31 +884,33 @@ begin
                     when EVENT_SCALAR  =>
                         COPY_KEY_WORD(core, keyword);
                         case keyword is
-                            when KEY_SAY   => EXECUTE_SAY(core, stream);
-                            when KEY_WAIT  => EXECUTE_WAIT;
-                            when KEY_CHECK => EXECUTE_CHECK;
-                            when KEY_DEBUG => EXECUTE_DEBUG;
-                            when others    => EXECUTE_UNDEFINED_MAP_KEY(keyword);
+                            when KEY_DEBUG  => EXECUTE_DEBUG (core, stream);
+                            when KEY_REPORT => EXECUTE_REPORT(core, stream);
+                            when KEY_SAY    => EXECUTE_SAY   (core, stream);
+                            when KEY_WAIT   => EXECUTE_WAIT;
+                            when KEY_CHECK  => EXECUTE_CHECK;
+                            when others     => EXECUTE_UNDEFINED_MAP_KEY(keyword);
                         end case;
                     when EVENT_MAP_END =>
                         exit MAP_LOOP;
                     when EVENT_ERROR =>
-                        EXECUTE_ABORT(core, string'("EXECUTE_CHANNEL_MAP_OPERATION:Read Error"));
+                        READ_ERROR(core, PROC_NAME, "READ_AXI4_CHANNEL NG");
                     when others        =>
                         SKIP_EVENT(core, stream, next_event);
                         -- ERROR
                 end case;
             end loop;
-            REPORT_DEBUG(core, string'("EXECUTE_CHANNEL_MAP_OPERATION END"));
+            REPORT_DEBUG(core, PROC_NAME, "END");
         end procedure;
         ---------------------------------------------------------------------------
         -- チャネルオペレーションループ
         ---------------------------------------------------------------------------
         procedure EXECUTE_CHANNEL_OPERATION is
+            constant PROC_NAME  : string := "EXECUTE_CHANNEL_OPERATION";
             variable next_event : EVENT_TYPE;
             variable seq_level  : integer;
         begin
-            REPORT_DEBUG(core, string'("EXECUTE_CHANNEL_OPERATION BEGIN"));
+            REPORT_DEBUG(core, PROC_NAME, "BEGIN");
             seq_level := 0;
             SEQ_LOOP: loop
                 SEEK_EVENT(core, stream, next_event);
@@ -938,14 +926,14 @@ begin
                     when EVENT_SCALAR    =>
                         EXECUTE_CHANNEL_SCALAR_OPERATION;
                     when EVENT_ERROR     =>
-                        EXECUTE_ABORT(core, string'("EXECUTE_CHANNEL_OPERATION:Read Error"));
+                        READ_ERROR(core, PROC_NAME, "SEEK_EVENT NG");
                     when others          =>
                         SKIP_EVENT(core, stream, next_event);
                         -- ERROR
                 end case;
                 exit when (seq_level <= 0);
             end loop;
-            REPORT_DEBUG(core, string'("EXECUTE_CHANNEL_OPERATION END"));
+            REPORT_DEBUG(core, PROC_NAME, "END");
         end procedure;
     begin
         ---------------------------------------------------------------------------
@@ -984,17 +972,18 @@ begin
                     when OP_MAP    =>
                         REPORT_DEBUG(core, string'("MAIN_LOOP:OP_MAP(") & keyword & ")");
                         case keyword is
-                            when KEY_AR    |
-                                 KEY_AW    |
-                                 KEY_R     |
-                                 KEY_W     |
-                                 KEY_B     => EXECUTE_SKIP(core, stream);
-                            when KEY_SAY   => EXECUTE_SAY (core, stream);
-                            when KEY_SYNC  => EXECUTE_SYNC(operation);
-                            when KEY_WAIT  => EXECUTE_WAIT;
-                            when KEY_DEBUG => EXECUTE_DEBUG;
-                            when KEY_CHECK => EXECUTE_CHECK;
-                            when others    => EXECUTE_UNDEFINED_MAP_KEY(keyword);
+                            when KEY_AR     |
+                                 KEY_AW     |
+                                 KEY_R      |
+                                 KEY_W      |
+                                 KEY_B      => EXECUTE_SKIP  (core, stream);
+                            when KEY_REPORT => EXECUTE_REPORT(core, stream);
+                            when KEY_DEBUG  => EXECUTE_DEBUG (core, stream);
+                            when KEY_SAY    => EXECUTE_SAY   (core, stream);
+                            when KEY_SYNC   => EXECUTE_SYNC  (operation);
+                            when KEY_WAIT   => EXECUTE_WAIT;
+                            when KEY_CHECK  => EXECUTE_CHECK;
+                            when others     => EXECUTE_UNDEFINED_MAP_KEY(keyword);
                         end case;
                     when OP_SCALAR =>
                         case keyword is
@@ -1014,6 +1003,8 @@ begin
                         REPORT_DEBUG(core, string'("MAIN_LOOP:OP_MAP(") & keyword & ")");
                         if    (keyword = KEY_CHANNEL) then
                             EXECUTE_CHANNEL_OPERATION;
+                        elsif (keyword = KEY_REPORT) then
+                            EXECUTE_REPORT(core, stream);
                         elsif (keyword = KEY_SYNC) then
                             LOCAL_SYNC;
                             EXECUTE_SKIP(core, stream);

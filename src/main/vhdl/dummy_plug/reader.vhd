@@ -2,7 +2,7 @@
 --!     @file    reader.vhd
 --!     @brief   Package for Dummy Plug Scenario Reader.
 --!     @version 0.0.5
---!     @date    2012/5/11
+--!     @date    2012/5/12
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --

@@ -2,7 +2,7 @@
 --!     @file    core.vhd
 --!     @brief   Core Package for Dummy Plug.
 --!     @version 0.0.5
---!     @date    2012/5/8
+--!     @date    2012/5/12
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -202,6 +202,20 @@ package CORE is
         file     STREAM     :       TEXT                  --! 入力ストリーム.
     );
     -------------------------------------------------------------------------------
+    --! @brief REPORTフラグを書き換えるオペレーションを実行する.
+    -------------------------------------------------------------------------------
+    procedure EXECUTE_REPORT(
+        variable SELF       : inout CORE_TYPE;            --! コア変数.
+        file     STREAM     :       TEXT                  --! 入力ストリーム.
+    );
+    -------------------------------------------------------------------------------
+    --! @brief DEBUGフラグを書き換えるオペレーションを実行する.
+    -------------------------------------------------------------------------------
+    procedure EXECUTE_DEBUG(
+        variable SELF       : inout CORE_TYPE;            --! コア変数.
+        file     STREAM     :       TEXT                  --! 入力ストリーム.
+    );
+    -------------------------------------------------------------------------------
     --! @brief 不正なSCALARオペレーションを警告して読み飛ばす.
     -------------------------------------------------------------------------------
     procedure EXECUTE_UNDEFINED_SCALAR(
@@ -220,42 +234,51 @@ package CORE is
     -------------------------------------------------------------------------------
     --! @brief コア変数のデバッグ用ダンプ
     -------------------------------------------------------------------------------
-    procedure REPORT_DEBUG     (SELF:inout CORE_TYPE;MESSAGE:in STRING);
+    procedure REPORT_DEBUG     (SELF:inout CORE_TYPE; NAME,MESSAGE:in STRING);
+    -------------------------------------------------------------------------------
+    --! @brief コア変数のデバッグ用ダンプ
+    -------------------------------------------------------------------------------
+    procedure REPORT_DEBUG     (SELF:inout CORE_TYPE; MESSAGE:in STRING);
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にREMARKメッセージを出力するサブプログラム.
     -------------------------------------------------------------------------------
-    procedure REPORT_REMARK    (SELF:inout CORE_TYPE;MESSAGE:in STRING);
+    procedure REPORT_REMARK    (SELF:inout CORE_TYPE; MESSAGE:in STRING);
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にNOTEメッセージを出力するサブプログラム.
     -------------------------------------------------------------------------------
-    procedure REPORT_NOTE      (SELF:inout CORE_TYPE;MESSAGE:in STRING);
+    procedure REPORT_NOTE      (SELF:inout CORE_TYPE; MESSAGE:in STRING);
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にWARNINGメッセージを出力するサブプログラム.
     -------------------------------------------------------------------------------
-    procedure REPORT_WARNING   (SELF:inout CORE_TYPE;MESSAGE:in STRING);
+    procedure REPORT_WARNING   (SELF:inout CORE_TYPE; MESSAGE:in STRING);
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にMISMATCHメッセージを出力するサブプログラム.
     -------------------------------------------------------------------------------
-    procedure REPORT_MISMATCH  (SELF:inout CORE_TYPE;MESSAGE:in STRING);
+    procedure REPORT_MISMATCH  (SELF:inout CORE_TYPE; MESSAGE:in STRING);
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にERRORメッセージを出力するサブプログラム.
     -------------------------------------------------------------------------------
-    procedure REPORT_ERROR     (SELF:inout CORE_TYPE;MESSAGE:in STRING);
+    procedure REPORT_ERROR     (SELF:inout CORE_TYPE; MESSAGE:in STRING);
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にFAILUREメッセージを出力するサブプログラム.
     -------------------------------------------------------------------------------
-    procedure REPORT_FAILURE   (SELF:inout CORE_TYPE;MESSAGE:in STRING);
+    procedure REPORT_FAILURE   (SELF:inout CORE_TYPE; MESSAGE:in STRING);
     -------------------------------------------------------------------------------
-    --! @brief 標準出力(OUTPUT)にシナリオリードエラーメッセージを出力するサブプログラム.
+    --! @brief シナリオリードエラーによる中断.
     -------------------------------------------------------------------------------
-    procedure REPORT_READ_ERROR(SELF:inout CORE_TYPE;MESSAGE:in STRING);
+    procedure READ_ERROR       (SELF:inout CORE_TYPE; MESSAGE:in STRING);
+    -------------------------------------------------------------------------------
+    --! @brief シナリオリードエラーによる中断.
+    -------------------------------------------------------------------------------
+    procedure READ_ERROR       (SELF:inout CORE_TYPE; NAME, MESSAGE:in STRING);
     -------------------------------------------------------------------------------
     --! @brief 致命的エラーによる中断.
     -------------------------------------------------------------------------------
-    procedure EXECUTE_ABORT(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-                 MESSAGE    : in    STRING                --! メッセージ
-    );
+    procedure EXECUTE_ABORT    (SELF:inout CORE_TYPE; MESSAGE: in STRING);
+    -------------------------------------------------------------------------------
+    --! @brief 致命的エラーによる中断.
+    -------------------------------------------------------------------------------
+    procedure EXECUTE_ABORT    (SELF:inout CORE_TYPE; NAME, MESSAGE: in STRING);
     ------------------------------------------------------------------------------
     -- 
     ------------------------------------------------------------------------------
@@ -286,6 +309,8 @@ use     DUMMY_PLUG.READER.all;
 use     DUMMY_PLUG.VOCAL.all;
 use     DUMMY_PLUG.SYNC.all;
 use     DUMMY_PLUG.UTIL.INTEGER_TO_STRING;
+use     DUMMY_PLUG.UTIL.STRING_TO_BOOLEAN;
+use     DUMMY_PLUG.UTIL.STRING_TO_INTEGER;
 package body CORE is
     -------------------------------------------------------------------------------
     --! @brief コア変数のデバッグ用ダンプ
@@ -294,6 +319,15 @@ package body CORE is
     begin
         if (SELF.debug > 0) then
             REPORT_DEBUG(SELF.vocal, MESSAGE);
+        end if;
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief コア変数のデバッグ用ダンプ
+    -------------------------------------------------------------------------------
+    procedure REPORT_DEBUG     (SELF: inout CORE_TYPE; NAME, MESSAGE:in STRING) is
+    begin
+        if (SELF.debug > 0) then
+            REPORT_DEBUG(SELF.vocal, NAME & " " & MESSAGE);
         end if;
     end procedure;
     -------------------------------------------------------------------------------
@@ -337,13 +371,6 @@ package body CORE is
     procedure REPORT_FAILURE   (SELF:inout CORE_TYPE;MESSAGE:in STRING) is
     begin
         REPORT_FAILURE(SELF.vocal, MESSAGE);
-    end procedure;
-    -------------------------------------------------------------------------------
-    --! @brief 標準出力(OUTPUT)にシナリオリードエラーメッセージを出力するサブプログラム.
-    -------------------------------------------------------------------------------
-    procedure REPORT_READ_ERROR(SELF:inout CORE_TYPE;MESSAGE:in STRING) is
-    begin
-        REPORT_READ_ERROR(SELF.vocal, MESSAGE);
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief コア変数の初期化用定数を生成する関数.
@@ -425,12 +452,13 @@ package body CORE is
         file     STREAM     :       TEXT;                 --! 入力ストリーム.
                  EVENT      : in    EVENT_TYPE            --! 読み取るイベント.
     ) is
+        constant PROC_NAME  :       string := "READ_EVENT";
         variable read_len   :       integer;
         variable read_good  :       boolean;
     begin 
         READ_EVENT(SELF.reader, STREAM, EVENT, SELF.str_buf, SELF.str_len, read_len, read_good);
         if (read_good = FALSE) then
-            EXECUTE_ABORT(SELF, string'("READ_EVENT:Read Error"));
+            READ_ERROR(SELF, PROC_NAME, "READ_EVENT NG");
         end if;
     end procedure;
     -------------------------------------------------------------------------------
@@ -443,11 +471,12 @@ package body CORE is
         file     STREAM     :       TEXT;                 --! 入力ストリーム.
                  EVENT      : in    EVENT_TYPE            --! 読み飛ばすイベント.
     ) is
+        constant PROC_NAME  :       string := "SKIP_EVENT";
         variable skip_good  :       boolean;
     begin
         SKIP_EVENT(SELF.reader, STREAM, EVENT, skip_good);
         if (skip_good = FALSE) then
-            EXECUTE_ABORT(SELF, string'("SKIP_EVENT:Read Error"));
+            READ_ERROR(SELF, PROC_NAME, "SKIP_EVENT NG");
         end if;
     end procedure;
     -------------------------------------------------------------------------------
@@ -474,6 +503,7 @@ package body CORE is
         file     STREAM     :       TEXT;                 --! シナリオのストリーム.
         variable FOUND      : out   boolean               --! 名前があるかどうかを返す.
     ) is
+        constant PROC_NAME  :       string := "check_my_name";
         variable get_event  :       EVENT_TYPE;
         variable seq_level  :       integer;
         variable match      :       boolean;
@@ -500,7 +530,7 @@ package body CORE is
                     end if;
                     exit when (seq_level = 0);
                 when EVENT_ERROR     =>
-                    EXECUTE_ABORT(SELF, string'("Check_My_Name:Read Error"));
+                    READ_ERROR(SELF, PROC_NAME, "SEEK_EVENT NG");
                 when others =>
                     SKIP_EVENT(SELF, STREAM, get_event);
             end case;
@@ -515,6 +545,7 @@ package body CORE is
         file     STREAM     :       TEXT;                 --! シナリオのストリーム.
         variable NEXT_STATE : out   STATE_TYPE            --! 次に遷移する状態.
     ) is
+        constant PROC_NAME  :       string := "check_first_node";
         variable next_event :       EVENT_TYPE;
         variable found      :       boolean;
     begin
@@ -525,7 +556,7 @@ package body CORE is
                 -- エラーだった場合.
                 -------------------------------------------------------------------
                 when EVENT_ERROR =>
-                    EXECUTE_ABORT(SELF, string'("Check_First_Node:Read Error"));
+                    READ_ERROR(SELF, PROC_NAME, "SEEK_EVENT NG");
                 -------------------------------------------------------------------
                 -- 最初のノードがマップだった場合.
                 -- * 例１ ID: {...}
@@ -638,12 +669,13 @@ package body CORE is
         variable OPERATION  : out   OPERATION_TYPE;       --! オペレーションコマンド.
         variable OP_WORD    : out   string                --! オペレーションキーワード.
     ) is
+        constant PROC_NAME  :       string := "READ_OPERATION";
         variable next_event :       EVENT_TYPE;
         variable next_state :       STATE_TYPE;
         procedure REPORT_DEBUG(state:in STRING;event:EVENT_TYPE) is
         begin
-            REPORT_DEBUG(SELF, string'("CORE_MAIN(state=") & state & 
-                               string'(",next_event=") & EVENT_TO_STRING(event) & ")");
+            REPORT_DEBUG(SELF, PROC_NAME, string'("state=") & state & 
+                               string'(" next_event=") & EVENT_TO_STRING(event));
             if (SELF.debug > 1) then
                 DEBUG_DUMP(SELF.reader);
             end if;
@@ -653,7 +685,7 @@ package body CORE is
         MAIN_LOOP: loop
             SEEK_EVENT(SELF, STREAM, next_event);
             if (next_event = EVENT_ERROR) then
-                EXECUTE_ABORT(SELF, string'("READ_OPERATION:Read Error"));
+                READ_ERROR(SELF, PROC_NAME, "SEEK_EVENT NG");
             end if;
             case SELF.curr_state is
                 -------------------------------------------------------------------
@@ -815,9 +847,10 @@ package body CORE is
                             READ_EVENT(SELF, STREAM, next_event);
                             SELF.curr_state := STATE_TOP_SEQ;
                         when others =>
-                            SKIP_EVENT(SELF, STREAM, next_event);
-                            SELF.curr_state := STATE_TOP_SEQ;
-                            -- ERROR
+                            READ_ERROR(SELF, PROC_NAME,
+                                       "need EVENT_MAP_END but " &
+                                       EVENT_TO_STRING(next_event) &
+                                       " in STATE_MAP_END");
                     end case;
                 -------------------------------------------------------------------
                 -- OP_MAPを処理している状態.
@@ -829,9 +862,10 @@ package body CORE is
                             READ_EVENT(SELF, STREAM, next_event);
                             SELF.curr_state := SELF.prev_state;
                         when others =>
-                            READ_EVENT(SELF, STREAM, next_event);
-                            SELF.curr_state := SELF.prev_state;
-                            -- ERROR
+                            READ_ERROR(SELF, PROC_NAME,
+                                       "need EVENT_MAP_END but " &
+                                       EVENT_TO_STRING(next_event) &
+                                       " in STATE_OP_MAP");
                     end case;
                 -------------------------------------------------------------------
                 -- OP_SCALARを処理している状態.
@@ -839,9 +873,11 @@ package body CORE is
                 when STATE_OP_SCALAR =>
                     REPORT_DEBUG(string'("STATE_OP_SCALAR"), next_event);
                     SELF.curr_state := SELF.prev_state;
+                -------------------------------------------------------------------
+                -- 不正な状態(ありえないはず).
+                -------------------------------------------------------------------
                 when others =>
-                    null;
-                    -- ERROR
+                    EXECUTE_ABORT(SELF, PROC_NAME, "bad state");
             end case;
         end loop;
     end procedure;
@@ -868,8 +904,10 @@ package body CORE is
         variable SELF       : inout CORE_TYPE;            --! コア変数.
         file     STREAM     :       TEXT                  --! 入力ストリーム.
     ) is
+        constant PROC_NAME  :       STRING := "EXECUTE_SAY";
         variable next_event :       EVENT_TYPE;
     begin
+        REPORT_DEBUG(SELF, PROC_NAME, "BEGIN");
         SEEK_EVENT(SELF, STREAM, next_event);
         if (next_event = EVENT_SCALAR) then
             READ_EVENT(SELF, STREAM, next_event);
@@ -877,6 +915,7 @@ package body CORE is
         else
             SKIP_EVENT(SELF, STREAM, next_event);
         end if;
+        REPORT_DEBUG(SELF, PROC_NAME, "END");
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief SKIPオペレーションを実行する.
@@ -885,27 +924,137 @@ package body CORE is
         variable SELF       : inout CORE_TYPE;            --! コア変数.
         file     STREAM     :       TEXT                  --! 入力ストリーム.
     ) is
+        constant PROC_NAME  :       STRING := "EXECUTE_SKIP";
         variable next_event :       EVENT_TYPE;
     begin
+        REPORT_DEBUG(SELF, PROC_NAME, "BEGIN");
         SEEK_EVENT(SELF, STREAM, next_event);
-        if (next_event /= EVENT_ERROR) then
-            SKIP_EVENT(SELF, STREAM, next_event);
+        if (next_event = EVENT_ERROR) then
+            READ_ERROR(SELF, PROC_NAME, "SEEK_EVENT NG");
         else
-            EXECUTE_ABORT(SELF, string'("EXECUTE SKIP:Read Error"));
+            SKIP_EVENT(SELF, STREAM, next_event);
         end if;
+        REPORT_DEBUG(SELF, PROC_NAME, "END");
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief REPORTフラグを書き換えるオペレーションを実行する.
+    -------------------------------------------------------------------------------
+    procedure EXECUTE_REPORT(
+        variable SELF       : inout CORE_TYPE;            --! コア変数.
+        file     STREAM     :       TEXT                  --! 入力ストリーム.
+    ) is
+        constant PROC_NAME  :       STRING := "EXECUTE_REPORT";
+        variable next_event :       EVENT_TYPE;
+        constant KEY_DEBUG  :       STRING(1 to 3) := "DEB";
+        constant KEY_REMARK :       STRING(1 to 3) := "REM";
+        constant KEY_NOTE   :       STRING(1 to 3) := "NOT";
+        constant KEY_WARNING:       STRING(1 to 3) := "WAR";
+        constant KEY_MISMATCH:      STRING(1 to 3) := "MIS";
+        constant KEY_ERROR  :       STRING(1 to 3) := "ERR";
+        constant KEY_FAILURE:       STRING(1 to 3) := "FAI";
+        constant KEY_GET    :       STRING(1 to 3) := "GET";
+        constant KEY_NONE   :       STRING(1 to 3) := "   ";
+        variable key_word   :       STRING(1 to 3);
+        variable map_level  :       integer;
+        variable map_value  :       boolean;
+        variable scan_len   :       integer;
+    begin
+        REPORT_DEBUG(SELF, PROC_NAME, "BEGIN");
+        map_level := 0;
+        map_value := FALSE;
+        key_word  := KEY_GET;
+        SCAN_LOOP: loop
+            SEEK_EVENT(SELF, STREAM, next_event);
+            case next_event is
+                when EVENT_ERROR     =>
+                    READ_ERROR(SELF, PROC_NAME, "SEEK_EVENT NG");
+                when EVENT_MAP_BEGIN =>
+                    READ_EVENT(SELF, STREAM, next_event);
+                    map_level := map_level + 1;
+                when EVENT_MAP_END   =>
+                    READ_EVENT(SELF, STREAM, next_event);
+                    map_level := map_level - 1;
+                when EVENT_SCALAR =>
+                    READ_EVENT(SELF, STREAM, next_event);
+                    if (key_word = KEY_GET) then
+                        COPY_KEY_WORD(SELF, key_word);
+                        case key_word is
+                            when KEY_DEBUG   => null;
+                            when KEY_REMARK  => null;
+                            when KEY_NOTE    => null;
+                            when KEY_WARNING => null;
+                            when KEY_MISMATCH=> null;
+                            when KEY_ERROR   => null;
+                            when KEY_FAILURE => null;
+                            when others      =>
+                                READ_ERROR(SELF, PROC_NAME, "Illegal keyword");
+                                key_word := KEY_NONE;
+                        end case;
+                    else
+                        STRING_TO_BOOLEAN(SELF.str_buf(1 to SELF.str_len), map_value, scan_len);
+                        if (scan_len > 0) then
+                            case key_word is
+                                when KEY_DEBUG   => SELF.vocal.enable_debug    := map_value;
+                                when KEY_REMARK  => SELF.vocal.enable_remark   := map_value;
+                                when KEY_NOTE    => SELF.vocal.enable_note     := map_value;
+                                when KEY_WARNING => SELF.vocal.enable_warning  := map_value;
+                                when KEY_MISMATCH=> SELF.vocal.enable_mismatch := map_value;
+                                when KEY_ERROR   => SELF.vocal.enable_error    := map_value;
+                                when KEY_FAILURE => SELF.vocal.enable_failure  := map_value;
+                                when others      => null;
+                            end case;
+                        else
+                            READ_ERROR(SELF, PROC_NAME, "Illegal boolean value");
+                        end if;
+                        key_word := KEY_GET;
+                    end if;
+                when others =>
+                    READ_ERROR(SELF, PROC_NAME, EVENT_TO_STRING(next_event));
+                    SKIP_EVENT(SELF, STREAM, next_event);
+            end case;
+            exit when (map_level = 0);
+        end loop;
+        REPORT_DEBUG(SELF, PROC_NAME, "END");
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief DEBUGフラグを書き換えるオペレーションを実行する.
+    -------------------------------------------------------------------------------
+    procedure EXECUTE_DEBUG(
+        variable SELF       : inout CORE_TYPE;            --! コア変数.
+        file     STREAM     :       TEXT                  --! 入力ストリーム.
+    ) is
+        constant PROC_NAME  :       string := "EXECUTE_DEBUG";
+        variable next_event :       EVENT_TYPE;
+        variable scan_len   :       integer;
+        variable debug      :       integer;
+    begin 
+        REPORT_DEBUG(SELF, PROC_NAME, "BEGIN");
+        SEEK_EVENT(SELF, STREAM, next_event);
+        case next_event is
+            when EVENT_SCALAR =>
+                READ_EVENT(SELF, STREAM, EVENT_SCALAR);
+                STRING_TO_INTEGER(SELF.str_buf(1 to SELF.str_len), debug, scan_len);
+                if (scan_len > 0) then
+                    SELF.debug := debug;
+                    REPORT_DEBUG(SELF, PROC_NAME & " ON");
+                end if;
+            when others =>
+                READ_ERROR(SELF, PROC_NAME, EVENT_TO_STRING(next_event));
+                SKIP_EVENT(SELF, STREAM, next_event);
+        end case;
+        REPORT_DEBUG(SELF, PROC_NAME, "END");
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 不正なSCALARオペレーションを警告して読み飛ばす.
     -------------------------------------------------------------------------------
-    constant  UNDEFINED_TAG        : STRING := "+++++ Warning :";
     procedure EXECUTE_UNDEFINED_SCALAR(
         variable SELF       : inout CORE_TYPE;            --! コア変数.
         file     STREAM     :       TEXT;                 --! 入力ストリーム.
                  OP_WORD    : in    STRING
     ) is
     begin
+        REPORT_READ_ERROR(SELF.vocal, string'("Undefined Scalar Operation(") & OP_WORD & ")");
         DEBUG_DUMP(SELF.reader);
-        REPORT_READ_ERROR(SELF.vocal, string'("Undefined Map Operation(") & OP_WORD & ")");
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 不正なMAPオペレーションを警告して読み飛ばす.
@@ -917,7 +1066,7 @@ package body CORE is
    ) is
         variable next_event :       EVENT_TYPE;
     begin
-        REPORT_READ_ERROR(SELF.vocal, string'("Undefined Scalar Operation(") & OP_WORD & ")");
+        REPORT_READ_ERROR(SELF.vocal, string'("Undefined Map Operation(") & OP_WORD & ")");
         DEBUG_DUMP(SELF.reader);
         SEEK_EVENT(SELF, STREAM, next_event);
         SKIP_EVENT(SELF, STREAM, next_event);
@@ -925,13 +1074,37 @@ package body CORE is
     -------------------------------------------------------------------------------
     --! @brief 致命的エラーによる中断.
     -------------------------------------------------------------------------------
-    procedure EXECUTE_ABORT(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-                 MESSAGE    : in    STRING
-    ) is
+    procedure EXECUTE_ABORT(SELF: inout CORE_TYPE; MESSAGE: in STRING) is
     begin
         REPORT_FAILURE(SELF.vocal, MESSAGE);
         DEBUG_DUMP(SELF.reader);
         assert FALSE report MESSAGE severity FAILURE;
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief 致命的エラーによる中断.
+    -------------------------------------------------------------------------------
+    procedure EXECUTE_ABORT(SELF: inout CORE_TYPE; NAME, MESSAGE: in STRING) is
+    begin
+        REPORT_FAILURE(SELF.vocal, NAME & " " & MESSAGE);
+        DEBUG_DUMP(SELF.reader);
+        assert FALSE report NAME & " " & MESSAGE severity FAILURE;
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief シナリオリードエラーによる中断.
+    -------------------------------------------------------------------------------
+    procedure READ_ERROR(SELF:inout CORE_TYPE;MESSAGE:in STRING) is
+    begin
+        REPORT_READ_ERROR(SELF.vocal, string'("Read Error ") & MESSAGE);
+        DEBUG_DUMP(SELF.reader);
+        assert FALSE report string'("Read Error ") & MESSAGE severity FAILURE;
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief シナリオリードエラーによる中断.
+    -------------------------------------------------------------------------------
+    procedure READ_ERROR(SELF:inout CORE_TYPE;NAME, MESSAGE:in STRING) is
+    begin
+        REPORT_READ_ERROR(SELF.vocal, NAME & " Read Error " & MESSAGE);
+        DEBUG_DUMP(SELF.reader);
+        assert FALSE report NAME & " Read Error " & MESSAGE severity FAILURE;
     end procedure;
 end CORE;
