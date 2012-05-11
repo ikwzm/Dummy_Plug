@@ -2,7 +2,7 @@
 --!     @file    reader.vhd
 --!     @brief   Package for Dummy Plug Scenario Reader.
 --!     @version 0.0.5
---!     @date    2012/5/8
+--!     @date    2012/5/11
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -145,6 +145,15 @@ package READER is
                  GOOD       : out   boolean       --! 正常に読み取れたことを示す.
     );
     -------------------------------------------------------------------------------
+    --! @brief ストリームからEVENT_SCALARを真偽値数(BOOLEAN)として取り出すサブプログラム.
+    -------------------------------------------------------------------------------
+    procedure READ_BOOLEAN(
+        variable SELF       : inout READER_TYPE;  --! リーダーの状態.
+        file     STREAM     :       TEXT;         --! 入力ストリーム.
+                 VALUE      : out   boolean;      --! 読み取った整数の値.
+                 GOOD       : out   boolean       --! 正常に読み取れたことを示す.
+    );
+    -------------------------------------------------------------------------------
     --! @brief ストリームからEVENTを読み飛ばすサブプログラム.
     --!        EVENTがMAP_BEGINやSEQ_BEGINの場合は、対応するMAP_ENDまたはSEQ_ENDまで
     --!        読み飛ばすことに注意.
@@ -188,6 +197,7 @@ use     ieee.std_logic_1164.all;
 use     std.textio.all;
 library DUMMY_PLUG;
 use     DUMMY_PLUG.UTIL.STRING_TO_INTEGER;
+use     DUMMY_PLUG.UTIL.STRING_TO_BOOLEAN;
 use     DUMMY_PLUG.UTIL.INTEGER_TO_STRING;
 -----------------------------------------------------------------------------------
 --! @brief Dummy Plug のシナリオを読み込むためのパッケージのボディ
@@ -2643,6 +2653,29 @@ package body  READER is
             GOOD := TRUE;
         else
             VALUE:= 0;
+            GOOD := FALSE;
+        end if;
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief ストリームからEVENT_SCALARを真偽値数(BOOLEAN)として取り出すサブプログラム.
+    -------------------------------------------------------------------------------
+    procedure READ_BOOLEAN(
+        variable SELF       : inout READER_TYPE;  --! リーダーの状態.
+        file     STREAM     :       TEXT;         --! 入力ストリーム.
+                 VALUE      : out   boolean;      --! 読み取った整数の値.
+                 GOOD       : out   boolean       --! 正常に読み取れたことを示す.
+    ) is
+        variable word       :       STRING(1 to 5);
+        variable word_len   :       integer;
+        variable read_len   :       integer;
+        variable value_len  :       integer;
+    begin
+        read_scalar(SELF, STREAM, word, word_len, read_len, GOOD);
+        if (word_len > 0) then
+            STRING_TO_BOOLEAN(word(1 to word_len), VALUE, value_len);
+            GOOD := (value_len > 0);
+        else
+            VALUE:= FALSE;
             GOOD := FALSE;
         end if;
     end procedure;

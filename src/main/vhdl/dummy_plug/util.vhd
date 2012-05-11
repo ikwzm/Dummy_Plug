@@ -2,7 +2,7 @@
 --!     @file    util.vhd
 --!     @brief   Utility Package for Dummy Plug.
 --!     @version 0.0.5
---!     @date    2012/5/8
+--!     @date    2012/5/11
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -55,6 +55,14 @@ package UTIL is
     procedure STRING_TO_STD_LOGIC_VECTOR(
                  STR        : in    string          ; --! 入力文字列.
                  VAL        : out   std_logic_vector; --! 変換された std_logic_vector.
+                 LEN        : out   integer           --! 入力文字列から処理した文字の数.
+    );
+    -------------------------------------------------------------------------------
+    --! @brief 文字列をbooleanに変換するサブプログラム.
+    -------------------------------------------------------------------------------
+    procedure STRING_TO_BOOLEAN(
+                 STR        : in    string ;          --! 入力文字列.
+                 VAL        : out   boolean;          --! 変換された boolean.
                  LEN        : out   integer           --! 入力文字列から処理した文字の数.
     );
     -------------------------------------------------------------------------------
@@ -165,6 +173,10 @@ package UTIL is
     --! @brief std_logicを２進数文字に変換するサブプログラム.
     -------------------------------------------------------------------------------
     function  BIN_TO_CHAR  (VAL: std_logic       ) return character;
+    -------------------------------------------------------------------------------
+    --! @brief booleanを文字列に変換するサブプログラム.
+    -------------------------------------------------------------------------------
+    function  BOOLEAN_TO_STRING(VAL: boolean) return STRING;
     -------------------------------------------------------------------------------
     --! @brief std_logic 同士を比較するサブプログラム.
     -------------------------------------------------------------------------------
@@ -304,6 +316,51 @@ package body UTIL is
         variable temp       :       integer;
     begin
         STRING_TO_STD_LOGIC_VECTOR(STR,VAL,LEN,temp);
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief 文字列をbooleanに変換するサブプログラム.
+    -------------------------------------------------------------------------------
+    procedure STRING_TO_BOOLEAN(
+                 STR        : in    string ;          --! 入力文字列.
+                 VAL        : out   boolean;          --! 変換された boolean.
+                 LEN        : out   integer           --! 入力文字列から処理した文字の数.
+    ) is
+    begin
+        case STR'length is
+            when 1 => if    STR = "y"     or
+                            STR = "Y"     then VAL := TRUE ; LEN := 1;
+                      elsif STR = "n"     or
+                            STR = "N"     then VAL := FALSE; LEN := 1;
+                      else                     VAL := FALSE; LEN := 0;
+                      end if;
+            when 2 => if    STR = "on"    or
+                            STR = "On"    or
+                            STR = "ON"    then VAL := TRUE ; LEN := 1;
+                      elsif STR = "no"    or
+                            STR = "No"    or
+                            STR = "NO"    then VAL := FALSE; LEN := 1;
+                      else                     VAL := FALSE; LEN := 0;
+                      end if;
+            when  3 => if   STR = "yes"   or
+                            STR = "Yes"   or
+                            STR = "YES"   then VAL := TRUE ; LEN := 1;
+                      elsif STR = "off"   or
+                            STR = "Off"   or
+                            STR = "OFF"   then VAL := FALSE; LEN := 1;
+                      else                     VAL := FALSE; LEN := 0;
+                      end if;
+            when  4 => if   STR = "true"  or
+                            STR = "True"  or
+                            STR = "TRUE"  then VAL := TRUE ; LEN := 1;
+                       else                    VAL := FALSE; LEN := 0;
+                       end if;
+            when  5 => if   STR = "false" or
+                            STR = "False" or
+                            STR = "FALSE" then VAL := FALSE; LEN := 1;
+                       else                    VAL := FALSE; LEN := 0;
+                       end if;
+            when others =>                     VAL := FALSE; LEN := 0;
+        end case;
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 10進数文字列を整数に変換するサブプログラム.
@@ -817,6 +874,17 @@ package body UTIL is
         str(1) := BIN_TO_CHAR(VAL);
         return str;
     end BIN_TO_STRING; 
+    -------------------------------------------------------------------------------
+    --! @brief booleanを文字列に変換するサブプログラム.
+    -------------------------------------------------------------------------------
+    function  BOOLEAN_TO_STRING(VAL: boolean) return STRING is
+        constant T : string(1 to 4) := "TRUE";
+        constant F : string(1 to 5) := "FALSE";
+    begin
+        if (VAL) then return T;
+        else          return F;
+        end if;
+    end function;
     -------------------------------------------------------------------------------
     --! @brief std_logic 同士を比較するサブプログラム.
     -------------------------------------------------------------------------------
