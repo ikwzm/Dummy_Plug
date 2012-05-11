@@ -817,7 +817,7 @@ begin
                                             port_num := -1;
                                         else
                                             SCAN_INTEGER(port_num, scan_len);
-                                            if (SYNC_REQ'low <= port_num and port_num <= SYNC_REQ'high) then
+                                            if (port_num < SYNC_REQ'low and SYNC_REQ'high < port_num) then
                                                 port_num := -2;
                                             end if;
                                         end if;
@@ -843,7 +843,6 @@ begin
                         READ_ERROR(core, PROC_NAME, "need EVENT_MAP_END but " &
                                                      EVENT_TO_STRING(next_event));
                     end if;
-                    READ_EVENT(core, stream, EVENT_MAP_END);
                 when OP_DOC_BEGIN => null;
                 when OP_SCALAR    => null;
                 when others       => null;
