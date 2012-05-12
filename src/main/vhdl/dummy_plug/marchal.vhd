@@ -2,7 +2,7 @@
 --!     @file    marchal.vhd
 --!     @brief   Marchal Dummy Plug Player.
 --!     @version 0.0.5
---!     @date    2012/5/11
+--!     @date    2012/5/12
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -88,11 +88,13 @@ end MARCHAL;
 -----------------------------------------------------------------------------------
 library ieee;
 use     ieee.std_logic_1164.all;
+use     ieee.numeric_std.all;
 use     std.textio.all;
 library DUMMY_PLUG;
 use     DUMMY_PLUG.CORE.all;
 use     DUMMY_PLUG.SYNC.all;
 use     DUMMY_PLUG.UTIL.all;
+use     DUMMY_PLUG.VOCAL.all;
 use     DUMMY_PLUG.READER.all;
 -----------------------------------------------------------------------------------
 --
@@ -106,11 +108,20 @@ architecture MODEL of MARCHAL is
     signal    sync_rst          : std_logic := '0';
     signal    sync_clr          : std_logic := '0';
     signal    sync_debug        : boolean   := FALSE;
+    -------------------------------------------------------------------------------
+    --! TIME_KEEPER
+    -------------------------------------------------------------------------------
+    subtype   TIMER_TIME_TYPE   is unsigned(63 downto 0);
+    constant  DEFAULT_TIMEOUT   : TIMER_TIME_TYPE := (others => '1');
+    signal    timer_reset       : boolean := TRUE;
+    signal    timer_valid       : boolean := TRUE;
+    signal    timer             : TIMER_TIME_TYPE := DEFAULT_TIMEOUT;
+    signal    timeout_time      : TIMER_TIME_TYPE := DEFAULT_TIMEOUT;
 begin
     -------------------------------------------------------------------------------
     --
     -------------------------------------------------------------------------------
-    process
+    MAIN: process
         file      stream        : TEXT;
         variable  core          : CORE_TYPE;
         variable  operation     : OPERATION_TYPE;
@@ -120,6 +131,40 @@ begin
         constant  KEY_REPORT    : STRING(1 to 3) := "REP";
         constant  KEY_SYNC      : STRING(1 to 3) := "SYN";
         constant  KEY_WAIT      : STRING(1 to 3) := "WAI";
+        constant  KEY_TIMEOUT   : STRING(1 to 3) := "TIM";
+        ---------------------------------------------------------------------------
+        --! @brief  TIMEOUTオペレーション.タイムアウトの設定を行う.
+        ---------------------------------------------------------------------------
+        procedure EXECUTE_TIMEOUT is
+            constant PROC_NAME  : string := "EXECUTE_TIMEOUT";
+            variable next_event : EVENT_TYPE;
+            variable valid      : boolean;
+            variable count      : std_logic_vector(TIMER_TIME_TYPE'range);
+            variable valid_len  : integer;
+            variable count_len  : integer;
+        begin
+            REPORT_DEBUG(core, PROC_NAME, "BEGIN");
+            SEEK_EVENT(core, stream, next_event);
+            case next_event is
+                when EVENT_SCALAR =>
+                    READ_EVENT(core, stream, EVENT_SCALAR);
+                    STRING_TO_STD_LOGIC_VECTOR(core.str_buf(1 to core.str_len), count, count_len);
+                    if (count_len > 0) then
+                        timeout_time <= unsigned(count);
+                    else
+                        STRING_TO_BOOLEAN     (core.str_buf(1 to core.str_len), valid, valid_len);
+                        if (valid_len > 0) then
+                            timer_valid <= valid;
+                        else
+                            READ_ERROR(core, PROC_NAME, "Invalid Parameter(" &
+                                       core.str_buf(1 to core.str_len) & ")");
+                        end if;
+                    end if;
+                when others =>
+                    READ_ERROR(core, PROC_NAME, "SEEK_EVENT NG");
+            end case;
+            REPORT_DEBUG(core, PROC_NAME, "END");
+        end procedure;
         ---------------------------------------------------------------------------
         --! @brief  WAITオペレーション. 指定された条件まで待機.
         ---------------------------------------------------------------------------
@@ -199,11 +244,13 @@ begin
             READ_OPERATION(core, stream, operation, keyword);
             case operation is
                 when OP_DOC_BEGIN =>
+                    timer_reset  <= TRUE, FALSE after 1 ns;
                     CORE_SYNC(core, 0, 2, sync_req, sync_ack);
                 when OP_MAP    =>
                     case keyword is
                         when KEY_SYNC   => EXECUTE_SYNC  (operation);
                         when KEY_WAIT   => EXECUTE_WAIT;
+                        when KEY_TIMEOUT=> EXECUTE_TIMEOUT;
                         when KEY_SAY    => EXECUTE_SAY   (core, stream);
                         when KEY_DEBUG  => EXECUTE_DEBUG (core, stream);
                         when KEY_REPORT => EXECUTE_REPORT(core, stream);
@@ -224,6 +271,25 @@ begin
             assert FALSE report "Simulation complete." severity FAILURE;
         end if;
         wait;
+    end process;
+    -------------------------------------------------------------------------------
+    --! @brief タイムキーパー
+    -------------------------------------------------------------------------------
+    TIME_KEEPER: process(timer_reset, CLK)
+        variable vocal : VOCAL_TYPE := NEW_VOCAL(NAME);
+    begin
+        if (timer_reset) then
+            timer <= (others => '0');
+        elsif (CLK'event and CLK = '1') then
+            if (timer_valid) then
+                if (timer < timeout_time) then
+                    timer <= timer + 1;
+                else
+                    REPORT_FAILURE(vocal, string'("Time Out!"));
+                    assert FALSE report "Time Out!" severity FAILURE;
+                end if;
+            end if;
+        end if;
     end process;
     -------------------------------------------------------------------------------
     --! @ SYNC制御
