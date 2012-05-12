@@ -442,8 +442,6 @@ begin
         constant  KEY_WAIT      : KEYWORD_TYPE := "WAIT ";
         constant  KEY_CHECK     : KEYWORD_TYPE := "CHECK";
         constant  KEY_DEBUG     : KEYWORD_TYPE := "DEBUG";
-        constant  KEY_PORT      : KEYWORD_TYPE := "PORT ";
-        constant  KEY_LOCAL     : KEYWORD_TYPE := "LOCAL";
         constant  KEY_TIMEOUT   : KEYWORD_TYPE := "TIMEO";
         constant  KEY_WAIT_ON   : KEYWORD_TYPE := "ON   ";
         constant  KEY_REPORT    : KEYWORD_TYPE := "REPOR";
@@ -778,87 +776,18 @@ begin
         ---------------------------------------------------------------------------
         procedure EXECUTE_SYNC(operation: in OPERATION_TYPE) is
             constant PROC_NAME  : string := "EXECUTE_SYNC";
-            variable next_event : EVENT_TYPE;
             variable port_num   : integer;
             variable wait_num   : integer;
-            variable scan_len   : integer;
-            variable match      : boolean;
-            variable map_level  : integer;
-            type     STATE_TYPE is (STATE_NULL, STATE_SCALAR_PORT,
-                                    STATE_MAP_KEY, STATE_MAP_PORT, STATE_MAP_WAIT, STATE_ERROR);
-            variable state      : STATE_TYPE;
         begin
-            REPORT_DEBUG(core, PROC_NAME, "BEGIN");
-            port_num := 0;
-            wait_num := 2;
-            case operation is
-                when OP_MAP       =>
-                    map_level := 0;
-                    state     := STATE_SCALAR_PORT;
-                    OP_MAP_LOOP: loop
-                        SEEK_EVENT(core, stream, next_event);
-                        case next_event is
-                            when EVENT_MAP_BEGIN =>
-                                READ_EVENT(core, stream, next_event);
-                                map_level := map_level + 1;
-                                state     := STATE_MAP_KEY;
-                            when EVENT_MAP_END   =>
-                                READ_EVENT(core, stream, next_event);
-                                map_level := map_level - 1;
-                                state     := STATE_NULL;
-                            when EVENT_SCALAR    =>
-                                READ_EVENT(core, stream, next_event);
-                                case state is
-                                    when STATE_MAP_KEY =>
-                                        COPY_KEY_WORD(core, keyword);
-                                        case keyword is
-                                            when KEY_PORT => state := STATE_MAP_PORT;
-                                            when KEY_WAIT => state := STATE_MAP_WAIT;
-                                            when others   => state := STATE_ERROR;
-                                        end case;
-                                    when STATE_SCALAR_PORT | STATE_MAP_PORT =>
-                                        COPY_KEY_WORD(core, keyword);
-                                        if    (keyword = KEY_LOCAL) then
-                                            port_num := -1;
-                                        else
-                                            SCAN_INTEGER(port_num, scan_len);
-                                            if (port_num < SYNC_REQ'low and SYNC_REQ'high < port_num) then
-                                                port_num := -2;
-                                            end if;
-                                        end if;
-                                        if (state = STATE_MAP_PORT) then
-                                            state := STATE_MAP_KEY;
-                                        else
-                                            state := STATE_NULL;
-                                        end if;
-                                    when STATE_MAP_WAIT =>
-                                        SCAN_INTEGER(wait_num, scan_len);
-                                        state := STATE_MAP_KEY;
-                                    when others =>
-                                        state := STATE_MAP_KEY;
-                                end case;
-                            when EVENT_ERROR =>
-                                READ_ERROR(core, PROC_NAME, "SEEK_EVENT NG");
-                            when others =>
-                                SKIP_EVENT(core, stream, next_event);
-                        end case;
-                        exit when (map_level = 0);
-                    end loop;
-                    if (next_event /= EVENT_MAP_END) then
-                        READ_ERROR(core, PROC_NAME, "need EVENT_MAP_END but " &
-                                                     EVENT_TO_STRING(next_event));
-                    end if;
-                when OP_DOC_BEGIN => null;
-                when OP_SCALAR    => null;
-                when others       => null;
-            end case;
-            REPORT_DEBUG(core, PROC_NAME, "PORT=" & INTEGER_TO_STRING(port_num) &
-                                         " WAIT=" & INTEGER_TO_STRING(wait_num));
+            REPORT_DEBUG  (core, PROC_NAME, "BEGIN");
+            READ_SYNC_ARGS(core, stream, operation, port_num, wait_num);
+            REPORT_DEBUG  (core, PROC_NAME, "PORT=" & INTEGER_TO_STRING(port_num) &
+                                           " WAIT=" & INTEGER_TO_STRING(wait_num));
             LOCAL_SYNC;
-            if (port_num >= 0) then
+            if (SYNC_REQ'low <= port_num and port_num <= SYNC_REQ'high) then
                 CORE_SYNC(core, port_num, wait_num, SYNC_REQ, SYNC_ACK);
             end if;
-            REPORT_DEBUG(core, PROC_NAME, "END");
+            REPORT_DEBUG  (core, PROC_NAME, "END");
         end procedure;
         ---------------------------------------------------------------------------
         --! @brief チャネルオペレーション(SCALAR)実行サブプログラム.

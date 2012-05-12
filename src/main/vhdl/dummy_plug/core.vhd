@@ -155,6 +155,16 @@ package CORE is
         variable OP_WORD    : out   string                --! オペレーションキーワード.
     );
     -------------------------------------------------------------------------------
+    --! @brief SYNCオペレーションの引数を読むサブプログラム.
+    -------------------------------------------------------------------------------
+    procedure READ_SYNC_ARGS(
+        variable SELF       : inout CORE_TYPE;            --! コア変数.
+        file     STREAM     :       TEXT;                 --! 入力ストリーム.
+                 OPERATION  : in    OPERATION_TYPE;       --! オペレーションコマンド.
+                 SYNC_PORT  : out   integer;              --! ポート番号.
+                 SYNC_WAIT  : out   integer               --! ウェイトクロック数.
+    );
+    -------------------------------------------------------------------------------
     --! @brief 同期オペレーション.
     -------------------------------------------------------------------------------
     procedure CORE_SYNC(
@@ -910,6 +920,94 @@ package body CORE is
                     EXECUTE_ABORT(SELF, PROC_NAME, "bad state");
             end case;
         end loop;
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief SYNCオペレーションの引数を読むサブプログラム.
+    -------------------------------------------------------------------------------
+    procedure READ_SYNC_ARGS(
+        variable SELF       : inout CORE_TYPE;            --! コア変数.
+        file     STREAM     :       TEXT;                 --! 入力ストリーム.
+                 OPERATION  : in    OPERATION_TYPE;       --! オペレーションコマンド.
+                 SYNC_PORT  : out   integer;              --! ポート番号.
+                 SYNC_WAIT  : out   integer               --! ウェイトクロック数.
+    ) is
+        constant PROC_NAME  : string := "READ_SYNC_ARGS";
+        variable next_event : EVENT_TYPE;
+        variable port_num   : integer;
+        variable wait_num   : integer;
+        variable scan_len   : integer;
+        variable match      : boolean;
+        variable map_level  : integer;
+        type     STATE_TYPE is (STATE_NULL, STATE_SCALAR_PORT,
+                                STATE_MAP_KEY, STATE_MAP_PORT, STATE_MAP_WAIT, STATE_ERROR);
+        variable state      : STATE_TYPE;
+        variable keyword    : STRING(1 to 5);
+        constant KEY_WAIT   : STRING(1 to 5) := "WAIT ";
+        constant KEY_PORT   : STRING(1 to 5) := "PORT ";
+        constant KEY_LOCAL  : STRING(1 to 5) := "LOCAL";
+    begin
+        port_num := 0;
+        wait_num := 2;
+        case OPERATION is
+            when OP_MAP =>
+                map_level := 0;
+                state     := STATE_SCALAR_PORT;
+                OP_MAP_LOOP: loop
+                    SEEK_EVENT(SELF, STREAM, next_event);
+                    case next_event is
+                        when EVENT_MAP_BEGIN =>
+                            READ_EVENT(SELF, STREAM, next_event);
+                            map_level := map_level + 1;
+                            state     := STATE_MAP_KEY;
+                        when EVENT_MAP_END   =>
+                            READ_EVENT(SELF, STREAM, next_event);
+                            map_level := map_level - 1;
+                            state     := STATE_NULL;
+                        when EVENT_SCALAR    =>
+                            READ_EVENT(SELF, STREAM, next_event);
+                            case state is
+                                when STATE_MAP_KEY =>
+                                    COPY_KEY_WORD(SELF, keyword);
+                                    case keyword is
+                                        when KEY_PORT => state := STATE_MAP_PORT;
+                                        when KEY_WAIT => state := STATE_MAP_WAIT;
+                                        when others   => state := STATE_ERROR;
+                                    end case;
+                                when STATE_SCALAR_PORT | STATE_MAP_PORT =>
+                                    COPY_KEY_WORD(SELF, keyword);
+                                    if    (keyword = KEY_LOCAL) then
+                                        port_num := -1;
+                                    else
+                                        STRING_TO_INTEGER(SELF.str_buf(1 to SELF.str_len), port_num, scan_len);
+                                    end if;
+                                    if (state = STATE_MAP_PORT) then
+                                        state := STATE_MAP_KEY;
+                                    else
+                                        state := STATE_NULL;
+                                    end if;
+                                when STATE_MAP_WAIT =>
+                                    STRING_TO_INTEGER(SELF.str_buf(1 to SELF.str_len), wait_num, scan_len);
+                                    state := STATE_MAP_KEY;
+                                when others =>
+                                    state := STATE_MAP_KEY;
+                            end case;
+                        when EVENT_ERROR =>
+                            READ_ERROR(SELF, PROC_NAME, "SEEK_EVENT NG");
+                        when others =>
+                            SKIP_EVENT(SELF, stream, next_event);
+                    end case;
+                    exit when (map_level = 0);
+                end loop;
+                if (next_event /= EVENT_MAP_END) then
+                    READ_ERROR(SELF, PROC_NAME, "need EVENT_MAP_END but " &
+                                                 EVENT_TO_STRING(next_event));
+                end if;
+            when OP_DOC_BEGIN => null;
+            when OP_SCALAR    => null;
+            when others       => null;
+        end case;
+        SYNC_PORT := port_num;
+        SYNC_WAIT := wait_num;
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 同期オペレーション.

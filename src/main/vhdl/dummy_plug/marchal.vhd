@@ -92,6 +92,7 @@ use     std.textio.all;
 library DUMMY_PLUG;
 use     DUMMY_PLUG.CORE.all;
 use     DUMMY_PLUG.SYNC.all;
+use     DUMMY_PLUG.UTIL.all;
 -----------------------------------------------------------------------------------
 --
 -----------------------------------------------------------------------------------
@@ -116,6 +117,24 @@ begin
         constant  KEY_SAY       : STRING(1 to 3) := "SAY";
         constant  KEY_DEBUG     : STRING(1 to 3) := "DEB";
         constant  KEY_REPORT    : STRING(1 to 3) := "REP";
+        constant  KEY_SYNC      : STRING(1 to 3) := "SYN";
+        ---------------------------------------------------------------------------
+        --! @brief  SYNCオペレーション. 
+        ---------------------------------------------------------------------------
+        procedure EXECUTE_SYNC(operation: in OPERATION_TYPE) is
+            constant PROC_NAME  : string := "EXECUTE_SYNC";
+            variable port_num   : integer;
+            variable wait_num   : integer;
+        begin
+            REPORT_DEBUG  (core, PROC_NAME, "BEGIN");
+            READ_SYNC_ARGS(core, stream, operation, port_num, wait_num);
+            REPORT_DEBUG  (core, PROC_NAME, "PORT=" & INTEGER_TO_STRING(port_num) &
+                                           " WAIT=" & INTEGER_TO_STRING(wait_num));
+            if (SYNC_REQ'low <= port_num and port_num <= SYNC_REQ'high) then
+                CORE_SYNC(core, port_num, wait_num, SYNC_REQ, SYNC_ACK);
+            end if;
+            REPORT_DEBUG  (core, PROC_NAME, "END");
+        end procedure;
     begin
         ---------------------------------------------------------------------------
         --! ダミープラグコアの初期化.
@@ -152,12 +171,17 @@ begin
                     CORE_SYNC(core, 0, 2, sync_req, sync_ack);
                 when OP_MAP    =>
                     case keyword is
+                        when KEY_SYNC   => EXECUTE_SYNC  (operation);
                         when KEY_SAY    => EXECUTE_SAY   (core, stream);
                         when KEY_DEBUG  => EXECUTE_DEBUG (core, stream);
                         when KEY_REPORT => EXECUTE_REPORT(core, stream);
                         when others     => EXECUTE_SKIP  (core, stream);
                     end case;
                 when OP_SCALAR =>
+                    case keyword is
+                        when KEY_SYNC   => EXECUTE_SYNC  (operation);
+                        when others     => null;
+                    end case;
                 when OP_FINISH => exit;
                 when others    => null;
             end case;

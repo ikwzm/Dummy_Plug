@@ -307,16 +307,20 @@
       RRESP   : 0
 ---
 - MARCHAL:
+  - DEBUG : 0
   - SAY: >
        AIX DUMMU-PLUG SAMPLE SCENARIO 1 4 DONE
+- MASTER :
+  - DEBUG : 0
+- SLAVE  :
+  - DEBUG : 0
 ---
 - MARCHAL:
   - SAY: >
        AIX DUMMU-PLUG SAMPLE SCENARIO 1 5 START
-  - SYNC   : {PORT: 0, WAIT: 10}
+  - SYNC  : {PORT: 0, WAIT: 100}
   - SAY: >
        AIX DUMMU-PLUG SAMPLE SCENARIO 1 5 DONE
----
 - MASTER:                                 # マスター用ダミープラグの名前. 
   - DEBUG : 0
   - REPORT: {DEBUG: ON, MISMATCH: ON}
