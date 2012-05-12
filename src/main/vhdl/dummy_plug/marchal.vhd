@@ -93,6 +93,7 @@ library DUMMY_PLUG;
 use     DUMMY_PLUG.CORE.all;
 use     DUMMY_PLUG.SYNC.all;
 use     DUMMY_PLUG.UTIL.all;
+use     DUMMY_PLUG.READER.all;
 -----------------------------------------------------------------------------------
 --
 -----------------------------------------------------------------------------------
@@ -118,6 +119,36 @@ begin
         constant  KEY_DEBUG     : STRING(1 to 3) := "DEB";
         constant  KEY_REPORT    : STRING(1 to 3) := "REP";
         constant  KEY_SYNC      : STRING(1 to 3) := "SYN";
+        constant  KEY_WAIT      : STRING(1 to 3) := "WAI";
+        ---------------------------------------------------------------------------
+        --! @brief  WAITオペレーション. 指定された条件まで待機.
+        ---------------------------------------------------------------------------
+        procedure EXECUTE_WAIT is
+            constant PROC_NAME  : string := "EXECUTE_WAIT";
+            variable next_event : EVENT_TYPE;
+            variable wait_count : integer;
+            variable scan_len   : integer;
+         begin
+            REPORT_DEBUG(core, PROC_NAME, "BEGIN");
+            SEEK_EVENT(core, stream, next_event);
+            case next_event is
+                when EVENT_SCALAR =>
+                    READ_EVENT(core, stream, EVENT_SCALAR);
+                    STRING_TO_INTEGER(core.str_buf(1 to core.str_len), wait_count, scan_len);
+                    if (scan_len = 0) then
+                        wait_count := 1;
+                    end if;
+                    if (wait_count > 0) then
+                        for i in 1 to wait_count loop
+                            wait until (CLK'event and CLK = '1');
+                        end loop;
+                    end if;
+                    wait_count := 0;
+                when others =>
+                    READ_ERROR(core, PROC_NAME, "SEEK_EVENT NG");
+            end case;
+            REPORT_DEBUG(core, PROC_NAME, "END");
+        end procedure;
         ---------------------------------------------------------------------------
         --! @brief  SYNCオペレーション. 
         ---------------------------------------------------------------------------
@@ -172,6 +203,7 @@ begin
                 when OP_MAP    =>
                     case keyword is
                         when KEY_SYNC   => EXECUTE_SYNC  (operation);
+                        when KEY_WAIT   => EXECUTE_WAIT;
                         when KEY_SAY    => EXECUTE_SAY   (core, stream);
                         when KEY_DEBUG  => EXECUTE_DEBUG (core, stream);
                         when KEY_REPORT => EXECUTE_REPORT(core, stream);
