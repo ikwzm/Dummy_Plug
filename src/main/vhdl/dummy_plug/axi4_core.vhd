@@ -2,7 +2,7 @@
 --!     @file    axi4_core.vhd
 --!     @brief   AXI4 Dummy Plug Core Package.
 --!     @version 0.0.5
---!     @date    2012/5/9
+--!     @date    2012/5/12
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -363,159 +363,6 @@ package AXI4_CORE is
         signal   BREADY     : in    std_logic
     );
     -------------------------------------------------------------------------------
-    --! @brief AXI4_CORE_PLAYER
-    -------------------------------------------------------------------------------
-    component AXI4_CORE_PLAYER is
-        ---------------------------------------------------------------------------
-        -- ジェネリック変数.
-        ---------------------------------------------------------------------------
-        generic (
-            SCENARIO_FILE   : --! @brief シナリオファイルの名前.
-                              STRING;
-            NAME            : --! @brief 固有名詞.
-                              STRING;
-            MASTER          : --! @brief マスターモードを指定する.
-                              boolean   := FALSE;
-            SLAVE           : --! @brief スレーブモードを指定する.
-                              boolean   := FALSE;
-            READ            : --! @brief リードモードを指定する.
-                              boolean   := TRUE;
-            WRITE           : --! @brief ライトモードを指定する.
-                              boolean   := TRUE;
-            OUTPUT_DELAY    : --! @brief 出力信号遅延時間
-                              time;
-            WIDTH           : --! @brief AXI4 IS WIDTH :
-                              AXI4_SIGNAL_WIDTH_TYPE;
-            SYNC_PLUG_NUM   : --! @brief シンクロ用信号のプラグ番号.
-                              SYNC.SYNC_PLUG_NUM_TYPE := 1;
-            SYNC_WIDTH      : --! @brief シンクロ用信号の本数.
-                              integer :=  1;
-            FINISH_ABORT    : --! @brief FINISH コマンド実行時にシミュレーションを
-                              --!        アボートするかどうかを指定するフラグ.
-                              boolean := true
-        );
-        --------------------------------------------------------------------------
-        -- 入出力ポートの定義.
-        --------------------------------------------------------------------------
-        port(
-            ----------------------------------------------------------------------
-            -- グローバルシグナル.
-            ----------------------------------------------------------------------
-            ACLK            : in    std_logic;
-            ARESETn         : in    std_logic;
-            ----------------------------------------------------------------------
-            -- リードアドレスチャネルシグナル.
-            ----------------------------------------------------------------------
-            ARADDR_I        : in    std_logic_vector(WIDTH.ARADDR -1 downto 0);
-            ARADDR_O        : out   std_logic_vector(WIDTH.ARADDR -1 downto 0);
-            ARLEN_I         : in    AXI4_ALEN_TYPE;
-            ARLEN_O         : out   AXI4_ALEN_TYPE;
-            ARSIZE_I        : in    AXI4_ASIZE_TYPE;
-            ARSIZE_O        : out   AXI4_ASIZE_TYPE;
-            ARBURST_I       : in    AXI4_ABURST_TYPE;
-            ARBURST_O       : out   AXI4_ABURST_TYPE;
-            ARLOCK_I        : in    AXI4_ALOCK_TYPE;
-            ARLOCK_O        : out   AXI4_ALOCK_TYPE;
-            ARCACHE_I       : in    AXI4_ACACHE_TYPE;
-            ARCACHE_O       : out   AXI4_ACACHE_TYPE;
-            ARPROT_I        : in    AXI4_APROT_TYPE;
-            ARPROT_O        : out   AXI4_APROT_TYPE;
-            ARQOS_I         : in    AXI4_AQOS_TYPE;
-            ARQOS_O         : out   AXI4_AQOS_TYPE;
-            ARREGION_I      : in    AXI4_AREGION_TYPE;
-            ARREGION_O      : out   AXI4_AREGION_TYPE;
-            ARUSER_I        : in    std_logic_vector(WIDTH.ARUSER -1 downto 0);
-            ARUSER_O        : out   std_logic_vector(WIDTH.ARUSER -1 downto 0);
-            ARID_I          : in    std_logic_vector(WIDTH.ID     -1 downto 0);
-            ARID_O          : out   std_logic_vector(WIDTH.ID     -1 downto 0);
-            ARVALID_I       : in    std_logic;
-            ARVALID_O       : out   std_logic;
-            ARREADY_I       : in    std_logic;
-            ARREADY_O       : out   std_logic;
-            ----------------------------------------------------------------------
-            -- リードデータチャネルシグナル.
-            ----------------------------------------------------------------------
-            RVALID_I        : in    std_logic;
-            RVALID_O        : out   std_logic;
-            RLAST_I         : in    std_logic;
-            RLAST_O         : out   std_logic;
-            RDATA_I         : in    std_logic_vector(WIDTH.RDATA  -1 downto 0);
-            RDATA_O         : out   std_logic_vector(WIDTH.RDATA  -1 downto 0);
-            RRESP_I         : in    AXI4_RESP_TYPE;
-            RRESP_O         : out   AXI4_RESP_TYPE;
-            RUSER_I         : in    std_logic_vector(WIDTH.RUSER  -1 downto 0);
-            RUSER_O         : out   std_logic_vector(WIDTH.RUSER  -1 downto 0);
-            RID_I           : in    std_logic_vector(WIDTH.ID     -1 downto 0);
-            RID_O           : out   std_logic_vector(WIDTH.ID     -1 downto 0);
-            RREADY_I        : in    std_logic;
-            RREADY_O        : out   std_logic;
-            ----------------------------------------------------------------------
-            -- ライトアドレスチャネルシグナル.
-            ----------------------------------------------------------------------
-            AWADDR_I        : in    std_logic_vector(WIDTH.AWADDR -1 downto 0);
-            AWADDR_O        : out   std_logic_vector(WIDTH.AWADDR -1 downto 0);
-            AWLEN_I         : in    AXI4_ALEN_TYPE;
-            AWLEN_O         : out   AXI4_ALEN_TYPE;
-            AWSIZE_I        : in    AXI4_ASIZE_TYPE;
-            AWSIZE_O        : out   AXI4_ASIZE_TYPE;
-            AWBURST_I       : in    AXI4_ABURST_TYPE;
-            AWBURST_O       : out   AXI4_ABURST_TYPE;
-            AWLOCK_I        : in    AXI4_ALOCK_TYPE;
-            AWLOCK_O        : out   AXI4_ALOCK_TYPE;
-            AWCACHE_I       : in    AXI4_ACACHE_TYPE;
-            AWCACHE_O       : out   AXI4_ACACHE_TYPE;
-            AWPROT_I        : in    AXI4_APROT_TYPE;
-            AWPROT_O        : out   AXI4_APROT_TYPE;
-            AWQOS_I         : in    AXI4_AQOS_TYPE;
-            AWQOS_O         : out   AXI4_AQOS_TYPE;
-            AWREGION_I      : in    AXI4_AREGION_TYPE;
-            AWREGION_O      : out   AXI4_AREGION_TYPE;
-            AWUSER_I        : in    std_logic_vector(WIDTH.AWUSER -1 downto 0);
-            AWUSER_O        : out   std_logic_vector(WIDTH.AWUSER -1 downto 0);
-            AWID_I          : in    std_logic_vector(WIDTH.ID     -1 downto 0);
-            AWID_O          : out   std_logic_vector(WIDTH.ID     -1 downto 0);
-            AWVALID_I       : in    std_logic;
-            AWVALID_O       : out   std_logic;
-            AWREADY_I       : in    std_logic;
-            AWREADY_O       : out   std_logic;
-            ----------------------------------------------------------------------
-            -- ライトデータチャネルシグナル.
-            ----------------------------------------------------------------------
-            WLAST_I         : in    std_logic;
-            WLAST_O         : out   std_logic;
-            WDATA_I         : in    std_logic_vector(WIDTH.WDATA  -1 downto 0);
-            WDATA_O         : out   std_logic_vector(WIDTH.WDATA  -1 downto 0);
-            WSTRB_I         : in    std_logic_vector(WIDTH.WDATA/8-1 downto 0);
-            WSTRB_O         : out   std_logic_vector(WIDTH.WDATA/8-1 downto 0);
-            WUSER_I         : in    std_logic_vector(WIDTH.WUSER  -1 downto 0);
-            WUSER_O         : out   std_logic_vector(WIDTH.WUSER  -1 downto 0);
-            WID_I           : in    std_logic_vector(WIDTH.ID     -1 downto 0);
-            WID_O           : out   std_logic_vector(WIDTH.ID     -1 downto 0);
-            WVALID_I        : in    std_logic;
-            WVALID_O        : out   std_logic;
-            WREADY_I        : in    std_logic;
-            WREADY_O        : out   std_logic;
-            ----------------------------------------------------------------------
-            -- ライト応答チャネルシグナル.
-            ----------------------------------------------------------------------
-            BRESP_I         : in    AXI4_RESP_TYPE;
-            BRESP_O         : out   AXI4_RESP_TYPE;
-            BUSER_I         : in    std_logic_vector(WIDTH.BUSER  -1 downto 0);
-            BUSER_O         : out   std_logic_vector(WIDTH.BUSER  -1 downto 0);
-            BID_I           : in    std_logic_vector(WIDTH.ID     -1 downto 0);
-            BID_O           : out   std_logic_vector(WIDTH.ID     -1 downto 0);
-            BVALID_I        : in    std_logic;
-            BVALID_O        : out   std_logic;
-            BREADY_I        : in    std_logic;
-            BREADY_O        : out   std_logic;
-            ----------------------------------------------------------------------
-            -- シンクロ用信号
-            ----------------------------------------------------------------------
-            SYNC            : inout SYNC.SYNC_SIG_VECTOR(SYNC_WIDTH-1 downto 0);
-            FINISH          : out   std_logic
-        );
-    end component;
-    -------------------------------------------------------------------------------
     --! @brief AXI4_CHANNEL_PLAYER
     -------------------------------------------------------------------------------
     component  AXI4_CHANNEL_PLAYER is
@@ -674,6 +521,10 @@ package AXI4_CORE is
             SYNC_ACK        : in    SYNC.SYNC_ACK_VECTOR(SYNC_WIDTH-1 downto 0) := (others => '0');
             SYNC_LOCAL_REQ  : out   SYNC.SYNC_REQ_VECTOR(SYNC_LOCAL_PORT downto SYNC_LOCAL_PORT);
             SYNC_LOCAL_ACK  : in    SYNC.SYNC_ACK_VECTOR(SYNC_LOCAL_PORT downto SYNC_LOCAL_PORT);
+            -----------------------------------------------------------------------
+            -- 各種状態信号.
+            -----------------------------------------------------------------------
+            REPORT_STATUS   : out   CORE.REPORT_STATUS_TYPE;
             FINISH          : out   std_logic
         );
     end component;
@@ -1562,79 +1413,79 @@ package body AXI4_CORE is
         ---------------------------------------------------------------------------
         if (WRITE) then
             if (MATCH_STD_LOGIC(SIGNALS.AW.VALID             ,AWVALID ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("AWVALID ") &
+                REPORT_MISMATCH(SELF, string'("AWVALID ") &
                                 BIN_TO_STRING(AWVALID) & " /= " &
                                 BIN_TO_STRING(SIGNALS.AW.VALID));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.AW.READY             ,AWREADY ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("AWREADY ") & 
+                REPORT_MISMATCH(SELF, string'("AWREADY ") & 
                                 BIN_TO_STRING(AWREADY) & " /= " &
                                 BIN_TO_STRING(SIGNALS.AW.READY));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.AW.ADDR(AWADDR'range),AWADDR  ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("AWADDR ") &
+                REPORT_MISMATCH(SELF, string'("AWADDR ") &
                                 HEX_TO_STRING(AWADDR ) & " /= " &
                                 HEX_TO_STRING(SIGNALS.AW.ADDR(AWADDR'range)));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.AW.LEN               ,AWLEN   ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("AWLEN ") &
+                REPORT_MISMATCH(SELF, string'("AWLEN ") &
                                 BIN_TO_STRING(AWLEN  ) & " /= " &
                                 BIN_TO_STRING(SIGNALS.AW.LEN));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.AW.SIZE              ,AWSIZE  ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("AWSIZE ") &
+                REPORT_MISMATCH(SELF, string'("AWSIZE ") &
                                 BIN_TO_STRING(AWSIZE ) & " /= " &
                                 BIN_TO_STRING(SIGNALS.AW.SIZE));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.AW.BURST             ,AWBURST ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("AWBURST ") &
+                REPORT_MISMATCH(SELF, string'("AWBURST ") &
                                 BIN_TO_STRING(AWBURST) & " /= " &
                                 BIN_TO_STRING(SIGNALS.AW.BURST));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.AW.LOCK              ,AWLOCK  ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("ALOCK ") &
+                REPORT_MISMATCH(SELF, string'("ALOCK ") &
                                 BIN_TO_STRING(AWLOCK ) & " /= " &
                                 BIN_TO_STRING(SIGNALS.AW.LOCK));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.AW.CACHE             ,AWCACHE ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("AWCACHE ") &
+                REPORT_MISMATCH(SELF, string'("AWCACHE ") &
                                 BIN_TO_STRING(AWCACHE) & " /= " &
                                 BIN_TO_STRING(SIGNALS.AW.CACHE));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.AW.PROT              ,AWPROT  ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("AWPROT ") &
+                REPORT_MISMATCH(SELF, string'("AWPROT ") &
                                 BIN_TO_STRING(AWPROT ) & " /= " &
                                 BIN_TO_STRING(SIGNALS.AW.PROT));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.AW.QOS               ,AWQOS   ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("AWQOS ") &
+                REPORT_MISMATCH(SELF, string'("AWQOS ") &
                                 HEX_TO_STRING(AWQOS  ) & " /= " &
                                 HEX_TO_STRING(SIGNALS.AW.QOS));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.AW.REGION            ,AWREGION) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("AWREGION ") &
+                REPORT_MISMATCH(SELF, string'("AWREGION ") &
                                 HEX_TO_STRING(AWREGION) & " /= " &
                                 HEX_TO_STRING(SIGNALS.AW.REGION));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.AW.ID(AWID'range)    ,AWID    ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("AWID ") &
+                REPORT_MISMATCH(SELF, string'("AWID ") &
                                 HEX_TO_STRING(AWID   ) & " /= " &
                                 HEX_TO_STRING(SIGNALS.AW.ID(AWID'range)));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.AW.USER(AWUSER'range),AWUSER  ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("AWUSER ") &
+                REPORT_MISMATCH(SELF, string'("AWUSER ") &
                                 HEX_TO_STRING(AWUSER ) & " /= " &
                                 HEX_TO_STRING(SIGNALS.AW.USER(AWUSER'range)));
                 count := count + 1;
@@ -1645,43 +1496,43 @@ package body AXI4_CORE is
         ---------------------------------------------------------------------------
         if (WRITE) then
             if (MATCH_STD_LOGIC(SIGNALS.W.VALID            ,WVALID ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("WVALID ") &
+                REPORT_MISMATCH(SELF, string'("WVALID ") &
                                 BIN_TO_STRING(WVALID) & " /= " &
                                 BIN_TO_STRING(SIGNALS.W.VALID));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.W.READY            ,WREADY ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("WREADY ") &
+                REPORT_MISMATCH(SELF, string'("WREADY ") &
                                 BIN_TO_STRING(WREADY) & " /= " &
                                 BIN_TO_STRING(SIGNALS.W.READY));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.W.DATA(WDATA'range),WDATA  ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("WDATA ") &
+                REPORT_MISMATCH(SELF, string'("WDATA ") &
                                 HEX_TO_STRING(WDATA ) & " /= " &
                                 HEX_TO_STRING(SIGNALS.W.DATA(WDATA'range)));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.W.LAST             ,WLAST  ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("WLAST ") &
+                REPORT_MISMATCH(SELF, string'("WLAST ") &
                                 BIN_TO_STRING(WLAST ) & " /= " &
                                 BIN_TO_STRING(SIGNALS.W.LAST));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.W.STRB(WSTRB'range),WSTRB  ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("WSTRB ") &
+                REPORT_MISMATCH(SELF, string'("WSTRB ") &
                                 BIN_TO_STRING(WSTRB ) & " /= " &
                                 BIN_TO_STRING(SIGNALS.W.STRB(WSTRB'range)));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.W.ID(WID'range)    ,WID    ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("WID ") &
+                REPORT_MISMATCH(SELF, string'("WID ") &
                                 HEX_TO_STRING(WID   ) & " /= " &
                                 HEX_TO_STRING(SIGNALS.W.ID(WID'range)));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.W.USER(WUSER'range),WUSER  ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("WUSER ") &
+                REPORT_MISMATCH(SELF, string'("WUSER ") &
                                 BIN_TO_STRING(WUSER ) & " /= " &
                                 BIN_TO_STRING(SIGNALS.W.USER(WUSER'range)));
                 count := count + 1;
@@ -1692,31 +1543,31 @@ package body AXI4_CORE is
         ---------------------------------------------------------------------------
         if (WRITE) then
             if (MATCH_STD_LOGIC(SIGNALS.B.VALID            ,BVALID ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("BVALID ") &
+                REPORT_MISMATCH(SELF, string'("BVALID ") &
                                 BIN_TO_STRING(BVALID) & " /= " &
                                 BIN_TO_STRING(SIGNALS.B.VALID));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.B.READY            ,BREADY ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("BREADY ") &
+                REPORT_MISMATCH(SELF, string'("BREADY ") &
                                 BIN_TO_STRING(BREADY) & " /= " &
                                 BIN_TO_STRING(SIGNALS.B.READY));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.B.RESP             ,BRESP  ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("BRESP ") &
+                REPORT_MISMATCH(SELF, string'("BRESP ") &
                                 BIN_TO_STRING(BRESP ) & " /= " &
                                 BIN_TO_STRING(SIGNALS.B.RESP));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.B.ID(BID'range)    ,BID    ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("BID ") &
+                REPORT_MISMATCH(SELF, string'("BID ") &
                                 HEX_TO_STRING(BID   ) & " /= " &
                                 HEX_TO_STRING(SIGNALS.B.ID(BID'range)));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.B.USER(BUSER'range),BUSER  ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("BUSER ") &
+                REPORT_MISMATCH(SELF, string'("BUSER ") &
                                 HEX_TO_STRING(BUSER ) & " /= " &
                                 HEX_TO_STRING(SIGNALS.B.USER(BUSER'range)));
                 count := count + 1;
@@ -1727,79 +1578,79 @@ package body AXI4_CORE is
         ---------------------------------------------------------------------------
         if (READ) then
             if (MATCH_STD_LOGIC(SIGNALS.AR.VALID             ,ARVALID ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("ARVALID ") &
+                REPORT_MISMATCH(SELF, string'("ARVALID ") &
                                 BIN_TO_STRING(ARVALID) & " /= " &
                                 BIN_TO_STRING(SIGNALS.AR.VALID));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.AR.READY             ,ARREADY ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("ARREADY ") & 
+                REPORT_MISMATCH(SELF, string'("ARREADY ") & 
                                 BIN_TO_STRING(ARREADY) & " /= " &
                                 BIN_TO_STRING(SIGNALS.AR.READY));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.AR.ADDR(ARADDR'range),ARADDR  ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("ARADDR ") &
+                REPORT_MISMATCH(SELF, string'("ARADDR ") &
                                 HEX_TO_STRING(ARADDR ) & " /= " &
                                 HEX_TO_STRING(SIGNALS.AR.ADDR(ARADDR'range)));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.AR.LEN               ,ARLEN   ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("ARLEN ") &
+                REPORT_MISMATCH(SELF, string'("ARLEN ") &
                                 BIN_TO_STRING(ARLEN  ) & " /= " &
                                 BIN_TO_STRING(SIGNALS.AR.LEN));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.AR.SIZE              ,ARSIZE  ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("ARSIZE ") &
+                REPORT_MISMATCH(SELF, string'("ARSIZE ") &
                                 BIN_TO_STRING(ARSIZE ) & " /= " &
                                 BIN_TO_STRING(SIGNALS.AR.SIZE));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.AR.BURST             ,ARBURST ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("ARBURST ") &
+                REPORT_MISMATCH(SELF, string'("ARBURST ") &
                                 BIN_TO_STRING(ARBURST) & " /= " &
                                 BIN_TO_STRING(SIGNALS.AR.BURST));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.AR.LOCK              ,ARLOCK  ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("ALOCK ") &
+                REPORT_MISMATCH(SELF, string'("ALOCK ") &
                                 BIN_TO_STRING(ARLOCK ) & " /= " &
                                 BIN_TO_STRING(SIGNALS.AR.LOCK));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.AR.CACHE             ,ARCACHE ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("ARCACHE ") &
+                REPORT_MISMATCH(SELF, string'("ARCACHE ") &
                                 BIN_TO_STRING(ARCACHE) & " /= " &
                                 BIN_TO_STRING(SIGNALS.AR.CACHE));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.AR.PROT              ,ARPROT  ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("ARPROT ") &
+                REPORT_MISMATCH(SELF, string'("ARPROT ") &
                                 BIN_TO_STRING(ARPROT ) & " /= " &
                                 BIN_TO_STRING(SIGNALS.AR.PROT));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.AR.QOS               ,ARQOS   ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("ARQOS ") &
+                REPORT_MISMATCH(SELF, string'("ARQOS ") &
                                 HEX_TO_STRING(ARQOS  ) & " /= " &
                                 HEX_TO_STRING(SIGNALS.AR.QOS));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.AR.REGION            ,ARREGION) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("ARREGION ") &
+                REPORT_MISMATCH(SELF, string'("ARREGION ") &
                                 HEX_TO_STRING(ARREGION) & " /= " &
                                 HEX_TO_STRING(SIGNALS.AR.REGION));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.AR.ID(ARID'range)    ,ARID    ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("ARID ") &
+                REPORT_MISMATCH(SELF, string'("ARID ") &
                                 HEX_TO_STRING(ARID   ) & " /= " &
                                 HEX_TO_STRING(SIGNALS.AR.ID(ARID'range)));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.AR.USER(ARUSER'range),ARUSER  ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("ARUSER ") &
+                REPORT_MISMATCH(SELF, string'("ARUSER ") &
                                 HEX_TO_STRING(ARUSER ) & " /= " &
                                 HEX_TO_STRING(SIGNALS.AR.USER(ARUSER'range)));
                 count := count + 1;
@@ -1810,43 +1661,43 @@ package body AXI4_CORE is
         ---------------------------------------------------------------------------
         if (READ) then
             if (MATCH_STD_LOGIC(SIGNALS.R.VALID            ,RVALID ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("RVALID ") & 
+                REPORT_MISMATCH(SELF, string'("RVALID ") & 
                                 BIN_TO_STRING(RVALID) & " /= " &
                                 BIN_TO_STRING(SIGNALS.R.VALID));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.R.READY            ,RREADY ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("RREADY ") &
+                REPORT_MISMATCH(SELF, string'("RREADY ") &
                                 BIN_TO_STRING(RREADY) & " /= " &
                                 BIN_TO_STRING(SIGNALS.R.READY));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.R.DATA(RDATA'range),RDATA  ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("RDATA ") &
+                REPORT_MISMATCH(SELF, string'("RDATA ") &
                                 HEX_TO_STRING(RDATA ) & " /= " &
                                 HEX_TO_STRING(SIGNALS.R.DATA(RDATA'range)));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.R.LAST             ,RLAST  ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("RLAST ") &
+                REPORT_MISMATCH(SELF, string'("RLAST ") &
                                 BIN_TO_STRING(RLAST ) & " /= " &
                                 BIN_TO_STRING(SIGNALS.R.LAST));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.R.RESP             ,RRESP  ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("RRESP ") &
+                REPORT_MISMATCH(SELF, string'("RRESP ") &
                                 BIN_TO_STRING(RRESP ) & " /= " &
                                 BIN_TO_STRING(SIGNALS.R.RESP));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.R.ID(RID'range)    ,RID    ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("RID ") &
+                REPORT_MISMATCH(SELF, string'("RID ") &
                                 HEX_TO_STRING(RID   ) & " /= " &
                                 HEX_TO_STRING(SIGNALS.R.ID(RID'range)));
                 count := count + 1;
             end if;
             if (MATCH_STD_LOGIC(SIGNALS.R.USER(RUSER'range),RUSER  ) = FALSE) then
-                REPORT_MISMATCH(SELF.vocal, string'("RUSER ") &
+                REPORT_MISMATCH(SELF, string'("RUSER ") &
                                 HEX_TO_STRING(RUSER ) & " /= " &
                                 HEX_TO_STRING(SIGNALS.R.USER(RUSER'range)));
                 count := count + 1;

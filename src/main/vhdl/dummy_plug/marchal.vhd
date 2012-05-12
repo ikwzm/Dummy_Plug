@@ -37,8 +37,9 @@
 library ieee;
 use     ieee.std_logic_1164.all;
 library DUMMY_PLUG;
-use     DUMMY_PLUG.SYNC.SYNC_SIG_VECTOR;
+use     DUMMY_PLUG.CORE.REPORT_STATUS_TYPE;
 use     DUMMY_PLUG.SYNC.SYNC_PLUG_NUM_TYPE;
+use     DUMMY_PLUG.SYNC.SYNC_SIG_VECTOR;
 -----------------------------------------------------------------------------------
 --! @brief   MARCHAL
 -----------------------------------------------------------------------------------
@@ -75,6 +76,10 @@ entity  MARCHAL is
         -- シンクロ用信号
         --------------------------------------------------------------------------
         SYNC            : inout SYNC_SIG_VECTOR(SYNC_WIDTH-1 downto 0);
+        --------------------------------------------------------------------------
+        -- 各種状態出力.
+        --------------------------------------------------------------------------
+        REPORT_STATUS   : out   REPORT_STATUS_TYPE;
         FINISH          : out   std_logic
     );
 end MARCHAL;
@@ -125,6 +130,7 @@ begin
         ---------------------------------------------------------------------------
         --! リセット信号の生成.
         ---------------------------------------------------------------------------
+        REPORT_STATUS <= core.report_status;
         sync_req <= (0 => 10, others => 0);
         FINISH   <= '0';
         sync_rst <= '1';
@@ -139,6 +145,7 @@ begin
         ---------------------------------------------------------------------------
         core.debug := 0;
         MAIN_LOOP: while (operation /= OP_FINISH) loop
+            REPORT_STATUS <= core.report_status;
             READ_OPERATION(core, stream, operation, keyword);
             case operation is
                 when OP_DOC_BEGIN =>
@@ -155,6 +162,7 @@ begin
                 when others    => null;
             end case;
         end loop;
+        REPORT_STATUS <= core.report_status;
         FINISH <= '1';
         if (FINISH_ABORT) then
             assert FALSE report "Simulation complete." severity FAILURE;

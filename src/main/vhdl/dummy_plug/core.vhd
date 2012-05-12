@@ -71,8 +71,26 @@ package CORE is
               STATE_MAP_END  , --! 
               STATE_SEQ_VAL  , --!
               STATE_SEQ_SKIP , --!
-              STATE_FINISH    --!
+              STATE_FINISH     --!
     );
+    -------------------------------------------------------------------------------
+    --! @brief ステータスレポートタイプ.
+    -------------------------------------------------------------------------------
+    type      REPORT_STATUS_TYPE is record
+        valid               : boolean;
+        warning_count       : integer;
+        mismatch_count      : integer;
+        error_count         : integer;
+        failure_count       : integer;
+    end record;
+    constant  REPORT_STATUS_NULL : REPORT_STATUS_TYPE := (
+        valid               => FALSE,
+        warning_count       => 0,
+        mismatch_count      => 0,
+        error_count         => 0,
+        failure_count       => 0
+    );
+    type      REPORT_STATUS_VECTOR is array (integer range <>) of  REPORT_STATUS_TYPE;
     -------------------------------------------------------------------------------
     --! @brief スクラッチ用文字列領域の大きさの定義.
     -------------------------------------------------------------------------------
@@ -88,6 +106,7 @@ package CORE is
         str_len             : integer;                    --! str_bufに格納されている文字数.
         prev_state          : STATE_TYPE;                 --! 一つ前の状態.
         curr_state          : STATE_TYPE;                 --! 現在の状態.
+        report_status       : REPORT_STATUS_TYPE;         --! 各種状態をレポートする変数.
         debug               : integer;                    --! デバッグ用変数.
     end record;
     -------------------------------------------------------------------------------
@@ -279,6 +298,10 @@ package CORE is
     --! @brief 致命的エラーによる中断.
     -------------------------------------------------------------------------------
     procedure EXECUTE_ABORT    (SELF:inout CORE_TYPE; NAME, MESSAGE: in STRING);
+    -------------------------------------------------------------------------------
+    --! @brief ステータスレポートを集計する関数.
+    -------------------------------------------------------------------------------
+    function  MARGE_REPORT_STATUS(REPORTS: REPORT_STATUS_VECTOR) return REPORT_STATUS_TYPE;
     ------------------------------------------------------------------------------
     -- 
     ------------------------------------------------------------------------------
@@ -294,6 +317,7 @@ package CORE is
             CLK             : in    std_logic;
             RESET           : out   std_logic;
             SYNC            : inout SYNC.SYNC_SIG_VECTOR(SYNC_WIDTH-1 downto 0);
+            REPORT_STATUS   : out   REPORT_STATUS_TYPE;
             FINISH          : out   std_logic
         );
     end component;
@@ -350,6 +374,7 @@ package body CORE is
     procedure REPORT_WARNING   (SELF:inout CORE_TYPE;MESSAGE:in STRING) is
     begin
         REPORT_WARNING(SELF.vocal, MESSAGE);
+        SELF.report_status.warning_count := SELF.report_status.warning_count + 1;
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にMISMATCHメッセージを出力するサブプログラム.
@@ -357,6 +382,7 @@ package body CORE is
     procedure REPORT_MISMATCH  (SELF:inout CORE_TYPE;MESSAGE:in STRING) is
     begin
         REPORT_MISMATCH(SELF.vocal, MESSAGE);
+        SELF.report_status.mismatch_count := SELF.report_status.mismatch_count + 1;
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にERRORメッセージを出力するサブプログラム.
@@ -364,6 +390,7 @@ package body CORE is
     procedure REPORT_ERROR     (SELF:inout CORE_TYPE;MESSAGE:in STRING) is
     begin
         REPORT_ERROR(SELF.vocal, MESSAGE);
+        SELF.report_status.error_count := SELF.report_status.error_count + 1;
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にFAILUREメッセージを出力するサブプログラム.
@@ -371,6 +398,7 @@ package body CORE is
     procedure REPORT_FAILURE   (SELF:inout CORE_TYPE;MESSAGE:in STRING) is
     begin
         REPORT_FAILURE(SELF.vocal, MESSAGE);
+        SELF.report_status.failure_count := SELF.report_status.failure_count + 1;
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief コア変数の初期化用定数を生成する関数.
@@ -394,11 +422,13 @@ package body CORE is
         variable self       : CORE_TYPE;
     begin
         WRITE(self.name, NAME);
-        self.reader     := NEW_READER(NAME, STREAM_NAME);
-        self.vocal      := NEW_VOCAL (VOCAL_NAME);
-        self.debug      := 0;
-        self.prev_state := STATE_NULL;
-        self.curr_state := STATE_NULL;
+        self.reader        := NEW_READER(NAME, STREAM_NAME);
+        self.vocal         := NEW_VOCAL (VOCAL_NAME);
+        self.debug         := 0;           
+        self.prev_state    := STATE_NULL;
+        self.curr_state    := STATE_NULL;
+        self.report_status := REPORT_STATUS_NULL;
+        self.report_status.valid := TRUE;
         return self;
     end function;
     -------------------------------------------------------------------------------
@@ -1107,4 +1137,22 @@ package body CORE is
         DEBUG_DUMP(SELF.reader);
         assert FALSE report NAME & " Read Error " & MESSAGE severity FAILURE;
     end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief ステータスレポートを集計する関数.
+    -------------------------------------------------------------------------------
+    function  MARGE_REPORT_STATUS(REPORTS: REPORT_STATUS_VECTOR) return REPORT_STATUS_TYPE is
+        variable status : REPORT_STATUS_TYPE;
+    begin
+        status := REPORT_STATUS_NULL;
+        for i in REPORTS'range loop
+            if (REPORTS(i).valid) then
+                status.valid          := TRUE;
+                status.warning_count  := status.warning_count  + REPORTS(i).warning_count;
+                status.mismatch_count := status.mismatch_count + REPORTS(i).mismatch_count;
+                status.error_count    := status.error_count    + REPORTS(i).error_count;
+                status.failure_count  := status.failure_count  + REPORTS(i).failure_count;
+            end if;
+        end loop;
+        return status;
+    end function;
 end CORE;

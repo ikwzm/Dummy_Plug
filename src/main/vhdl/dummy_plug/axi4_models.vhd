@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_models.vhd
 --!     @brief   AXI4 Dummy Plug Component Package.
---!     @version 0.0.4
---!     @date    2012/5/7
+--!     @version 0.0.5
+--!     @date    2012/5/12
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -38,7 +38,9 @@ library ieee;
 use     ieee.std_logic_1164.all;
 library DUMMY_PLUG;
 use     DUMMY_PLUG.AXI4_TYPES.all;
-use     DUMMY_PLUG.SYNC.all;
+use     DUMMY_PLUG.CORE.REPORT_STATUS_TYPE;
+use     DUMMY_PLUG.SYNC.SYNC_SIG_VECTOR;
+use     DUMMY_PLUG.SYNC.SYNC_PLUG_NUM_TYPE;
 -----------------------------------------------------------------------------------
 --! @brief AXI4 Master/Slave Bus Function Model Package.
 -----------------------------------------------------------------------------------
@@ -145,6 +147,10 @@ component AXI4_MASTER_PLAYER is
         -- シンクロ用信号
         --------------------------------------------------------------------------
         SYNC            : inout SYNC_SIG_VECTOR (SYNC_WIDTH   -1 downto 0);
+        --------------------------------------------------------------------------
+        -- 各種状態出力.
+        --------------------------------------------------------------------------
+        REPORT_STATUS   : out   REPORT_STATUS_TYPE;
         FINISH          : out   std_logic
     );
 end component;
@@ -249,6 +255,10 @@ component AXI4_SLAVE_PLAYER is
         -- シンクロ用信号
         --------------------------------------------------------------------------
         SYNC            : inout SYNC_SIG_VECTOR (SYNC_WIDTH   -1 downto 0);
+        --------------------------------------------------------------------------
+        -- 各種状態出力.
+        --------------------------------------------------------------------------
+        REPORT_STATUS   : out   REPORT_STATUS_TYPE;
         FINISH          : out   std_logic
     );
 end component;

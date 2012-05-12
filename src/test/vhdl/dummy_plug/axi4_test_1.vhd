@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    aix4_test_1.vhd
 --!     @brief   TEST BENCH No.1 for DUMMY_PLUG.AXI4_MODELS
---!     @version 0.0.4
---!     @date    2012/5/7
+--!     @version 0.0.5
+--!     @date    2012/5/12
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -45,6 +45,7 @@ use     DUMMY_PLUG.AXI4_MODELS.AXI4_SLAVE_PLAYER;
 use     DUMMY_PLUG.AXI4_MODELS.AXI4_SIGNAL_PRINTER;
 use     DUMMY_PLUG.SYNC.all;
 use     DUMMY_PLUG.CORE.MARCHAL;
+use     DUMMY_PLUG.CORE.REPORT_STATUS_TYPE;
 entity  DUMMY_PLUG_AXI4_TEST_1 is
 end     DUMMY_PLUG_AXI4_TEST_1;
 architecture MODEL of DUMMY_PLUG_AXI4_TEST_1 is
@@ -140,6 +141,12 @@ architecture MODEL of DUMMY_PLUG_AXI4_TEST_1 is
     -- シンクロ用信号
     -------------------------------------------------------------------------------
     signal   SYNC            : SYNC_SIG_VECTOR (SYNC_WIDTH     -1 downto 0);
+    -------------------------------------------------------------------------------
+    -- 各種状態出力.
+    -------------------------------------------------------------------------------
+    signal   N_REPORT        : REPORT_STATUS_TYPE;
+    signal   M_REPORT        : REPORT_STATUS_TYPE;
+    signal   S_REPORT        : REPORT_STATUS_TYPE;
     signal   N_FINISH        : std_logic;
     signal   M_FINISH        : std_logic;
     signal   S_FINISH        : std_logic;
@@ -161,6 +168,7 @@ begin
             RESET           => RESET           , -- In  :
             SYNC(0)         => SYNC(0)         , -- I/O :
             SYNC(1)         => SYNC(1)         , -- I/O :
+            REPORT_STATUS   => N_REPORT        , -- Out :
             FINISH          => N_FINISH          -- Out :
         );
     ------------------------------------------------------------------------------
@@ -249,6 +257,10 @@ begin
         --------------------------------------------------------------------------
             SYNC(0)         => SYNC(0)         , -- I/O :
             SYNC(1)         => SYNC(1)         , -- I/O :
+        --------------------------------------------------------------------------
+        -- 各種状態出力.
+        --------------------------------------------------------------------------
+            REPORT_STATUS   => M_REPORT        , -- Out :
             FINISH          => M_FINISH          -- Out :
         );
     ------------------------------------------------------------------------------
@@ -337,6 +349,10 @@ begin
         ---------------------------------------------------------------------------
             SYNC(0)         => SYNC(0)         , -- I/O :
             SYNC(1)         => SYNC(1)         , -- I/O :
+        --------------------------------------------------------------------------
+        -- 各種状態出力.
+        --------------------------------------------------------------------------
+            REPORT_STATUS   => S_REPORT        , -- Out :
             FINISH          => S_FINISH          -- Out :
     );
     -------------------------------------------------------------------------------
@@ -427,8 +443,33 @@ begin
 
     ARESETn <= '1' when (RESET = '0') else '0';
 
-    process begin
+    process
+        variable L : LINE;
+        constant T : STRING(1 to 7) := "  ***  ";
+    begin
         wait until (N_FINISH'event and N_FINISH = '1');
+        wait for DELAY;
+        WRITE(L,T);                                                   WRITELINE(OUTPUT,L);
+        WRITE(L,T & "ERROR REPORT");                                  WRITELINE(OUTPUT,L);
+        WRITE(L,T & "[ MASTER ]");                                    WRITELINE(OUTPUT,L);
+        WRITE(L,T & "  Error    : ");WRITE(L,M_REPORT.error_count   );WRITELINE(OUTPUT,L);
+        WRITE(L,T & "  Mismatch : ");WRITE(L,M_REPORT.mismatch_count);WRITELINE(OUTPUT,L);
+        WRITE(L,T & "  Warning  : ");WRITE(L,M_REPORT.warning_count );WRITELINE(OUTPUT,L);
+        WRITE(L,T);                                                   WRITELINE(OUTPUT,L);
+        WRITE(L,T & "[ SLAVE ]");                                     WRITELINE(OUTPUT,L);
+        WRITE(L,T & "  Error    : ");WRITE(L,S_REPORT.error_count   );WRITELINE(OUTPUT,L);
+        WRITE(L,T & "  Mismatch : ");WRITE(L,S_REPORT.mismatch_count);WRITELINE(OUTPUT,L);
+        WRITE(L,T & "  Warning  : ");WRITE(L,S_REPORT.warning_count );WRITELINE(OUTPUT,L);
+        WRITE(L,T);                                                   WRITELINE(OUTPUT,L);
+        assert (M_REPORT.error_count    =  0) and
+               (M_REPORT.mismatch_count =  8) and
+               (M_REPORT.warning_count  =  0) and
+               (M_REPORT.failure_count  =  0) and
+               (S_REPORT.error_count    =  0) and
+               (S_REPORT.mismatch_count = 20) and
+               (S_REPORT.warning_count  =  0) and
+               (S_REPORT.failure_count  =  0)
+        report "REPORT Mismatch !!" severity FAILURE;
         assert FALSE report "Simulation complete." severity FAILURE;
         wait;
     end process;

@@ -39,9 +39,10 @@ use     ieee.std_logic_1164.all;
 library DUMMY_PLUG;
 use     DUMMY_PLUG.AXI4_TYPES.all;
 use     DUMMY_PLUG.AXI4_CORE.all;
+use     DUMMY_PLUG.CORE.REPORT_STATUS_TYPE;
+use     DUMMY_PLUG.SYNC.SYNC_PLUG_NUM_TYPE;
 use     DUMMY_PLUG.SYNC.SYNC_REQ_VECTOR;
 use     DUMMY_PLUG.SYNC.SYNC_ACK_VECTOR;
-use     DUMMY_PLUG.SYNC.SYNC_PLUG_NUM_TYPE;
 -----------------------------------------------------------------------------------
 --! @brief   AXI4_CHANNEL_PLAYER :
 -----------------------------------------------------------------------------------
@@ -194,13 +195,17 @@ entity  AXI4_CHANNEL_PLAYER is
         BVALID_O        : out   std_logic;
         BREADY_I        : in    std_logic;
         BREADY_O        : out   std_logic;
-        -----------------------------------------------------------------------
-        -- シンクロ用信号
-        -----------------------------------------------------------------------
+        ---------------------------------------------------------------------------
+        -- シンクロ用信号.
+        ---------------------------------------------------------------------------
         SYNC_REQ        : out   SYNC_REQ_VECTOR(SYNC_WIDTH-1 downto 0);
         SYNC_ACK        : in    SYNC_ACK_VECTOR(SYNC_WIDTH-1 downto 0) := (others => '0');
         SYNC_LOCAL_REQ  : out   SYNC_REQ_VECTOR(SYNC_LOCAL_PORT downto SYNC_LOCAL_PORT);
         SYNC_LOCAL_ACK  : in    SYNC_ACK_VECTOR(SYNC_LOCAL_PORT downto SYNC_LOCAL_PORT);
+        ---------------------------------------------------------------------------
+        -- 各種状態出力.
+        ---------------------------------------------------------------------------
+        REPORT_STATUS   : out   REPORT_STATUS_TYPE;
         FINISH          : out   std_logic
     );
 end AXI4_CHANNEL_PLAYER;
@@ -655,14 +660,14 @@ begin
                         SIGNALS    => chk_signals     ,  -- I/O:
                         EVENT      => next_event         -- Out:
                     );
-                    assert (next_event = EVENT_MAP_END)
-                        report "Internal Read Error in " & FULL_NAME & " " & PROC_NAME
-                        severity FAILURE;
+                    if (next_event /= EVENT_MAP_END) then
+                        READ_ERROR(core, PROC_NAME, "need EVENT_MAP_END but " &
+                                                     EVENT_TO_STRING(next_event));
+                    end if;
                     READ_EVENT(core, stream, EVENT_MAP_END);
                     MATCH_AXI4_CHANNEL(core, chk_signals, match);
                 when others =>
-                    SKIP_EVENT(core, stream, next_event);
-                    -- ERROR
+                    READ_ERROR(core, PROC_NAME, "SEEK_EVENT NG");
             end case;
             REPORT_DEBUG(core, PROC_NAME, "END");
         end procedure;
@@ -957,6 +962,7 @@ begin
         SYNC_REQ       <= (0 =>10, others => 0);
         SYNC_LOCAL_REQ <= (        others => 0);
         FINISH         <= '0';
+        REPORT_STATUS  <= core.report_status;
         EXECUTE_OUTPUT;
         core.debug := 0;
         ---------------------------------------------------------------------------
@@ -965,6 +971,7 @@ begin
         if (CHANNEL = AXI4_CHANNEL_M) then
             wait until(ACLK'event and ACLK = '1' and ARESETn = '1');
             while (operation /= OP_FINISH) loop
+                REPORT_STATUS <= core.report_status;
                 READ_OPERATION(core, stream, operation, keyword);
                 case operation is
                     when OP_DOC_BEGIN      => EXECUTE_SYNC(operation);
@@ -995,6 +1002,7 @@ begin
             end loop;
         else
             while (operation /= OP_FINISH) loop
+                REPORT_STATUS <= core.report_status;
                 READ_OPERATION(core, stream, operation, keyword);
                 case operation is
                     when OP_DOC_BEGIN   => LOCAL_SYNC;
@@ -1023,7 +1031,8 @@ begin
                 end case;
             end loop;
         end if;
-        FINISH <= '1';
+        REPORT_STATUS <= core.report_status;
+        FINISH        <= '1';
         if (FINISH_ABORT) then
             assert FALSE report "Simulation complete." severity FAILURE;
         end if;

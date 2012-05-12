@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_master_player.vhd
 --!     @brief   AXI4 Master Dummy Plug Player.
---!     @version 0.0.4
---!     @date    2012/5/7
+--!     @version 0.0.5
+--!     @date    2012/5/12
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -38,8 +38,9 @@ library ieee;
 use     ieee.std_logic_1164.all;
 library DUMMY_PLUG;
 use     DUMMY_PLUG.AXI4_TYPES.all;
-use     DUMMY_PLUG.SYNC.SYNC_SIG_VECTOR;
+use     DUMMY_PLUG.CORE.REPORT_STATUS_TYPE;
 use     DUMMY_PLUG.SYNC.SYNC_PLUG_NUM_TYPE;
+use     DUMMY_PLUG.SYNC.SYNC_SIG_VECTOR;
 -----------------------------------------------------------------------------------
 --! @brief   AXI4 Master Dummy Plug Player.
 -----------------------------------------------------------------------------------
@@ -141,6 +142,10 @@ entity  AXI4_MASTER_PLAYER is
         -- シンクロ用信号
         --------------------------------------------------------------------------
         SYNC            : inout SYNC_SIG_VECTOR (SYNC_WIDTH   -1 downto 0);
+        --------------------------------------------------------------------------
+        -- 各種状態出力.
+        --------------------------------------------------------------------------
+        REPORT_STATUS   : out   REPORT_STATUS_TYPE;
         FINISH          : out   std_logic
     );
 end AXI4_MASTER_PLAYER;
@@ -152,6 +157,7 @@ use     ieee.std_logic_1164.all;
 library DUMMY_PLUG;
 use     DUMMY_PLUG.AXI4_TYPES.all;
 use     DUMMY_PLUG.AXI4_CORE.all;
+use     DUMMY_PLUG.CORE.all;
 use     DUMMY_PLUG.SYNC.all;
 -----------------------------------------------------------------------------------
 --! @brief   AXI4 Master Dummy Plug Player.
@@ -184,6 +190,10 @@ architecture MODEL of AXI4_MASTER_PLAYER is
     signal    sync_w_ack        : SYNC_ACK_VECTOR(SYNC_LOCAL_PORT downto SYNC_LOCAL_PORT);
     signal    sync_b_req        : SYNC_REQ_VECTOR(SYNC_LOCAL_PORT downto SYNC_LOCAL_PORT) := (others => 0);
     signal    sync_b_ack        : SYNC_ACK_VECTOR(SYNC_LOCAL_PORT downto SYNC_LOCAL_PORT);
+    -------------------------------------------------------------------------------
+    --! 各チャネルの状態出力.
+    -------------------------------------------------------------------------------
+    signal    reports           : REPORT_STATUS_VECTOR(1 to 6) := (1 to 6 => REPORT_STATUS_NULL);
 begin
     -------------------------------------------------------------------------------
     -- メイン用のプレイヤー
@@ -323,6 +333,10 @@ begin
             SYNC_ACK        => sync_ack    , -- In :
             SYNC_LOCAL_REQ  => sync_m_req  , -- Out:
             SYNC_LOCAL_ACK  => sync_m_ack  , -- In :
+            -----------------------------------------------------------------------
+            -- 各種状態出力.
+            -----------------------------------------------------------------------
+            REPORT_STATUS   => reports(1)  , -- Out:
             FINISH          => FINISH        -- Out:
         );
     -------------------------------------------------------------------------------
@@ -463,6 +477,10 @@ begin
             SYNC_ACK        => sync_ack    , -- In :
             SYNC_LOCAL_REQ  => sync_ar_req , -- Out:
             SYNC_LOCAL_ACK  => sync_ar_ack , -- In :
+            -----------------------------------------------------------------------
+            -- 各種状態出力.
+            -----------------------------------------------------------------------
+            REPORT_STATUS   => reports(2)  , -- Out:
             FINISH          => open          -- Out:
         );
     -------------------------------------------------------------------------------
@@ -603,6 +621,10 @@ begin
             SYNC_ACK        => sync_ack    , -- In :
             SYNC_LOCAL_REQ  => sync_r_req  , -- Out:
             SYNC_LOCAL_ACK  => sync_r_ack  , -- In :
+            -----------------------------------------------------------------------
+            -- 各種状態出力.
+            -----------------------------------------------------------------------
+            REPORT_STATUS   => reports(3)  , -- Out:
             FINISH          => open          -- Out:
         );
     -------------------------------------------------------------------------------
@@ -743,6 +765,10 @@ begin
             SYNC_ACK        => sync_ack    , -- In :
             SYNC_LOCAL_REQ  => sync_aw_req , -- Out:
             SYNC_LOCAL_ACK  => sync_aw_ack , -- In :
+            -----------------------------------------------------------------------
+            -- 各種状態出力.
+            -----------------------------------------------------------------------
+            REPORT_STATUS   => reports(4)  , -- Out:
             FINISH          => open          -- Out:
         );
     -------------------------------------------------------------------------------
@@ -883,6 +909,10 @@ begin
             SYNC_ACK        => sync_ack    , -- In :
             SYNC_LOCAL_REQ  => sync_w_req  , -- Out:
             SYNC_LOCAL_ACK  => sync_w_ack  , -- In :
+            -----------------------------------------------------------------------
+            -- 各種状態出力.
+            -----------------------------------------------------------------------
+            REPORT_STATUS   => reports(5)  , -- Out:
             FINISH          => open          -- Out:
         );
     -------------------------------------------------------------------------------
@@ -1023,8 +1053,16 @@ begin
             SYNC_ACK        => sync_ack    , -- In :
             SYNC_LOCAL_REQ  => sync_b_req  , -- Out:
             SYNC_LOCAL_ACK  => sync_b_ack  , -- In :
+            -----------------------------------------------------------------------
+            -- 各種状態出力.
+            -----------------------------------------------------------------------
+            REPORT_STATUS   => reports(6)  , -- Out:
             FINISH          => open          -- Out:
         );
+    -------------------------------------------------------------------------------
+    -- レポートの集計.
+    -------------------------------------------------------------------------------
+    REPORT_STATUS <= MARGE_REPORT_STATUS(reports);
     -------------------------------------------------------------------------------
     -- このコア用の同期回路
     -------------------------------------------------------------------------------
