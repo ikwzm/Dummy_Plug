@@ -241,9 +241,9 @@ package AXI4_CORE is
         B       => AXI4_B_CHANNEL_SIGNAL_NULL
     );
     -------------------------------------------------------------------------------
-    --! @brief READERのマップからチャネル信号の構造体を読み取るサブプログラム.
+    --! @brief シナリオのマップからチャネル信号構造体の値を読み取るサブプログラム.
     -------------------------------------------------------------------------------
-    procedure READ_AXI4_CHANNEL(
+    procedure MAP_READ_AXI4_CHANNEL(
         variable SELF       : inout CORE.CORE_TYPE;       --! コア変数.
         file     STREAM     :       TEXT;                 --! 入力ストリーム.
                  CHANNEL    : in    AXI4_CHANNEL_TYPE;    --! チャネルのタイプ.
@@ -1126,9 +1126,11 @@ package body AXI4_CORE is
         return READ_NONE;
     end function;
     -------------------------------------------------------------------------------
-    --! @brief READERのマップからチャネル信号の構造体を読み取るサブプログラム.
+    --! @brief シナリオのマップからチャネル信号構造体の値を読み取るサブプログラム.
+    --!      * このサブプログラムを呼ぶときは、すでにMAP_READ_BEGINを実行済みに
+    --!        しておかなければならない。
     -------------------------------------------------------------------------------
-    procedure READ_AXI4_CHANNEL(
+    procedure MAP_READ_AXI4_CHANNEL(
         variable SELF       : inout CORE_TYPE;            --! コア変数.
         file     STREAM     :       TEXT;                 --! 入力ストリーム.
                  CHANNEL    : in    AXI4_CHANNEL_TYPE;    --! チャネルタイプを指定.

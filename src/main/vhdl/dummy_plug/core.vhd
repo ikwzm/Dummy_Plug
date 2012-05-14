@@ -261,13 +261,41 @@ package CORE is
                  OP_WORD    : in    STRING
     );
     -------------------------------------------------------------------------------
-    --! @brief READERのマップから信号の値を読み取るサブプログラム.
+    --! @brief シナリオのマップからキーと値を読み出す処理を開始するサブプログラム.
     -------------------------------------------------------------------------------
-    procedure READ_SIGNALS(
+    procedure MAP_READ_NEXT(
         variable SELF       : inout CORE_TYPE;            --! コア変数.
         file     STREAM     :       TEXT;                 --! 入力ストリーム.
-                 SIG_NAME   : in    STRING;               --! 信号名
-                 SIG_VALUE  : out   std_logic_vector;     --! GPI信号出力.
+                 EVENT      : inout READER.EVENT_TYPE     --! 次のイベント.
+    );
+    -------------------------------------------------------------------------------
+    --! @brief シナリオのマップからキーを指定してstd_logic_vectorタイプの値を読む.
+    -------------------------------------------------------------------------------
+    procedure MAP_READ_STD_LOGIC_VECTOR(
+        variable SELF       : inout CORE_TYPE;            --! コア変数.
+        file     STREAM     :       TEXT;                 --! 入力ストリーム.
+                 KEY        : in    STRING;               --! 信号名
+                 VAL        : inout std_logic_vector;     --! 値出力.
+                 EVENT      : inout READER.EVENT_TYPE     --! 次のイベント.
+    );
+    -------------------------------------------------------------------------------
+    --! @brief シナリオのマップからキーを指定してintegerタイプの値を読む.
+    -------------------------------------------------------------------------------
+    procedure MAP_READ_INTEGER(
+        variable SELF       : inout CORE_TYPE;            --! コア変数.
+        file     STREAM     :       TEXT;                 --! 入力ストリーム.
+                 KEY        : in    STRING;               --! 信号名
+                 VAL        : inout integer;              --! 値出力.
+                 EVENT      : inout READER.EVENT_TYPE     --! 次のイベント.
+    );
+    -------------------------------------------------------------------------------
+    --! @brief シナリオのマップからキーを指定してbooleanタイプの値を読む.
+    -------------------------------------------------------------------------------
+    procedure MAP_READ_BOOLEAN(
+        variable SELF       : inout CORE_TYPE;            --! コア変数.
+        file     STREAM     :       TEXT;                 --! 入力ストリーム.
+                 KEY        : in    STRING;               --! 信号名
+                 VAL        : inout boolean;              --! 値出力.
                  EVENT      : inout READER.EVENT_TYPE     --! 次のイベント.
     );
     -------------------------------------------------------------------------------
@@ -353,6 +381,7 @@ use     DUMMY_PLUG.READER.all;
 use     DUMMY_PLUG.VOCAL.all;
 use     DUMMY_PLUG.SYNC.all;
 use     DUMMY_PLUG.UTIL.INTEGER_TO_STRING;
+use     DUMMY_PLUG.UTIL.BOOLEAN_TO_STRING;
 use     DUMMY_PLUG.UTIL.STRING_TO_BOOLEAN;
 use     DUMMY_PLUG.UTIL.STRING_TO_INTEGER;
 use     DUMMY_PLUG.UTIL.STRING_TO_STD_LOGIC_VECTOR;
@@ -1265,24 +1294,43 @@ package body CORE is
         return status;
     end function;
     -------------------------------------------------------------------------------
-    --! @brief READERのマップからGPIOの値を読み取るサブプログラム.
+    --! @brief シナリオのマップからキーと値を読み出す処理を開始するサブプログラム.
     -------------------------------------------------------------------------------
-    procedure READ_SIGNALS(
+    procedure MAP_READ_NEXT(
         variable SELF       : inout CORE_TYPE;            --! コア変数.
         file     STREAM     :       TEXT;                 --! 入力ストリーム.
-                 SIG_NAME   : in    STRING;               --! 信号名
-                 SIG_VALUE  : out   std_logic_vector;     --! 信号の値.
+                 EVENT      : inout READER.EVENT_TYPE     --! 次のイベント.
+    ) is
+    begin
+        SEEK_EVENT(SELF, STREAM, EVENT);
+        if (EVENT = EVENT_SCALAR) then
+            READ_EVENT(SELF, STREAM, EVENT_SCALAR);
+        end if;
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief シナリオのマップからキーを指定してstd_logic_vectorタイプの値を読む.
+    --!      * マップに指定されたキーが無いときは、何もしない。
+    --!        VALに値を上書きすることも無い.
+    --!      * このサブプログラムを呼ぶときは、すでにMAP_READ_NEXTを実行済みに
+    --!        しておかなければならない。
+    -------------------------------------------------------------------------------
+    procedure MAP_READ_STD_LOGIC_VECTOR(
+        variable SELF       : inout CORE_TYPE;            --! コア変数.
+        file     STREAM     :       TEXT;                 --! 入力ストリーム.
+                 KEY        : in    STRING;               --! 信号名
+                 VAL        : inout std_logic_vector;     --! 信号の値.
                  EVENT      : inout EVENT_TYPE            --! 次のイベント.
     ) is
-        constant PROC_NAME  :       string := "READ_GPI";
+        constant PROC_NAME  :       string := "MAP_READ_STD_LOGIC_VECTOR";
         variable next_event :       EVENT_TYPE;
-        variable key_word   :       string(1 to SIG_NAME'length);
+        variable key_word   :       string(1 to KEY'length);
         variable pos        :       integer;
         variable port_num   :       integer;
         variable read_len   :       integer;
         variable value      :       std_logic_vector(0 downto 0);
         variable val_size   :       integer;
     begin
+        REPORT_DEBUG(SELF, PROC_NAME, "BEGIN");
         next_event := EVENT;
         MAP_LOOP: loop
             case next_event is
@@ -1292,7 +1340,7 @@ package body CORE is
                         exit MAP_LOOP;
                     end if;
                     COPY_KEY_WORD(SELF, key_word);
-                    if (key_word = SIG_NAME) then
+                    if (key_word = KEY) then
                         pos := pos + key_word'length;
                         if (SELF.str_buf(pos) /= '(' ) then
                             exit MAP_LOOP;
@@ -1311,7 +1359,7 @@ package body CORE is
                         end if;
                         SEEK_EVENT(SELF, STREAM, next_event);
                         if (next_event /= EVENT_SCALAR) then
-                            READ_ERROR(SELF, PROC_NAME, "READ_VAL NG");
+                            READ_ERROR(SELF, PROC_NAME, "READ_VAL NG KEY=" & KEY);
                         end if;
                         READ_EVENT(SELF, STREAM, EVENT_SCALAR);
                         STRING_TO_STD_LOGIC_VECTOR(
@@ -1320,18 +1368,119 @@ package body CORE is
                             LEN  => read_len,
                             SIZE => val_size
                         );
-                        SIG_VALUE(port_num) := value(0);
+                        if (VAL'low <= port_num and port_num <= VAL'high) then
+                            VAL(port_num) := value(0);
+                        else
+                            READ_ERROR(SELF, PROC_NAME, "OUT OF RANGE KEY =" & KEY &
+                                       " index=" & INTEGER_TO_STRING(port_num) &
+                                       " range=" & INTEGER_TO_STRING(VAL'low ) &
+                                       ":"       & INTEGER_TO_STRING(VAL'high));
+                        end if;
                     else
                         exit MAP_LOOP;
                     end if;
                 when EVENT_MAP_END => exit MAP_LOOP;
                 when others        => exit MAP_LOOP;
             end case;
-            SEEK_EVENT(SELF, STREAM, next_event);
-            if (next_event = EVENT_SCALAR) then
-                READ_EVENT(SELF, STREAM, EVENT_SCALAR);
-            end if;
+            MAP_READ_NEXT(SELF, STREAM, next_event);
         end loop;
         EVENT := next_event;
+        REPORT_DEBUG(SELF, PROC_NAME, "END");
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief シナリオのマップからキーを指定してintegerタイプの値を読む.
+    --!      * マップに指定されたキーが無いときは、何もしない。
+    --!        VALに値を上書きすることも無い.
+    --!      * このサブプログラムを呼ぶときは、すでにMAP_READ_NEXTを実行済みに
+    --!        しておかなければならない。
+    -------------------------------------------------------------------------------
+    procedure MAP_READ_INTEGER(
+        variable SELF       : inout CORE_TYPE;            --! コア変数.
+        file     STREAM     :       TEXT;                 --! 入力ストリーム.
+                 KEY        : in    STRING;               --! 信号名
+                 VAL        : inout integer;              --! 値出力.
+                 EVENT      : inout EVENT_TYPE            --! 次のイベント.
+    ) is
+        constant PROC_NAME  :       string := "MAP_READ_INTEGER";
+        variable next_event :       EVENT_TYPE;
+        variable key_word   :       string(1 to KEY'length);
+        variable read_len   :       integer;
+        variable value      :       integer;
+    begin
+        REPORT_DEBUG(SELF, PROC_NAME, "BEGIN");
+        next_event := EVENT;
+        if (next_event = EVENT_SCALAR) then
+            COPY_KEY_WORD(SELF, key_word);
+            if (key_word = KEY) then
+                SEEK_EVENT(SELF, STREAM, next_event);
+                read_len := 0;
+                if (next_event = EVENT_SCALAR) then
+                    READ_EVENT(SELF, STREAM, next_event);
+                    STRING_TO_INTEGER(
+                        STR  => SELF.str_buf(1 to SELF.str_len),
+                        VAL  => value,
+                        LEN  => read_len
+                    );
+                end if;
+                if (read_len > 0) then
+                     VAL := value;
+                     REPORT_DEBUG(SELF, PROC_NAME, "KEY="  & KEY &
+                                  " VAL=" & INTEGER_TO_STRING(VAL));
+                else
+                     READ_ERROR(SELF, PROC_NAME, "READ_VAL NG KEY=" & KEY);
+                end if;
+                MAP_READ_NEXT(SELF, STREAM, next_event);
+            end if;
+        end if;
+        EVENT := next_event;
+        REPORT_DEBUG(SELF, PROC_NAME, "END");
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief シナリオのマップからキーを指定してbooleanタイプの値を読む.
+    --!      * マップに指定されたキーが無いときは、何もしない。
+    --!        VALに値を上書きすることも無い.
+    --!      * このサブプログラムを呼ぶときは、すでにMAP_READ_NEXTを実行済みに
+    --!        しておかなければならない。
+    -------------------------------------------------------------------------------
+    procedure MAP_READ_BOOLEAN(
+        variable SELF       : inout CORE_TYPE;            --! コア変数.
+        file     STREAM     :       TEXT;                 --! 入力ストリーム.
+                 KEY        : in    STRING;               --! 信号名
+                 VAL        : inout boolean;              --! 値出力.
+                 EVENT      : inout READER.EVENT_TYPE     --! 次のイベント.
+    ) is
+        constant PROC_NAME  :       string := "MAP_READ_BOOLEAN";
+        variable next_event :       EVENT_TYPE;
+        variable key_word   :       string(1 to KEY'length);
+        variable read_len   :       integer;
+        variable value      :       boolean;
+    begin
+        REPORT_DEBUG(SELF, PROC_NAME, "BEGIN");
+        next_event := EVENT;
+        if (next_event = EVENT_SCALAR) then
+            COPY_KEY_WORD(SELF, key_word);
+            if (key_word = KEY) then
+                SEEK_EVENT(SELF, STREAM, next_event);
+                read_len := 0;
+                if (next_event = EVENT_SCALAR) then
+                    READ_EVENT(SELF, STREAM, next_event);
+                    STRING_TO_BOOLEAN(
+                        STR  => SELF.str_buf(1 to SELF.str_len),
+                        VAL  => value,
+                        LEN  => read_len
+                    );
+                end if;
+                if (read_len > 0) then
+                     VAL := value;
+                     REPORT_DEBUG(SELF, PROC_NAME, "KEY="  & KEY &
+                                  " VAL=" & BOOLEAN_TO_STRING(VAL));
+                else
+                     READ_ERROR(SELF, PROC_NAME, "READ_VAL NG KEY=" & KEY);
+                end if;
+                MAP_READ_NEXT(SELF, STREAM, next_event);
+            end if;
+        end if;
+        EVENT := next_event;
+        REPORT_DEBUG(SELF, PROC_NAME, "END");
     end procedure;
 end CORE;

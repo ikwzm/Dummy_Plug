@@ -178,7 +178,7 @@
 - SLAVE:                                  # スレーブ用ダミープラグの名前. 
   - AW:                                   # アドレスチャネルの挙動.
     - AWREADY : 0                         # AWREADY <= 0
-    - WAIT    : {AWVALID: 1, TIMEOUT: 10, ON: 1} # AWVALID = 1 まで待つ.ただし10クロック以内.
+    - WAIT    : {AWVALID: 1, TIMEOUT: 10, ON: on} # AWVALID = 1 まで待つ.ただし10クロック以内.
     - AWREADY : 1                         # AWREADY <= 1
     - WAIT    : {AWVALID: 1, AWREADY: 1}  # AWVALID = 1 and AWREADY = 1 まで待つ.
     - CHECK   :                           # AWADDR, AWSIZE, AWID が

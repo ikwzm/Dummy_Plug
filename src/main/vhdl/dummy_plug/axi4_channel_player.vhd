@@ -433,16 +433,16 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
         );
     end procedure;
     -------------------------------------------------------------------------------
-    --! READ_AXI4_CHANNEL
+    --! MAP_READ_AXI4_CHANNEL
     -------------------------------------------------------------------------------
-    procedure  READ_AXI4_CHANNEL(
+    procedure  MAP_READ_AXI4_CHANNEL(
         variable CORE       : inout CORE_TYPE;
         file     STREAM     :       TEXT;
         variable SIGNALS    : inout AXI4_CHANNEL_SIGNAL_TYPE;
         variable EVENT      : inout EVENT_TYPE
     ) is
     begin
-        READ_AXI4_CHANNEL(
+        MAP_READ_AXI4_CHANNEL(
             SELF           => CORE                 ,  -- In :
             STREAM         => STREAM               ,  -- I/O:
             CHANNEL        => CHANNEL              ,  -- In :
@@ -685,28 +685,31 @@ begin
                     READ_EVENT(core, stream, EVENT_MAP_BEGIN);
                     chk_signals := AXI4_CHANNEL_SIGNAL_DONTCARE;
                     gpi_signals := (others => '-');
-                    SEEK_EVENT(core, stream, next_event);
-                    if (next_event = EVENT_SCALAR) then
-                        READ_EVENT(core, stream, EVENT_SCALAR);
-                    end if;
-                    READ_AXI4_CHANNEL(
-                        CORE       => core            ,  -- In :
-                        STREAM     => stream          ,  -- I/O:
-                        SIGNALS    => chk_signals     ,  -- I/O:
-                        EVENT      => next_event         -- I/O:
-                    );
-                    READ_SIGNALS(
-                        SELF       => core            ,  -- In :
-                        STREAM     => stream          ,  -- I/O:
-                        SIG_NAME   => "GPI"           ,  -- In :
-                        SIG_VALUE  => gpi_signals     ,  -- Out:
-                        EVENT      => next_event         -- I/O:
-                    );
-                    if (next_event /= EVENT_MAP_END) then
-                        READ_ERROR(core, PROC_NAME, "need EVENT_MAP_END but " &
-                                                     EVENT_TO_STRING(next_event));
-                    end if;
-                    READ_EVENT(core, stream, EVENT_MAP_END);
+                    MAP_READ_LOOP: loop
+                        MAP_READ_NEXT(core, stream, next_event);
+                        MAP_READ_AXI4_CHANNEL(
+                            CORE       => core            ,  -- In :
+                            STREAM     => stream          ,  -- I/O:
+                            SIGNALS    => chk_signals     ,  -- I/O:
+                            EVENT      => next_event         -- I/O:
+                        );
+                        MAP_READ_STD_LOGIC_VECTOR(
+                            SELF       => core            ,  -- In :
+                            STREAM     => stream          ,  -- I/O:
+                            KEY        => "GPI"           ,  -- In :
+                            VAL        => gpi_signals     ,  -- Out:
+                            EVENT      => next_event         -- I/O:
+                        );
+                        case next_event is
+                            when EVENT_SCALAR  =>
+                                EXECUTE_UNDEFINED_MAP_KEY(keyword);
+                            when EVENT_MAP_END =>
+                                exit MAP_READ_LOOP;
+                            when others        =>
+                                READ_ERROR(core, PROC_NAME, "need EVENT_MAP_END but " &
+                                           EVENT_TO_STRING(next_event));
+                        end case;
+                    end loop;
                     MATCH_AXI4_CHANNEL(core, chk_signals, match);
                     MATCH_GPI         (core, gpi_signals, match);
                 when others =>
@@ -723,13 +726,13 @@ begin
             variable wait_count : integer;
             variable scan_len   : integer;
             variable timeout    : integer;
-            variable wait_mode  : integer;
+            variable wait_on    : boolean;
             variable axi_match  : boolean;
             variable gpi_match  : boolean;
         begin
             REPORT_DEBUG(core, PROC_NAME, "BEGIN");
             timeout   := DEFAULT_WAIT_TIMEOUT;
-            wait_mode := 0;
+            wait_on   := FALSE;
             SEEK_EVENT(core, stream, next_event);
             case next_event is
                 when EVENT_SCALAR =>
@@ -748,58 +751,47 @@ begin
                     READ_EVENT(core, stream, EVENT_MAP_BEGIN);
                     chk_signals := AXI4_CHANNEL_SIGNAL_DONTCARE;
                     gpi_signals := (others => '-');
-                    MAP_LOOP: loop
-                        REPORT_DEBUG(core, PROC_NAME, "MAP_LOOP");
-                        SEEK_EVENT(core, stream, next_event);
-                        if (next_event = EVENT_SCALAR) then
-                            READ_EVENT(core, stream, EVENT_SCALAR);
-                        end if;
-                        READ_AXI4_CHANNEL(
+                    MAP_READ_LOOP: loop
+                        REPORT_DEBUG(core, PROC_NAME, "MAP_READ_LOOP");
+                        MAP_READ_NEXT(core, stream, next_event);
+                        MAP_READ_AXI4_CHANNEL(
                             CORE       => core            ,  -- In :
                             STREAM     => stream          ,  -- I/O:
                             SIGNALS    => chk_signals     ,  -- I/O:
                             EVENT      => next_event         -- Out:
                         );
-                        READ_SIGNALS(
+                        MAP_READ_STD_LOGIC_VECTOR(
                             SELF       => core            ,  -- In :
                             STREAM     => stream          ,  -- I/O:
-                            SIG_NAME   => "GPI"           ,  -- In :
-                            SIG_VALUE  => gpi_signals     ,  -- Out:
+                            KEY        => "GPI"           ,  -- In :
+                            VAL        => gpi_signals     ,  -- Out:
+                            EVENT      => next_event         -- I/O:
+                        );
+                        MAP_READ_INTEGER(
+                            SELF       => core            ,  -- In :
+                            STREAM     => stream          ,  -- I/O:
+                            KEY        => "TIMEOUT"       ,  -- In :
+                            VAL        => timeout         ,  -- Out:
+                            EVENT      => next_event         -- I/O:
+                        );
+                        MAP_READ_BOOLEAN(
+                            SELF       => core            ,  -- In :
+                            STREAM     => stream          ,  -- I/O:
+                            KEY        => "ON"            ,  -- In :
+                            VAL        => wait_on         ,  -- Out:
                             EVENT      => next_event         -- I/O:
                         );
                         case next_event is
                             when EVENT_SCALAR  =>
-                                COPY_KEY_WORD(core, keyword);
-                                case keyword is
-                                    when KEY_TIMEOUT =>
-                                        SEEK_EVENT(core, stream, next_event);
-                                        scan_len  := 0;
-                                        if (next_event = EVENT_SCALAR) then
-                                            READ_EVENT(core, stream, next_event);
-                                            SCAN_INTEGER(timeout, scan_len);
-                                        end if;
-                                        if (scan_len = 0) then
-                                            timeout := DEFAULT_WAIT_TIMEOUT;
-                                        end if;
-                                    when KEY_WAIT_ON =>
-                                        SEEK_EVENT(core, stream, next_event);
-                                        scan_len  := 0;
-                                        if (next_event = EVENT_SCALAR) then
-                                            READ_EVENT(core, stream, next_event);
-                                            SCAN_INTEGER(wait_mode, scan_len);
-                                        end if;
-                                        if (scan_len = 0) then
-                                            wait_mode := 1;
-                                        end if;
-                                    when others    => EXECUTE_UNDEFINED_MAP_KEY(keyword);
-                                end case;
+                                EXECUTE_UNDEFINED_MAP_KEY(keyword);
                             when EVENT_MAP_END =>
-                                exit MAP_LOOP;
+                                exit MAP_READ_LOOP;
                             when others        =>
-                                READ_ERROR(core, PROC_NAME, "READ_AXI4_CHANNEL NG");
+                                READ_ERROR(core, PROC_NAME, "need EVENT_MAP_END but " &
+                                           EVENT_TO_STRING(next_event));
                         end case;
                     end loop;
-                    if (wait_mode > 0) then
+                    if (wait_on) then
                         SIG_LOOP:loop
                             REPORT_DEBUG(core, PROC_NAME, "SIG_LOOP");
                             WAIT_ON_SIGNALS;
@@ -807,8 +799,9 @@ begin
                             gpi_match := MATCH_STD_LOGIC(gpi_signals, GPI);
                             exit when(axi_match and gpi_match);
                             if (ACLK'event and ACLK = '1') then
-                                timeout := timeout - 1;
-                                if (timeout < 0) then
+                                if (timeout > 0) then
+                                    timeout := timeout - 1;
+                                else
                                     EXECUTE_ABORT(core, PROC_NAME, "Time Out!");
                                 end if;
                             end if;
@@ -820,8 +813,9 @@ begin
                             MATCH_AXI4_CHANNEL(chk_signals, axi_match);
                             gpi_match := MATCH_STD_LOGIC(gpi_signals, GPI);
                             exit when(axi_match and gpi_match);
-                            timeout := timeout - 1;
-                            if (timeout < 0) then
+                            if (timeout > 0) then
+                                timeout := timeout - 1;
+                            else
                                 EXECUTE_ABORT(core, PROC_NAME, "Time Out!");
                             end if;
                         end loop;
@@ -865,12 +859,9 @@ begin
         begin
             REPORT_DEBUG(core, PROC_NAME, "BEGIN");
             READ_EVENT(core, stream, EVENT_MAP_BEGIN);
-            MAP_LOOP: loop
-                SEEK_EVENT(core, stream, next_event);
-                if (next_event = EVENT_SCALAR) then
-                    READ_EVENT(core, stream, EVENT_SCALAR);
-                end if;
-                READ_AXI4_CHANNEL(
+            MAP_READ_LOOP: loop
+                MAP_READ_NEXT(core, stream, next_event);
+                MAP_READ_AXI4_CHANNEL(
                     CORE       => core            ,  -- In :
                     STREAM     => stream          ,  -- I/O:
                     SIGNALS    => out_signals     ,  -- I/O:
@@ -889,12 +880,10 @@ begin
                             when others     => EXECUTE_UNDEFINED_MAP_KEY(keyword);
                         end case;
                     when EVENT_MAP_END =>
-                        exit MAP_LOOP;
-                    when EVENT_ERROR =>
-                        READ_ERROR(core, PROC_NAME, "READ_AXI4_CHANNEL NG");
+                        exit MAP_READ_LOOP;
                     when others        =>
-                        SKIP_EVENT(core, stream, next_event);
-                        -- ERROR
+                        READ_ERROR(core, PROC_NAME, "need EVENT_MAP_END but " &
+                                   EVENT_TO_STRING(next_event));
                 end case;
             end loop;
             REPORT_DEBUG(core, PROC_NAME, "END");
