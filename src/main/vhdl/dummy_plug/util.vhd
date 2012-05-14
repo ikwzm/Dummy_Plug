@@ -341,7 +341,7 @@ package body UTIL is
                             STR = "NO"    then VAL := FALSE; LEN := 1;
                       else                     VAL := FALSE; LEN := 0;
                       end if;
-            when  3 => if   STR = "yes"   or
+            when 3 => if    STR = "yes"   or
                             STR = "Yes"   or
                             STR = "YES"   then VAL := TRUE ; LEN := 1;
                       elsif STR = "off"   or
@@ -349,16 +349,16 @@ package body UTIL is
                             STR = "OFF"   then VAL := FALSE; LEN := 1;
                       else                     VAL := FALSE; LEN := 0;
                       end if;
-            when  4 => if   STR = "true"  or
+            when 4 => if    STR = "true"  or
                             STR = "True"  or
                             STR = "TRUE"  then VAL := TRUE ; LEN := 1;
-                       else                    VAL := FALSE; LEN := 0;
-                       end if;
-            when  5 => if   STR = "false" or
+                      else                     VAL := FALSE; LEN := 0;
+                      end if;
+            when 5 => if    STR = "false" or
                             STR = "False" or
                             STR = "FALSE" then VAL := FALSE; LEN := 1;
-                       else                    VAL := FALSE; LEN := 0;
-                       end if;
+                      else                     VAL := FALSE; LEN := 0;
+                      end if;
             when others =>                     VAL := FALSE; LEN := 0;
         end case;
     end procedure;

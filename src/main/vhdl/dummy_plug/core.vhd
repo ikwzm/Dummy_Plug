@@ -2,7 +2,7 @@
 --!     @file    core.vhd
 --!     @brief   Core Package for Dummy Plug.
 --!     @version 0.0.5
---!     @date    2012/5/12
+--!     @date    2012/5/15
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -261,6 +261,16 @@ package CORE is
                  OP_WORD    : in    STRING
     );
     -------------------------------------------------------------------------------
+    --! @brief READERのマップから信号の値を読み取るサブプログラム.
+    -------------------------------------------------------------------------------
+    procedure READ_SIGNALS(
+        variable SELF       : inout CORE_TYPE;            --! コア変数.
+        file     STREAM     :       TEXT;                 --! 入力ストリーム.
+                 SIG_NAME   : in    STRING;               --! 信号名
+                 SIG_VALUE  : out   std_logic_vector;     --! GPI信号出力.
+                 EVENT      : inout READER.EVENT_TYPE     --! 次のイベント.
+    );
+    -------------------------------------------------------------------------------
     --! @brief コア変数のデバッグ用ダンプ
     -------------------------------------------------------------------------------
     procedure REPORT_DEBUG     (SELF:inout CORE_TYPE; NAME,MESSAGE:in STRING);
@@ -345,6 +355,7 @@ use     DUMMY_PLUG.SYNC.all;
 use     DUMMY_PLUG.UTIL.INTEGER_TO_STRING;
 use     DUMMY_PLUG.UTIL.STRING_TO_BOOLEAN;
 use     DUMMY_PLUG.UTIL.STRING_TO_INTEGER;
+use     DUMMY_PLUG.UTIL.STRING_TO_STD_LOGIC_VECTOR;
 package body CORE is
     -------------------------------------------------------------------------------
     --! @brief コア変数のデバッグ用ダンプ
@@ -1253,4 +1264,74 @@ package body CORE is
         end loop;
         return status;
     end function;
+    -------------------------------------------------------------------------------
+    --! @brief READERのマップからGPIOの値を読み取るサブプログラム.
+    -------------------------------------------------------------------------------
+    procedure READ_SIGNALS(
+        variable SELF       : inout CORE_TYPE;            --! コア変数.
+        file     STREAM     :       TEXT;                 --! 入力ストリーム.
+                 SIG_NAME   : in    STRING;               --! 信号名
+                 SIG_VALUE  : out   std_logic_vector;     --! 信号の値.
+                 EVENT      : inout EVENT_TYPE            --! 次のイベント.
+    ) is
+        constant PROC_NAME  :       string := "READ_GPI";
+        variable next_event :       EVENT_TYPE;
+        variable key_word   :       string(1 to SIG_NAME'length);
+        variable pos        :       integer;
+        variable port_num   :       integer;
+        variable read_len   :       integer;
+        variable value      :       std_logic_vector(0 downto 0);
+        variable val_size   :       integer;
+    begin
+        next_event := EVENT;
+        MAP_LOOP: loop
+            case next_event is
+                when EVENT_SCALAR  =>
+                    pos := SELF.str_buf'low;
+                    if (SELF.str_len < 6) then
+                        exit MAP_LOOP;
+                    end if;
+                    COPY_KEY_WORD(SELF, key_word);
+                    if (key_word = SIG_NAME) then
+                        pos := pos + key_word'length;
+                        if (SELF.str_buf(pos) /= '(' ) then
+                            exit MAP_LOOP;
+                        end if;
+                        pos := pos + 1;
+                        STRING_TO_INTEGER(
+                            STR  => SELF.str_buf(pos to SELF.str_len),
+                            VAL  => port_num,
+                            LEN  => read_len
+                        );
+                        if (read_len = 0 or pos+read_len /= SELF.str_len) then
+                            exit MAP_LOOP;
+                        end if;
+                        if (SELF.str_buf(pos+read_len) /= ')') then
+                            exit MAP_LOOP;
+                        end if;
+                        SEEK_EVENT(SELF, STREAM, next_event);
+                        if (next_event /= EVENT_SCALAR) then
+                            READ_ERROR(SELF, PROC_NAME, "READ_VAL NG");
+                        end if;
+                        READ_EVENT(SELF, STREAM, EVENT_SCALAR);
+                        STRING_TO_STD_LOGIC_VECTOR(
+                            STR  => SELF.str_buf(1 to SELF.str_len),
+                            VAL  => value,
+                            LEN  => read_len,
+                            SIZE => val_size
+                        );
+                        SIG_VALUE(port_num) := value(0);
+                    else
+                        exit MAP_LOOP;
+                    end if;
+                when EVENT_MAP_END => exit MAP_LOOP;
+                when others        => exit MAP_LOOP;
+            end case;
+            SEEK_EVENT(SELF, STREAM, next_event);
+            if (next_event = EVENT_SCALAR) then
+                READ_EVENT(SELF, STREAM, EVENT_SCALAR);
+            end if;
+        end loop;
+        EVENT := next_event;
+    end procedure;
 end CORE;

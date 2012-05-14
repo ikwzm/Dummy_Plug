@@ -2,7 +2,7 @@
 --!     @file    axi4_models.vhd
 --!     @brief   AXI4 Dummy Plug Component Package.
 --!     @version 0.0.5
---!     @date    2012/5/12
+--!     @date    2012/5/14
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -70,6 +70,10 @@ component AXI4_MASTER_PLAYER is
                           SYNC_PLUG_NUM_TYPE := 1;
         SYNC_WIDTH      : --! @brief シンクロ用信号の本数.
                           integer :=  1;
+        GPI_WIDTH       : --! @brief GPI(General Purpose Input)信号のビット幅.
+                          integer := 8;
+        GPO_WIDTH       : --! @brief GPO(General Purpose Output)信号のビット幅.
+                          integer := 8;
         FINISH_ABORT    : --! @brief FINISH コマンド実行時にシミュレーションを
                           --!        アボートするかどうかを指定するフラグ.
                           boolean := true
@@ -148,6 +152,11 @@ component AXI4_MASTER_PLAYER is
         --------------------------------------------------------------------------
         SYNC            : inout SYNC_SIG_VECTOR (SYNC_WIDTH   -1 downto 0);
         --------------------------------------------------------------------------
+        -- GPIO
+        --------------------------------------------------------------------------
+        GPI             : in    std_logic_vector(GPI_WIDTH    -1 downto 0) := (others => '0');
+        GPO             : out   std_logic_vector(GPO_WIDTH    -1 downto 0);
+        --------------------------------------------------------------------------
         -- 各種状態出力.
         --------------------------------------------------------------------------
         REPORT_STATUS   : out   REPORT_STATUS_TYPE;
@@ -178,6 +187,10 @@ component AXI4_SLAVE_PLAYER is
                           SYNC_PLUG_NUM_TYPE := 1;
         SYNC_WIDTH      : --! @brief シンクロ用信号の本数.
                           integer :=  1;
+        GPI_WIDTH       : --! @brief GPI(General Purpose Input)信号のビット幅.
+                          integer := 8;
+        GPO_WIDTH       : --! @brief GPO(General Purpose Output)信号のビット幅.
+                          integer := 8;
         FINISH_ABORT    : --! @brief FINISH コマンド実行時にシミュレーションを
                           --!        アボートするかどうかを指定するフラグ.
                           boolean := true
@@ -255,6 +268,11 @@ component AXI4_SLAVE_PLAYER is
         -- シンクロ用信号
         --------------------------------------------------------------------------
         SYNC            : inout SYNC_SIG_VECTOR (SYNC_WIDTH   -1 downto 0);
+        --------------------------------------------------------------------------
+        -- GPIO
+        --------------------------------------------------------------------------
+        GPI             : in    std_logic_vector(GPI_WIDTH    -1 downto 0) := (others => '0');
+        GPO             : out   std_logic_vector(GPO_WIDTH    -1 downto 0);
         --------------------------------------------------------------------------
         -- 各種状態出力.
         --------------------------------------------------------------------------

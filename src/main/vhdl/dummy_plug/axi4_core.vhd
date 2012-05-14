@@ -2,7 +2,7 @@
 --!     @file    axi4_core.vhd
 --!     @brief   AXI4 Dummy Plug Core Package.
 --!     @version 0.0.5
---!     @date    2012/5/12
+--!     @date    2012/5/15
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -251,7 +251,7 @@ package AXI4_CORE is
                  WRITE      : in    boolean;              --! ライト可/不可を指定.
                  WIDTH      : in    AXI4_SIGNAL_WIDTH_TYPE;
                  SIGNALS    : inout AXI4_CHANNEL_SIGNAL_TYPE;
-                 CURR_EVENT : out   READER.EVENT_TYPE
+                 EVENT      : inout READER.EVENT_TYPE
     );
     -------------------------------------------------------------------------------
     --! @brief 構造体の値と信号を比較するサブプログラム.
@@ -396,6 +396,10 @@ package AXI4_CORE is
                               integer := 0;
             SYNC_LOCAL_WAIT : --! @brief ローカル同期時のウェイトクロック数.
                               integer := 2;
+            GPI_WIDTH       : --! @brief GPI(General Purpose Input)信号のビット幅.
+                              integer := 8;
+            GPO_WIDTH       : --! @brief GPO(General Purpose Output)信号のビット幅.
+                              integer := 8;
             FINISH_ABORT    : --! @brief FINISH コマンド実行時にシミュレーションを
                               --!        アボートするかどうかを指定するフラグ.
                               boolean := true
@@ -522,6 +526,11 @@ package AXI4_CORE is
             SYNC_LOCAL_REQ  : out   SYNC.SYNC_REQ_VECTOR(SYNC_LOCAL_PORT downto SYNC_LOCAL_PORT);
             SYNC_LOCAL_ACK  : in    SYNC.SYNC_ACK_VECTOR(SYNC_LOCAL_PORT downto SYNC_LOCAL_PORT);
             -----------------------------------------------------------------------
+            -- GPIO
+            -----------------------------------------------------------------------
+            GPI             : in    std_logic_vector(GPI_WIDTH     -1 downto 0) := (others => '0');
+            GPO             : out   std_logic_vector(GPO_WIDTH     -1 downto 0);
+            -----------------------------------------------------------------------
             -- 各種状態信号.
             -----------------------------------------------------------------------
             REPORT_STATUS   : out   CORE.REPORT_STATUS_TYPE;
@@ -635,6 +644,7 @@ package body AXI4_CORE is
     constant  KEY_BID       : KEY_TYPE := "BID    ";
     constant  KEY_BVALID    : KEY_TYPE := "BVALID ";
     constant  KEY_BREADY    : KEY_TYPE := "BREADY ";
+
     -------------------------------------------------------------------------------
     --! @brief READERから読み取る信号の種類を示すタイプの定義.
     -------------------------------------------------------------------------------
@@ -1126,14 +1136,20 @@ package body AXI4_CORE is
                  WRITE      : in    boolean;              --! ライト可/不可を指定.
                  WIDTH      : in    AXI4_SIGNAL_WIDTH_TYPE;
                  SIGNALS    : inout AXI4_CHANNEL_SIGNAL_TYPE;
-                 CURR_EVENT : out   READER.EVENT_TYPE
+                 EVENT      : inout EVENT_TYPE
     ) is
+        constant PROC_NAME  :       string := "READ_AXI4_CHANNEL";
         variable next_event :       EVENT_TYPE;
         variable key_word   :       KEY_TYPE;
         procedure READ_VAL(VAL: out std_logic_vector) is
+            variable next_event: EVENT_TYPE;
             variable read_len  : integer;
             variable val_size  : integer;
         begin
+            SEEK_EVENT(SELF, STREAM, next_event  );
+            if (next_event /= EVENT_SCALAR) then
+                READ_ERROR(SELF, PROC_NAME, "READ_VAL NG");
+            end if;
             READ_EVENT(SELF, STREAM, EVENT_SCALAR);
             STRING_TO_STD_LOGIC_VECTOR(
               STR  => SELF.str_buf(1 to SELF.str_len),
@@ -1143,10 +1159,15 @@ package body AXI4_CORE is
             );
         end procedure;
         procedure READ_VAL(VAL: out std_logic) is
+            variable next_event: EVENT_TYPE;
             variable read_len  : integer;
             variable val_size  : integer;
             variable vec       : std_logic_vector(0 downto 0);
         begin
+            SEEK_EVENT(SELF, STREAM, next_event  );
+            if (next_event /= EVENT_SCALAR) then
+                READ_ERROR(SELF, PROC_NAME, "READ_VAL NG");
+            end if;
             READ_EVENT(SELF, STREAM, EVENT_SCALAR);
             STRING_TO_STD_LOGIC_VECTOR(
               STR  => SELF.str_buf(1 to SELF.str_len),
@@ -1157,11 +1178,10 @@ package body AXI4_CORE is
             VAL := vec(0);
         end procedure;
     begin
+        next_event := EVENT;
         MAP_LOOP: loop
-            SEEK_EVENT(SELF, STREAM, next_event);
             case next_event is
                 when EVENT_SCALAR  =>
-                    READ_EVENT(SELF, STREAM, EVENT_SCALAR);
                     COPY_KEY_WORD(SELF, key_word);
                     case to_read_axi4_signal(key_word, CHANNEL, READ, WRITE) is
                         when READ_ARID     => READ_VAL(SIGNALS.AR.ID  (WIDTH.ID     -1 downto 0));
@@ -1214,8 +1234,12 @@ package body AXI4_CORE is
                 when EVENT_MAP_END =>         exit MAP_LOOP;
                 when others        =>         exit MAP_LOOP;
             end case;
+            SEEK_EVENT(SELF, STREAM, next_event);
+            if (next_event = EVENT_SCALAR) then
+                READ_EVENT(SELF, STREAM, EVENT_SCALAR);
+            end if;
         end loop;
-        CURR_EVENT := next_event;
+        EVENT := next_event;
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 構造体の値と信号を比較するサブプログラム.

@@ -2,7 +2,7 @@
 --!     @file    axi4_channel_player.vhd
 --!     @brief   AXI4 A/R/W/B Channel Dummy Plug Player.
 --!     @version 0.0.5
---!     @date    2012/5/12
+--!     @date    2012/5/15
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -77,6 +77,10 @@ entity  AXI4_CHANNEL_PLAYER is
                           integer := 0;
         SYNC_LOCAL_WAIT : --! @brief ローカル同期時のウェイトクロック数.
                           integer := 2;
+        GPI_WIDTH       : --! @brief GPI(General Purpose Input)信号のビット幅.
+                          integer := 8;
+        GPO_WIDTH       : --! @brief GPO(General Purpose Output)信号のビット幅.
+                          integer := 8;
         FINISH_ABORT    : --! @brief FINISH コマンド実行時にシミュレーションを
                           --!        アボートするかどうかを指定するフラグ.
                           boolean := true
@@ -203,6 +207,11 @@ entity  AXI4_CHANNEL_PLAYER is
         SYNC_LOCAL_REQ  : out   SYNC_REQ_VECTOR(SYNC_LOCAL_PORT downto SYNC_LOCAL_PORT);
         SYNC_LOCAL_ACK  : in    SYNC_ACK_VECTOR(SYNC_LOCAL_PORT downto SYNC_LOCAL_PORT);
         ---------------------------------------------------------------------------
+        -- GPIO
+        ---------------------------------------------------------------------------
+        GPI             : in    std_logic_vector(GPI_WIDTH-1 downto 0) := (others => '0');
+        GPO             : out   std_logic_vector(GPO_WIDTH-1 downto 0);
+        ---------------------------------------------------------------------------
         -- 各種状態出力.
         ---------------------------------------------------------------------------
         REPORT_STATUS   : out   REPORT_STATUS_TYPE;
@@ -229,7 +238,7 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
     -------------------------------------------------------------------------------
     --! 
     -------------------------------------------------------------------------------
-    procedure  WAIT_ON_AXI4_SIGNALS is
+    procedure  WAIT_ON_SIGNALS is
     begin
         wait on 
             ACLK       , -- In  :
@@ -277,7 +286,29 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
             BUSER_I    , -- In  :
             BID_I      , -- In  :
             BVALID_I   , -- In  :
-            BREADY_I   ; -- In  :
+            BREADY_I   , -- In  :
+            GPI        ; -- In  :
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! 
+    -------------------------------------------------------------------------------
+    procedure  MATCH_GPI(
+        variable CORE       : inout CORE_TYPE;
+                 SIGNALS    : in    std_logic_vector;
+                 MATCH      : out   boolean
+    ) is
+        variable count      :       integer;
+    begin
+        count := 0;
+        for i in GPI'range loop
+            if (MATCH_STD_LOGIC(SIGNALS(i), GPI(i)) = FALSE) then
+                REPORT_MISMATCH(CORE, string'("GPI(") & INTEGER_TO_STRING(i) & ") " &
+                                BIN_TO_STRING(GPI(i)) & " /= " &
+                                BIN_TO_STRING(SIGNALS(i)));
+                count := count + 1;
+            end if;
+        end loop;
+        MATCH := (count = 0);
     end procedure;
     -------------------------------------------------------------------------------
     --! 
@@ -349,7 +380,7 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
     ) is
     begin 
         MATCH_AXI4_CHANNEL(
-            SELF       => CORE     ,
+            SELF       => CORE       , -- I/O :
             SIGNALS    => SIGNALS    , -- In  :
             READ       => READ       , -- In  :
             WRITE      => WRITE      , -- In  :
@@ -399,7 +430,7 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
             BID        => BID_I      , -- In  :
             BVALID     => BVALID_I   , -- In  :
             BREADY     => BREADY_I     -- In  :
-         );
+        );
     end procedure;
     -------------------------------------------------------------------------------
     --! READ_AXI4_CHANNEL
@@ -408,7 +439,7 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
         variable CORE       : inout CORE_TYPE;
         file     STREAM     :       TEXT;
         variable SIGNALS    : inout AXI4_CHANNEL_SIGNAL_TYPE;
-        variable EVENT      : out   EVENT_TYPE
+        variable EVENT      : inout EVENT_TYPE
     ) is
     begin
         READ_AXI4_CHANNEL(
@@ -419,7 +450,7 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
             WRITE          => WRITE                ,  -- In :
             WIDTH          => WIDTH                ,  -- In :
             SIGNALS        => SIGNALS              ,  -- I/O:
-            CURR_EVENT     => EVENT                   -- Out:
+            EVENT          => EVENT                   -- I/O:
         );
     end procedure;
 begin 
@@ -466,6 +497,7 @@ begin
         variable  operation     : OPERATION_TYPE;
         variable  out_signals   : AXI4_CHANNEL_SIGNAL_TYPE;
         variable  chk_signals   : AXI4_CHANNEL_SIGNAL_TYPE;
+        variable  gpi_signals   : std_logic_vector(GPI'range);
         ---------------------------------------------------------------------------
         --! @brief 
         ---------------------------------------------------------------------------
@@ -652,11 +684,23 @@ begin
                 when EVENT_MAP_BEGIN =>
                     READ_EVENT(core, stream, EVENT_MAP_BEGIN);
                     chk_signals := AXI4_CHANNEL_SIGNAL_DONTCARE;
+                    gpi_signals := (others => '-');
+                    SEEK_EVENT(core, stream, next_event);
+                    if (next_event = EVENT_SCALAR) then
+                        READ_EVENT(core, stream, EVENT_SCALAR);
+                    end if;
                     READ_AXI4_CHANNEL(
                         CORE       => core            ,  -- In :
                         STREAM     => stream          ,  -- I/O:
                         SIGNALS    => chk_signals     ,  -- I/O:
-                        EVENT      => next_event         -- Out:
+                        EVENT      => next_event         -- I/O:
+                    );
+                    READ_SIGNALS(
+                        SELF       => core            ,  -- In :
+                        STREAM     => stream          ,  -- I/O:
+                        SIG_NAME   => "GPI"           ,  -- In :
+                        SIG_VALUE  => gpi_signals     ,  -- Out:
+                        EVENT      => next_event         -- I/O:
                     );
                     if (next_event /= EVENT_MAP_END) then
                         READ_ERROR(core, PROC_NAME, "need EVENT_MAP_END but " &
@@ -664,6 +708,7 @@ begin
                     end if;
                     READ_EVENT(core, stream, EVENT_MAP_END);
                     MATCH_AXI4_CHANNEL(core, chk_signals, match);
+                    MATCH_GPI         (core, gpi_signals, match);
                 when others =>
                     READ_ERROR(core, PROC_NAME, "SEEK_EVENT NG");
             end case;
@@ -679,7 +724,8 @@ begin
             variable scan_len   : integer;
             variable timeout    : integer;
             variable wait_mode  : integer;
-            variable match      : boolean;
+            variable axi_match  : boolean;
+            variable gpi_match  : boolean;
         begin
             REPORT_DEBUG(core, PROC_NAME, "BEGIN");
             timeout   := DEFAULT_WAIT_TIMEOUT;
@@ -701,13 +747,25 @@ begin
                 when EVENT_MAP_BEGIN =>
                     READ_EVENT(core, stream, EVENT_MAP_BEGIN);
                     chk_signals := AXI4_CHANNEL_SIGNAL_DONTCARE;
+                    gpi_signals := (others => '-');
                     MAP_LOOP: loop
                         REPORT_DEBUG(core, PROC_NAME, "MAP_LOOP");
+                        SEEK_EVENT(core, stream, next_event);
+                        if (next_event = EVENT_SCALAR) then
+                            READ_EVENT(core, stream, EVENT_SCALAR);
+                        end if;
                         READ_AXI4_CHANNEL(
                             CORE       => core            ,  -- In :
                             STREAM     => stream          ,  -- I/O:
                             SIGNALS    => chk_signals     ,  -- I/O:
                             EVENT      => next_event         -- Out:
+                        );
+                        READ_SIGNALS(
+                            SELF       => core            ,  -- In :
+                            STREAM     => stream          ,  -- I/O:
+                            SIG_NAME   => "GPI"           ,  -- In :
+                            SIG_VALUE  => gpi_signals     ,  -- Out:
+                            EVENT      => next_event         -- I/O:
                         );
                         case next_event is
                             when EVENT_SCALAR  =>
@@ -744,9 +802,10 @@ begin
                     if (wait_mode > 0) then
                         SIG_LOOP:loop
                             REPORT_DEBUG(core, PROC_NAME, "SIG_LOOP");
-                            WAIT_ON_AXI4_SIGNALS;
-                            MATCH_AXI4_CHANNEL(chk_signals, match);
-                            exit when(match);
+                            WAIT_ON_SIGNALS;
+                            MATCH_AXI4_CHANNEL(chk_signals, axi_match);
+                            gpi_match := MATCH_STD_LOGIC(gpi_signals, GPI);
+                            exit when(axi_match and gpi_match);
                             if (ACLK'event and ACLK = '1') then
                                 timeout := timeout - 1;
                                 if (timeout < 0) then
@@ -758,8 +817,9 @@ begin
                         CLK_LOOP:loop
                             REPORT_DEBUG(core, PROC_NAME, "CLK_LOOP");
                             wait until (ACLK'event and ACLK = '1');
-                            MATCH_AXI4_CHANNEL(chk_signals, match);
-                            exit when(match);
+                            MATCH_AXI4_CHANNEL(chk_signals, axi_match);
+                            gpi_match := MATCH_STD_LOGIC(gpi_signals, GPI);
+                            exit when(axi_match and gpi_match);
                             timeout := timeout - 1;
                             if (timeout < 0) then
                                 EXECUTE_ABORT(core, PROC_NAME, "Time Out!");
@@ -806,6 +866,10 @@ begin
             REPORT_DEBUG(core, PROC_NAME, "BEGIN");
             READ_EVENT(core, stream, EVENT_MAP_BEGIN);
             MAP_LOOP: loop
+                SEEK_EVENT(core, stream, next_event);
+                if (next_event = EVENT_SCALAR) then
+                    READ_EVENT(core, stream, EVENT_SCALAR);
+                end if;
                 READ_AXI4_CHANNEL(
                     CORE       => core            ,  -- In :
                     STREAM     => stream          ,  -- I/O:

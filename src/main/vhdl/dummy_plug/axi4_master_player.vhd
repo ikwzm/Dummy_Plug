@@ -2,7 +2,7 @@
 --!     @file    axi4_master_player.vhd
 --!     @brief   AXI4 Master Dummy Plug Player.
 --!     @version 0.0.5
---!     @date    2012/5/12
+--!     @date    2012/5/15
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -65,6 +65,10 @@ entity  AXI4_MASTER_PLAYER is
                           SYNC_PLUG_NUM_TYPE := 1;
         SYNC_WIDTH      : --! @brief シンクロ用信号の本数.
                           integer :=  1;
+        GPI_WIDTH       : --! @brief GPI(General Purpose Input)信号のビット幅.
+                          integer := 8;
+        GPO_WIDTH       : --! @brief GPO(General Purpose Output)信号のビット幅.
+                          integer := 8;
         FINISH_ABORT    : --! @brief FINISH コマンド実行時にシミュレーションを
                           --!        アボートするかどうかを指定するフラグ.
                           boolean := true
@@ -143,6 +147,11 @@ entity  AXI4_MASTER_PLAYER is
         --------------------------------------------------------------------------
         SYNC            : inout SYNC_SIG_VECTOR (SYNC_WIDTH   -1 downto 0);
         --------------------------------------------------------------------------
+        -- GPIO
+        --------------------------------------------------------------------------
+        GPI             : in    std_logic_vector(GPI_WIDTH    -1 downto 0) := (others => '0');
+        GPO             : out   std_logic_vector(GPO_WIDTH    -1 downto 0);
+        --------------------------------------------------------------------------
         -- 各種状態出力.
         --------------------------------------------------------------------------
         REPORT_STATUS   : out   REPORT_STATUS_TYPE;
@@ -213,6 +222,8 @@ begin
             SYNC_WIDTH      => SYNC_WIDTH,
             SYNC_LOCAL_PORT => SYNC_LOCAL_PORT,
             SYNC_LOCAL_WAIT => SYNC_LOCAL_WAIT,
+            GPI_WIDTH       => GPI_WIDTH,
+            GPO_WIDTH       => GPO_WIDTH,
             FINISH_ABORT    => FINISH_ABORT
         )
         port map(
@@ -333,6 +344,11 @@ begin
             SYNC_ACK        => sync_ack    , -- In :
             SYNC_LOCAL_REQ  => sync_m_req  , -- Out:
             SYNC_LOCAL_ACK  => sync_m_ack  , -- In :
+            ----------------------------------------------------------------------
+            -- GPIO
+            ----------------------------------------------------------------------
+            GPI             => GPI         , -- In :
+            GPO             => GPO         , -- Out:
             -----------------------------------------------------------------------
             -- 各種状態出力.
             -----------------------------------------------------------------------
@@ -357,6 +373,8 @@ begin
             SYNC_WIDTH      => SYNC_WIDTH,
             SYNC_LOCAL_PORT => SYNC_LOCAL_PORT,
             SYNC_LOCAL_WAIT => SYNC_LOCAL_WAIT,
+            GPI_WIDTH       => GPI_WIDTH,
+            GPO_WIDTH       => GPO_WIDTH,
             FINISH_ABORT    => FINISH_ABORT
         )
         port map(
@@ -477,6 +495,11 @@ begin
             SYNC_ACK        => sync_ack    , -- In :
             SYNC_LOCAL_REQ  => sync_ar_req , -- Out:
             SYNC_LOCAL_ACK  => sync_ar_ack , -- In :
+            ----------------------------------------------------------------------
+            -- GPIO
+            ----------------------------------------------------------------------
+            GPI             => GPI         , -- In :
+            GPO             => open        , -- Out:
             -----------------------------------------------------------------------
             -- 各種状態出力.
             -----------------------------------------------------------------------
@@ -501,6 +524,8 @@ begin
             SYNC_WIDTH      => SYNC_WIDTH,
             SYNC_LOCAL_PORT => SYNC_LOCAL_PORT,
             SYNC_LOCAL_WAIT => SYNC_LOCAL_WAIT,
+            GPI_WIDTH       => GPI_WIDTH,
+            GPO_WIDTH       => GPO_WIDTH,
             FINISH_ABORT    => FINISH_ABORT
         )
         port map(
@@ -621,6 +646,11 @@ begin
             SYNC_ACK        => sync_ack    , -- In :
             SYNC_LOCAL_REQ  => sync_r_req  , -- Out:
             SYNC_LOCAL_ACK  => sync_r_ack  , -- In :
+            ----------------------------------------------------------------------
+            -- GPIO
+            ----------------------------------------------------------------------
+            GPI             => GPI         , -- In :
+            GPO             => open        , -- Out:
             -----------------------------------------------------------------------
             -- 各種状態出力.
             -----------------------------------------------------------------------
@@ -645,6 +675,8 @@ begin
             SYNC_WIDTH      => SYNC_WIDTH,
             SYNC_LOCAL_PORT => SYNC_LOCAL_PORT,
             SYNC_LOCAL_WAIT => SYNC_LOCAL_WAIT,
+            GPI_WIDTH       => GPI_WIDTH,
+            GPO_WIDTH       => GPO_WIDTH,
             FINISH_ABORT    => FINISH_ABORT
         )
         port map(
@@ -765,6 +797,11 @@ begin
             SYNC_ACK        => sync_ack    , -- In :
             SYNC_LOCAL_REQ  => sync_aw_req , -- Out:
             SYNC_LOCAL_ACK  => sync_aw_ack , -- In :
+            ----------------------------------------------------------------------
+            -- GPIO
+            ----------------------------------------------------------------------
+            GPI             => GPI         , -- In :
+            GPO             => open        , -- Out:
             -----------------------------------------------------------------------
             -- 各種状態出力.
             -----------------------------------------------------------------------
@@ -789,6 +826,8 @@ begin
             SYNC_WIDTH      => SYNC_WIDTH,
             SYNC_LOCAL_PORT => SYNC_LOCAL_PORT,
             SYNC_LOCAL_WAIT => SYNC_LOCAL_WAIT,
+            GPI_WIDTH       => GPI_WIDTH,
+            GPO_WIDTH       => GPO_WIDTH,
             FINISH_ABORT    => FINISH_ABORT
         )
         port map(
@@ -909,6 +948,11 @@ begin
             SYNC_ACK        => sync_ack    , -- In :
             SYNC_LOCAL_REQ  => sync_w_req  , -- Out:
             SYNC_LOCAL_ACK  => sync_w_ack  , -- In :
+            ----------------------------------------------------------------------
+            -- GPIO
+            ----------------------------------------------------------------------
+            GPI             => GPI         , -- In :
+            GPO             => open        , -- Out:
             -----------------------------------------------------------------------
             -- 各種状態出力.
             -----------------------------------------------------------------------
@@ -933,6 +977,8 @@ begin
             SYNC_WIDTH      => SYNC_WIDTH,
             SYNC_LOCAL_PORT => SYNC_LOCAL_PORT,
             SYNC_LOCAL_WAIT => SYNC_LOCAL_WAIT,
+            GPI_WIDTH       => GPI_WIDTH,
+            GPO_WIDTH       => GPO_WIDTH,
             FINISH_ABORT    => FINISH_ABORT
         )
         port map(
@@ -1053,6 +1099,11 @@ begin
             SYNC_ACK        => sync_ack    , -- In :
             SYNC_LOCAL_REQ  => sync_b_req  , -- Out:
             SYNC_LOCAL_ACK  => sync_b_ack  , -- In :
+            ----------------------------------------------------------------------
+            -- GPIO
+            ----------------------------------------------------------------------
+            GPI             => GPI         , -- In :
+            GPO             => open        , -- Out:
             -----------------------------------------------------------------------
             -- 各種状態出力.
             -----------------------------------------------------------------------

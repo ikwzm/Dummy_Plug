@@ -462,7 +462,7 @@ begin
         WRITE(L,T & "  Warning  : ");WRITE(L,S_REPORT.warning_count );WRITELINE(OUTPUT,L);
         WRITE(L,T);                                                   WRITELINE(OUTPUT,L);
         assert (M_REPORT.error_count    =  0) and
-               (M_REPORT.mismatch_count =  8) and
+               (M_REPORT.mismatch_count =  9) and
                (M_REPORT.warning_count  =  0) and
                (M_REPORT.failure_count  =  0) and
                (S_REPORT.error_count    =  0) and

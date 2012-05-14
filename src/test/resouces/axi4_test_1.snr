@@ -326,6 +326,9 @@
 - MASTER:                                 # マスター用ダミープラグの名前. 
   - DEBUG : 0
   - REPORT: {DEBUG: ON, MISMATCH: ON}
+  - CHECK : {GPI(1) : 1}                  # 
+  - WAIT  : {GPI(0) : 0, TIMEOUT: 10}     #
+  - DEBUG : 0
   - AW:                                   # アドレスチャネルの挙動.
     - AWVALID : 0                         # AWVALID <= 0
       AWADDR  : "32'h00000000"            # AWADDR  <= 00000000
