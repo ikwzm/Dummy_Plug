@@ -472,9 +472,8 @@ begin
         constant  KEY_SYNC      : KEYWORD_TYPE := "SYNC ";
         constant  KEY_WAIT      : KEYWORD_TYPE := "WAIT ";
         constant  KEY_CHECK     : KEYWORD_TYPE := "CHECK";
+        constant  KEY_OUT       : KEYWORD_TYPE := "OUT  ";
         constant  KEY_DEBUG     : KEYWORD_TYPE := "DEBUG";
-        constant  KEY_TIMEOUT   : KEYWORD_TYPE := "TIMEO";
-        constant  KEY_WAIT_ON   : KEYWORD_TYPE := "ON   ";
         constant  KEY_REPORT    : KEYWORD_TYPE := "REPOR";
         function  GENERATE_KEY_CHANNEL return KEYWORD_TYPE is
         begin
@@ -498,6 +497,7 @@ begin
         variable  out_signals   : AXI4_CHANNEL_SIGNAL_TYPE;
         variable  chk_signals   : AXI4_CHANNEL_SIGNAL_TYPE;
         variable  gpi_signals   : std_logic_vector(GPI'range);
+        variable  gpo_signals   : std_logic_vector(GPO'range);
         ---------------------------------------------------------------------------
         --! @brief 
         ---------------------------------------------------------------------------
@@ -686,22 +686,27 @@ begin
                     chk_signals := AXI4_CHANNEL_SIGNAL_DONTCARE;
                     gpi_signals := (others => '-');
                     MAP_READ_LOOP: loop
-                        MAP_READ_NEXT(core, stream, next_event);
+                        MAP_READ_PREPARE_FOR_NEXT(
+                            SELF       => core            ,  -- I/O:
+                            STREAM     => stream          ,  -- I/O:
+                            EVENT      => next_event         -- I/O:
+                        );
                         MAP_READ_AXI4_CHANNEL(
-                            CORE       => core            ,  -- In :
+                            CORE       => core            ,  -- I/O:
                             STREAM     => stream          ,  -- I/O:
                             SIGNALS    => chk_signals     ,  -- I/O:
                             EVENT      => next_event         -- I/O:
                         );
                         MAP_READ_STD_LOGIC_VECTOR(
-                            SELF       => core            ,  -- In :
+                            SELF       => core            ,  -- I/O:
                             STREAM     => stream          ,  -- I/O:
                             KEY        => "GPI"           ,  -- In :
-                            VAL        => gpi_signals     ,  -- Out:
+                            VAL        => gpi_signals     ,  -- I/O:
                             EVENT      => next_event         -- I/O:
                         );
                         case next_event is
                             when EVENT_SCALAR  =>
+                                COPY_KEY_WORD(core, keyword);
                                 EXECUTE_UNDEFINED_MAP_KEY(keyword);
                             when EVENT_MAP_END =>
                                 exit MAP_READ_LOOP;
@@ -753,36 +758,41 @@ begin
                     gpi_signals := (others => '-');
                     MAP_READ_LOOP: loop
                         REPORT_DEBUG(core, PROC_NAME, "MAP_READ_LOOP");
-                        MAP_READ_NEXT(core, stream, next_event);
+                        MAP_READ_PREPARE_FOR_NEXT(
+                            SELF       => core            ,  -- I/O:
+                            STREAM     => stream          ,  -- I/O:
+                            EVENT      => next_event         -- I/O:
+                        );
                         MAP_READ_AXI4_CHANNEL(
-                            CORE       => core            ,  -- In :
+                            CORE       => core            ,  -- I/O:
                             STREAM     => stream          ,  -- I/O:
                             SIGNALS    => chk_signals     ,  -- I/O:
-                            EVENT      => next_event         -- Out:
+                            EVENT      => next_event         -- I/O:
                         );
                         MAP_READ_STD_LOGIC_VECTOR(
-                            SELF       => core            ,  -- In :
+                            SELF       => core            ,  -- I/O:
                             STREAM     => stream          ,  -- I/O:
                             KEY        => "GPI"           ,  -- In :
-                            VAL        => gpi_signals     ,  -- Out:
+                            VAL        => gpi_signals     ,  -- I/O:
                             EVENT      => next_event         -- I/O:
                         );
                         MAP_READ_INTEGER(
-                            SELF       => core            ,  -- In :
+                            SELF       => core            ,  -- I/O:
                             STREAM     => stream          ,  -- I/O:
                             KEY        => "TIMEOUT"       ,  -- In :
-                            VAL        => timeout         ,  -- Out:
+                            VAL        => timeout         ,  -- I/O:
                             EVENT      => next_event         -- I/O:
                         );
                         MAP_READ_BOOLEAN(
-                            SELF       => core            ,  -- In :
+                            SELF       => core            ,  -- I/O:
                             STREAM     => stream          ,  -- I/O:
                             KEY        => "ON"            ,  -- In :
-                            VAL        => wait_on         ,  -- Out:
+                            VAL        => wait_on         ,  -- I/O:
                             EVENT      => next_event         -- I/O:
                         );
                         case next_event is
                             when EVENT_SCALAR  =>
+                                COPY_KEY_WORD(core, keyword);
                                 EXECUTE_UNDEFINED_MAP_KEY(keyword);
                             when EVENT_MAP_END =>
                                 exit MAP_READ_LOOP;
@@ -860,7 +870,7 @@ begin
             REPORT_DEBUG(core, PROC_NAME, "BEGIN");
             READ_EVENT(core, stream, EVENT_MAP_BEGIN);
             MAP_READ_LOOP: loop
-                MAP_READ_NEXT(core, stream, next_event);
+                MAP_READ_PREPARE_FOR_NEXT(core, stream, next_event);
                 MAP_READ_AXI4_CHANNEL(
                     CORE       => core            ,  -- In :
                     STREAM     => stream          ,  -- I/O:
@@ -938,6 +948,7 @@ begin
         ---------------------------------------------------------------------------
         out_signals := INIT_SIGNALS;
         chk_signals := INIT_SIGNALS;
+        gpo_signals := (others => 'Z');
         ---------------------------------------------------------------------------
         -- 信号の初期化
         ---------------------------------------------------------------------------
@@ -968,6 +979,7 @@ begin
                             when KEY_REPORT => EXECUTE_REPORT(core, stream);
                             when KEY_DEBUG  => EXECUTE_DEBUG (core, stream);
                             when KEY_SAY    => EXECUTE_SAY   (core, stream);
+                            when KEY_OUT    => EXECUTE_OUT   (core, stream, gpo_signals, GPO);
                             when KEY_SYNC   => EXECUTE_SYNC  (operation);
                             when KEY_WAIT   => EXECUTE_WAIT;
                             when KEY_CHECK  => EXECUTE_CHECK;

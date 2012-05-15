@@ -224,6 +224,15 @@ package CORE is
         file     STREAM     :       TEXT                  --! 入力ストリーム.
     );
     -------------------------------------------------------------------------------
+    --! @brief OUTオペレーション.GPO(General Purpose Output)に値を出力する.
+    ---------------------------------------------------------------------------
+    procedure EXECUTE_OUT(
+        variable SELF       : inout CORE_TYPE;            --! コア変数.
+        file     STREAM     :       TEXT;                 --! 入力ストリーム.
+                 SIGNALS    : inout std_logic_vector;     --! 出力する値を保持している変数.
+        signal   GPO        : out   std_logic_vector      --! GPO信号出力.
+    );
+    -------------------------------------------------------------------------------
     --! @brief SKIPオペレーションを実行する.
     -------------------------------------------------------------------------------
     procedure EXECUTE_SKIP(
@@ -261,9 +270,9 @@ package CORE is
                  OP_WORD    : in    STRING
     );
     -------------------------------------------------------------------------------
-    --! @brief シナリオのマップからキーと値を読み出す処理を開始するサブプログラム.
+    --! @brief シナリオのマップからキーと値を読み出す準備をするサブプログラム.
     -------------------------------------------------------------------------------
-    procedure MAP_READ_NEXT(
+    procedure MAP_READ_PREPARE_FOR_NEXT(
         variable SELF       : inout CORE_TYPE;            --! コア変数.
         file     STREAM     :       TEXT;                 --! 入力ストリーム.
                  EVENT      : inout READER.EVENT_TYPE     --! 次のイベント.
@@ -1086,6 +1095,57 @@ package body CORE is
         REPORT_DEBUG(SELF, PROC_NAME, "END");
     end procedure;
     -------------------------------------------------------------------------------
+    --! @brief OUTオペレーション.GPO(General Purpose Output)に値を出力する.
+    ---------------------------------------------------------------------------
+    procedure EXECUTE_OUT(
+        variable SELF       : inout CORE_TYPE;            --! コア変数.
+        file     STREAM     :       TEXT;                 --! 入力ストリーム.
+                 SIGNALS    : inout std_logic_vector;     --! 出力する値を保持している変数.
+        signal   GPO        : out   std_logic_vector      --! GPO信号出力.
+    ) is
+        constant PROC_NAME  : string := "EXECUTE_OUT";
+        variable next_event : EVENT_TYPE;
+        variable match      : boolean;
+    begin
+        REPORT_DEBUG(SELF, PROC_NAME, "BEGIN");
+        SEEK_EVENT(SELF, STREAM, next_event);
+        case next_event is
+            when EVENT_MAP_BEGIN =>
+                READ_EVENT(SELF, STREAM, EVENT_MAP_BEGIN);
+                MAP_READ_LOOP: loop
+                    MAP_READ_PREPARE_FOR_NEXT(
+                        SELF       => SELF            ,  -- I/O:
+                        STREAM     => STREAM          ,  -- I/O:
+                        EVENT      => next_event         -- I/O:
+                    );
+                    MAP_READ_STD_LOGIC_VECTOR(
+                        SELF       => SELF            ,  -- I/O:
+                        STREAM     => STREAM          ,  -- I/O:
+                        KEY        => "GPO"           ,  -- In :
+                        VAL        => SIGNALS         ,  -- I/O:
+                        EVENT      => next_event         -- I/O:
+                    );
+                    case next_event is
+                        when EVENT_SCALAR  =>
+                            EXECUTE_UNDEFINED_MAP_KEY(
+                                SELF    => SELF  ,
+                                STREAM  => STREAM,
+                                OP_WORD => SELF.str_buf(1 to SELF.str_len)
+                            );
+                        when EVENT_MAP_END =>
+                            exit MAP_READ_LOOP;
+                        when others        =>
+                            READ_ERROR(SELF, PROC_NAME, "need EVENT_MAP_END but " &
+                                       EVENT_TO_STRING(next_event));
+                    end case;
+                end loop;
+                GPO <= SIGNALS;
+            when others =>
+                READ_ERROR(SELF, PROC_NAME, "SEEK_EVENT NG");
+        end case;
+        REPORT_DEBUG(SELF, PROC_NAME, "END");
+    end procedure;
+    -------------------------------------------------------------------------------
     --! @brief SKIPオペレーションを実行する.
     -------------------------------------------------------------------------------
     procedure EXECUTE_SKIP(
@@ -1294,9 +1354,9 @@ package body CORE is
         return status;
     end function;
     -------------------------------------------------------------------------------
-    --! @brief シナリオのマップからキーと値を読み出す処理を開始するサブプログラム.
+    --! @brief シナリオのマップからキーと値を読み出す準備をするサブプログラム.
     -------------------------------------------------------------------------------
-    procedure MAP_READ_NEXT(
+    procedure MAP_READ_PREPARE_FOR_NEXT(
         variable SELF       : inout CORE_TYPE;            --! コア変数.
         file     STREAM     :       TEXT;                 --! 入力ストリーム.
                  EVENT      : inout READER.EVENT_TYPE     --! 次のイベント.
@@ -1311,8 +1371,8 @@ package body CORE is
     --! @brief シナリオのマップからキーを指定してstd_logic_vectorタイプの値を読む.
     --!      * マップに指定されたキーが無いときは、何もしない。
     --!        VALに値を上書きすることも無い.
-    --!      * このサブプログラムを呼ぶときは、すでにMAP_READ_NEXTを実行済みに
-    --!        しておかなければならない。
+    --!      * このサブプログラムを呼ぶときは、前もって MAP_READ_PREPARE_FOR_NEXTを
+    --!        実行しておかなければならない。
     -------------------------------------------------------------------------------
     procedure MAP_READ_STD_LOGIC_VECTOR(
         variable SELF       : inout CORE_TYPE;            --! コア変数.
@@ -1382,7 +1442,7 @@ package body CORE is
                 when EVENT_MAP_END => exit MAP_LOOP;
                 when others        => exit MAP_LOOP;
             end case;
-            MAP_READ_NEXT(SELF, STREAM, next_event);
+            MAP_READ_PREPARE_FOR_NEXT(SELF, STREAM, next_event);
         end loop;
         EVENT := next_event;
         REPORT_DEBUG(SELF, PROC_NAME, "END");
@@ -1391,8 +1451,8 @@ package body CORE is
     --! @brief シナリオのマップからキーを指定してintegerタイプの値を読む.
     --!      * マップに指定されたキーが無いときは、何もしない。
     --!        VALに値を上書きすることも無い.
-    --!      * このサブプログラムを呼ぶときは、すでにMAP_READ_NEXTを実行済みに
-    --!        しておかなければならない。
+    --!      * このサブプログラムを呼ぶときは、前もって MAP_READ_PREPARE_FOR_NEXTを
+    --!        実行しておかなければならない。
     -------------------------------------------------------------------------------
     procedure MAP_READ_INTEGER(
         variable SELF       : inout CORE_TYPE;            --! コア変数.
@@ -1429,7 +1489,7 @@ package body CORE is
                 else
                      READ_ERROR(SELF, PROC_NAME, "READ_VAL NG KEY=" & KEY);
                 end if;
-                MAP_READ_NEXT(SELF, STREAM, next_event);
+                MAP_READ_PREPARE_FOR_NEXT(SELF, STREAM, next_event);
             end if;
         end if;
         EVENT := next_event;
@@ -1439,8 +1499,8 @@ package body CORE is
     --! @brief シナリオのマップからキーを指定してbooleanタイプの値を読む.
     --!      * マップに指定されたキーが無いときは、何もしない。
     --!        VALに値を上書きすることも無い.
-    --!      * このサブプログラムを呼ぶときは、すでにMAP_READ_NEXTを実行済みに
-    --!        しておかなければならない。
+    --!      * このサブプログラムを呼ぶときは、前もって MAP_READ_PREPARE_FOR_NEXTを
+    --!        実行しておかなければならない。
     -------------------------------------------------------------------------------
     procedure MAP_READ_BOOLEAN(
         variable SELF       : inout CORE_TYPE;            --! コア変数.
@@ -1477,7 +1537,7 @@ package body CORE is
                 else
                      READ_ERROR(SELF, PROC_NAME, "READ_VAL NG KEY=" & KEY);
                 end if;
-                MAP_READ_NEXT(SELF, STREAM, next_event);
+                MAP_READ_PREPARE_FOR_NEXT(SELF, STREAM, next_event);
             end if;
         end if;
         EVENT := next_event;
