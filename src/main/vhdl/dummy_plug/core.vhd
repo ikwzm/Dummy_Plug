@@ -237,6 +237,15 @@ package CORE is
         signal    GPO           : out   std_logic_vector    --! GPO信号出力.
     );
     -------------------------------------------------------------------------------
+    --! @brief GPI(General Purpose Input)信号の値をチェックする.
+    -------------------------------------------------------------------------------
+    procedure  MATCH_GPI(
+        variable  CORE          : inout CORE_TYPE;
+                  SIGNALS       : in    std_logic_vector;
+        signal    GPI           : in    std_logic_vector;
+                  MATCH         : out   boolean
+    );
+    -------------------------------------------------------------------------------
     --! @brief SKIPオペレーションを実行する.
     -------------------------------------------------------------------------------
     procedure EXECUTE_SKIP(
@@ -395,9 +404,11 @@ use     DUMMY_PLUG.VOCAL.all;
 use     DUMMY_PLUG.SYNC.all;
 use     DUMMY_PLUG.UTIL.INTEGER_TO_STRING;
 use     DUMMY_PLUG.UTIL.BOOLEAN_TO_STRING;
+use     DUMMY_PLUG.UTIL.BIN_TO_STRING;
 use     DUMMY_PLUG.UTIL.STRING_TO_BOOLEAN;
 use     DUMMY_PLUG.UTIL.STRING_TO_INTEGER;
 use     DUMMY_PLUG.UTIL.STRING_TO_STD_LOGIC_VECTOR;
+use     DUMMY_PLUG.UTIL.MATCH_STD_LOGIC;
 package body CORE is
     -------------------------------------------------------------------------------
     --! @brief コア変数のデバッグ用ダンプ
@@ -1156,6 +1167,28 @@ package body CORE is
         REPORT_DEBUG(SELF, PROC_NAME, "END");
     end procedure;
     -------------------------------------------------------------------------------
+    --! @brief GPI(General Purpose Input)信号の値をチェックする.
+    -------------------------------------------------------------------------------
+    procedure  MATCH_GPI(
+        variable  CORE          : inout CORE_TYPE;
+                  SIGNALS       : in    std_logic_vector;
+        signal    GPI           : in    std_logic_vector;
+                  MATCH         : out   boolean
+    ) is
+        variable  count         :       integer;
+    begin
+        count := 0;
+        for i in GPI'range loop
+            if (MATCH_STD_LOGIC(SIGNALS(i), GPI(i)) = FALSE) then
+                REPORT_MISMATCH(CORE, string'("GPI(") & INTEGER_TO_STRING(i) & ") " &
+                                BIN_TO_STRING(GPI(i)) & " /= " &
+                                BIN_TO_STRING(SIGNALS(i)));
+                count := count + 1;
+            end if;
+        end loop;
+        MATCH := (count = 0);
+    end procedure;
+    -------------------------------------------------------------------------------
     --! @brief SKIPオペレーションを実行する.
     -------------------------------------------------------------------------------
     procedure EXECUTE_SKIP(
@@ -1417,9 +1450,9 @@ package body CORE is
                         end if;
                         pos := pos + 1;
                         STRING_TO_INTEGER(
-                            STR  => SELF.str_buf(pos to SELF.str_len),
-                            VAL  => port_num,
-                            LEN  => read_len
+                            STR     => SELF.str_buf(pos to SELF.str_len),
+                            VAL     => port_num,
+                            STR_LEN => read_len
                         );
                         if (read_len = 0 or pos+read_len /= SELF.str_len) then
                             exit MAP_LOOP;
@@ -1433,10 +1466,10 @@ package body CORE is
                         end if;
                         READ_EVENT(SELF, STREAM, EVENT_SCALAR);
                         STRING_TO_STD_LOGIC_VECTOR(
-                            STR  => SELF.str_buf(1 to SELF.str_len),
-                            VAL  => value,
-                            LEN  => read_len,
-                            SIZE => val_size
+                            STR     => SELF.str_buf(1 to SELF.str_len),
+                            VAL     => value,
+                            STR_LEN => read_len,
+                            VAL_LEN => val_size
                         );
                         if (VAL'low <= port_num and port_num <= VAL'high) then
                             VAL(port_num) := value(0);
@@ -1487,9 +1520,9 @@ package body CORE is
                 if (next_event = EVENT_SCALAR) then
                     READ_EVENT(SELF, STREAM, next_event);
                     STRING_TO_INTEGER(
-                        STR  => SELF.str_buf(1 to SELF.str_len),
-                        VAL  => value,
-                        LEN  => read_len
+                        STR     => SELF.str_buf(1 to SELF.str_len),
+                        VAL     => value,
+                        STR_LEN => read_len
                     );
                 end if;
                 if (read_len > 0) then
@@ -1535,9 +1568,9 @@ package body CORE is
                 if (next_event = EVENT_SCALAR) then
                     READ_EVENT(SELF, STREAM, next_event);
                     STRING_TO_BOOLEAN(
-                        STR  => SELF.str_buf(1 to SELF.str_len),
-                        VAL  => value,
-                        LEN  => read_len
+                        STR     => SELF.str_buf(1 to SELF.str_len),
+                        VAL     => value,
+                        STR_LEN => read_len
                     );
                 end if;
                 if (read_len > 0) then

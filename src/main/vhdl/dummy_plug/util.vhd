@@ -44,106 +44,110 @@ package UTIL is
     --! @brief : 文字列をstd_logic_vectorに変換するサブプログラム.
     -------------------------------------------------------------------------------
     procedure STRING_TO_STD_LOGIC_VECTOR(
-                  STR   : in    string          ;   --! 入力文字列.
-                  VAL   : out   std_logic_vector;   --! 変換された std_logic_vector.
-                  LEN   : out   integer         ;   --! 入力文字列から処理した文字の数.
-                  SIZE  : out   integer             --! std_logic_vectorの大きさ.
+                  STR       : in    string          ;   --! 入力文字列.
+                  VAL       : out   std_logic_vector;   --! 変換された std_logic_vector.
+                  STR_LEN   : out   integer         ;   --! 入力文字列から処理した文字の数.
+                  VAL_LEN   : out   integer             --! std_logic_vectorの大きさ.
     );
     -------------------------------------------------------------------------------
     --! @brief 文字列をstd_logic_vectorに変換するサブプログラム.
     -------------------------------------------------------------------------------
     procedure STRING_TO_STD_LOGIC_VECTOR(
-                  STR   : in    string          ;   --! 入力文字列.
-                  VAL   : out   std_logic_vector;   --! 変換された std_logic_vector.
-                  LEN   : out   integer             --! 入力文字列から処理した文字の数.
+                  STR       : in    string          ;   --! 入力文字列.
+                  VAL       : out   std_logic_vector;   --! 変換された std_logic_vector.
+                  STR_LEN   : out   integer             --! 入力文字列から処理した文字の数.
     );
     -------------------------------------------------------------------------------
     --! @brief 文字列をbooleanに変換するサブプログラム.
     -------------------------------------------------------------------------------
     procedure STRING_TO_BOOLEAN(
-                  STR   : in    string ;            --! 入力文字列.
-                  VAL   : out   boolean;            --! 変換された boolean.
-                  LEN   : out   integer             --! 入力文字列から処理した文字の数.
+                  STR       : in    string ;            --! 入力文字列.
+                  VAL       : out   boolean;            --! 変換された boolean.
+                  STR_LEN   : out   integer             --! 入力文字列から処理した文字の数.
     );
     -------------------------------------------------------------------------------
     --! @brief 文字列を整数に変換するサブプログラム.
     -------------------------------------------------------------------------------
     procedure STRING_TO_INTEGER(
-                  STR   : in    string ;            --! 入力文字列.
-                  VAL   : out   integer;            --! 変換された std_logic_vector.
-                  LEN   : out   integer             --! 入力文字列から処理した文字の数.
+                  STR       : in    string ;            --! 入力文字列.
+                  VAL       : out   integer;            --! 変換された std_logic_vector.
+                  STR_LEN   : out   integer             --! 入力文字列から処理した文字の数.
     );
     -------------------------------------------------------------------------------
     --! @brief 16進数文字列を整数に変換するサブプログラム.
     -------------------------------------------------------------------------------
     procedure STRING_TO_HEX(
-                  STR   : in    string ;            --! 入力文字列.
-                  VAL   : out   integer;            --! 変換された整数.
-                  LEN   : out   integer             --! 入力文字列から処理した文字の数.
+                  STR       : in    string ;            --! 入力文字列.
+                  VAL       : out   integer;            --! 変換された整数.
+                  STR_LEN   : out   integer             --! 入力文字列から処理した文字の数.
     );
     -------------------------------------------------------------------------------
     --! @brief 10進数文字列を整数に変換するサブプログラム.
     -------------------------------------------------------------------------------
     procedure STRING_TO_DEC(
-                  STR   : in    string ;            --! 入力文字列.
-                  VAL   : out   integer;            --! 変換された整数.
-                  LEN   : out   integer             --! 入力文字列から処理した文字の数.
+                  STR       : in    string ;            --! 入力文字列.
+                  VAL       : out   integer;            --! 変換された整数.
+                  STR_LEN   : out   integer             --! 入力文字列から処理した文字の数.
     );
     -------------------------------------------------------------------------------
     --! @brief 8進数文字列を整数に変換するサブプログラム.
     -------------------------------------------------------------------------------
     procedure STRING_TO_OCT(
-                  STR   : in    string ;            --! 入力文字列.
-                  VAL   : out   integer;            --! 変換された整数.
-                  LEN   : out   integer             --! 入力文字列から処理した文字の数.
+                  STR       : in    string ;            --! 入力文字列.
+                  VAL       : out   integer;            --! 変換された整数.
+                  STR_LEN   : out   integer             --! 入力文字列から処理した文字の数.
     );
     -------------------------------------------------------------------------------
     --! @brief 2進数文字列を整数に変換するサブプログラム
     -------------------------------------------------------------------------------
     procedure STRING_TO_BIN(
-                  STR   : in    string ;            --! 入力文字列.
-                  VAL   : out   integer;            --! 変換された整数.
-                  LEN   : out   integer             --! 入力文字列から処理した文字の数.
+                  STR       : in    string ;            --! 入力文字列.
+                  VAL       : out   integer;            --! 変換された整数.
+                  STR_LEN   : out   integer             --! 入力文字列から処理した文字の数.
     );
     -------------------------------------------------------------------------------
     --! @brief 16進数文字列をstd_logic_vectorに変換するサブプログラム.
     -------------------------------------------------------------------------------
     procedure STRING_TO_HEX(
-                  STR   : in    string          ;   --! 入力文字列.
-                  VAL   : out   std_logic_vector;   --! 変換された std_logic_vector.
-                  LEN   : out   integer             --! 入力文字列から処理した文字の数.
+                  STR       : in    string          ;   --! 入力文字列.
+                  VAL       : out   std_logic_vector;   --! 変換された std_logic_vector.
+                  STR_LEN   : out   integer         ;   --! 入力文字列から処理した文字の数.
+                  VAL_LEN   : out   integer             --! std_logic_vectorの大きさ.
     );
     -------------------------------------------------------------------------------
     --! @brief 10進数文字列をstd_logic_vectorに変換するサブプログラム.
     -------------------------------------------------------------------------------
     procedure STRING_TO_DEC(
-                  STR   : in    string          ;   --! 入力文字列.
-                  VAL   : out   std_logic_vector;   --! 変換された std_logic_vector.
-                  LEN   : out   integer             --! 入力文字列から処理した文字の数.
+                  STR       : in    string          ;   --! 入力文字列.
+                  VAL       : out   std_logic_vector;   --! 変換された std_logic_vector.
+                  STR_LEN   : out   integer         ;   --! 入力文字列から処理した文字の数.
+                  VAL_LEN   : out   integer             --! std_logic_vectorの大きさ.
     );
     -------------------------------------------------------------------------------
     --! @brief 8進数文字列をstd_logic_vectorに変換するサブプログラム.
     -------------------------------------------------------------------------------
     procedure STRING_TO_OCT(
-                  STR   : in    string          ;   --! 入力文字列.
-                  VAL   : out   std_logic_vector;   --! 変換された std_logic_vector.
-                  LEN   : out   integer             --! 入力文字列から処理した文字の数.
+                  STR       : in    string          ;   --! 入力文字列.
+                  VAL       : out   std_logic_vector;   --! 変換された std_logic_vector.
+                  STR_LEN   : out   integer         ;   --! 入力文字列から処理した文字の数.
+                  VAL_LEN   : out   integer             --! std_logic_vectorの大きさ.
     );
     -------------------------------------------------------------------------------
     --! @brief 2進数文字列をstd_logic_vectorに変換するサブプログラム
     -------------------------------------------------------------------------------
     procedure STRING_TO_BIN(
-                  STR   : in    string          ;   --! 入力文字列.
-                  VAL   : out   std_logic_vector;   --! 変換された std_logic_vector.
-                  LEN   : out   integer             --! 入力文字列から処理した文字の数.
+                  STR       : in    string          ;   --! 入力文字列.
+                  VAL       : out   std_logic_vector;   --! 変換された std_logic_vector.
+                  STR_LEN   : out   integer         ;   --! 入力文字列から処理した文字の数.
+                  VAL_LEN   : out   integer             --! std_logic_vectorの大きさ.
     );
     -------------------------------------------------------------------------------
     --! @brief 整数を文字列に変換するサブプログラム
     -------------------------------------------------------------------------------
     procedure INTEGER_TO_STRING(
-                  VAL   : in    integer;            --! 入力整数
-                  STR   : out   STRING ;            --! 出力文字列
-                  LEN   : out   integer             --! 変換した文字列の文字数
+                  VAL       : in    integer;            --! 入力整数
+                  STR       : out   STRING ;            --! 出力文字列
+                  LEN       : out   integer             --! 変換した文字列の文字数
     );
     -------------------------------------------------------------------------------
     --! @brief 整数を文字列に変換するサブプログラム.
@@ -200,12 +204,12 @@ package body UTIL is
     --! @brief 整数をstd_logic_vectorに変換するサブプログラム
     -------------------------------------------------------------------------------
     procedure integer_to_std_logic_vector(
-                  NUM   : in    integer;            --! 入力整数.
-                  VAL   : out   std_logic_vector    --! 変換された std_logic_vector.
+                  NUM       : in    integer;            --! 入力整数.
+                  VAL       : out   std_logic_vector    --! 変換された std_logic_vector.
     ) is
-        alias     result:       std_logic_vector(VAL'length-1 downto 0) is VAL;
-        variable  number:       integer;
-        variable  bin   :       std_logic;
+        alias     result    :       std_logic_vector(VAL'length-1 downto 0) is VAL;
+        variable  number    :       integer;
+        variable  bin       :       std_logic;
     begin
         if (NUM < 0) then
             bin    := '1';
@@ -227,14 +231,14 @@ package body UTIL is
     --! @brief : 文字列をstd_logic_vectorに変換するサブプログラム.
     -------------------------------------------------------------------------------
     procedure STRING_TO_STD_LOGIC_VECTOR(
-                  STR   : in    string          ;   --! 入力文字列.
-                  VAL   : out   std_logic_vector;   --! 変換された std_logic_vector.
-                  LEN   : out   integer         ;   --! 入力文字列から処理した文字の数.
-                  SIZE  : out   integer             --! std_logic_vectorの大きさ.
+                  STR       : in    string          ;   --! 入力文字列.
+                  VAL       : out   std_logic_vector;   --! 変換された std_logic_vector.
+                  STR_LEN   : out   integer         ;   --! 入力文字列から処理した文字の数.
+                  VAL_LEN   : out   integer             --! std_logic_vectorの大きさ.
     ) is
-        variable  pos   :       integer;
-        variable  data  :       integer;
-        variable  temp  :       integer;
+        variable  value     :       integer;
+        variable  pos       :       integer;
+        variable  len       :       integer;
     begin
         ---------------------------------------------------------------------------
         -- 最初の文字が'0'の場合...
@@ -242,18 +246,16 @@ package body UTIL is
         if (STR(STR'low) = '0' and STR'low < STR'high) then
             pos := STR'low;
             if ((STR(pos+1) = 'x' or STR(pos+1) = 'X') and pos+2 <= STR'high) then
-                STRING_TO_HEX(STR(pos+2 to STR'high), VAL, temp);
-                pos := pos + 2 + temp;
+                STRING_TO_HEX(STR(pos+2 to STR'high), VAL, len, VAL_LEN);
+                pos := pos + 2 + len;
             else
-                STRING_TO_OCT(STR(pos+1 to STR'high), VAL, temp);
-                pos := pos + 1 + temp;
+                STRING_TO_OCT(STR(pos+1 to STR'high), VAL, len, VAL_LEN);
+                pos := pos + 1 + len;
             end if;
-            if (temp > 0) then
-                LEN  := pos - STR'low;
-                SIZE := VAL'length;
+            if (len > 0) then
+                STR_LEN := pos - STR'low;
             else
-                LEN  := 0;
-                SIZE := 0;
+                STR_LEN := 0;
             end if;
         ---------------------------------------------------------------------------
         -- 最初の文字が'0'ではなかった場合.
@@ -262,46 +264,44 @@ package body UTIL is
             -----------------------------------------------------------------------
             -- 最初の定数(10進数)を読む.
             -----------------------------------------------------------------------
-            STRING_TO_DEC(STR, data, temp);
-            if (temp = 0) then
-                data := 0;
+            STRING_TO_DEC(STR, value, len);
+            if (len = 0) then
+                value := 0;
             end if;
-            pos := STR'low + temp;
+            pos := STR'low + len;
             -----------------------------------------------------------------------
             -- 次の字句が ' の場合は、最初に読んだ定数はベクタの大きさになる.
             -----------------------------------------------------------------------
             if (pos <= STR'high and STR(pos) = ''') then
-                if (data < 0 or pos+1 > STR'high) then 
-                    SIZE := 0;
-                    LEN  := 0; 
+                if (value < 0 or pos+1 > STR'high) then 
+                    STR_LEN := 0;
+                    VAL_LEN := 0;
                     return; 
                 end if;
                 case STR(pos+1) is
-                    when 'X'|'x'=> STRING_TO_HEX(STR(pos+2 to STR'high), VAL, temp);
-                    when 'H'|'h'=> STRING_TO_HEX(STR(pos+2 to STR'high), VAL, temp);
-                    when 'O'|'o'=> STRING_TO_OCT(STR(pos+2 to STR'high), VAL, temp);
-                    when 'B'|'b'=> STRING_TO_BIN(STR(pos+2 to STR'high), VAL, temp);
-                    when 'D'|'d'=> STRING_TO_DEC(STR(pos+2 to STR'high), VAL, temp);
-                    when others => temp := 0;
+                    when 'X'|'x'=> STRING_TO_HEX(STR(pos+2 to STR'high), VAL, len, VAL_LEN);
+                    when 'H'|'h'=> STRING_TO_HEX(STR(pos+2 to STR'high), VAL, len, VAL_LEN);
+                    when 'O'|'o'=> STRING_TO_OCT(STR(pos+2 to STR'high), VAL, len, VAL_LEN);
+                    when 'B'|'b'=> STRING_TO_BIN(STR(pos+2 to STR'high), VAL, len, VAL_LEN);
+                    when 'D'|'d'=> STRING_TO_DEC(STR(pos+2 to STR'high), VAL, len, VAL_LEN);
+                    when others => len := 0; VAL_LEN := 0;
                 end case;
-                if (temp > 0) then
-                    if (data > 0) then
-                        SIZE := data;
-                    else
-                        SIZE := VAL'length;
+                if (len > 0) then
+                    if (value > 0) then
+                        VAL_LEN := value;
                     end if;
-                    LEN  := pos + 2 + temp - STR'low;
+                    STR_LEN := pos + 2 + len - STR'low;
                 else
-                    LEN  := 0;
-                    SIZE := 0;
+                    STR_LEN := 0;
+                    VAL_LEN := 0;
                 end if;
             ---------------------------------------------------------------------------
             -- 次の字句が ' でない場合は、読んだ定数を返す.
             ---------------------------------------------------------------------------
             else
-                LEN  := temp;
-                SIZE := VAL'length;
-                integer_to_std_logic_vector(data, VAL);
+                STR_LEN := len;
+                VAL_LEN := VAL'length;
+                integer_to_std_logic_vector(value, VAL);
             end if;
         end if;
     end procedure;
@@ -309,374 +309,380 @@ package body UTIL is
     --! @brief 文字列をstd_logic_vectorに変換するサブプログラム.
     -------------------------------------------------------------------------------
     procedure STRING_TO_STD_LOGIC_VECTOR(
-                  STR   : in    string          ;   --! 入力文字列.
-                  VAL   : out   std_logic_vector;   --! 変換された std_logic_vector.
-                  LEN   : out   integer             --! 入力文字列から処理した文字の数.
+                  STR       : in    string          ;   --! 入力文字列.
+                  VAL       : out   std_logic_vector;   --! 変換された std_logic_vector.
+                  STR_LEN   : out   integer             --! 入力文字列から処理した文字の数.
     ) is
-        variable  temp  :       integer;
+        variable  val_len   :       integer;
     begin
-        STRING_TO_STD_LOGIC_VECTOR(STR,VAL,LEN,temp);
+        STRING_TO_STD_LOGIC_VECTOR(STR,VAL,STR_LEN,val_len);
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 文字列をbooleanに変換するサブプログラム.
     -------------------------------------------------------------------------------
     procedure STRING_TO_BOOLEAN(
-                  STR   : in    string ;            --! 入力文字列.
-                  VAL   : out   boolean;            --! 変換された boolean.
-                  LEN   : out   integer             --! 入力文字列から処理した文字の数.
+                  STR       : in    string ;            --! 入力文字列.
+                  VAL       : out   boolean;            --! 変換された boolean.
+                  STR_LEN   : out   integer             --! 入力文字列から処理した文字の数.
     ) is
     begin
         case STR'length is
             when 1 => if    STR = "y"     or
-                            STR = "Y"     then VAL := TRUE ; LEN := 1;
+                            STR = "Y"     then VAL := TRUE ; STR_LEN := 1;
                       elsif STR = "n"     or
-                            STR = "N"     then VAL := FALSE; LEN := 1;
-                      else                     VAL := FALSE; LEN := 0;
+                            STR = "N"     then VAL := FALSE; STR_LEN := 1;
+                      else                     VAL := FALSE; STR_LEN := 0;
                       end if;
             when 2 => if    STR = "on"    or
                             STR = "On"    or
-                            STR = "ON"    then VAL := TRUE ; LEN := 1;
+                            STR = "ON"    then VAL := TRUE ; STR_LEN := 1;
                       elsif STR = "no"    or
                             STR = "No"    or
-                            STR = "NO"    then VAL := FALSE; LEN := 1;
-                      else                     VAL := FALSE; LEN := 0;
+                            STR = "NO"    then VAL := FALSE; STR_LEN := 1;
+                      else                     VAL := FALSE; STR_LEN := 0;
                       end if;
             when 3 => if    STR = "yes"   or
                             STR = "Yes"   or
-                            STR = "YES"   then VAL := TRUE ; LEN := 1;
+                            STR = "YES"   then VAL := TRUE ; STR_LEN := 1;
                       elsif STR = "off"   or
                             STR = "Off"   or
-                            STR = "OFF"   then VAL := FALSE; LEN := 1;
-                      else                     VAL := FALSE; LEN := 0;
+                            STR = "OFF"   then VAL := FALSE; STR_LEN := 1;
+                      else                     VAL := FALSE; STR_LEN := 0;
                       end if;
             when 4 => if    STR = "true"  or
                             STR = "True"  or
-                            STR = "TRUE"  then VAL := TRUE ; LEN := 1;
-                      else                     VAL := FALSE; LEN := 0;
+                            STR = "TRUE"  then VAL := TRUE ; STR_LEN := 1;
+                      else                     VAL := FALSE; STR_LEN := 0;
                       end if;
             when 5 => if    STR = "false" or
                             STR = "False" or
-                            STR = "FALSE" then VAL := FALSE; LEN := 1;
-                      else                     VAL := FALSE; LEN := 0;
+                            STR = "FALSE" then VAL := FALSE; STR_LEN := 1;
+                      else                     VAL := FALSE; STR_LEN := 0;
                       end if;
-            when others =>                     VAL := FALSE; LEN := 0;
+            when others =>                     VAL := FALSE; STR_LEN := 0;
         end case;
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 10進数文字列を整数に変換するサブプログラム.
     -------------------------------------------------------------------------------
     procedure STRING_TO_INTEGER(
-                  STR   : in    string ;            --! 入力文字列.
-                  VAL   : out   integer;            --! 変換された std_logic_vector.
-                  LEN   : out   integer             --! 入力文字列から処理した文字の数.
+                  STR       : in    string ;            --! 入力文字列.
+                  VAL       : out   integer;            --! 変換された std_logic_vector.
+                  STR_LEN   : out   integer             --! 入力文字列から処理した文字の数.
     ) is
-        variable  pos   :       integer;
-        variable  data  :       integer;
-        variable  k     :       integer;
-        variable  size  :       integer;
+        variable  pos       :       integer;
+        variable  value     :       integer;
+        variable  k         :       integer;
+        variable  len       :       integer;
     begin
-        pos  := STR'low;
-        data := 0;
-        k    := 1;
+        pos   := STR'low;
+        value := 0;
+        k     := 1;
         if (STR(pos) = '-') then
-            pos  := pos + 1;
-            k    := -1;
+            pos := pos + 1;
+            k   := -1;
         end if;
         if (pos <= STR'high) then
             if (STR(pos) = '0' and pos+1 <= STR'high) then
                 if ((STR(pos+1) = 'x' or STR(pos+1) = 'X') and pos+2 <= STR'high) then
-                    STRING_TO_HEX(STR(pos+2 to STR'high), data, size);
-                    pos := pos + 2 + size;
+                    STRING_TO_HEX(STR(pos+2 to STR'high), value, len);
+                    pos := pos + 2 + len;
                 else
-                    STRING_TO_OCT(STR(pos+1 to STR'high), data, size);
-                    pos := pos + 1 + size;
+                    STRING_TO_OCT(STR(pos+1 to STR'high), value, len);
+                    pos := pos + 1 + len;
                 end if;
             else
-                    STRING_TO_DEC(STR(pos+0 to STR'high), data, size);
-                    pos := pos + 0 + size;
+                    STRING_TO_DEC(STR(pos+0 to STR'high), value, len);
+                    pos := pos + 0 + len;
             end if;
         end if;
-        VAL := k * data;
-        LEN := pos - STR'low;
+        VAL     := k * value;
+        STR_LEN := pos - STR'low;
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 16進数文字列を整数に変換するサブプログラム.
     -------------------------------------------------------------------------------
     procedure STRING_TO_HEX(
-                  STR   : in    string ;            --! 入力文字列.
-                  VAL   : out   integer;            --! 変換された整数.
-                  LEN   : out   integer             --! 入力文字列から処理した文字の数.
+                  STR       : in    string ;            --! 入力文字列.
+                  VAL       : out   integer;            --! 変換された整数.
+                  STR_LEN   : out   integer             --! 入力文字列から処理した文字の数.
     ) is
-        variable  pos   :       integer;
-        variable  data  :       integer;
+        variable  pos       :       integer;
+        variable  value     :       integer;
     begin
-        pos  := STR'low;
-        data := 0;
+        pos   := STR'low;
+        value := 0;
         MAIN_LOOP: loop
             exit MAIN_LOOP when (pos > STR'high);
             case STR(pos) is
-                when '0'       => data := data*16+0;
-                when '1'       => data := data*16+1;
-                when '2'       => data := data*16+2;
-                when '3'       => data := data*16+3;
-                when '4'       => data := data*16+4;
-                when '5'       => data := data*16+5;
-                when '6'       => data := data*16+6;
-                when '7'       => data := data*16+7;
-                when '8'       => data := data*16+8;
-                when '9'       => data := data*16+9;
-                when 'a' | 'A' => data := data*16+10;
-                when 'b' | 'B' => data := data*16+11;
-                when 'c' | 'C' => data := data*16+12;
-                when 'd' | 'D' => data := data*16+13;
-                when 'e' | 'E' => data := data*16+14;
-                when 'f' | 'F' => data := data*16+15;
+                when '0'       => value := value*16+0;
+                when '1'       => value := value*16+1;
+                when '2'       => value := value*16+2;
+                when '3'       => value := value*16+3;
+                when '4'       => value := value*16+4;
+                when '5'       => value := value*16+5;
+                when '6'       => value := value*16+6;
+                when '7'       => value := value*16+7;
+                when '8'       => value := value*16+8;
+                when '9'       => value := value*16+9;
+                when 'a' | 'A' => value := value*16+10;
+                when 'b' | 'B' => value := value*16+11;
+                when 'c' | 'C' => value := value*16+12;
+                when 'd' | 'D' => value := value*16+13;
+                when 'e' | 'E' => value := value*16+14;
+                when 'f' | 'F' => value := value*16+15;
                 when '_'       =>
                 when others    => exit MAIN_LOOP;
             end case;
             pos := pos + 1;
         end loop;
-        VAL := data;
-        LEN := pos - STR'low;
+        VAL     := value;
+        STR_LEN := pos - STR'low;
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 10進数文字列を整数に変換するサブプログラム.
     -------------------------------------------------------------------------------
     procedure STRING_TO_DEC(
-                  STR   : in    string ;            --! 入力文字列.
-                  VAL   : out   integer;            --! 変換された整数.
-                  LEN   : out   integer             --! 入力文字列から処理した文字の数.
+                  STR       : in    string ;            --! 入力文字列.
+                  VAL       : out   integer;            --! 変換された整数.
+                  STR_LEN   : out   integer             --! 入力文字列から処理した文字の数.
     ) is
-        variable  pos   :       integer;
-        variable  data  :       integer;
+        variable  pos       :       integer;
+        variable  value     :       integer;
     begin
-        pos  := STR'low;
-        data := 0;
+        pos   := STR'low;
+        value := 0;
         MAIN_LOOP: loop
             exit MAIN_LOOP when (pos > STR'high);
             case STR(pos) is
-                when '0'    => data := data*10+0;
-                when '1'    => data := data*10+1;
-                when '2'    => data := data*10+2;
-                when '3'    => data := data*10+3;
-                when '4'    => data := data*10+4;
-                when '5'    => data := data*10+5;
-                when '6'    => data := data*10+6;
-                when '7'    => data := data*10+7;
-                when '8'    => data := data*10+8;
-                when '9'    => data := data*10+9;
+                when '0'    => value := value*10+0;
+                when '1'    => value := value*10+1;
+                when '2'    => value := value*10+2;
+                when '3'    => value := value*10+3;
+                when '4'    => value := value*10+4;
+                when '5'    => value := value*10+5;
+                when '6'    => value := value*10+6;
+                when '7'    => value := value*10+7;
+                when '8'    => value := value*10+8;
+                when '9'    => value := value*10+9;
                 when '_'    =>
                 when others => exit MAIN_LOOP;
             end case;
             pos := pos + 1;
         end loop;
-        VAL := data;
-        LEN := pos - STR'low;
+        VAL     := value;
+        STR_LEN := pos - STR'low;
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 8進数文字列を整数に変換するサブプログラム.
     -------------------------------------------------------------------------------
     procedure STRING_TO_OCT(
-                  STR   : in    string ;            --! 入力文字列.
-                  VAL   : out   integer;            --! 変換された整数.
-                  LEN   : out   integer             --! 入力文字列から処理した文字の数.
+                  STR       : in    string ;            --! 入力文字列.
+                  VAL       : out   integer;            --! 変換された整数.
+                  STR_LEN   : out   integer             --! 入力文字列から処理した文字の数.
     ) is
-        variable  pos   :       integer;
-        variable  data  :       integer;
+        variable  pos       :       integer;
+        variable  value     :       integer;
     begin
-        pos  := STR'low;
-        data := 0;
+        pos   := STR'low;
+        value := 0;
         MAIN_LOOP: loop
             exit MAIN_LOOP when (pos > STR'high);
             case STR(pos) is
-                when '0'       => data := data*8+0;
-                when '1'       => data := data*8+1;
-                when '2'       => data := data*8+2;
-                when '3'       => data := data*8+3;
-                when '4'       => data := data*8+4;
-                when '5'       => data := data*8+5;
-                when '6'       => data := data*8+6;
-                when '7'       => data := data*8+7;
+                when '0'       => value := value*8+0;
+                when '1'       => value := value*8+1;
+                when '2'       => value := value*8+2;
+                when '3'       => value := value*8+3;
+                when '4'       => value := value*8+4;
+                when '5'       => value := value*8+5;
+                when '6'       => value := value*8+6;
+                when '7'       => value := value*8+7;
                 when '_'       =>
                 when others    => exit MAIN_LOOP;
             end case;
             pos := pos + 1;
         end loop;
-        VAL := data;
-        LEN := pos - STR'low;
+        VAL     := value;
+        STR_LEN := pos - STR'low;
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 2進数文字列を整数に変換するサブプログラム.
     -------------------------------------------------------------------------------
     procedure STRING_TO_BIN(
-                  STR   : in    string ;            --! 入力文字列.
-                  VAL   : out   integer;            --! 変換された整数.
-                  LEN   : out   integer             --! 入力文字列から処理した文字の数.
+                  STR       : in    string ;            --! 入力文字列.
+                  VAL       : out   integer;            --! 変換された整数.
+                  STR_LEN   : out   integer             --! 入力文字列から処理した文字の数.
     ) is
-        variable  pos   :       integer;
-        variable  data  :       integer;
+        variable  pos       :       integer;
+        variable  value     :       integer;
     begin
-        pos  := STR'low;
-        data := 0;
+        pos   := STR'low;
+        value := 0;
         MAIN_LOOP: loop
             exit MAIN_LOOP when (pos > STR'high);
             case STR(pos) is
-                when '0'       => data := data*2+0;
-                when '1'       => data := data*2+1;
+                when '0'       => value := value*2+0;
+                when '1'       => value := value*2+1;
                 when '_'       =>
                 when others    => exit MAIN_LOOP;
             end case;
             pos := pos + 1;
         end loop;
-        VAL := data;
-        LEN := pos - STR'low;
+        VAL     := value;
+        STR_LEN := pos - STR'low;
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 10進数文字列をstd_logic_vectorに変換するサブプログラム.
     -------------------------------------------------------------------------------
     procedure STRING_TO_DEC(
-                  STR   : in    string          ;   --! 入力文字列.
-                  VAL   : out   std_logic_vector;   --! 変換された std_logic_vector.
-                  LEN   : out   integer             --! 入力文字列から処理した文字の数.
+                  STR       : in    string          ;   --! 入力文字列.
+                  VAL       : out   std_logic_vector;   --! 変換された std_logic_vector.
+                  STR_LEN   : out   integer         ;   --! 入力文字列から処理した文字の数.
+                  VAL_LEN   : out   integer             --! std_logic_vectorの大きさ.
     ) is
-        variable  value :       integer;
-        variable  length:       integer;
+        variable  value     :       integer;
+        variable  length    :       integer;
     begin
         STRING_TO_DEC(STR, value, length);
         integer_to_std_logic_vector(value, VAL);
-        LEN := length;
+        STR_LEN := length;
+        VAL_LEN := VAL'length;
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 16進数文字列をstd_logic_vectorに変換するサブプログラム.
     -------------------------------------------------------------------------------
     procedure STRING_TO_HEX(
-                  STR   : in    string          ;   --! 入力文字列.
-                  VAL   : out   std_logic_vector;   --! 変換された std_logic_vector.
-                  LEN   : out   integer             --! 入力文字列から処理した文字の数.
+                  STR       : in    string          ;   --! 入力文字列.
+                  VAL       : out   std_logic_vector;   --! 変換された std_logic_vector.
+                  STR_LEN   : out   integer         ;   --! 入力文字列から処理した文字の数.
+                  VAL_LEN   : out   integer             --! std_logic_vectorの大きさ.
     ) is
-        variable  vec   :       std_logic_vector(VAL'length-1 downto 0) := (others => '0');
-        variable  data  :       std_logic_vector(3 downto 0);
-        variable  pos   :       integer;
-        variable  size  :       integer;
-        variable  spc   :       boolean;
+        variable  vec       :   std_logic_vector(VAL'length-1 downto 0) := (others => '0');
+        variable  value     :   std_logic_vector(3 downto 0);
+        variable  pos       :   integer;
+        variable  len       :   integer;
+        variable  spc       :   boolean;
     begin
-        pos  := STR'low;
-        size := 1;
+        pos := STR'low;
+        len := 0;
         MAIN_LOOP: loop
             spc := FALSE;
             exit MAIN_LOOP when (pos > STR'high);
             case STR(pos) is
-                when '0'    => data := "0000";
-                when '1'    => data := "0001";
-                when '2'    => data := "0010";
-                when '3'    => data := "0011";
-                when '4'    => data := "0100";
-                when '5'    => data := "0101";
-                when '6'    => data := "0110";
-                when '7'    => data := "0111";
-                when '8'    => data := "1000";
-                when '9'    => data := "1001";
-                when 'A'|'a'=> data := "1010";
-                when 'B'|'b'=> data := "1011";
-                when 'C'|'c'=> data := "1100";
-                when 'D'|'d'=> data := "1101";
-                when 'E'|'e'=> data := "1110";
-                when 'F'|'f'=> data := "1111";
-                when 'U'|'u'=> data := "UUUU";
-                when 'Z'|'z'=> data := "ZZZZ";
-                when 'X'|'x'=> data := "XXXX";
-                when '-'    => data := "----";
-                when '_'    => spc  := TRUE  ;
+                when '0'    => value := "0000";
+                when '1'    => value := "0001";
+                when '2'    => value := "0010";
+                when '3'    => value := "0011";
+                when '4'    => value := "0100";
+                when '5'    => value := "0101";
+                when '6'    => value := "0110";
+                when '7'    => value := "0111";
+                when '8'    => value := "1000";
+                when '9'    => value := "1001";
+                when 'A'|'a'=> value := "1010";
+                when 'B'|'b'=> value := "1011";
+                when 'C'|'c'=> value := "1100";
+                when 'D'|'d'=> value := "1101";
+                when 'E'|'e'=> value := "1110";
+                when 'F'|'f'=> value := "1111";
+                when 'U'|'u'=> value := "UUUU";
+                when 'Z'|'z'=> value := "ZZZZ";
+                when 'X'|'x'=> value := "XXXX";
+                when '-'    => value := "----";
+                when '_'    => spc   := TRUE  ;
                 when others => exit MAIN_LOOP;
             end case;
             pos := pos + 1;
             if (spc = FALSE) then
                 if (VAL'length > 4) then
                     vec(VAL'length-1 downto 4) := vec(VAL'length-5 downto 0);
-                    vec(           3 downto 0) := data;
+                    vec(           3 downto 0) := value;
                 else
-                    vec := data(vec'range);
+                    vec := value(vec'range);
                 end if;
-                size := size + 4;
-                exit MAIN_LOOP when (size > VAL'length);
+                len := len + 4;
+                exit MAIN_LOOP when (len >= VAL'length);
             end if;
         end loop;
         ---------------------------------------------------------------------------
         -- 出来た定数を出力変数に代入する。
         ---------------------------------------------------------------------------
-        VAL := vec;
-        LEN := pos - STR'low;
+        VAL     := vec;
+        VAL_LEN := len;
+        STR_LEN := pos - STR'low;
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 8進数文字列をstd_logic_vectorに変換するサブプログラム.
     -------------------------------------------------------------------------------
     procedure STRING_TO_OCT(
-                  STR   : in    string          ;   --! 入力文字列.
-                  VAL   : out   std_logic_vector;   --! 変換された std_logic_vector.
-                  LEN   : out   integer             --! 入力文字列から処理した文字の数.
+                  STR       : in    string          ;   --! 入力文字列.
+                  VAL       : out   std_logic_vector;   --! 変換された std_logic_vector.
+                  STR_LEN   : out   integer         ;   --! 入力文字列から処理した文字の数.
+                  VAL_LEN   : out   integer             --! std_logic_vectorの大きさ.
     ) is
-        variable  vec   :       std_logic_vector(VAL'length-1 downto 0) := (others => '0');
-        variable  data  :       std_logic_vector(2 downto 0);
-        variable  pos   :       integer;
-        variable  size  :       integer;
-        variable  spc   :       boolean;
+        variable  vec       :       std_logic_vector(VAL'length-1 downto 0) := (others => '0');
+        variable  value     :       std_logic_vector(2 downto 0);
+        variable  pos       :       integer;
+        variable  len       :       integer;
+        variable  spc       :       boolean;
     begin
-        pos  := STR'low;
-        size := 1;
+        pos := STR'low;
+        len := 0;
         MAIN_LOOP: loop
             spc := FALSE;
             exit MAIN_LOOP when (pos > STR'high);
             case STR(pos) is
-                when '0'    => data := "000";
-                when '1'    => data := "001";
-                when '2'    => data := "010";
-                when '3'    => data := "011";
-                when '4'    => data := "100";
-                when '5'    => data := "101";
-                when '6'    => data := "110";
-                when '7'    => data := "111";
-                when 'U'|'u'=> data := "UUU";
-                when 'Z'|'z'=> data := "ZZZ";
-                when 'X'|'x'=> data := "XXX";
-                when '-'    => data := "---";
-                when '_'    => spc  := TRUE ;
+                when '0'    => value := "000";
+                when '1'    => value := "001";
+                when '2'    => value := "010";
+                when '3'    => value := "011";
+                when '4'    => value := "100";
+                when '5'    => value := "101";
+                when '6'    => value := "110";
+                when '7'    => value := "111";
+                when 'U'|'u'=> value := "UUU";
+                when 'Z'|'z'=> value := "ZZZ";
+                when 'X'|'x'=> value := "XXX";
+                when '-'    => value := "---";
+                when '_'    => spc   := TRUE ;
                 when others => exit MAIN_LOOP;
             end case;
             pos := pos + 1;
             if (spc = FALSE) then
                 if (VAL'length > 3) then
                     vec(VAL'length-1 downto 3) := vec(VAL'length-4 downto 0);
-                    vec(           2 downto 0) := data;
+                    vec(           2 downto 0) := value;
                 else
-                    vec := data(vec'range);
+                    vec := value(vec'range);
                 end if;
-                size := size + 3;
-                exit MAIN_LOOP when (size > VAL'length);
+                len := len + 3;
+                exit MAIN_LOOP when (len >= VAL'length);
             end if;
         end loop;
         ---------------------------------------------------------------------------
         -- 出来た定数を出力変数に代入する。
         ---------------------------------------------------------------------------
-        VAL := vec;
-        LEN := pos - STR'low;
+        VAL     := vec;
+        VAL_LEN := len;
+        STR_LEN := pos - STR'low;
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 2進数文字列をstd_logic_vectorに変換するサブプログラム
     -------------------------------------------------------------------------------
     procedure STRING_TO_BIN(
-                  STR   : in    string          ;   --! 入力文字列.
-                  VAL   : out   std_logic_vector;   --! 変換された std_logic_vector.
-                  LEN   : out   integer             --! 入力文字列から処理した文字の数.
+                  STR       : in    string          ;   --! 入力文字列.
+                  VAL       : out   std_logic_vector;   --! 変換された std_logic_vector.
+                  STR_LEN   : out   integer         ;   --! 入力文字列から処理した文字の数.
+                  VAL_LEN   : out   integer             --! std_logic_vectorの大きさ.
     ) is
-        variable  vec   :       std_logic_vector(VAL'length-1 downto 0) := (others => '0');
-        variable  bin   :       std_logic;
-        variable  pos   :       integer;
-        variable  size  :       integer;
-        variable  ok    :       boolean;
-        variable  spc   :       boolean;
+        variable  vec       :       std_logic_vector(VAL'length-1 downto 0) := (others => '0');
+        variable  bin       :       std_logic;
+        variable  pos       :       integer;
+        variable  len       :       integer;
+        variable  spc       :       boolean;
     begin
-        pos  := STR'low;
-        size := 1;
+        pos := STR'low;
+        len := 0;
         MAIN_LOOP: loop
             spc := FALSE;
             exit MAIN_LOOP when (pos > STR'high);
@@ -696,15 +702,16 @@ package body UTIL is
                     vec(VAL'length-1 downto 1) := vec(VAL'length-2 downto 0);
                 end if;
                 vec(0) := bin;
-                size := size + 1;
-                exit MAIN_LOOP when (size > VAL'length);
+                len    := len + 1;
+                exit MAIN_LOOP when (len > VAL'length);
             end if;
         end loop;
         ---------------------------------------------------------------------------
         -- 出来た定数を出力変数に代入する。
         ---------------------------------------------------------------------------
-        VAL := vec;
-        LEN := pos - STR'low;
+        VAL     := vec;
+        VAL_LEN := len;
+        STR_LEN := pos - STR'low;
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 整数を文字列に変換するサブプログラム

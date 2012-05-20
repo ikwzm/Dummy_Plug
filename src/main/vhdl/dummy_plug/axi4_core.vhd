@@ -39,9 +39,11 @@ use     ieee.std_logic_1164.all;
 use     std.textio.all;
 library DUMMY_PLUG;
 use     DUMMY_PLUG.AXI4_TYPES.all;
-use     DUMMY_PLUG.CORE;
-use     DUMMY_PLUG.SYNC;
-use     DUMMY_PLUG.READER;
+use     DUMMY_PLUG.CORE.CORE_TYPE;
+use     DUMMY_PLUG.CORE.REPORT_STATUS_TYPE;
+use     DUMMY_PLUG.SYNC.SYNC_REQ_VECTOR;
+use     DUMMY_PLUG.SYNC.SYNC_ACK_VECTOR;
+use     DUMMY_PLUG.READER.EVENT_TYPE;
 -----------------------------------------------------------------------------------
 --! @brief AXI4 Dummy Plug のコアパッケージ.
 -----------------------------------------------------------------------------------
@@ -248,14 +250,14 @@ package AXI4_CORE is
     --! @brief シナリオのマップからチャネル信号構造体の値を読み取るサブプログラム.
     -------------------------------------------------------------------------------
     procedure MAP_READ_AXI4_CHANNEL(
-        variable SELF       : inout CORE.CORE_TYPE;       --! コア変数.
-        file     STREAM     :       TEXT;                 --! 入力ストリーム.
-                 CHANNEL    : in    AXI4_CHANNEL_TYPE;    --! チャネルのタイプ.
-                 READ       : in    boolean;              --! リード可/不可を指定.
-                 WRITE      : in    boolean;              --! ライト可/不可を指定.
-                 WIDTH      : in    AXI4_SIGNAL_WIDTH_TYPE;
-                 SIGNALS    : inout AXI4_CHANNEL_SIGNAL_TYPE;
-                 EVENT      : inout READER.EVENT_TYPE
+        variable  CORE          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT;               --! 入力ストリーム.
+                  CHANNEL       : in    AXI4_CHANNEL_TYPE;  --! チャネルのタイプ.
+                  READ          : in    boolean;            --! リード可/不可を指定.
+                  WRITE         : in    boolean;            --! ライト可/不可を指定.
+                  WIDTH         : in    AXI4_SIGNAL_WIDTH_TYPE;
+                  SIGNALS       : inout AXI4_CHANNEL_SIGNAL_TYPE;
+                  EVENT         : inout EVENT_TYPE
     );
     -------------------------------------------------------------------------------
     --! @brief シナリオのマップからトランザクションの値を読み取るサブプログラム.
@@ -263,193 +265,193 @@ package AXI4_CORE is
     --!        しておかなければならない。
     -------------------------------------------------------------------------------
     procedure MAP_READ_AXI4_TRANSACTION(
-        variable SELF       : inout CORE.CORE_TYPE;       --! コア変数.
-        file     STREAM     :       TEXT;                 --! 入力ストリーム.
-                 ADDR_WIDTH : in    integer;
-                 USER_WIDTH : in    integer;
-                 ID_WIDTH   : in    integer;
-                 A_CHANNEL  : inout AXI4_A_CHANNEL_SIGNAL_TYPE;
-                 RESP       : inout AXI4_RESP_TYPE;
-                 DATA_BUF   : inout std_logic_vector;
-                 DATA_LEN   : inout integer;
-                 EVENT      : inout READER.EVENT_TYPE
+        variable  CORE          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT;               --! 入力ストリーム.
+                  ADDR_WIDTH    : in    integer;
+                  USER_WIDTH    : in    integer;
+                  ID_WIDTH      : in    integer;
+                  A_CHANNEL     : inout AXI4_A_CHANNEL_SIGNAL_TYPE;
+                  RESP          : inout AXI4_RESP_TYPE;
+                  DATA_BUF      : inout std_logic_vector;
+                  DATA_LEN      : inout integer;
+                  EVENT         : inout EVENT_TYPE
     );
     -------------------------------------------------------------------------------
     --! @brief 構造体の値と信号を比較するサブプログラム.
     -------------------------------------------------------------------------------
     procedure MATCH_AXI4_CHANNEL(
-                 SIGNALS    : in    AXI4_CHANNEL_SIGNAL_TYPE;
-                 READ       : in    boolean;
-                 WRITE      : in    boolean;
-                 MATCH      : out   boolean;
-        signal   ARADDR     : in    std_logic_vector;
-        signal   ARLEN      : in    AXI4_ALEN_TYPE;
-        signal   ARSIZE     : in    AXI4_ASIZE_TYPE;
-        signal   ARBURST    : in    AXI4_ABURST_TYPE;
-        signal   ARLOCK     : in    AXI4_ALOCK_TYPE;
-        signal   ARCACHE    : in    AXI4_ACACHE_TYPE;
-        signal   ARPROT     : in    AXI4_APROT_TYPE;
-        signal   ARQOS      : in    AXI4_AQOS_TYPE;
-        signal   ARREGION   : in    AXI4_AREGION_TYPE;
-        signal   ARUSER     : in    std_logic_vector;
-        signal   ARID       : in    std_logic_vector;
-        signal   ARVALID    : in    std_logic;
-        signal   ARREADY    : in    std_logic;
-        signal   AWADDR     : in    std_logic_vector;
-        signal   AWLEN      : in    AXI4_ALEN_TYPE;
-        signal   AWSIZE     : in    AXI4_ASIZE_TYPE;
-        signal   AWBURST    : in    AXI4_ABURST_TYPE;
-        signal   AWLOCK     : in    AXI4_ALOCK_TYPE;
-        signal   AWCACHE    : in    AXI4_ACACHE_TYPE;
-        signal   AWPROT     : in    AXI4_APROT_TYPE;
-        signal   AWQOS      : in    AXI4_AQOS_TYPE;
-        signal   AWREGION   : in    AXI4_AREGION_TYPE;
-        signal   AWUSER     : in    std_logic_vector;
-        signal   AWID       : in    std_logic_vector;
-        signal   AWVALID    : in    std_logic;
-        signal   AWREADY    : in    std_logic;
-        signal   RLAST      : in    std_logic;
-        signal   RDATA      : in    std_logic_vector;
-        signal   RRESP      : in    AXI4_RESP_TYPE;
-        signal   RUSER      : in    std_logic_vector;
-        signal   RID        : in    std_logic_vector;
-        signal   RVALID     : in    std_logic;
-        signal   RREADY     : in    std_logic;
-        signal   WLAST      : in    std_logic;
-        signal   WDATA      : in    std_logic_vector;
-        signal   WSTRB      : in    std_logic_vector;
-        signal   WUSER      : in    std_logic_vector;
-        signal   WID        : in    std_logic_vector;
-        signal   WVALID     : in    std_logic;
-        signal   WREADY     : in    std_logic;
-        signal   BRESP      : in    AXI4_RESP_TYPE;
-        signal   BUSER      : in    std_logic_vector;
-        signal   BID        : in    std_logic_vector;
-        signal   BVALID     : in    std_logic;
-        signal   BREADY     : in    std_logic
+                  SIGNALS       : in    AXI4_CHANNEL_SIGNAL_TYPE;
+                  READ          : in    boolean;
+                  WRITE         : in    boolean;
+                  MATCH         : out   boolean;
+        signal    ARADDR        : in    std_logic_vector;
+        signal    ARLEN         : in    AXI4_ALEN_TYPE;
+        signal    ARSIZE        : in    AXI4_ASIZE_TYPE;
+        signal    ARBURST       : in    AXI4_ABURST_TYPE;
+        signal    ARLOCK        : in    AXI4_ALOCK_TYPE;
+        signal    ARCACHE       : in    AXI4_ACACHE_TYPE;
+        signal    ARPROT        : in    AXI4_APROT_TYPE;
+        signal    ARQOS         : in    AXI4_AQOS_TYPE;
+        signal    ARREGION      : in    AXI4_AREGION_TYPE;
+        signal    ARUSER        : in    std_logic_vector;
+        signal    ARID          : in    std_logic_vector;
+        signal    ARVALID       : in    std_logic;
+        signal    ARREADY       : in    std_logic;
+        signal    AWADDR        : in    std_logic_vector;
+        signal    AWLEN         : in    AXI4_ALEN_TYPE;
+        signal    AWSIZE        : in    AXI4_ASIZE_TYPE;
+        signal    AWBURST       : in    AXI4_ABURST_TYPE;
+        signal    AWLOCK        : in    AXI4_ALOCK_TYPE;
+        signal    AWCACHE       : in    AXI4_ACACHE_TYPE;
+        signal    AWPROT        : in    AXI4_APROT_TYPE;
+        signal    AWQOS         : in    AXI4_AQOS_TYPE;
+        signal    AWREGION      : in    AXI4_AREGION_TYPE;
+        signal    AWUSER        : in    std_logic_vector;
+        signal    AWID          : in    std_logic_vector;
+        signal    AWVALID       : in    std_logic;
+        signal    AWREADY       : in    std_logic;
+        signal    RLAST         : in    std_logic;
+        signal    RDATA         : in    std_logic_vector;
+        signal    RRESP         : in    AXI4_RESP_TYPE;
+        signal    RUSER         : in    std_logic_vector;
+        signal    RID           : in    std_logic_vector;
+        signal    RVALID        : in    std_logic;
+        signal    RREADY        : in    std_logic;
+        signal    WLAST         : in    std_logic;
+        signal    WDATA         : in    std_logic_vector;
+        signal    WSTRB         : in    std_logic_vector;
+        signal    WUSER         : in    std_logic_vector;
+        signal    WID           : in    std_logic_vector;
+        signal    WVALID        : in    std_logic;
+        signal    WREADY        : in    std_logic;
+        signal    BRESP         : in    AXI4_RESP_TYPE;
+        signal    BUSER         : in    std_logic_vector;
+        signal    BID           : in    std_logic_vector;
+        signal    BVALID        : in    std_logic;
+        signal    BREADY        : in    std_logic
     );
     -------------------------------------------------------------------------------
     --! @brief アドレスチャネルの期待値と信号の値を比較するサブプログラム.
     -------------------------------------------------------------------------------
     procedure MATCH_AXI4_CHANNEL(
-        variable SELF       : inout CORE.CORE_TYPE;
-                 NAME       : in    STRING;
-                 SIGNALS    : in    AXI4_A_CHANNEL_SIGNAL_TYPE;
-                 MATCH      : out   boolean;
-        signal   ADDR       : in    std_logic_vector;
-        signal   LEN        : in    AXI4_ALEN_TYPE;
-        signal   SIZE       : in    AXI4_ASIZE_TYPE;
-        signal   BURST      : in    AXI4_ABURST_TYPE;
-        signal   LOCK       : in    AXI4_ALOCK_TYPE;
-        signal   CACHE      : in    AXI4_ACACHE_TYPE;
-        signal   PROT       : in    AXI4_APROT_TYPE;
-        signal   QOS        : in    AXI4_AQOS_TYPE;
-        signal   REGION     : in    AXI4_AREGION_TYPE;
-        signal   USER       : in    std_logic_vector;
-        signal   ID         : in    std_logic_vector;
-        signal   VALID      : in    std_logic;
-        signal   READY      : in    std_logic
+        variable  CORE          : inout CORE_TYPE;
+                  NAME          : in    STRING;
+                  SIGNALS       : in    AXI4_A_CHANNEL_SIGNAL_TYPE;
+                  MATCH         : out   boolean;
+        signal    ADDR          : in    std_logic_vector;
+        signal    LEN           : in    AXI4_ALEN_TYPE;
+        signal    SIZE          : in    AXI4_ASIZE_TYPE;
+        signal    BURST         : in    AXI4_ABURST_TYPE;
+        signal    LOCK          : in    AXI4_ALOCK_TYPE;
+        signal    CACHE         : in    AXI4_ACACHE_TYPE;
+        signal    PROT          : in    AXI4_APROT_TYPE;
+        signal    QOS           : in    AXI4_AQOS_TYPE;
+        signal    REGION        : in    AXI4_AREGION_TYPE;
+        signal    USER          : in    std_logic_vector;
+        signal    ID            : in    std_logic_vector;
+        signal    VALID         : in    std_logic;
+        signal    READY         : in    std_logic
     );
     -------------------------------------------------------------------------------
     --! @brief リードデータチャネルの期待値と信号の値を比較するサブプログラム.
     -------------------------------------------------------------------------------
     procedure MATCH_AXI4_CHANNEL(
-        variable SELF       : inout CORE.CORE_TYPE;
-                 NAME       : in    STRING;
-                 SIGNALS    : in    AXI4_R_CHANNEL_SIGNAL_TYPE;
-                 MATCH      : out   boolean;
-        signal   LAST       : in    std_logic;
-        signal   DATA       : in    std_logic_vector;
-        signal   RESP       : in    AXI4_RESP_TYPE;
-        signal   USER       : in    std_logic_vector;
-        signal   ID         : in    std_logic_vector;
-        signal   VALID      : in    std_logic;
-        signal   READY      : in    std_logic
+        variable  CORE          : inout CORE_TYPE;
+                  NAME          : in    STRING;
+                  SIGNALS       : in    AXI4_R_CHANNEL_SIGNAL_TYPE;
+                  MATCH         : out   boolean;
+        signal    LAST          : in    std_logic;
+        signal    DATA          : in    std_logic_vector;
+        signal    RESP          : in    AXI4_RESP_TYPE;
+        signal    USER          : in    std_logic_vector;
+        signal    ID            : in    std_logic_vector;
+        signal    VALID         : in    std_logic;
+        signal    READY         : in    std_logic
     );
     -------------------------------------------------------------------------------
     --! @brief ライトデータチャネルの期待値と信号の値を比較するサブプログラム.
     -------------------------------------------------------------------------------
     procedure MATCH_AXI4_CHANNEL(
-        variable SELF       : inout CORE.CORE_TYPE;
-                 NAME       : in    STRING;
-                 SIGNALS    : in    AXI4_W_CHANNEL_SIGNAL_TYPE;
-                 MATCH      : out   boolean;
-        signal   LAST       : in    std_logic;
-        signal   DATA       : in    std_logic_vector;
-        signal   STRB       : in    std_logic_vector;
-        signal   USER       : in    std_logic_vector;
-        signal   ID         : in    std_logic_vector;
-        signal   VALID      : in    std_logic;
-        signal   READY      : in    std_logic
+        variable  CORE          : inout CORE_TYPE;
+                  NAME          : in    STRING;
+                  SIGNALS       : in    AXI4_W_CHANNEL_SIGNAL_TYPE;
+                  MATCH         : out   boolean;
+        signal    LAST          : in    std_logic;
+        signal    DATA          : in    std_logic_vector;
+        signal    STRB          : in    std_logic_vector;
+        signal    USER          : in    std_logic_vector;
+        signal    ID            : in    std_logic_vector;
+        signal    VALID         : in    std_logic;
+        signal    READY         : in    std_logic
     );
     -------------------------------------------------------------------------------
     --! @brief ライト応答チャネルの期待値と信号の値を比較するサブプログラム.
     -------------------------------------------------------------------------------
     procedure MATCH_AXI4_CHANNEL(
-        variable SELF       : inout CORE.CORE_TYPE;
-                 NAME       : in    STRING;
-                 SIGNALS    : in    AXI4_B_CHANNEL_SIGNAL_TYPE;
-                 MATCH      : out   boolean;
-        signal   RESP       : in    AXI4_RESP_TYPE;
-        signal   USER       : in    std_logic_vector;
-        signal   ID         : in    std_logic_vector;
-        signal   VALID      : in    std_logic;
-        signal   READY      : in    std_logic
+        variable  CORE          : inout CORE_TYPE;
+                  NAME          : in    STRING;
+                  SIGNALS       : in    AXI4_B_CHANNEL_SIGNAL_TYPE;
+                  MATCH         : out   boolean;
+        signal    RESP          : in    AXI4_RESP_TYPE;
+        signal    USER          : in    std_logic_vector;
+        signal    ID            : in    std_logic_vector;
+        signal    VALID         : in    std_logic;
+        signal    READY         : in    std_logic
     );
     -------------------------------------------------------------------------------
     --! @brief 全チャネルの期待値と信号の値を比較するサブプログラム.
     -------------------------------------------------------------------------------
     procedure MATCH_AXI4_CHANNEL(
-        variable SELF       : inout CORE.CORE_TYPE;
-                 SIGNALS    : in    AXI4_CHANNEL_SIGNAL_TYPE;
-                 READ       : in    boolean;
-                 WRITE      : in    boolean;
-                 MATCH      : out   boolean;
-        signal   ARADDR     : in    std_logic_vector;
-        signal   ARLEN      : in    AXI4_ALEN_TYPE;
-        signal   ARSIZE     : in    AXI4_ASIZE_TYPE;
-        signal   ARBURST    : in    AXI4_ABURST_TYPE;
-        signal   ARLOCK     : in    AXI4_ALOCK_TYPE;
-        signal   ARCACHE    : in    AXI4_ACACHE_TYPE;
-        signal   ARPROT     : in    AXI4_APROT_TYPE;
-        signal   ARQOS      : in    AXI4_AQOS_TYPE;
-        signal   ARREGION   : in    AXI4_AREGION_TYPE;
-        signal   ARUSER     : in    std_logic_vector;
-        signal   ARID       : in    std_logic_vector;
-        signal   ARVALID    : in    std_logic;
-        signal   ARREADY    : in    std_logic;
-        signal   AWADDR     : in    std_logic_vector;
-        signal   AWLEN      : in    AXI4_ALEN_TYPE;
-        signal   AWSIZE     : in    AXI4_ASIZE_TYPE;
-        signal   AWBURST    : in    AXI4_ABURST_TYPE;
-        signal   AWLOCK     : in    AXI4_ALOCK_TYPE;
-        signal   AWCACHE    : in    AXI4_ACACHE_TYPE;
-        signal   AWPROT     : in    AXI4_APROT_TYPE;
-        signal   AWQOS      : in    AXI4_AQOS_TYPE;
-        signal   AWREGION   : in    AXI4_AREGION_TYPE;
-        signal   AWUSER     : in    std_logic_vector;
-        signal   AWID       : in    std_logic_vector;
-        signal   AWVALID    : in    std_logic;
-        signal   AWREADY    : in    std_logic;
-        signal   RLAST      : in    std_logic;
-        signal   RDATA      : in    std_logic_vector;
-        signal   RRESP      : in    AXI4_RESP_TYPE;
-        signal   RUSER      : in    std_logic_vector;
-        signal   RID        : in    std_logic_vector;
-        signal   RVALID     : in    std_logic;
-        signal   RREADY     : in    std_logic;
-        signal   WLAST      : in    std_logic;
-        signal   WDATA      : in    std_logic_vector;
-        signal   WSTRB      : in    std_logic_vector;
-        signal   WUSER      : in    std_logic_vector;
-        signal   WID        : in    std_logic_vector;
-        signal   WVALID     : in    std_logic;
-        signal   WREADY     : in    std_logic;
-        signal   BRESP      : in    AXI4_RESP_TYPE;
-        signal   BUSER      : in    std_logic_vector;
-        signal   BID        : in    std_logic_vector;
-        signal   BVALID     : in    std_logic;
-        signal   BREADY     : in    std_logic
+        variable  CORE          : inout CORE_TYPE;
+                  SIGNALS       : in    AXI4_CHANNEL_SIGNAL_TYPE;
+                  READ          : in    boolean;
+                  WRITE         : in    boolean;
+                  MATCH         : out   boolean;
+        signal    ARADDR        : in    std_logic_vector;
+        signal    ARLEN         : in    AXI4_ALEN_TYPE;
+        signal    ARSIZE        : in    AXI4_ASIZE_TYPE;
+        signal    ARBURST       : in    AXI4_ABURST_TYPE;
+        signal    ARLOCK        : in    AXI4_ALOCK_TYPE;
+        signal    ARCACHE       : in    AXI4_ACACHE_TYPE;
+        signal    ARPROT        : in    AXI4_APROT_TYPE;
+        signal    ARQOS         : in    AXI4_AQOS_TYPE;
+        signal    ARREGION      : in    AXI4_AREGION_TYPE;
+        signal    ARUSER        : in    std_logic_vector;
+        signal    ARID          : in    std_logic_vector;
+        signal    ARVALID       : in    std_logic;
+        signal    ARREADY       : in    std_logic;
+        signal    AWADDR        : in    std_logic_vector;
+        signal    AWLEN         : in    AXI4_ALEN_TYPE;
+        signal    AWSIZE        : in    AXI4_ASIZE_TYPE;
+        signal    AWBURST       : in    AXI4_ABURST_TYPE;
+        signal    AWLOCK        : in    AXI4_ALOCK_TYPE;
+        signal    AWCACHE       : in    AXI4_ACACHE_TYPE;
+        signal    AWPROT        : in    AXI4_APROT_TYPE;
+        signal    AWQOS         : in    AXI4_AQOS_TYPE;
+        signal    AWREGION      : in    AXI4_AREGION_TYPE;
+        signal    AWUSER        : in    std_logic_vector;
+        signal    AWID          : in    std_logic_vector;
+        signal    AWVALID       : in    std_logic;
+        signal    AWREADY       : in    std_logic;
+        signal    RLAST         : in    std_logic;
+        signal    RDATA         : in    std_logic_vector;
+        signal    RRESP         : in    AXI4_RESP_TYPE;
+        signal    RUSER         : in    std_logic_vector;
+        signal    RID           : in    std_logic_vector;
+        signal    RVALID        : in    std_logic;
+        signal    RREADY        : in    std_logic;
+        signal    WLAST         : in    std_logic;
+        signal    WDATA         : in    std_logic_vector;
+        signal    WSTRB         : in    std_logic_vector;
+        signal    WUSER         : in    std_logic_vector;
+        signal    WID           : in    std_logic_vector;
+        signal    WVALID        : in    std_logic;
+        signal    WREADY        : in    std_logic;
+        signal    BRESP         : in    AXI4_RESP_TYPE;
+        signal    BUSER         : in    std_logic_vector;
+        signal    BID           : in    std_logic_vector;
+        signal    BVALID        : in    std_logic;
+        signal    BREADY        : in    std_logic
     );
     -------------------------------------------------------------------------------
     --! @brief AXI4_CHANNEL_PLAYER
@@ -610,10 +612,10 @@ package AXI4_CORE is
             -----------------------------------------------------------------------
             -- シンクロ用信号
             -----------------------------------------------------------------------
-            SYNC_REQ        : out   SYNC.SYNC_REQ_VECTOR(SYNC_WIDTH-1 downto 0);
-            SYNC_ACK        : in    SYNC.SYNC_ACK_VECTOR(SYNC_WIDTH-1 downto 0) := (others => '0');
-            SYNC_LOCAL_REQ  : out   SYNC.SYNC_REQ_VECTOR(SYNC_LOCAL_PORT downto SYNC_LOCAL_PORT);
-            SYNC_LOCAL_ACK  : in    SYNC.SYNC_ACK_VECTOR(SYNC_LOCAL_PORT downto SYNC_LOCAL_PORT);
+            SYNC_REQ        : out   SYNC_REQ_VECTOR(SYNC_WIDTH-1 downto 0);
+            SYNC_ACK        : in    SYNC_ACK_VECTOR(SYNC_WIDTH-1 downto 0) := (others => '0');
+            SYNC_LOCAL_REQ  : out   SYNC_REQ_VECTOR(SYNC_LOCAL_PORT downto SYNC_LOCAL_PORT);
+            SYNC_LOCAL_ACK  : in    SYNC_ACK_VECTOR(SYNC_LOCAL_PORT downto SYNC_LOCAL_PORT);
             -----------------------------------------------------------------------
             -- GPIO
             -----------------------------------------------------------------------
@@ -622,7 +624,7 @@ package AXI4_CORE is
             -----------------------------------------------------------------------
             -- 各種状態信号.
             -----------------------------------------------------------------------
-            REPORT_STATUS   : out   CORE.REPORT_STATUS_TYPE;
+            REPORT_STATUS   : out   REPORT_STATUS_TYPE;
             FINISH          : out   std_logic
         );
     end component;
@@ -1221,51 +1223,51 @@ package body AXI4_CORE is
     --!        しておかなければならない。
     -------------------------------------------------------------------------------
     procedure MAP_READ_AXI4_CHANNEL(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-        file     STREAM     :       TEXT;                 --! 入力ストリーム.
-                 CHANNEL    : in    AXI4_CHANNEL_TYPE;    --! チャネルタイプを指定.
-                 READ       : in    boolean;              --! リード可/不可を指定.
-                 WRITE      : in    boolean;              --! ライト可/不可を指定.
-                 WIDTH      : in    AXI4_SIGNAL_WIDTH_TYPE;
-                 SIGNALS    : inout AXI4_CHANNEL_SIGNAL_TYPE;
-                 EVENT      : inout EVENT_TYPE
+        variable  CORE          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT;               --! 入力ストリーム.
+                  CHANNEL       : in    AXI4_CHANNEL_TYPE;  --! チャネルタイプを指定.
+                  READ          : in    boolean;            --! リード可/不可を指定.
+                  WRITE         : in    boolean;            --! ライト可/不可を指定.
+                  WIDTH         : in    AXI4_SIGNAL_WIDTH_TYPE;
+                  SIGNALS       : inout AXI4_CHANNEL_SIGNAL_TYPE;
+                  EVENT         : inout EVENT_TYPE
     ) is
-        constant PROC_NAME  :       string := "MAP_READ_AXI4_CHANNEL";
-        variable next_event :       EVENT_TYPE;
-        variable key_word   :       KEY_TYPE;
+        constant  PROC_NAME     :       string := "MAP_READ_AXI4_CHANNEL";
+        variable  next_event    :       EVENT_TYPE;
+        variable  key_word      :       KEY_TYPE;
         procedure READ_VAL(VAL: out std_logic_vector) is
-            variable next_event: EVENT_TYPE;
-            variable read_len  : integer;
-            variable val_size  : integer;
+            variable  next_event    : EVENT_TYPE;
+            variable  read_len      : integer;
+            variable  val_size      : integer;
         begin
-            SEEK_EVENT(SELF, STREAM, next_event  );
+            SEEK_EVENT(CORE, STREAM, next_event  );
             if (next_event /= EVENT_SCALAR) then
-                READ_ERROR(SELF, PROC_NAME, "READ_VAL NG");
+                READ_ERROR(CORE, PROC_NAME, "READ_VAL NG");
             end if;
-            READ_EVENT(SELF, STREAM, EVENT_SCALAR);
+            READ_EVENT(CORE, STREAM, EVENT_SCALAR);
             STRING_TO_STD_LOGIC_VECTOR(
-              STR  => SELF.str_buf(1 to SELF.str_len),
-              VAL  => VAL,
-              LEN  => read_len,
-              SIZE => val_size
+                STR     => CORE.str_buf(1 to CORE.str_len),
+                VAL     => VAL,
+                STR_LEN => read_len,
+                VAL_LEN => val_size
             );
         end procedure;
         procedure READ_VAL(VAL: out std_logic) is
-            variable next_event: EVENT_TYPE;
-            variable read_len  : integer;
-            variable val_size  : integer;
-            variable vec       : std_logic_vector(0 downto 0);
+            variable  next_event    : EVENT_TYPE;
+            variable  read_len      : integer;
+            variable  val_size      : integer;
+            variable  vec           : std_logic_vector(0 downto 0);
         begin
-            SEEK_EVENT(SELF, STREAM, next_event  );
+            SEEK_EVENT(CORE, STREAM, next_event  );
             if (next_event /= EVENT_SCALAR) then
-                READ_ERROR(SELF, PROC_NAME, "READ_VAL NG");
+                READ_ERROR(CORE, PROC_NAME, "READ_VAL NG");
             end if;
-            READ_EVENT(SELF, STREAM, EVENT_SCALAR);
+            READ_EVENT(CORE, STREAM, EVENT_SCALAR);
             STRING_TO_STD_LOGIC_VECTOR(
-              STR  => SELF.str_buf(1 to SELF.str_len),
-              VAL  => vec,
-              LEN  => read_len,
-              SIZE => val_size
+                STR     => CORE.str_buf(1 to CORE.str_len),
+                VAL     => vec,
+                STR_LEN => read_len,
+                VAL_LEN => val_size
             );
             VAL := vec(0);
         end procedure;
@@ -1274,7 +1276,7 @@ package body AXI4_CORE is
         MAP_LOOP: loop
             case next_event is
                 when EVENT_SCALAR  =>
-                    COPY_KEY_WORD(SELF, key_word);
+                    COPY_KEY_WORD(CORE, key_word);
                     case to_read_axi4_signal(key_word, CHANNEL, READ, WRITE) is
                         when READ_ARID     => READ_VAL(SIGNALS.AR.ID  (WIDTH.ID     -1 downto 0));
                         when READ_ARADDR   => READ_VAL(SIGNALS.AR.ADDR(WIDTH.ARADDR -1 downto 0));
@@ -1326,9 +1328,9 @@ package body AXI4_CORE is
                 when EVENT_MAP_END =>         exit MAP_LOOP;
                 when others        =>         exit MAP_LOOP;
             end case;
-            SEEK_EVENT(SELF, STREAM, next_event);
+            SEEK_EVENT(CORE, STREAM, next_event);
             if (next_event = EVENT_SCALAR) then
-                READ_EVENT(SELF, STREAM, EVENT_SCALAR);
+                READ_EVENT(CORE, STREAM, EVENT_SCALAR);
             end if;
         end loop;
         EVENT := next_event;
@@ -1337,60 +1339,60 @@ package body AXI4_CORE is
     --! @brief 構造体の値と信号を比較するサブプログラム.
     -------------------------------------------------------------------------------
     procedure MATCH_AXI4_CHANNEL(
-                 SIGNALS    : in    AXI4_CHANNEL_SIGNAL_TYPE;
-                 READ       : in    boolean;
-                 WRITE      : in    boolean;
-                 MATCH      : out   boolean;
-        signal   ARADDR     : in    std_logic_vector;
-        signal   ARLEN      : in    AXI4_ALEN_TYPE;
-        signal   ARSIZE     : in    AXI4_ASIZE_TYPE;
-        signal   ARBURST    : in    AXI4_ABURST_TYPE;
-        signal   ARLOCK     : in    AXI4_ALOCK_TYPE;
-        signal   ARCACHE    : in    AXI4_ACACHE_TYPE;
-        signal   ARPROT     : in    AXI4_APROT_TYPE;
-        signal   ARQOS      : in    AXI4_AQOS_TYPE;
-        signal   ARREGION   : in    AXI4_AREGION_TYPE;
-        signal   ARUSER     : in    std_logic_vector;
-        signal   ARID       : in    std_logic_vector;
-        signal   ARVALID    : in    std_logic;
-        signal   ARREADY    : in    std_logic;
-        signal   AWADDR     : in    std_logic_vector;
-        signal   AWLEN      : in    AXI4_ALEN_TYPE;
-        signal   AWSIZE     : in    AXI4_ASIZE_TYPE;
-        signal   AWBURST    : in    AXI4_ABURST_TYPE;
-        signal   AWLOCK     : in    AXI4_ALOCK_TYPE;
-        signal   AWCACHE    : in    AXI4_ACACHE_TYPE;
-        signal   AWPROT     : in    AXI4_APROT_TYPE;
-        signal   AWQOS      : in    AXI4_AQOS_TYPE;
-        signal   AWREGION   : in    AXI4_AREGION_TYPE;
-        signal   AWUSER     : in    std_logic_vector;
-        signal   AWID       : in    std_logic_vector;
-        signal   AWVALID    : in    std_logic;
-        signal   AWREADY    : in    std_logic;
-        signal   RLAST      : in    std_logic;
-        signal   RDATA      : in    std_logic_vector;
-        signal   RRESP      : in    AXI4_RESP_TYPE;
-        signal   RUSER      : in    std_logic_vector;
-        signal   RID        : in    std_logic_vector;
-        signal   RVALID     : in    std_logic;
-        signal   RREADY     : in    std_logic;
-        signal   WLAST      : in    std_logic;
-        signal   WDATA      : in    std_logic_vector;
-        signal   WSTRB      : in    std_logic_vector;
-        signal   WUSER      : in    std_logic_vector;
-        signal   WID        : in    std_logic_vector;
-        signal   WVALID     : in    std_logic;
-        signal   WREADY     : in    std_logic;
-        signal   BRESP      : in    AXI4_RESP_TYPE;
-        signal   BUSER      : in    std_logic_vector;
-        signal   BID        : in    std_logic_vector;
-        signal   BVALID     : in    std_logic;
-        signal   BREADY     : in    std_logic
+                  SIGNALS       : in    AXI4_CHANNEL_SIGNAL_TYPE;
+                  READ          : in    boolean;
+                  WRITE         : in    boolean;
+                  MATCH         : out   boolean;
+        signal    ARADDR        : in    std_logic_vector;
+        signal    ARLEN         : in    AXI4_ALEN_TYPE;
+        signal    ARSIZE        : in    AXI4_ASIZE_TYPE;
+        signal    ARBURST       : in    AXI4_ABURST_TYPE;
+        signal    ARLOCK        : in    AXI4_ALOCK_TYPE;
+        signal    ARCACHE       : in    AXI4_ACACHE_TYPE;
+        signal    ARPROT        : in    AXI4_APROT_TYPE;
+        signal    ARQOS         : in    AXI4_AQOS_TYPE;
+        signal    ARREGION      : in    AXI4_AREGION_TYPE;
+        signal    ARUSER        : in    std_logic_vector;
+        signal    ARID          : in    std_logic_vector;
+        signal    ARVALID       : in    std_logic;
+        signal    ARREADY       : in    std_logic;
+        signal    AWADDR        : in    std_logic_vector;
+        signal    AWLEN         : in    AXI4_ALEN_TYPE;
+        signal    AWSIZE        : in    AXI4_ASIZE_TYPE;
+        signal    AWBURST       : in    AXI4_ABURST_TYPE;
+        signal    AWLOCK        : in    AXI4_ALOCK_TYPE;
+        signal    AWCACHE       : in    AXI4_ACACHE_TYPE;
+        signal    AWPROT        : in    AXI4_APROT_TYPE;
+        signal    AWQOS         : in    AXI4_AQOS_TYPE;
+        signal    AWREGION      : in    AXI4_AREGION_TYPE;
+        signal    AWUSER        : in    std_logic_vector;
+        signal    AWID          : in    std_logic_vector;
+        signal    AWVALID       : in    std_logic;
+        signal    AWREADY       : in    std_logic;
+        signal    RLAST         : in    std_logic;
+        signal    RDATA         : in    std_logic_vector;
+        signal    RRESP         : in    AXI4_RESP_TYPE;
+        signal    RUSER         : in    std_logic_vector;
+        signal    RID           : in    std_logic_vector;
+        signal    RVALID        : in    std_logic;
+        signal    RREADY        : in    std_logic;
+        signal    WLAST         : in    std_logic;
+        signal    WDATA         : in    std_logic_vector;
+        signal    WSTRB         : in    std_logic_vector;
+        signal    WUSER         : in    std_logic_vector;
+        signal    WID           : in    std_logic_vector;
+        signal    WVALID        : in    std_logic;
+        signal    WREADY        : in    std_logic;
+        signal    BRESP         : in    AXI4_RESP_TYPE;
+        signal    BUSER         : in    std_logic_vector;
+        signal    BID           : in    std_logic_vector;
+        signal    BVALID        : in    std_logic;
+        signal    BREADY        : in    std_logic
     ) is
-        variable ar_match   :       boolean;
-        variable aw_match   :       boolean;
-        variable r_match    :       boolean;
-        variable w_match    :       boolean;
+        variable  ar_match      :       boolean;
+        variable  aw_match      :       boolean;
+        variable  r_match       :       boolean;
+        variable  w_match       :       boolean;
     begin
         ---------------------------------------------------------------------------
         -- ライトアドレスチャネルシグナルの比較
@@ -1470,101 +1472,101 @@ package body AXI4_CORE is
     --! @brief アドレスチャネルの期待値と信号の値を比較するサブプログラム.
     -------------------------------------------------------------------------------
     procedure MATCH_AXI4_CHANNEL(
-        variable SELF       : inout CORE_TYPE;
-                 NAME       : in    STRING;
-                 SIGNALS    : in    AXI4_A_CHANNEL_SIGNAL_TYPE;
-                 MATCH      : out   boolean;
-        signal   ADDR       : in    std_logic_vector;
-        signal   LEN        : in    AXI4_ALEN_TYPE;
-        signal   SIZE       : in    AXI4_ASIZE_TYPE;
-        signal   BURST      : in    AXI4_ABURST_TYPE;
-        signal   LOCK       : in    AXI4_ALOCK_TYPE;
-        signal   CACHE      : in    AXI4_ACACHE_TYPE;
-        signal   PROT       : in    AXI4_APROT_TYPE;
-        signal   QOS        : in    AXI4_AQOS_TYPE;
-        signal   REGION     : in    AXI4_AREGION_TYPE;
-        signal   USER       : in    std_logic_vector;
-        signal   ID         : in    std_logic_vector;
-        signal   VALID      : in    std_logic;
-        signal   READY      : in    std_logic
+        variable  CORE          : inout CORE_TYPE;
+                  NAME          : in    STRING;
+                  SIGNALS       : in    AXI4_A_CHANNEL_SIGNAL_TYPE;
+                  MATCH         : out   boolean;
+        signal    ADDR          : in    std_logic_vector;
+        signal    LEN           : in    AXI4_ALEN_TYPE;
+        signal    SIZE          : in    AXI4_ASIZE_TYPE;
+        signal    BURST         : in    AXI4_ABURST_TYPE;
+        signal    LOCK          : in    AXI4_ALOCK_TYPE;
+        signal    CACHE         : in    AXI4_ACACHE_TYPE;
+        signal    PROT          : in    AXI4_APROT_TYPE;
+        signal    QOS           : in    AXI4_AQOS_TYPE;
+        signal    REGION        : in    AXI4_AREGION_TYPE;
+        signal    USER          : in    std_logic_vector;
+        signal    ID            : in    std_logic_vector;
+        signal    VALID         : in    std_logic;
+        signal    READY         : in    std_logic
     ) is
-        variable count      :       integer;
+        variable  count         :       integer;
     begin
         count := 0;
         if (MATCH_STD_LOGIC(SIGNALS.VALID           ,VALID ) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "VALID " &
+            REPORT_MISMATCH(CORE, NAME & "VALID " &
                             BIN_TO_STRING(VALID) & " /= " &
                             BIN_TO_STRING(SIGNALS.VALID));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.READY           ,READY ) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "READY " & 
+            REPORT_MISMATCH(CORE, NAME & "READY " & 
                             BIN_TO_STRING(READY) & " /= " &
                             BIN_TO_STRING(SIGNALS.READY));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.ADDR(ADDR'range),ADDR  ) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "ADDR " &
+            REPORT_MISMATCH(CORE, NAME & "ADDR " &
                             HEX_TO_STRING(ADDR ) & " /= " &
                             HEX_TO_STRING(SIGNALS.ADDR(ADDR'range)));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.LEN             ,LEN   ) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "LEN " &
+            REPORT_MISMATCH(CORE, NAME & "LEN " &
                             BIN_TO_STRING(LEN  ) & " /= " &
                             BIN_TO_STRING(SIGNALS.LEN));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.SIZE            ,SIZE  ) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "SIZE " &
+            REPORT_MISMATCH(CORE, NAME & "SIZE " &
                             BIN_TO_STRING(SIZE ) & " /= " &
                             BIN_TO_STRING(SIGNALS.SIZE));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.BURST           ,BURST ) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "BURST " &
+            REPORT_MISMATCH(CORE, NAME & "BURST " &
                             BIN_TO_STRING(BURST) & " /= " &
                             BIN_TO_STRING(SIGNALS.BURST));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.LOCK            ,LOCK  ) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "LOCK " &
+            REPORT_MISMATCH(CORE, NAME & "LOCK " &
                             BIN_TO_STRING(LOCK ) & " /= " &
                             BIN_TO_STRING(SIGNALS.LOCK));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.CACHE           ,CACHE ) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "CACHE " &
+            REPORT_MISMATCH(CORE, NAME & "CACHE " &
                             BIN_TO_STRING(CACHE) & " /= " &
                             BIN_TO_STRING(SIGNALS.CACHE));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.PROT            ,PROT  ) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "PROT " &
+            REPORT_MISMATCH(CORE, NAME & "PROT " &
                             BIN_TO_STRING(PROT ) & " /= " &
                             BIN_TO_STRING(SIGNALS.PROT));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.QOS             ,QOS   ) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "QOS " &
+            REPORT_MISMATCH(CORE, NAME & "QOS " &
                             HEX_TO_STRING(QOS  ) & " /= " &
                             HEX_TO_STRING(SIGNALS.QOS));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.REGION          ,REGION) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "REGION " &
+            REPORT_MISMATCH(CORE, NAME & "REGION " &
                             HEX_TO_STRING(REGION) & " /= " &
                             HEX_TO_STRING(SIGNALS.REGION));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.ID(ID'range)    ,ID    ) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "ID " &
+            REPORT_MISMATCH(CORE, NAME & "ID " &
                             HEX_TO_STRING(ID   ) & " /= " &
                             HEX_TO_STRING(SIGNALS.ID(ID'range)));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.USER(USER'range),USER  ) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "USER " &
+            REPORT_MISMATCH(CORE, NAME & "USER " &
                             HEX_TO_STRING(USER ) & " /= " &
                             HEX_TO_STRING(SIGNALS.USER(USER'range)));
             count := count + 1;
@@ -1575,59 +1577,59 @@ package body AXI4_CORE is
     --! @brief リードデータチャネルの期待値と信号の値を比較するサブプログラム.
     -------------------------------------------------------------------------------
     procedure MATCH_AXI4_CHANNEL(
-        variable SELF       : inout CORE_TYPE;
-                 NAME       : in    STRING;
-                 SIGNALS    : in    AXI4_R_CHANNEL_SIGNAL_TYPE;
-                 MATCH      : out   boolean;
-        signal   LAST       : in    std_logic;
-        signal   DATA       : in    std_logic_vector;
-        signal   RESP       : in    AXI4_RESP_TYPE;
-        signal   USER       : in    std_logic_vector;
-        signal   ID         : in    std_logic_vector;
-        signal   VALID      : in    std_logic;
-        signal   READY      : in    std_logic
+        variable  CORE          : inout CORE_TYPE;
+                  NAME          : in    STRING;
+                  SIGNALS       : in    AXI4_R_CHANNEL_SIGNAL_TYPE;
+                  MATCH         : out   boolean;
+        signal    LAST          : in    std_logic;
+        signal    DATA          : in    std_logic_vector;
+        signal    RESP          : in    AXI4_RESP_TYPE;
+        signal    USER          : in    std_logic_vector;
+        signal    ID            : in    std_logic_vector;
+        signal    VALID         : in    std_logic;
+        signal    READY         : in    std_logic
     ) is
-        variable count      :       integer;
+        variable  count         :       integer;
     begin
         count := 0;
         if (MATCH_STD_LOGIC(SIGNALS.VALID           ,VALID) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "VALID " & 
+            REPORT_MISMATCH(CORE, NAME & "VALID " & 
                             BIN_TO_STRING(VALID) & " /= " &
                             BIN_TO_STRING(SIGNALS.VALID));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.READY           ,READY) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "READY " &
+            REPORT_MISMATCH(CORE, NAME & "READY " &
                             BIN_TO_STRING(READY) & " /= " &
                             BIN_TO_STRING(SIGNALS.READY));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.DATA(DATA'range),DATA ) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "DATA " &
+            REPORT_MISMATCH(CORE, NAME & "DATA " &
                             HEX_TO_STRING(DATA ) & " /= " &
                             HEX_TO_STRING(SIGNALS.DATA(DATA'range)));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.LAST            ,LAST ) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "LAST " &
+            REPORT_MISMATCH(CORE, NAME & "LAST " &
                             BIN_TO_STRING(LAST ) & " /= " &
                             BIN_TO_STRING(SIGNALS.LAST));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.RESP            ,RESP ) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "RESP " &
+            REPORT_MISMATCH(CORE, NAME & "RESP " &
                             BIN_TO_STRING(RESP ) & " /= " &
                             BIN_TO_STRING(SIGNALS.RESP));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.ID(ID'range)    ,ID   ) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "ID " &
+            REPORT_MISMATCH(CORE, NAME & "ID " &
                             HEX_TO_STRING(ID   ) & " /= " &
                             HEX_TO_STRING(SIGNALS.ID(ID'range)));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.USER(USER'range),USER ) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "USER " &
+            REPORT_MISMATCH(CORE, NAME & "USER " &
                             HEX_TO_STRING(USER ) & " /= " &
                             HEX_TO_STRING(SIGNALS.USER(USER'range)));
             count := count + 1;
@@ -1638,59 +1640,59 @@ package body AXI4_CORE is
     --! @brief ライトデータチャネルの期待値と信号の値を比較するサブプログラム.
     -------------------------------------------------------------------------------
     procedure MATCH_AXI4_CHANNEL(
-        variable SELF       : inout CORE_TYPE;
-                 NAME       : in    STRING;
-                 SIGNALS    : in    AXI4_W_CHANNEL_SIGNAL_TYPE;
-                 MATCH      : out   boolean;
-        signal   LAST       : in    std_logic;
-        signal   DATA       : in    std_logic_vector;
-        signal   STRB       : in    std_logic_vector;
-        signal   USER       : in    std_logic_vector;
-        signal   ID         : in    std_logic_vector;
-        signal   VALID      : in    std_logic;
-        signal   READY      : in    std_logic
+        variable  CORE          : inout CORE_TYPE;
+                  NAME          : in    STRING;
+                  SIGNALS       : in    AXI4_W_CHANNEL_SIGNAL_TYPE;
+                  MATCH         : out   boolean;
+        signal    LAST          : in    std_logic;
+        signal    DATA          : in    std_logic_vector;
+        signal    STRB          : in    std_logic_vector;
+        signal    USER          : in    std_logic_vector;
+        signal    ID            : in    std_logic_vector;
+        signal    VALID         : in    std_logic;
+        signal    READY         : in    std_logic
     ) is
-        variable count      :       integer;
+        variable  count         :       integer;
     begin
         count := 0;
         if (MATCH_STD_LOGIC(SIGNALS.VALID           ,VALID) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "VALID " & 
+            REPORT_MISMATCH(CORE, NAME & "VALID " & 
                             BIN_TO_STRING(VALID) & " /= " &
                             BIN_TO_STRING(SIGNALS.VALID));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.READY           ,READY) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "READY " &
+            REPORT_MISMATCH(CORE, NAME & "READY " &
                             BIN_TO_STRING(READY) & " /= " &
                             BIN_TO_STRING(SIGNALS.READY));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.DATA(DATA'range),DATA ) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "DATA " &
+            REPORT_MISMATCH(CORE, NAME & "DATA " &
                             HEX_TO_STRING(DATA ) & " /= " &
                             HEX_TO_STRING(SIGNALS.DATA(DATA'range)));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.STRB(STRB'range),STRB ) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "STRB " &
+            REPORT_MISMATCH(CORE, NAME & "STRB " &
                             BIN_TO_STRING(STRB ) & " /= " &
                             BIN_TO_STRING(SIGNALS.STRB(STRB'range)));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.LAST            ,LAST ) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "LAST " &
+            REPORT_MISMATCH(CORE, NAME & "LAST " &
                             BIN_TO_STRING(LAST ) & " /= " &
                             BIN_TO_STRING(SIGNALS.LAST));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.ID(ID'range)    ,ID   ) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "ID " &
+            REPORT_MISMATCH(CORE, NAME & "ID " &
                             HEX_TO_STRING(ID   ) & " /= " &
                             HEX_TO_STRING(SIGNALS.ID(ID'range)));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.USER(USER'range),USER ) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "USER " &
+            REPORT_MISMATCH(CORE, NAME & "USER " &
                             HEX_TO_STRING(USER ) & " /= " &
                             HEX_TO_STRING(SIGNALS.USER(USER'range)));
             count := count + 1;
@@ -1701,45 +1703,45 @@ package body AXI4_CORE is
     --! @brief ライト応答チャネルの期待値と信号の値を比較するサブプログラム.
     -------------------------------------------------------------------------------
     procedure MATCH_AXI4_CHANNEL(
-        variable SELF       : inout CORE_TYPE;
-                 NAME       : in    STRING;
-                 SIGNALS    : in    AXI4_B_CHANNEL_SIGNAL_TYPE;
-                 MATCH      : out   boolean;
-        signal   RESP       : in    AXI4_RESP_TYPE;
-        signal   USER       : in    std_logic_vector;
-        signal   ID         : in    std_logic_vector;
-        signal   VALID      : in    std_logic;
-        signal   READY      : in    std_logic
+        variable  CORE          : inout CORE_TYPE;
+                  NAME          : in    STRING;
+                  SIGNALS       : in    AXI4_B_CHANNEL_SIGNAL_TYPE;
+                  MATCH         : out   boolean;
+        signal    RESP          : in    AXI4_RESP_TYPE;
+        signal    USER          : in    std_logic_vector;
+        signal    ID            : in    std_logic_vector;
+        signal    VALID         : in    std_logic;
+        signal    READY         : in    std_logic
     ) is
-        variable count      :       integer;
+        variable  count         :       integer;
     begin
         count := 0;
         if (MATCH_STD_LOGIC(SIGNALS.VALID           ,VALID) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "VALID " & 
+            REPORT_MISMATCH(CORE, NAME & "VALID " & 
                             BIN_TO_STRING(VALID) & " /= " &
                             BIN_TO_STRING(SIGNALS.VALID));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.READY           ,READY) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "READY " &
+            REPORT_MISMATCH(CORE, NAME & "READY " &
                             BIN_TO_STRING(READY) & " /= " &
                             BIN_TO_STRING(SIGNALS.READY));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.RESP            ,RESP ) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "RESP " &
+            REPORT_MISMATCH(CORE, NAME & "RESP " &
                             BIN_TO_STRING(RESP ) & " /= " &
                             BIN_TO_STRING(SIGNALS.RESP));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.ID(ID'range)    ,ID   ) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "ID " &
+            REPORT_MISMATCH(CORE, NAME & "ID " &
                             HEX_TO_STRING(ID   ) & " /= " &
                             HEX_TO_STRING(SIGNALS.ID(ID'range)));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.USER(USER'range),USER ) = FALSE) then
-            REPORT_MISMATCH(SELF, NAME & "USER " &
+            REPORT_MISMATCH(CORE, NAME & "USER " &
                             HEX_TO_STRING(USER ) & " /= " &
                             HEX_TO_STRING(SIGNALS.USER(USER'range)));
             count := count + 1;
@@ -1750,66 +1752,66 @@ package body AXI4_CORE is
     --! @brief 全チャネルの期待値と信号の値を比較するサブプログラム.
     -------------------------------------------------------------------------------
     procedure MATCH_AXI4_CHANNEL(
-        variable SELF       : inout CORE_TYPE;
-                 SIGNALS    : in    AXI4_CHANNEL_SIGNAL_TYPE;
-                 READ       : in    boolean;
-                 WRITE      : in    boolean;
-                 MATCH      : out   boolean;
-        signal   ARADDR     : in    std_logic_vector;
-        signal   ARLEN      : in    AXI4_ALEN_TYPE;
-        signal   ARSIZE     : in    AXI4_ASIZE_TYPE;
-        signal   ARBURST    : in    AXI4_ABURST_TYPE;
-        signal   ARLOCK     : in    AXI4_ALOCK_TYPE;
-        signal   ARCACHE    : in    AXI4_ACACHE_TYPE;
-        signal   ARPROT     : in    AXI4_APROT_TYPE;
-        signal   ARQOS      : in    AXI4_AQOS_TYPE;
-        signal   ARREGION   : in    AXI4_AREGION_TYPE;
-        signal   ARUSER     : in    std_logic_vector;
-        signal   ARID       : in    std_logic_vector;
-        signal   ARVALID    : in    std_logic;
-        signal   ARREADY    : in    std_logic;
-        signal   AWADDR     : in    std_logic_vector;
-        signal   AWLEN      : in    AXI4_ALEN_TYPE;
-        signal   AWSIZE     : in    AXI4_ASIZE_TYPE;
-        signal   AWBURST    : in    AXI4_ABURST_TYPE;
-        signal   AWLOCK     : in    AXI4_ALOCK_TYPE;
-        signal   AWCACHE    : in    AXI4_ACACHE_TYPE;
-        signal   AWPROT     : in    AXI4_APROT_TYPE;
-        signal   AWQOS      : in    AXI4_AQOS_TYPE;
-        signal   AWREGION   : in    AXI4_AREGION_TYPE;
-        signal   AWUSER     : in    std_logic_vector;
-        signal   AWID       : in    std_logic_vector;
-        signal   AWVALID    : in    std_logic;
-        signal   AWREADY    : in    std_logic;
-        signal   RLAST      : in    std_logic;
-        signal   RDATA      : in    std_logic_vector;
-        signal   RRESP      : in    AXI4_RESP_TYPE;
-        signal   RUSER      : in    std_logic_vector;
-        signal   RID        : in    std_logic_vector;
-        signal   RVALID     : in    std_logic;
-        signal   RREADY     : in    std_logic;
-        signal   WLAST      : in    std_logic;
-        signal   WDATA      : in    std_logic_vector;
-        signal   WSTRB      : in    std_logic_vector;
-        signal   WUSER      : in    std_logic_vector;
-        signal   WID        : in    std_logic_vector;
-        signal   WVALID     : in    std_logic;
-        signal   WREADY     : in    std_logic;
-        signal   BRESP      : in    AXI4_RESP_TYPE;
-        signal   BUSER      : in    std_logic_vector;
-        signal   BID        : in    std_logic_vector;
-        signal   BVALID     : in    std_logic;
-        signal   BREADY     : in    std_logic
+        variable  CORE          : inout CORE_TYPE;
+                  SIGNALS       : in    AXI4_CHANNEL_SIGNAL_TYPE;
+                  READ          : in    boolean;
+                  WRITE         : in    boolean;
+                  MATCH         : out   boolean;
+        signal    ARADDR        : in    std_logic_vector;
+        signal    ARLEN         : in    AXI4_ALEN_TYPE;
+        signal    ARSIZE        : in    AXI4_ASIZE_TYPE;
+        signal    ARBURST       : in    AXI4_ABURST_TYPE;
+        signal    ARLOCK        : in    AXI4_ALOCK_TYPE;
+        signal    ARCACHE       : in    AXI4_ACACHE_TYPE;
+        signal    ARPROT        : in    AXI4_APROT_TYPE;
+        signal    ARQOS         : in    AXI4_AQOS_TYPE;
+        signal    ARREGION      : in    AXI4_AREGION_TYPE;
+        signal    ARUSER        : in    std_logic_vector;
+        signal    ARID          : in    std_logic_vector;
+        signal    ARVALID       : in    std_logic;
+        signal    ARREADY       : in    std_logic;
+        signal    AWADDR        : in    std_logic_vector;
+        signal    AWLEN         : in    AXI4_ALEN_TYPE;
+        signal    AWSIZE        : in    AXI4_ASIZE_TYPE;
+        signal    AWBURST       : in    AXI4_ABURST_TYPE;
+        signal    AWLOCK        : in    AXI4_ALOCK_TYPE;
+        signal    AWCACHE       : in    AXI4_ACACHE_TYPE;
+        signal    AWPROT        : in    AXI4_APROT_TYPE;
+        signal    AWQOS         : in    AXI4_AQOS_TYPE;
+        signal    AWREGION      : in    AXI4_AREGION_TYPE;
+        signal    AWUSER        : in    std_logic_vector;
+        signal    AWID          : in    std_logic_vector;
+        signal    AWVALID       : in    std_logic;
+        signal    AWREADY       : in    std_logic;
+        signal    RLAST         : in    std_logic;
+        signal    RDATA         : in    std_logic_vector;
+        signal    RRESP         : in    AXI4_RESP_TYPE;
+        signal    RUSER         : in    std_logic_vector;
+        signal    RID           : in    std_logic_vector;
+        signal    RVALID        : in    std_logic;
+        signal    RREADY        : in    std_logic;
+        signal    WLAST         : in    std_logic;
+        signal    WDATA         : in    std_logic_vector;
+        signal    WSTRB         : in    std_logic_vector;
+        signal    WUSER         : in    std_logic_vector;
+        signal    WID           : in    std_logic_vector;
+        signal    WVALID        : in    std_logic;
+        signal    WREADY        : in    std_logic;
+        signal    BRESP         : in    AXI4_RESP_TYPE;
+        signal    BUSER         : in    std_logic_vector;
+        signal    BID           : in    std_logic_vector;
+        signal    BVALID        : in    std_logic;
+        signal    BREADY        : in    std_logic
     ) is
-        variable ar_match   :       boolean;
-        variable aw_match   :       boolean;
-        variable r_match    :       boolean;
-        variable w_match    :       boolean;
-        variable b_match    :       boolean;
+        variable  ar_match      :       boolean;
+        variable  aw_match      :       boolean;
+        variable  r_match       :       boolean;
+        variable  w_match       :       boolean;
+        variable  b_match       :       boolean;
     begin
         if (WRITE) then
             MATCH_AXI4_CHANNEL(
-                SELF    => SELF      ,  -- I/O :
+                CORE    => CORE      ,  -- I/O :
                 NAME    => "AW"      ,  -- In  :
                 SIGNALS => SIGNALS.AW,  -- In  :
                 MATCH   => aw_match  ,  -- Out :
@@ -1828,7 +1830,7 @@ package body AXI4_CORE is
                 READY   => AWREADY      -- In  :
             );
             MATCH_AXI4_CHANNEL(
-                SELF    => SELF      ,  -- I/O :
+                CORE    => CORE      ,  -- I/O :
                 NAME    => "W"       ,  -- In  :
                 SIGNALS => SIGNALS.W ,  -- In  :
                 MATCH   => w_match   ,  -- Out :
@@ -1841,7 +1843,7 @@ package body AXI4_CORE is
                 READY   => WREADY       -- In  :
             );
             MATCH_AXI4_CHANNEL(
-                SELF    => SELF      ,  -- I/O :
+                CORE    => CORE      ,  -- I/O :
                 NAME    => "B"       ,  -- In  :
                 SIGNALS => SIGNALS.B ,  -- In  :
                 MATCH   => b_match   ,  -- Out :
@@ -1858,7 +1860,7 @@ package body AXI4_CORE is
         end if;
         if (READ) then
             MATCH_AXI4_CHANNEL(
-                SELF    => SELF      ,  -- I/O :
+                CORE    => CORE      ,  -- I/O :
                 NAME    => "AR"      ,  -- In  :
                 SIGNALS => SIGNALS.AR,  -- In  :
                 MATCH   => ar_match  ,  -- Out :
@@ -1877,7 +1879,7 @@ package body AXI4_CORE is
                 READY   => ARREADY      -- In  :
             );
             MATCH_AXI4_CHANNEL(
-                SELF    => SELF      ,  -- I/O :
+                CORE    => CORE      ,  -- I/O :
                 NAME    => "R"       ,  -- In  :
                 SIGNALS => SIGNALS.R ,  -- In  :
                 MATCH   => r_match   ,  -- Out :
@@ -1901,66 +1903,66 @@ package body AXI4_CORE is
     --!        しておかなければならない。
     -------------------------------------------------------------------------------
     procedure MAP_READ_AXI4_TRANSACTION(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-        file     STREAM     :       TEXT;                 --! 入力ストリーム.
-                 ADDR_WIDTH : in    integer;
-                 USER_WIDTH : in    integer;
-                 ID_WIDTH   : in    integer;
-                 A_CHANNEL  : inout AXI4_A_CHANNEL_SIGNAL_TYPE;
-                 RESP       : inout AXI4_RESP_TYPE;
-                 DATA_BUF   : inout std_logic_vector;
-                 DATA_LEN   : inout integer;
-                 EVENT      : inout EVENT_TYPE
+        variable  CORE          : inout CORE_TYPE;            --! コア変数.
+        file      STREAM        :       TEXT;                 --! 入力ストリーム.
+                  ADDR_WIDTH    : in    integer;
+                  USER_WIDTH    : in    integer;
+                  ID_WIDTH      : in    integer;
+                  A_CHANNEL     : inout AXI4_A_CHANNEL_SIGNAL_TYPE;
+                  RESP          : inout AXI4_RESP_TYPE;
+                  DATA_BUF      : inout std_logic_vector;
+                  DATA_LEN      : inout integer;
+                  EVENT         : inout EVENT_TYPE
     ) is
-        constant PROC_NAME  :       string := "MAP_READ_AXI4_TRANSACTION";
-        variable next_event :       EVENT_TYPE;
-        variable key_word   :       KEY_TYPE;
+        constant  PROC_NAME     :       string := "MAP_READ_AXI4_TRANSACTION";
+        variable  next_event    :       EVENT_TYPE;
+        variable  key_word      :       KEY_TYPE;
         procedure READ_VAL(VAL: out std_logic_vector) is
-            variable next_event: EVENT_TYPE;
-            variable read_len  : integer;
-            variable val_size  : integer;
+            variable  next_event    : EVENT_TYPE;
+            variable  read_len      : integer;
+            variable  val_size      : integer;
         begin
-            SEEK_EVENT(SELF, STREAM, next_event  );
+            SEEK_EVENT(CORE, STREAM, next_event  );
             if (next_event /= EVENT_SCALAR) then
-                READ_ERROR(SELF, PROC_NAME, "READ_VAL NG");
+                READ_ERROR(CORE, PROC_NAME, "READ_VAL NG");
             end if;
-            READ_EVENT(SELF, STREAM, EVENT_SCALAR);
+            READ_EVENT(CORE, STREAM, EVENT_SCALAR);
             STRING_TO_STD_LOGIC_VECTOR(
-                STR  => SELF.str_buf(1 to SELF.str_len),
-                VAL  => VAL,
-                LEN  => read_len,
-                SIZE => val_size
+                STR    => CORE.str_buf(1 to CORE.str_len),
+                VAL    => VAL,
+                STR_LEN => read_len,
+                VAL_LEN => val_size
             );
         end procedure;
         procedure READ_VAL(VAL: inout std_logic_vector;
                            LEN: inout integer
         ) is
-            variable next_event: EVENT_TYPE;
-            variable read_len  : integer;
-            variable val_size  : integer;
-            variable seq_level : integer;
+            variable  next_event    : EVENT_TYPE;
+            variable  read_len      : integer;
+            variable  val_size      : integer;
+            variable  seq_level     : integer;
         begin
             seq_level := 0;
-            SEEK_EVENT(SELF, STREAM, next_event);
+            SEEK_EVENT(CORE, STREAM, next_event);
             SEQ_LOOP: loop
                 case next_event is
                     when EVENT_SCALAR    =>
-                        READ_EVENT(SELF, STREAM, EVENT_SCALAR);
+                        READ_EVENT(CORE, STREAM, EVENT_SCALAR);
                         STRING_TO_STD_LOGIC_VECTOR(
-                            STR  => SELF.str_buf(1 to SELF.str_len),
-                            VAL  => VAL(VAL'left downto LEN),
-                            LEN  => read_len,
-                            SIZE => val_size
+                            STR     => CORE.str_buf(1 to CORE.str_len),
+                            VAL     => VAL(VAL'left downto LEN),
+                            STR_LEN => read_len,
+                            VAL_LEN => val_size
                         );
                         LEN := LEN + val_size;
                     when EVENT_SEQ_BEGIN =>
-                        READ_EVENT(SELF, STREAM, EVENT_SEQ_BEGIN);
+                        READ_EVENT(CORE, STREAM, EVENT_SEQ_BEGIN);
                         seq_level := seq_level + 1;
                     when EVENT_SEQ_END   =>
-                        READ_EVENT(SELF, STREAM, EVENT_SEQ_END  );
+                        READ_EVENT(CORE, STREAM, EVENT_SEQ_END  );
                         seq_level := seq_level - 1;
                     when others          =>
-                        READ_ERROR(SELF, PROC_NAME, "READ_VAL NG");
+                        READ_ERROR(CORE, PROC_NAME, "READ_VAL NG");
                 end case;
                 exit when (seq_level <= 0);
             end loop;
@@ -1970,7 +1972,7 @@ package body AXI4_CORE is
         READ_MAP_LOOP: loop
             case next_event is
                 when EVENT_SCALAR  =>
-                    COPY_KEY_WORD(SELF, key_word);
+                    COPY_KEY_WORD(CORE, key_word);
                     case key_word is
                         when KEY_SIZE   => READ_VAL(A_CHANNEL.SIZE  );
                         when KEY_BURST  => READ_VAL(A_CHANNEL.BURST );
@@ -1989,9 +1991,9 @@ package body AXI4_CORE is
                 when EVENT_MAP_END      => exit READ_MAP_LOOP;
                 when others             => exit READ_MAP_LOOP;
             end case;
-            SEEK_EVENT(SELF, STREAM, next_event);
+            SEEK_EVENT(CORE, STREAM, next_event);
             if (next_event = EVENT_SCALAR) then
-                READ_EVENT(SELF, STREAM, EVENT_SCALAR);
+                READ_EVENT(CORE, STREAM, EVENT_SCALAR);
             end if;
         end loop;
         EVENT := next_event;
