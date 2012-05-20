@@ -292,6 +292,108 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
     -------------------------------------------------------------------------------
     --! 
     -------------------------------------------------------------------------------
+    procedure  WAIT_UNTIL_XFER_AR(
+        variable CORE       : inout CORE_TYPE;
+                 PROC_NAME  : in    STRING;
+                 TIMEOUT    : in    integer
+    ) is
+        variable count      :       integer;
+    begin
+        count := 0;
+        WAIT_LOOP: loop
+            wait until (ACLK'event and ACLK = '1');
+            exit when  (ARVALID_I = '1' and ARREADY_I = '1');
+            if (count >= TIMEOUT) then
+                EXECUTE_ABORT(core, PROC_NAME, "WAIT AR Time Out!");
+            end if;
+            count := count + 1;
+        end loop;
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! 
+    -------------------------------------------------------------------------------
+    procedure  WAIT_UNTIL_XFER_AW(
+        variable CORE       : inout CORE_TYPE;
+                 PROC_NAME  : in    STRING;
+                 TIMEOUT    : in    integer
+    ) is
+        variable count      :       integer;
+    begin
+        count := 0;
+        WAIT_LOOP: loop
+            wait until (ACLK'event and ACLK = '1');
+            exit when  (AWVALID_I = '1' and AWREADY_I = '1');
+            if (count >= TIMEOUT) then
+                EXECUTE_ABORT(core, PROC_NAME, "WAIT AW Time Out!");
+            end if;
+            count := count + 1;
+        end loop;
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! 
+    -------------------------------------------------------------------------------
+    procedure  WAIT_UNTIL_XFER_R(
+        variable CORE       : inout CORE_TYPE;
+                 PROC_NAME  : in    STRING;
+                 TIMEOUT    : in    integer;
+                 LAST       : in    std_logic
+    ) is
+        variable count      :       integer;
+    begin
+        count := 0;
+        WAIT_LOOP: loop
+            wait until (ACLK'event and ACLK = '1');
+            exit when  (RVALID_I = '1' and RREADY_I = '1' and (LAST = '0' or RLAST_I = '1'));
+            if (count >= TIMEOUT) then
+                EXECUTE_ABORT(core, PROC_NAME, "WAIT R Time Out!");
+            end if;
+            count := count + 1;
+        end loop;
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! 
+    -------------------------------------------------------------------------------
+    procedure  WAIT_UNTIL_XFER_W(
+        variable CORE       : inout CORE_TYPE;
+                 PROC_NAME  : in    STRING;
+                 TIMEOUT    : in    integer;
+                 LAST       : in    std_logic
+    ) is
+        variable count      :       integer;
+    begin
+        count := 0;
+        WAIT_LOOP: loop
+            wait until (ACLK'event and ACLK = '1');
+            exit when  (WVALID_I = '1' and WREADY_I = '1' and (LAST = '0' or WLAST_I = '1'));
+            if (count >= TIMEOUT) then
+                EXECUTE_ABORT(core, PROC_NAME, "WAIT W Time Out!");
+            end if;
+            count := count + 1;
+        end loop;
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! 
+    -------------------------------------------------------------------------------
+    procedure  WAIT_UNTIL_XFER_B(
+        variable CORE       : inout CORE_TYPE;
+                 PROC_NAME  : in    STRING;
+                 TIMEOUT    : in    integer
+    ) is
+        variable count      :       integer;
+    begin
+        count := 0;
+        WAIT_LOOP: loop
+            wait until (ACLK'event and ACLK = '1');
+            exit when  (BVALID_I = '1' and BREADY_I = '1');
+            if (count >= TIMEOUT) then
+                EXECUTE_ABORT(core, PROC_NAME, "WAIT B Time Out!");
+            end if;
+            count := count + 1;
+        end loop;
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! 
+    -------------------------------------------------------------------------------
     procedure  MATCH_GPI(
         variable CORE       : inout CORE_TYPE;
                  SIGNALS    : in    std_logic_vector;
@@ -311,7 +413,7 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
         MATCH := (count = 0);
     end procedure;
     -------------------------------------------------------------------------------
-    --! 
+    --! @brief 全チャネルの期待値と信号の値を比較するサブプログラム.
     -------------------------------------------------------------------------------
     procedure  MATCH_AXI4_CHANNEL(
                  SIGNALS    : in    AXI4_CHANNEL_SIGNAL_TYPE;
@@ -371,78 +473,173 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
          );
     end procedure;
     -------------------------------------------------------------------------------
-    --! 
+    --! @brief ライトアドレスチャネルの期待値と信号の値を比較するサブプログラム.
+    -------------------------------------------------------------------------------
+    procedure MATCH_AXI4_AW_CHANNEL(
+        variable CORE       : inout CORE_TYPE;
+                 SIGNALS    : in    AXI4_A_CHANNEL_SIGNAL_TYPE;
+                 MATCH      : out   boolean
+    ) is
+    begin
+        MATCH_AXI4_CHANNEL(
+            SELF    => CORE      , -- I/O :
+            NAME    => "AW"      , -- In  :
+            SIGNALS => SIGNALS   , -- In  :
+            MATCH   => MATCH     , -- Out :
+            ADDR    => AWADDR_I  , -- In  :
+            LEN     => AWLEN_I   , -- In  :
+            SIZE    => AWSIZE_I  , -- In  :
+            BURST   => AWBURST_I , -- In  :
+            LOCK    => AWLOCK_I  , -- In  :
+            CACHE   => AWCACHE_I , -- In  :
+            PROT    => AWPROT_I  , -- In  :
+            QOS     => AWQOS_I   , -- In  :
+            REGION  => AWREGION_I, -- In  :
+            USER    => AWUSER_I  , -- In  :
+            ID      => AWID_I    , -- In  :
+            VALID   => AWVALID_I , -- In  :
+            READY   => AWREADY_I   -- In  :
+        );
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief ライトデータチャネルの期待値と信号の値を比較するサブプログラム.
+    -------------------------------------------------------------------------------
+    procedure MATCH_AXI4_W_CHANNEL(
+        variable CORE       : inout CORE_TYPE;
+                 SIGNALS    : in    AXI4_W_CHANNEL_SIGNAL_TYPE;
+                 MATCH      : out   boolean
+    ) is
+    begin
+        MATCH_AXI4_CHANNEL(
+            SELF    => CORE      , -- I/O :
+            NAME    => "W"       , -- In  :
+            SIGNALS => SIGNALS   , -- In  :
+            MATCH   => MATCH     , -- Out :
+            LAST    => WLAST_I   , -- In  :
+            DATA    => WDATA_I   , -- In  :
+            STRB    => WSTRB_I   , -- In  :
+            USER    => WUSER_I   , -- In  :
+            ID      => WID_I     , -- In  :
+            VALID   => WVALID_I  , -- In  :
+            READY   => WREADY_I    -- In  :
+        );
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief ライト応答チャネルの期待値と信号の値を比較するサブプログラム.
+    -------------------------------------------------------------------------------
+    procedure MATCH_AXI4_B_CHANNEL(
+        variable CORE       : inout CORE_TYPE;
+                 SIGNALS    : in    AXI4_B_CHANNEL_SIGNAL_TYPE;
+                 MATCH      : out   boolean
+    ) is
+    begin
+        MATCH_AXI4_CHANNEL(
+            SELF    => CORE      , -- I/O :
+            NAME    => "B"       , -- In  :
+            SIGNALS => SIGNALS   , -- In  :
+            MATCH   => MATCH     , -- Out :
+            RESP    => BRESP_I   , -- In  :
+            USER    => BUSER_I   , -- In  :
+            ID      => BID_I     , -- In  :
+            VALID   => BVALID_I  , -- In  :
+            READY   => BREADY_I    -- In  :
+        );
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief リードアドレスチャネルの期待値と信号の値を比較するサブプログラム.
+    -------------------------------------------------------------------------------
+    procedure MATCH_AXI4_AR_CHANNEL(
+        variable SELF       : inout CORE_TYPE;
+                 SIGNALS    : in    AXI4_A_CHANNEL_SIGNAL_TYPE;
+                 MATCH      : out   boolean
+    ) is
+    begin
+        MATCH_AXI4_CHANNEL(
+            SELF    => SELF      , -- I/O :
+            NAME    => "AR"      , -- In  :
+            SIGNALS => SIGNALS   , -- In  :
+            MATCH   => MATCH     , -- Out :
+            ADDR    => ARADDR_I  , -- In  :
+            LEN     => ARLEN_I   , -- In  :
+            SIZE    => ARSIZE_I  , -- In  :
+            BURST   => ARBURST_I , -- In  :
+            LOCK    => ARLOCK_I  , -- In  :
+            CACHE   => ARCACHE_I , -- In  :
+            PROT    => ARPROT_I  , -- In  :
+            QOS     => ARQOS_I   , -- In  :
+            REGION  => ARREGION_I, -- In  :
+            USER    => ARUSER_I  , -- In  :
+            ID      => ARID_I    , -- In  :
+            VALID   => ARVALID_I , -- In  :
+            READY   => ARREADY_I   -- In  :
+        );
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief リードデータチャネルの期待値と信号の値を比較するサブプログラム.
+    -------------------------------------------------------------------------------
+    procedure MATCH_AXI4_R_CHANNEL(
+        variable CORE       : inout CORE_TYPE;
+                 SIGNALS    : in    AXI4_R_CHANNEL_SIGNAL_TYPE;
+                 MATCH      : out   boolean
+    ) is
+    begin
+        MATCH_AXI4_CHANNEL(
+            SELF    => CORE      , -- I/O :
+            NAME    => "R"       , -- In  :
+            SIGNALS => SIGNALS   , -- In  :
+            MATCH   => MATCH     , -- Out :
+            LAST    => RLAST_I   , -- In  :
+            DATA    => RDATA_I   , -- In  :
+            RESP    => RRESP_I   , -- In  :
+            USER    => RUSER_I   , -- In  :
+            ID      => RID_I     , -- In  :
+            VALID   => RVALID_I  , -- In  :
+            READY   => RREADY_I    -- In  :
+        );
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief 全チャネルの期待値と信号の値を比較するサブプログラム.
     -------------------------------------------------------------------------------
     procedure  MATCH_AXI4_CHANNEL(
         variable CORE       : inout CORE_TYPE;
                  SIGNALS    : in    AXI4_CHANNEL_SIGNAL_TYPE;
                  MATCH      : out   boolean
     ) is
-    begin 
-        MATCH_AXI4_CHANNEL(
-            SELF       => CORE       , -- I/O :
-            SIGNALS    => SIGNALS    , -- In  :
-            READ       => READ       , -- In  :
-            WRITE      => WRITE      , -- In  :
-            MATCH      => MATCH      , -- Out :
-            ARADDR     => ARADDR_I   , -- In  :
-            ARLEN      => ARLEN_I    , -- In  :
-            ARSIZE     => ARSIZE_I   , -- In  :
-            ARBURST    => ARBURST_I  , -- In  :
-            ARLOCK     => ARLOCK_I   , -- In  :
-            ARCACHE    => ARCACHE_I  , -- In  :
-            ARPROT     => ARPROT_I   , -- In  :
-            ARQOS      => ARQOS_I    , -- In  :
-            ARREGION   => ARREGION_I , -- In  :
-            ARUSER     => ARUSER_I   , -- In  :
-            ARID       => ARID_I     , -- In  :
-            ARVALID    => ARVALID_I  , -- In  :
-            ARREADY    => ARREADY_I  , -- In  :
-            AWADDR     => AWADDR_I   , -- In  :
-            AWLEN      => AWLEN_I    , -- In  :
-            AWSIZE     => AWSIZE_I   , -- In  :
-            AWBURST    => AWBURST_I  , -- In  :
-            AWLOCK     => AWLOCK_I   , -- In  :
-            AWCACHE    => AWCACHE_I  , -- In  :
-            AWPROT     => AWPROT_I   , -- In  :
-            AWQOS      => AWQOS_I    , -- In  :
-            AWREGION   => AWREGION_I , -- In  :
-            AWUSER     => AWUSER_I   , -- In  :
-            AWID       => AWID_I     , -- In  :
-            AWVALID    => AWVALID_I  , -- In  :
-            AWREADY    => AWREADY_I  , -- In  :
-            RLAST      => RLAST_I    , -- In  :
-            RDATA      => RDATA_I    , -- In  :
-            RRESP      => RRESP_I    , -- In  :
-            RUSER      => RUSER_I    , -- In  :
-            RID        => RID_I      , -- In  :
-            RVALID     => RVALID_I   , -- In  :
-            RREADY     => RREADY_I   , -- In  :
-            WLAST      => WLAST_I    , -- In  :
-            WDATA      => WDATA_I    , -- In  :
-            WSTRB      => WSTRB_I    , -- In  :
-            WUSER      => WUSER_I    , -- In  :
-            WID        => WID_I      , -- In  :
-            WVALID     => WVALID_I   , -- In  :
-            WREADY     => WREADY_I   , -- In  :
-            BRESP      => BRESP_I    , -- In  :
-            BUSER      => BUSER_I    , -- In  :
-            BID        => BID_I      , -- In  :
-            BVALID     => BVALID_I   , -- In  :
-            BREADY     => BREADY_I     -- In  :
-        );
+        variable aw_match   :       boolean;
+        variable w_match    :       boolean;
+        variable b_match    :       boolean;
+        variable ar_match   :       boolean;
+        variable r_match    :       boolean;
+    begin
+        if (WRITE) then
+            MATCH_AXI4_AW_CHANNEL(CORE, SIGNALS.AW, aw_match);
+            MATCH_AXI4_W_CHANNEL (CORE, SIGNALS.W , w_match );
+            MATCH_AXI4_B_CHANNEL (CORE, SIGNALS.B , b_match );
+        else
+            aw_match := TRUE;
+            w_match  := TRUE;
+            b_match  := TRUE;
+        end if;
+        if (READ) then
+            MATCH_AXI4_AR_CHANNEL(CORE, SIGNALS.AR, ar_match);
+            MATCH_AXI4_R_CHANNEL (CORE, SIGNALS.R , r_match );
+        else
+            ar_match := TRUE;
+            r_match  := TRUE;
+        end if;
+        MATCH := aw_match and w_match and b_match and ar_match and r_match;
     end procedure;
     -------------------------------------------------------------------------------
-    --! READ_AXI4_CHANNEL
+    --! 
     -------------------------------------------------------------------------------
-    procedure  READ_AXI4_CHANNEL(
-        variable CORE       : inout CORE_TYPE;
-        file     STREAM     :       TEXT;
-        variable SIGNALS    : inout AXI4_CHANNEL_SIGNAL_TYPE;
-        variable EVENT      : inout EVENT_TYPE
+    procedure  MAP_READ_AXI4_CHANNEL(
+        variable  CORE     : inout CORE_TYPE;
+        file      STREAM   :       TEXT;
+        variable  SIGNALS  : inout AXI4_CHANNEL_SIGNAL_TYPE;
+        variable  EVENT    : inout EVENT_TYPE
     ) is
     begin
-        READ_AXI4_CHANNEL(
+        MAP_READ_AXI4_CHANNEL(
             SELF           => CORE                 ,  -- In :
             STREAM         => STREAM               ,  -- I/O:
             CHANNEL        => CHANNEL              ,  -- In :
@@ -472,10 +669,11 @@ begin
         constant  KEY_SYNC      : KEYWORD_TYPE := "SYNC ";
         constant  KEY_WAIT      : KEYWORD_TYPE := "WAIT ";
         constant  KEY_CHECK     : KEYWORD_TYPE := "CHECK";
+        constant  KEY_OUT       : KEYWORD_TYPE := "OUT  ";
         constant  KEY_DEBUG     : KEYWORD_TYPE := "DEBUG";
-        constant  KEY_TIMEOUT   : KEYWORD_TYPE := "TIMEO";
-        constant  KEY_WAIT_ON   : KEYWORD_TYPE := "ON   ";
         constant  KEY_REPORT    : KEYWORD_TYPE := "REPOR";
+        constant  KEY_READ      : KEYWORD_TYPE := "READ ";
+        constant  KEY_WRITE     : KEYWORD_TYPE := "WRITE";
         function  GENERATE_KEY_CHANNEL return KEYWORD_TYPE is
         begin
             case CHANNEL is
@@ -489,6 +687,18 @@ begin
         end function;
         constant  KEY_CHANNEL   : KEYWORD_TYPE := GENERATE_KEY_CHANNEL;
         ---------------------------------------------------------------------------
+        -- トランザクションデータバッファサイズ
+        ---------------------------------------------------------------------------
+        function  GENERATE_DATA_BUF_SIZE return integer is
+        begin
+            case CHANNEL is
+                when AXI4_CHANNEL_R  => return AXI4_XFER_MAX_BYTES*8;
+                when AXI4_CHANNEL_W  => return AXI4_XFER_MAX_BYTES*8;
+                when others          => return 1;
+            end case;
+        end function;
+        constant  DATA_BUF_SIZE : integer      := GENERATE_DATA_BUF_SIZE;
+        ---------------------------------------------------------------------------
         -- 各種変数の定義.
         ---------------------------------------------------------------------------
         file      stream        : TEXT;
@@ -497,7 +707,10 @@ begin
         variable  operation     : OPERATION_TYPE;
         variable  out_signals   : AXI4_CHANNEL_SIGNAL_TYPE;
         variable  chk_signals   : AXI4_CHANNEL_SIGNAL_TYPE;
+        variable  tmp_signals   : AXI4_CHANNEL_SIGNAL_TYPE;
         variable  gpi_signals   : std_logic_vector(GPI'range);
+        variable  gpo_signals   : std_logic_vector(GPO'range);
+        variable  data_buf      : std_logic_vector(DATA_BUF_SIZE-1 downto 0);
         ---------------------------------------------------------------------------
         --! @brief 
         ---------------------------------------------------------------------------
@@ -523,7 +736,7 @@ begin
         --! @brief チャネル信号変数の初期化.
         ---------------------------------------------------------------------------
         function  GEN_INIT_SIGNALS return AXI4_CHANNEL_SIGNAL_TYPE is
-            variable value : AXI4_CHANNEL_SIGNAL_TYPE;
+            variable  value : AXI4_CHANNEL_SIGNAL_TYPE;
         begin
             value := AXI4_CHANNEL_SIGNAL_DONTCARE;
             if (MASTER) then
@@ -660,8 +873,8 @@ begin
         --! @brief ローカル同期オペレーション.
         ---------------------------------------------------------------------------
         procedure LOCAL_SYNC is
-            constant PROC_NAME  : string := "LOCAL_SYNC";
-            variable sync_count : SYNC_REQ_VECTOR(SYNC_LOCAL_REQ'range);
+            constant  PROC_NAME  : string := "LOCAL_SYNC";
+            variable  sync_count : SYNC_REQ_VECTOR(SYNC_LOCAL_REQ'range);
         begin
             REPORT_DEBUG(core, PROC_NAME, "BEGIN");
             sync_count(SYNC_LOCAL_PORT) := SYNC_LOCAL_WAIT;
@@ -674,9 +887,9 @@ begin
         --! @brief CHECKオペレーション.信号が指定された値になっているかチェック.
         ---------------------------------------------------------------------------
         procedure EXECUTE_CHECK is
-            constant PROC_NAME  : string := "EXECUTE_CHECK";
-            variable next_event : EVENT_TYPE;
-            variable match      : boolean;
+            constant  PROC_NAME  : string := "EXECUTE_CHECK";
+            variable  next_event : EVENT_TYPE;
+            variable  match      : boolean;
         begin
             REPORT_DEBUG(core, PROC_NAME, "BEGIN");
             SEEK_EVENT(core, stream, next_event);
@@ -685,28 +898,36 @@ begin
                     READ_EVENT(core, stream, EVENT_MAP_BEGIN);
                     chk_signals := AXI4_CHANNEL_SIGNAL_DONTCARE;
                     gpi_signals := (others => '-');
-                    SEEK_EVENT(core, stream, next_event);
-                    if (next_event = EVENT_SCALAR) then
-                        READ_EVENT(core, stream, EVENT_SCALAR);
-                    end if;
-                    READ_AXI4_CHANNEL(
-                        CORE       => core            ,  -- In :
-                        STREAM     => stream          ,  -- I/O:
-                        SIGNALS    => chk_signals     ,  -- I/O:
-                        EVENT      => next_event         -- I/O:
-                    );
-                    READ_SIGNALS(
-                        SELF       => core            ,  -- In :
-                        STREAM     => stream          ,  -- I/O:
-                        SIG_NAME   => "GPI"           ,  -- In :
-                        SIG_VALUE  => gpi_signals     ,  -- Out:
-                        EVENT      => next_event         -- I/O:
-                    );
-                    if (next_event /= EVENT_MAP_END) then
-                        READ_ERROR(core, PROC_NAME, "need EVENT_MAP_END but " &
-                                                     EVENT_TO_STRING(next_event));
-                    end if;
-                    READ_EVENT(core, stream, EVENT_MAP_END);
+                    MAP_READ_LOOP: loop
+                        MAP_READ_PREPARE_FOR_NEXT(
+                            SELF       => core            ,  -- I/O:
+                            STREAM     => stream          ,  -- I/O:
+                            EVENT      => next_event         -- I/O:
+                        );
+                        MAP_READ_AXI4_CHANNEL(
+                            CORE       => core            ,  -- I/O:
+                            STREAM     => stream          ,  -- I/O:
+                            SIGNALS    => chk_signals     ,  -- I/O:
+                            EVENT      => next_event         -- I/O:
+                        );
+                        MAP_READ_STD_LOGIC_VECTOR(
+                            SELF       => core            ,  -- I/O:
+                            STREAM     => stream          ,  -- I/O:
+                            KEY        => "GPI"           ,  -- In :
+                            VAL        => gpi_signals     ,  -- I/O:
+                            EVENT      => next_event         -- I/O:
+                        );
+                        case next_event is
+                            when EVENT_SCALAR  =>
+                                COPY_KEY_WORD(core, keyword);
+                                EXECUTE_UNDEFINED_MAP_KEY(keyword);
+                            when EVENT_MAP_END =>
+                                exit MAP_READ_LOOP;
+                            when others        =>
+                                READ_ERROR(core, PROC_NAME, "need EVENT_MAP_END but " &
+                                           EVENT_TO_STRING(next_event));
+                        end case;
+                    end loop;
                     MATCH_AXI4_CHANNEL(core, chk_signals, match);
                     MATCH_GPI         (core, gpi_signals, match);
                 when others =>
@@ -718,18 +939,18 @@ begin
         --! @brief  WAITオペレーション. 指定された条件まで待機.
         ---------------------------------------------------------------------------
         procedure EXECUTE_WAIT is
-            constant PROC_NAME  : string := "EXECUTE_WAIT";
-            variable next_event : EVENT_TYPE;
-            variable wait_count : integer;
-            variable scan_len   : integer;
-            variable timeout    : integer;
-            variable wait_mode  : integer;
-            variable axi_match  : boolean;
-            variable gpi_match  : boolean;
+            constant  PROC_NAME  : string := "EXECUTE_WAIT";
+            variable  next_event : EVENT_TYPE;
+            variable  wait_count : integer;
+            variable  scan_len   : integer;
+            variable  timeout    : integer;
+            variable  wait_on    : boolean;
+            variable  axi_match  : boolean;
+            variable  gpi_match  : boolean;
         begin
             REPORT_DEBUG(core, PROC_NAME, "BEGIN");
             timeout   := DEFAULT_WAIT_TIMEOUT;
-            wait_mode := 0;
+            wait_on   := FALSE;
             SEEK_EVENT(core, stream, next_event);
             case next_event is
                 when EVENT_SCALAR =>
@@ -748,58 +969,52 @@ begin
                     READ_EVENT(core, stream, EVENT_MAP_BEGIN);
                     chk_signals := AXI4_CHANNEL_SIGNAL_DONTCARE;
                     gpi_signals := (others => '-');
-                    MAP_LOOP: loop
-                        REPORT_DEBUG(core, PROC_NAME, "MAP_LOOP");
-                        SEEK_EVENT(core, stream, next_event);
-                        if (next_event = EVENT_SCALAR) then
-                            READ_EVENT(core, stream, EVENT_SCALAR);
-                        end if;
-                        READ_AXI4_CHANNEL(
-                            CORE       => core            ,  -- In :
+                    MAP_READ_LOOP: loop
+                        REPORT_DEBUG(core, PROC_NAME, "MAP_READ_LOOP");
+                        MAP_READ_PREPARE_FOR_NEXT(
+                            SELF       => core            ,  -- I/O:
+                            STREAM     => stream          ,  -- I/O:
+                            EVENT      => next_event         -- I/O:
+                        );
+                        MAP_READ_AXI4_CHANNEL(
+                            CORE       => core            ,  -- I/O:
                             STREAM     => stream          ,  -- I/O:
                             SIGNALS    => chk_signals     ,  -- I/O:
-                            EVENT      => next_event         -- Out:
+                            EVENT      => next_event         -- I/O:
                         );
-                        READ_SIGNALS(
-                            SELF       => core            ,  -- In :
+                        MAP_READ_STD_LOGIC_VECTOR(
+                            SELF       => core            ,  -- I/O:
                             STREAM     => stream          ,  -- I/O:
-                            SIG_NAME   => "GPI"           ,  -- In :
-                            SIG_VALUE  => gpi_signals     ,  -- Out:
+                            KEY        => "GPI"           ,  -- In :
+                            VAL        => gpi_signals     ,  -- I/O:
+                            EVENT      => next_event         -- I/O:
+                        );
+                        MAP_READ_INTEGER(
+                            SELF       => core            ,  -- I/O:
+                            STREAM     => stream          ,  -- I/O:
+                            KEY        => "TIMEOUT"       ,  -- In :
+                            VAL        => timeout         ,  -- I/O:
+                            EVENT      => next_event         -- I/O:
+                        );
+                        MAP_READ_BOOLEAN(
+                            SELF       => core            ,  -- I/O:
+                            STREAM     => stream          ,  -- I/O:
+                            KEY        => "ON"            ,  -- In :
+                            VAL        => wait_on         ,  -- I/O:
                             EVENT      => next_event         -- I/O:
                         );
                         case next_event is
                             when EVENT_SCALAR  =>
                                 COPY_KEY_WORD(core, keyword);
-                                case keyword is
-                                    when KEY_TIMEOUT =>
-                                        SEEK_EVENT(core, stream, next_event);
-                                        scan_len  := 0;
-                                        if (next_event = EVENT_SCALAR) then
-                                            READ_EVENT(core, stream, next_event);
-                                            SCAN_INTEGER(timeout, scan_len);
-                                        end if;
-                                        if (scan_len = 0) then
-                                            timeout := DEFAULT_WAIT_TIMEOUT;
-                                        end if;
-                                    when KEY_WAIT_ON =>
-                                        SEEK_EVENT(core, stream, next_event);
-                                        scan_len  := 0;
-                                        if (next_event = EVENT_SCALAR) then
-                                            READ_EVENT(core, stream, next_event);
-                                            SCAN_INTEGER(wait_mode, scan_len);
-                                        end if;
-                                        if (scan_len = 0) then
-                                            wait_mode := 1;
-                                        end if;
-                                    when others    => EXECUTE_UNDEFINED_MAP_KEY(keyword);
-                                end case;
+                                EXECUTE_UNDEFINED_MAP_KEY(keyword);
                             when EVENT_MAP_END =>
-                                exit MAP_LOOP;
+                                exit MAP_READ_LOOP;
                             when others        =>
-                                READ_ERROR(core, PROC_NAME, "READ_AXI4_CHANNEL NG");
+                                READ_ERROR(core, PROC_NAME, "need EVENT_MAP_END but " &
+                                           EVENT_TO_STRING(next_event));
                         end case;
                     end loop;
-                    if (wait_mode > 0) then
+                    if (wait_on) then
                         SIG_LOOP:loop
                             REPORT_DEBUG(core, PROC_NAME, "SIG_LOOP");
                             WAIT_ON_SIGNALS;
@@ -807,8 +1022,9 @@ begin
                             gpi_match := MATCH_STD_LOGIC(gpi_signals, GPI);
                             exit when(axi_match and gpi_match);
                             if (ACLK'event and ACLK = '1') then
-                                timeout := timeout - 1;
-                                if (timeout < 0) then
+                                if (timeout > 0) then
+                                    timeout := timeout - 1;
+                                else
                                     EXECUTE_ABORT(core, PROC_NAME, "Time Out!");
                                 end if;
                             end if;
@@ -820,8 +1036,9 @@ begin
                             MATCH_AXI4_CHANNEL(chk_signals, axi_match);
                             gpi_match := MATCH_STD_LOGIC(gpi_signals, GPI);
                             exit when(axi_match and gpi_match);
-                            timeout := timeout - 1;
-                            if (timeout < 0) then
+                            if (timeout > 0) then
+                                timeout := timeout - 1;
+                            else
                                 EXECUTE_ABORT(core, PROC_NAME, "Time Out!");
                             end if;
                         end loop;
@@ -835,9 +1052,9 @@ begin
         --! @brief  SYNCオペレーション. 
         ---------------------------------------------------------------------------
         procedure EXECUTE_SYNC(operation: in OPERATION_TYPE) is
-            constant PROC_NAME  : string := "EXECUTE_SYNC";
-            variable port_num   : integer;
-            variable wait_num   : integer;
+            constant  PROC_NAME  : string := "EXECUTE_SYNC";
+            variable  port_num   : integer;
+            variable  wait_num   : integer;
         begin
             REPORT_DEBUG  (core, PROC_NAME, "BEGIN");
             READ_SYNC_ARGS(core, stream, operation, port_num, wait_num);
@@ -850,6 +1067,279 @@ begin
             REPORT_DEBUG  (core, PROC_NAME, "END");
         end procedure;
         ---------------------------------------------------------------------------
+        --! @brief トランザクションの情報をシナリオから読むサブプログラム.
+        ---------------------------------------------------------------------------
+        procedure READ_TRANSACTION_INFO(
+                      PROC_NAME  : in     STRING;
+                      ADDR_WIDTH : in     integer;
+                      USER_WIDTH : in     integer;
+            variable  A_CHANNEL  : inout  AXI4_A_CHANNEL_SIGNAL_TYPE;
+            variable  RESP       : inout  AXI4_RESP_TYPE;
+            variable  DATA_BUF   : inout  std_logic_vector;
+            variable  DATA_LEN   : inout  integer;
+            variable  TIMEOUT    : inout  integer
+        ) is
+            variable  next_event : EVENT_TYPE;
+        begin
+            TIMEOUT  := DEFAULT_WAIT_TIMEOUT;
+            DATA_LEN := 0;
+            SEEK_EVENT(core, stream, next_event);
+            case next_event is
+                when EVENT_MAP_BEGIN =>
+                    READ_EVENT(core, stream, EVENT_MAP_BEGIN);
+                    MAP_READ_LOOP: loop
+                        MAP_READ_PREPARE_FOR_NEXT(
+                            SELF       => core            ,  -- I/O:
+                            STREAM     => stream          ,  -- I/O:
+                            EVENT      => next_event         -- I/O:
+                        );
+                        MAP_READ_AXI4_TRANSACTION(
+                            SELF       => core            ,  -- I/O:
+                            STREAM     => stream          ,  -- I/O:
+                            ADDR_WIDTH => ADDR_WIDTH      ,  -- In :
+                            USER_WIDTH => USER_WIDTH      ,  -- In :
+                            ID_WIDTH   => WIDTH.ID        ,  -- In :
+                            A_CHANNEL  => A_CHANNEL       ,  -- I/O:
+                            RESP       => RESP            ,  -- I/O:
+                            DATA_BUF   => DATA_BUF        ,  -- I/O:
+                            DATA_LEN   => DATA_LEN        ,  -- I/O:
+                            EVENT      => next_event         -- I/O:
+                        );
+                        MAP_READ_INTEGER(
+                            SELF       => core            ,  -- I/O:
+                            STREAM     => stream          ,  -- I/O:
+                            KEY        => "TIMEOUT"       ,  -- In :
+                            VAL        => TIMEOUT         ,  -- I/O:
+                            EVENT      => next_event         -- I/O:
+                        );
+                        case next_event is
+                            when EVENT_SCALAR  =>
+                                COPY_KEY_WORD(core, keyword);
+                                EXECUTE_UNDEFINED_MAP_KEY(keyword);
+                            when EVENT_MAP_END =>
+                                exit MAP_READ_LOOP;
+                            when others        =>
+                                READ_ERROR(core, PROC_NAME, "need EVENT_MAP_END but " &
+                                           EVENT_TO_STRING(next_event));
+                        end case;
+                    end loop;
+                when others =>
+                    READ_ERROR(core, PROC_NAME, "SEEK_EVENT NG");
+            end case;
+        end procedure;
+        ---------------------------------------------------------------------------
+        --! @brief マスターリードトランザクション実行サブプログラム.
+        ---------------------------------------------------------------------------
+        procedure EXECUTE_TRANSACTION_MASTER_READ is
+            constant  PROC_NAME  : string := "EXECUTE_TRANSACTION_MASTER_READ";
+            variable  data_len   : integer;
+            variable  timeout    : integer;
+            variable  match      : boolean;
+            variable  a_channel  : AXI4_A_CHANNEL_SIGNAL_TYPE;
+            variable  responce   : AXI4_RESP_TYPE;
+        begin
+            REPORT_DEBUG(core, PROC_NAME, "BEGIN");
+            a_channel := AXI4_A_CHANNEL_SIGNAL_NULL;
+            READ_TRANSACTION_INFO(
+                PROC_NAME  => PROC_NAME   ,
+                ADDR_WIDTH => WIDTH.ARADDR,
+                USER_WIDTH => WIDTH.ARUSER,
+                A_CHANNEL  => a_channel   ,
+                RESP       => responce    ,
+                DATA_BUF   => data_buf    ,
+                DATA_LEN   => data_len    ,
+                TIMEOUT    => timeout
+            );
+            if (data_len > 0) then
+                case CHANNEL is
+                    when AXI4_CHANNEL_AR =>
+                        out_signals.AR       := a_channel;
+                        out_signals.AR.VALID := '1';
+                        EXECUTE_OUTPUT;
+                        WAIT_UNTIL_XFER_AR(core, PROC_NAME, timeout);
+                        out_signals.AR       := AXI4_A_CHANNEL_SIGNAL_NULL;
+                        EXECUTE_OUTPUT;
+                    when AXI4_CHANNEL_R =>
+                        out_signals.R.READY  := '0';
+                        EXECUTE_OUTPUT;
+                        WAIT_UNTIL_XFER_AR(core, PROC_NAME, timeout);
+                        out_signals.R.VALID  := '1';
+                        WAIT_UNTIL_XFER_R (core, PROC_NAME, timeout, '1');
+                        out_signals.R        := AXI4_R_CHANNEL_SIGNAL_NULL;
+                        EXECUTE_OUTPUT;
+                    when others => null;
+                end case;
+            end if;
+            REPORT_DEBUG(core, PROC_NAME, "END");
+        end procedure;
+        ---------------------------------------------------------------------------
+        --! @brief スレーブリードトランザクション実行サブプログラム.
+        ---------------------------------------------------------------------------
+        procedure EXECUTE_TRANSACTION_SLAVE_READ is
+            constant PROC_NAME  : string := "EXECUTE_TRANSACTION_SLAVE_READ";
+            variable  data_len   : integer;
+            variable  timeout    : integer;
+            variable  match      : boolean;
+            variable  a_channel  : AXI4_A_CHANNEL_SIGNAL_TYPE;
+            variable  responce   : AXI4_RESP_TYPE;
+        begin
+            REPORT_DEBUG(core, PROC_NAME, "BEGIN");
+            a_channel := AXI4_A_CHANNEL_SIGNAL_NULL;
+            READ_TRANSACTION_INFO(
+                PROC_NAME  => PROC_NAME   ,
+                ADDR_WIDTH => WIDTH.ARADDR,
+                USER_WIDTH => WIDTH.ARUSER,
+                A_CHANNEL  => a_channel   ,
+                RESP       => responce    ,
+                DATA_BUF   => data_buf    ,
+                DATA_LEN   => data_len    ,
+                TIMEOUT    => timeout
+            );
+            if (data_len > 0) then
+            end if;
+            REPORT_DEBUG(core, PROC_NAME, "END");
+        end procedure;
+        ---------------------------------------------------------------------------
+        --! @brief マスターライトトランザクション実行サブプログラム.
+        ---------------------------------------------------------------------------
+        procedure EXECUTE_TRANSACTION_MASTER_WRITE is
+            constant  PROC_NAME  : string := "EXECUTE_TRANSACTION_MASTER_WRITE";
+            variable  data_len   : integer;
+            variable  timeout    : integer;
+            variable  match      : boolean;
+            variable  a_channel  : AXI4_A_CHANNEL_SIGNAL_TYPE;
+            variable  b_channel  : AXI4_B_CHANNEL_SIGNAL_TYPE;
+        begin
+            REPORT_DEBUG(core, PROC_NAME, "BEGIN");
+            a_channel := AXI4_A_CHANNEL_SIGNAL_NULL;
+            b_channel := AXI4_B_CHANNEL_SIGNAL_NULL;
+            READ_TRANSACTION_INFO(
+                PROC_NAME  => PROC_NAME     ,
+                ADDR_WIDTH => WIDTH.AWADDR  ,
+                USER_WIDTH => WIDTH.AWUSER  ,
+                A_CHANNEL  => a_channel     ,
+                RESP       => b_channel.RESP,
+                DATA_BUF   => data_buf      ,
+                DATA_LEN   => data_len      ,
+                TIMEOUT    => timeout
+            );
+            if (data_len > 0) then
+                case CHANNEL is
+                    when AXI4_CHANNEL_AW =>
+                        out_signals.AW       := a_channel;
+                        out_signals.AW.VALID := '1';
+                        EXECUTE_OUTPUT;
+                        WAIT_UNTIL_XFER_AW(core, PROC_NAME, timeout);
+                        out_signals.AW       := AXI4_A_CHANNEL_SIGNAL_NULL;
+                        EXECUTE_OUTPUT;
+                    when AXI4_CHANNEL_B =>
+                        out_signals.B.READY := '0';
+                        EXECUTE_OUTPUT;
+                        WAIT_UNTIL_XFER_AW(core, PROC_NAME, timeout);
+                        out_signals.B.READY := '1';
+                        EXECUTE_OUTPUT;
+                        WAIT_UNTIL_XFER_B (core, PROC_NAME, timeout);
+                        MATCH_AXI4_B_CHANNEL(core, b_channel, match);
+                        out_signals.B.READY := '0';
+                        EXECUTE_OUTPUT;
+                    when others => null;
+                end case;
+            end if;
+            REPORT_DEBUG(core, PROC_NAME, "END");
+        end procedure;
+        ---------------------------------------------------------------------------
+        --! @brief スレーブライトトランザクション実行サブプログラム.
+        ---------------------------------------------------------------------------
+        procedure EXECUTE_TRANSACTION_SLAVE_WRITE is
+            constant  PROC_NAME  : string := "EXECUTE_TRANSACTION_SLAVE_WRITE";
+            variable  data_len   : integer;
+            variable  timeout    : integer;
+            variable  match      : boolean;
+            variable  a_channel  : AXI4_A_CHANNEL_SIGNAL_TYPE;
+            variable  b_channel  : AXI4_B_CHANNEL_SIGNAL_TYPE;
+        begin
+            REPORT_DEBUG(core, PROC_NAME, "BEGIN");
+            a_channel := AXI4_A_CHANNEL_SIGNAL_NULL;
+            b_channel := AXI4_B_CHANNEL_SIGNAL_NULL;
+            READ_TRANSACTION_INFO(
+                PROC_NAME  => PROC_NAME     ,
+                ADDR_WIDTH => WIDTH.AWADDR  ,
+                USER_WIDTH => WIDTH.AWUSER  ,
+                A_CHANNEL  => a_channel     ,
+                RESP       => b_channel.RESP,
+                DATA_BUF   => data_buf      ,
+                DATA_LEN   => data_len      ,
+                TIMEOUT    => timeout
+            );
+            if (data_len > 0) then
+                case CHANNEL is
+                    when AXI4_CHANNEL_AW =>
+                        out_signals.AW.READY := '1';
+                        EXECUTE_OUTPUT;
+                        WAIT_UNTIL_XFER_AW(core, PROC_NAME, timeout);
+                        MATCH_AXI4_AW_CHANNEL(core, a_channel, match);
+                        out_signals.AW.READY := '0';
+                        EXECUTE_OUTPUT;
+                    when AXI4_CHANNEL_B =>
+                        out_signals.B := AXI4_B_CHANNEL_SIGNAL_NULL;
+                        EXECUTE_OUTPUT;
+                        WAIT_UNTIL_XFER_W(core, PROC_NAME, timeout, '1');
+                        out_signals.B.RESP   := b_channel.RESP;
+                        out_signals.B.ID     := a_channel.ID;
+                        out_signals.B.VALID  := '1';
+                        EXECUTE_OUTPUT;
+                        WAIT_UNTIL_XFER_B(core, PROC_NAME, timeout);
+                        out_signals.B := AXI4_B_CHANNEL_SIGNAL_NULL;
+                        EXECUTE_OUTPUT;
+                    when others => null;
+                end case;
+            end if;
+            REPORT_DEBUG(core, PROC_NAME, "END");
+        end procedure;
+        ---------------------------------------------------------------------------
+        --! @brief リードトランザクション実行サブプログラム.
+        ---------------------------------------------------------------------------
+        procedure EXECUTE_TRANSACTION_READ is
+            constant  PROC_NAME  : string := "EXECUTE_TRANSACTION_READ";
+        begin
+            REPORT_DEBUG(core, PROC_NAME, "BEGIN");
+            case CHANNEL is
+                when AXI4_CHANNEL_AR |
+                     AXI4_CHANNEL_R  =>
+                    if (MASTER and READ ) then
+                        EXECUTE_TRANSACTION_MASTER_READ;
+                    end if;
+                    if (SLAVE  and READ ) then
+                        EXECUTE_TRANSACTION_SLAVE_READ;
+                    end if;
+                when others =>
+                        EXECUTE_SKIP(core, stream);
+            end case;
+            REPORT_DEBUG(core, PROC_NAME, "END");
+        end procedure;
+        ---------------------------------------------------------------------------
+        --! @brief ライトトランザクション実行サブプログラム.
+        ---------------------------------------------------------------------------
+        procedure EXECUTE_TRANSACTION_WRITE is
+            constant  PROC_NAME  : string := "EXECUTE_TRANSACTION_WRITE";
+        begin
+            REPORT_DEBUG(core, PROC_NAME, "BEGIN");
+            case CHANNEL is
+                when AXI4_CHANNEL_AW |
+                     AXI4_CHANNEL_W  |
+                     AXI4_CHANNEL_B  =>
+                    if (MASTER and WRITE) then
+                        EXECUTE_TRANSACTION_MASTER_WRITE;
+                    end if;
+                    if (SLAVE  and WRITE) then
+                        EXECUTE_TRANSACTION_SLAVE_WRITE;
+                    end if;
+                when others =>
+                        EXECUTE_SKIP(core, stream);
+            end case;
+            REPORT_DEBUG(core, PROC_NAME, "END");
+        end procedure;
+        ---------------------------------------------------------------------------
         --! @brief チャネルオペレーション(SCALAR)実行サブプログラム.
         ---------------------------------------------------------------------------
         procedure EXECUTE_CHANNEL_SCALAR_OPERATION is
@@ -860,17 +1350,14 @@ begin
         --! @brief チャネルオペレーション(MAP)実行サブプログラム.
         ---------------------------------------------------------------------------
         procedure EXECUTE_CHANNEL_MAP_OPERATION is
-            constant PROC_NAME  : string := "EXECUTE_CHANNEL_MAP_OPERATION";
-            variable next_event : EVENT_TYPE;
+            constant  PROC_NAME  : string := "EXECUTE_CHANNEL_MAP_OPERATION";
+            variable  next_event : EVENT_TYPE;
         begin
             REPORT_DEBUG(core, PROC_NAME, "BEGIN");
             READ_EVENT(core, stream, EVENT_MAP_BEGIN);
-            MAP_LOOP: loop
-                SEEK_EVENT(core, stream, next_event);
-                if (next_event = EVENT_SCALAR) then
-                    READ_EVENT(core, stream, EVENT_SCALAR);
-                end if;
-                READ_AXI4_CHANNEL(
+            MAP_READ_LOOP: loop
+                MAP_READ_PREPARE_FOR_NEXT(core, stream, next_event);
+                MAP_READ_AXI4_CHANNEL(
                     CORE       => core            ,  -- In :
                     STREAM     => stream          ,  -- I/O:
                     SIGNALS    => out_signals     ,  -- I/O:
@@ -889,23 +1376,21 @@ begin
                             when others     => EXECUTE_UNDEFINED_MAP_KEY(keyword);
                         end case;
                     when EVENT_MAP_END =>
-                        exit MAP_LOOP;
-                    when EVENT_ERROR =>
-                        READ_ERROR(core, PROC_NAME, "READ_AXI4_CHANNEL NG");
+                        exit MAP_READ_LOOP;
                     when others        =>
-                        SKIP_EVENT(core, stream, next_event);
-                        -- ERROR
+                        READ_ERROR(core, PROC_NAME, "need EVENT_MAP_END but " &
+                                   EVENT_TO_STRING(next_event));
                 end case;
             end loop;
             REPORT_DEBUG(core, PROC_NAME, "END");
         end procedure;
         ---------------------------------------------------------------------------
-        -- チャネルオペレーションループ
+        --! @brief チャネルオペレーションループ
         ---------------------------------------------------------------------------
         procedure EXECUTE_CHANNEL_OPERATION is
-            constant PROC_NAME  : string := "EXECUTE_CHANNEL_OPERATION";
-            variable next_event : EVENT_TYPE;
-            variable seq_level  : integer;
+            constant  PROC_NAME  : string := "EXECUTE_CHANNEL_OPERATION";
+            variable  next_event : EVENT_TYPE;
+            variable  seq_level  : integer;
         begin
             REPORT_DEBUG(core, PROC_NAME, "BEGIN");
             seq_level := 0;
@@ -949,6 +1434,7 @@ begin
         ---------------------------------------------------------------------------
         out_signals := INIT_SIGNALS;
         chk_signals := INIT_SIGNALS;
+        gpo_signals := (others => 'Z');
         ---------------------------------------------------------------------------
         -- 信号の初期化
         ---------------------------------------------------------------------------
@@ -979,9 +1465,12 @@ begin
                             when KEY_REPORT => EXECUTE_REPORT(core, stream);
                             when KEY_DEBUG  => EXECUTE_DEBUG (core, stream);
                             when KEY_SAY    => EXECUTE_SAY   (core, stream);
+                            when KEY_OUT    => EXECUTE_OUT   (core, stream, gpo_signals, GPO);
                             when KEY_SYNC   => EXECUTE_SYNC  (operation);
                             when KEY_WAIT   => EXECUTE_WAIT;
                             when KEY_CHECK  => EXECUTE_CHECK;
+                            when KEY_READ   => EXECUTE_TRANSACTION_READ;
+                            when KEY_WRITE  => EXECUTE_TRANSACTION_WRITE;
                             when others     => EXECUTE_UNDEFINED_MAP_KEY(keyword);
                         end case;
                     when OP_SCALAR =>
@@ -1003,11 +1492,15 @@ begin
                         REPORT_DEBUG(core, string'("MAIN_LOOP:OP_MAP(") & keyword & ")");
                         if    (keyword = KEY_CHANNEL) then
                             EXECUTE_CHANNEL_OPERATION;
-                        elsif (keyword = KEY_REPORT) then
+                        elsif (keyword = KEY_REPORT ) then
                             EXECUTE_REPORT(core, stream);
-                        elsif (keyword = KEY_SYNC) then
+                        elsif (keyword = KEY_SYNC   ) then
                             LOCAL_SYNC;
                             EXECUTE_SKIP(core, stream);
+                        elsif (keyword = KEY_READ   ) then
+                            EXECUTE_TRANSACTION_READ;
+                        elsif (keyword = KEY_WRITE  ) then
+                            EXECUTE_TRANSACTION_WRITE;
                         else
                             REPORT_DEBUG(core, string'("MAIN_LOOP:OP_MAP:SKIP BEGIN"));
                             EXECUTE_SKIP(core, stream);

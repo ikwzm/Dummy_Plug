@@ -2,7 +2,7 @@
 --!     @file    aix4_test_1.vhd
 --!     @brief   TEST BENCH No.1 for DUMMY_PLUG.AXI4_MODELS
 --!     @version 0.0.5
---!     @date    2012/5/12
+--!     @date    2012/5/15
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -70,6 +70,8 @@ architecture MODEL of DUMMY_PLUG_AXI4_TEST_1 is
                                  RUSER       =>  1,
                                  BUSER       =>  1);
     constant SYNC_WIDTH      : integer :=  2;
+    constant GPO_WIDTH       : integer :=  8;
+    constant GPI_WIDTH       : integer :=  2*GPO_WIDTH;
     -------------------------------------------------------------------------------
     -- グローバルシグナル.
     -------------------------------------------------------------------------------
@@ -140,7 +142,14 @@ architecture MODEL of DUMMY_PLUG_AXI4_TEST_1 is
     -------------------------------------------------------------------------------
     -- シンクロ用信号
     -------------------------------------------------------------------------------
-    signal   SYNC            : SYNC_SIG_VECTOR (SYNC_WIDTH     -1 downto 0);
+    signal   SYNC            : SYNC_SIG_VECTOR (SYNC_WIDTH   -1 downto 0);
+    -------------------------------------------------------------------------------
+    -- GPIO(General Purpose Input/Output)
+    -------------------------------------------------------------------------------
+    signal   M_GPI           : std_logic_vector(GPI_WIDTH    -1 downto 0);
+    signal   M_GPO           : std_logic_vector(GPO_WIDTH    -1 downto 0);
+    signal   S_GPI           : std_logic_vector(GPI_WIDTH    -1 downto 0);
+    signal   S_GPO           : std_logic_vector(GPO_WIDTH    -1 downto 0);
     -------------------------------------------------------------------------------
     -- 各種状態出力.
     -------------------------------------------------------------------------------
@@ -150,6 +159,7 @@ architecture MODEL of DUMMY_PLUG_AXI4_TEST_1 is
     signal   N_FINISH        : std_logic;
     signal   M_FINISH        : std_logic;
     signal   S_FINISH        : std_logic;
+    
 begin
 
     -------------------------------------------------------------------------------
@@ -184,6 +194,8 @@ begin
             WIDTH           => WIDTH,
             SYNC_PLUG_NUM   => 2,
             SYNC_WIDTH      => SYNC_WIDTH,
+            GPI_WIDTH       => GPI_WIDTH,
+            GPO_WIDTH       => GPO_WIDTH,
             FINISH_ABORT    => FALSE
         )
         port map(
@@ -258,6 +270,11 @@ begin
             SYNC(0)         => SYNC(0)         , -- I/O :
             SYNC(1)         => SYNC(1)         , -- I/O :
         --------------------------------------------------------------------------
+        -- GPIO
+        --------------------------------------------------------------------------
+            GPI             => M_GPI           , -- In  :
+            GPO             => M_GPO           , -- Out :
+        --------------------------------------------------------------------------
         -- 各種状態出力.
         --------------------------------------------------------------------------
             REPORT_STATUS   => M_REPORT        , -- Out :
@@ -276,6 +293,8 @@ begin
             WIDTH           => WIDTH,
             SYNC_PLUG_NUM   => 3,
             SYNC_WIDTH      => SYNC_WIDTH,
+            GPI_WIDTH       => GPI_WIDTH,
+            GPO_WIDTH       => GPO_WIDTH,
             FINISH_ABORT    => FALSE
         )
         port map(
@@ -349,6 +368,11 @@ begin
         ---------------------------------------------------------------------------
             SYNC(0)         => SYNC(0)         , -- I/O :
             SYNC(1)         => SYNC(1)         , -- I/O :
+        --------------------------------------------------------------------------
+        -- GPIO
+        --------------------------------------------------------------------------
+            GPI             => S_GPI           , -- In  :
+            GPO             => S_GPO           , -- Out :
         --------------------------------------------------------------------------
         -- 各種状態出力.
         --------------------------------------------------------------------------
@@ -442,7 +466,8 @@ begin
     end process;
 
     ARESETn <= '1' when (RESET = '0') else '0';
-
+    M_GPI   <= S_GPO & M_GPO;
+    S_GPI   <= S_GPO & M_GPO;
     process
         variable L : LINE;
         constant T : STRING(1 to 7) := "  ***  ";
@@ -462,7 +487,7 @@ begin
         WRITE(L,T & "  Warning  : ");WRITE(L,S_REPORT.warning_count );WRITELINE(OUTPUT,L);
         WRITE(L,T);                                                   WRITELINE(OUTPUT,L);
         assert (M_REPORT.error_count    =  0) and
-               (M_REPORT.mismatch_count =  9) and
+               (M_REPORT.mismatch_count = 11) and
                (M_REPORT.warning_count  =  0) and
                (M_REPORT.failure_count  =  0) and
                (S_REPORT.error_count    =  0) and

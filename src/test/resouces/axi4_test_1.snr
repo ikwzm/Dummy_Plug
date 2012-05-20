@@ -178,7 +178,7 @@
 - SLAVE:                                  # スレーブ用ダミープラグの名前. 
   - AW:                                   # アドレスチャネルの挙動.
     - AWREADY : 0                         # AWREADY <= 0
-    - WAIT    : {AWVALID: 1, TIMEOUT: 10, ON: 1} # AWVALID = 1 まで待つ.ただし10クロック以内.
+    - WAIT    : {AWVALID: 1, TIMEOUT: 10, ON: on} # AWVALID = 1 まで待つ.ただし10クロック以内.
     - AWREADY : 1                         # AWREADY <= 1
     - WAIT    : {AWVALID: 1, AWREADY: 1}  # AWVALID = 1 and AWREADY = 1 まで待つ.
     - CHECK   :                           # AWADDR, AWSIZE, AWID が
@@ -326,9 +326,14 @@
 - MASTER:                                 # マスター用ダミープラグの名前. 
   - DEBUG : 0
   - REPORT: {DEBUG: ON, MISMATCH: ON}
-  - CHECK : {GPI(1) : 1}                  # 
-  - WAIT  : {GPI(0) : 0, TIMEOUT: 10}     #
+  - WAIT  : {GPI(8)  : 0, TIMEOUT: 100}   #
+  - SAY   : "Expected mismatch! GPI(8) 0 /= 1 !"
+  - CHECK : {GPI(8)  : 1, GPI(9)  : 0, GPI(10) : 0, GPI(11) : 0,
+             GPI(12) : 1, GPI(13) : 0, GPI(14) : 1, GPI(15) : 1}
+  - WAIT  : 10
+  - OUT   : {GPO(0)  : 0, GPO(1)  : 1, GPO(2)  : 0, GPO(3)  : 1}
   - DEBUG : 0
+  - SYNC  : {PORT : LOCAL, WAIT: 3}
   - AW:                                   # アドレスチャネルの挙動.
     - AWVALID : 0                         # AWVALID <= 0
       AWADDR  : "32'h00000000"            # AWADDR  <= 00000000
@@ -375,6 +380,7 @@
     - WAIT    : {AWVALID: 1, AWREADY: 1}  # AWVALID = 1 and AWREADY = 1まで待つ.
     - BREADY  : 1                         # BVALID <= 1
     - WAIT    : {BVALID: 1, BREADY: 1}    # BVALID = 1 and BREADY = 1まで待つ.
+    - SAY     : "Expected mismatch ! BRESP, BID!"
     - CHECK   :                           # BRESP, BID が
         BRESP  : "2'b00"                  # 指定された値になっていないことを調べる.
         BID    : 3                        #
@@ -410,26 +416,34 @@
     - WAIT    : {ARVALID: 1, TIMEOUT: 100}
     - RREADY  : 1
     - WAIT    : {RVALID: 1, RREADY: 1, TIMEOUT: 100}
+    - SAY     : "Expected mismatch ! RDATA, RLAST, RRESP, RID!"
     - CHECK   :
         RDATA   : "32'h01234567"
         RLAST   : 1
         RRESP   : 1
+        RID     : 4
     - WAIT    : {RVALID: 1, RREADY: 1, TIMEOUT: 100}
+    - SAY     : "Expected mismatch ! RDATA, RLAST, RRESP, RID!"
     - CHECK   :
         RDATA   : "32'hFEDCBA98"
         RLAST   : 0
         RRESP   : 0
+        RID     : 1
     - RREADY  : 0
   - SYNC  : {PORT : 0, WAIT: 3}
   - REPORT: {DEBUG: OFF}
 - SLAVE:                                  # スレーブ用ダミープラグの名前. 
   - DEBUG : 0
   - REPORT: {DEBUG: ON, MISMATCH: ON}
+  - OUT   : {GPO(0) : 0, GPO(1) : 0, GPO(2) : 0, GPO(3) : 0,
+             GPO(4) : 1, GPO(5) : 0, GPO(6) : 1, GPO(7) : 1}
+  - DEBUG : 0
   - AW:                                   # アドレスチャネルの挙動.
     - AWREADY : 0                         # AWREADY <= 0
-    - WAIT    : {AWVALID: 1, TIMEOUT: 10} # AWVALID = 1 まで待つ.ただし10クロック以内.
+    - WAIT    : {AWVALID: 1, TIMEOUT: 50} # AWVALID = 1 まで待つ.ただし50クロック以内.
     - AWREADY : 1                         # AWREADY <= 1
     - WAIT    : {AWVALID: 1, AWREADY: 1}  # AWVALID = 1 and AWREADY = 1 まで待つ.
+    - SAY     : "Expected mismatch! AWADDR, AWSIZE, AWID, AWLEN, AWBURST, AWLOCK, AWPROT, AWQOS ...!"
     - CHECK   :                           # AWADDR, AWSIZE, AWID が
         AWADDR  : "32'h00000012"          # 指定した値になっていないことを調べる.
         AWSIZE  : "'b011"                 #
@@ -445,6 +459,7 @@
     - WAIT    : {AWVALID: 1, AWREADY: 1}  # AWVALID = 1 and AWREADY = 1 まで待つ.
     - WREADY  : 1                         # WREADY <= '1'
     - WAIT    : {WVALID : 1, WREADY : 1}  # WVALID = 1 and WREADY = 1 まで待つ.
+    - SAY     : "Expected mismatch ! WDATA, WSTRB, WLAST, WID ...!"
     - CHECK   :                           # WDATA, WSTRB, WLAST, WID　が
         WDATA  : "32'h01234567"           # 指定された値になっていないことを調べる.
         WSTRB  : "4'b0111"                #
@@ -473,6 +488,7 @@
     - WAIT    : {ARVALID: 1, TIMEOUT: 10} # ARVALID = 1 まで待つ.ただし10クロック以内.
     - ARREADY : 1                         # ARREADY <= 1
     - WAIT    : {ARVALID: 1, ARREADY: 1}  # ARVALID = 1 and ARREADY = 1 まで待つ.
+    - SAY     : "Expected mismatch ! ARADDR, ARSIZE, ARLEN, ARBURST, ARLOCK,ARPORT,ARQOS, ARID!"
     - CHECK   :                           # AWADDR, AWSIZE, AWID が
         ARADDR  : "32'h00432100"          # 指定した値になっていないことを調べる.
         ARSIZE  : "'b001"                 #
@@ -488,6 +504,7 @@
       RDATA   : "32'h00000000"
       RLAST   : 0
       RRESP   : 0
+      RID     : 8
     - WAIT    : {ARVALID: 1, TIMEOUT: 100}
     - WAIT    : 5
     - RVALID  : 1
@@ -502,6 +519,7 @@
       RDATA   : "32'h01234567"
       RLAST   : 1
       RRESP   : 1
+      RID     : 8
     - WAIT    : {RVALID: 1, RREADY: 1, TIMEOUT: 100}
     - RVALID  : 0
       RDATA   : "32'h00000000"

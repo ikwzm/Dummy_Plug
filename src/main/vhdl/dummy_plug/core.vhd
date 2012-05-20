@@ -2,7 +2,7 @@
 --!     @file    core.vhd
 --!     @brief   Core Package for Dummy Plug.
 --!     @version 0.0.5
---!     @date    2012/5/15
+--!     @date    2012/5/20
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -38,9 +38,13 @@ library ieee;
 use     ieee.std_logic_1164.all;
 use     std.textio.all;
 library DUMMY_PLUG;
-use     DUMMY_PLUG.READER;
-use     DUMMY_PLUG.VOCAL;
-use     DUMMY_PLUG.SYNC;
+use     DUMMY_PLUG.READER.READER_TYPE;
+use     DUMMY_PLUG.READER.EVENT_TYPE;
+use     DUMMY_PLUG.VOCAL.VOCAL_TYPE;
+use     DUMMY_PLUG.SYNC.SYNC_REQ_VECTOR;
+use     DUMMY_PLUG.SYNC.SYNC_ACK_VECTOR;
+use     DUMMY_PLUG.SYNC.SYNC_SIG_VECTOR;
+use     DUMMY_PLUG.SYNC.SYNC_PLUG_NUM_TYPE;
 -----------------------------------------------------------------------------------
 --! @brief Dummy Plug のコアパッケージ.
 -----------------------------------------------------------------------------------
@@ -77,18 +81,18 @@ package CORE is
     --! @brief ステータスレポートタイプ.
     -------------------------------------------------------------------------------
     type      REPORT_STATUS_TYPE is record
-        valid               : boolean;
-        warning_count       : integer;
-        mismatch_count      : integer;
-        error_count         : integer;
-        failure_count       : integer;
+                  valid               : boolean;
+                  warning_count       : integer;
+                  mismatch_count      : integer;
+                  error_count         : integer;
+                  failure_count       : integer;
     end record;
     constant  REPORT_STATUS_NULL : REPORT_STATUS_TYPE := (
-        valid               => FALSE,
-        warning_count       => 0,
-        mismatch_count      => 0,
-        error_count         => 0,
-        failure_count       => 0
+                  valid               => FALSE,
+                  warning_count       => 0,
+                  mismatch_count      => 0,
+                  error_count         => 0,
+                  failure_count       => 0
     );
     type      REPORT_STATUS_VECTOR is array (integer range <>) of  REPORT_STATUS_TYPE;
     -------------------------------------------------------------------------------
@@ -99,97 +103,97 @@ package CORE is
     --! @brief コアの各種状態を保持する構造体.
     -------------------------------------------------------------------------------
     type      CORE_TYPE is record
-        name                : LINE;                       --! インスタンス名を保持.
-        reader              : READER.READER_TYPE;         --! リーダー用変数.
-        vocal               : VOCAL.VOCAL_TYPE;           --! ボーカル用変数.
-        str_buf             : STRING(1 to STR_BUF_SIZE);  --! スクラッチ用文字列バッファ.
-        str_len             : integer;                    --! str_bufに格納されている文字数.
-        prev_state          : STATE_TYPE;                 --! 一つ前の状態.
-        curr_state          : STATE_TYPE;                 --! 現在の状態.
-        report_status       : REPORT_STATUS_TYPE;         --! 各種状態をレポートする変数.
-        debug               : integer;                    --! デバッグ用変数.
+                  name          : LINE;                     --! インスタンス名を保持.
+                  reader        : READER_TYPE;              --! リーダー用変数.
+                  vocal         : VOCAL_TYPE;               --! ボーカル用変数.
+                  str_buf       : STRING(1 to STR_BUF_SIZE);--! スクラッチ用文字列バッファ.
+                  str_len       : integer;                  --! str_bufに格納されている文字数.
+                  prev_state    : STATE_TYPE;               --! 一つ前の状態.
+                  curr_state    : STATE_TYPE;               --! 現在の状態.
+                  report_status : REPORT_STATUS_TYPE;       --! 各種状態をレポートする変数.
+                  debug         : integer;                  --! デバッグ用変数.
     end record;
     -------------------------------------------------------------------------------
     --! @brief コア変数の初期化用定数を生成する関数.
     -------------------------------------------------------------------------------
     function  NEW_CORE(
-                 NAME       : STRING;                     --! コアの識別名.
-                 STREAM_NAME: STRING                      --! シナリオのストリーム名.
+                  NAME          : STRING;                   --! コアの識別名.
+                  STREAM_NAME   : STRING                    --! シナリオのストリーム名.
     ) return CORE_TYPE;
     -------------------------------------------------------------------------------
     --! @brief コア変数の初期化用定数を生成する関数.
     -------------------------------------------------------------------------------
     function  NEW_CORE(
-                 NAME       : STRING;                     --! コアの識別名.
-                 VOCAL_NAME : STRING;                     --! メッセージ用の識別名.
-                 STREAM_NAME: STRING                      --! シナリオのストリーム名.
+                  NAME          : STRING;                   --! コアの識別名.
+                  VOCAL_NAME    : STRING;                   --! メッセージ用の識別名.
+                  STREAM_NAME   : STRING                    --! シナリオのストリーム名.
     ) return CORE_TYPE;
     -------------------------------------------------------------------------------
     --! @brief コア変数の初期化サブプログラム.
     -------------------------------------------------------------------------------
     procedure CORE_INIT(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-                 NAME       : in    STRING;               --! コアの識別名.
-        file     STREAM     :       TEXT;                 --! シナリオのストリーム.
-                 STREAM_NAME: in    STRING;               --! シナリオのストリーム名.
-        variable OPERATION  : out   OPERATION_TYPE        --! オペレーションコマンド.
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+                  NAME          : in    STRING;             --! コアの識別名.
+        file      STREAM        :       TEXT;               --! シナリオのストリーム.
+                  STREAM_NAME   : in    STRING;             --! シナリオのストリーム名.
+        variable  OPERATION     : out   OPERATION_TYPE      --! オペレーションコマンド.
     );
     -------------------------------------------------------------------------------
     --! @brief コア変数の初期化サブプログラム.
     -------------------------------------------------------------------------------
     procedure CORE_INIT(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-                 NAME       : in    STRING;               --! コアの識別名.
-                 VOCAL_NAME :       STRING;               --! メッセージ用の識別名.
-        file     STREAM     :       TEXT;                 --! シナリオのストリーム.
-                 STREAM_NAME: in    STRING;               --! シナリオのストリーム名.
-        variable OPERATION  : out   OPERATION_TYPE        --! オペレーションコマンド.
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+                  NAME          : in    STRING;             --! コアの識別名.
+                  VOCAL_NAME    :       STRING;             --! メッセージ用の識別名.
+        file      STREAM        :       TEXT;               --! シナリオのストリーム.
+                  STREAM_NAME   : in    STRING;             --! シナリオのストリーム名.
+        variable  OPERATION     : out   OPERATION_TYPE      --! オペレーションコマンド.
     );
     -------------------------------------------------------------------------------
     --! @brief コアからオペレーションコマンドを読むサブプログラム.
     -------------------------------------------------------------------------------
     procedure READ_OPERATION(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-        file     STREAM     :       TEXT;                 --! シナリオのストリーム.
-        variable OPERATION  : out   OPERATION_TYPE;       --! オペレーションコマンド.
-        variable OP_WORD    : out   string                --! オペレーションキーワード.
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT;               --! シナリオのストリーム.
+        variable  OPERATION     : out   OPERATION_TYPE;     --! オペレーションコマンド.
+        variable  OP_WORD       : out   string              --! オペレーションキーワード.
     );
     -------------------------------------------------------------------------------
     --! @brief SYNCオペレーションの引数を読むサブプログラム.
     -------------------------------------------------------------------------------
     procedure READ_SYNC_ARGS(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-        file     STREAM     :       TEXT;                 --! 入力ストリーム.
-                 OPERATION  : in    OPERATION_TYPE;       --! オペレーションコマンド.
-                 SYNC_PORT  : out   integer;              --! ポート番号.
-                 SYNC_WAIT  : out   integer               --! ウェイトクロック数.
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT;               --! 入力ストリーム.
+                  OPERATION     : in    OPERATION_TYPE;     --! オペレーションコマンド.
+                  SYNC_PORT     : out   integer;            --! ポート番号.
+                  SYNC_WAIT     : out   integer             --! ウェイトクロック数.
     );
     -------------------------------------------------------------------------------
     --! @brief 同期オペレーション.
     -------------------------------------------------------------------------------
     procedure CORE_SYNC(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-                 NUM        : in    integer;              --! 同期チャネル番号.
-                 COUNT      : in    integer;              --! 同期までの待ちクロック数.
-        signal   SYNC_REQ   : out   SYNC.SYNC_REQ_VECTOR; --! SYNC要求信号出力.
-        signal   SYNC_ACK   : in    SYNC.SYNC_ACK_VECTOR  --! SYNC応答信号入力.
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+                  NUM           : in    integer;            --! 同期チャネル番号.
+                  COUNT         : in    integer;            --! 同期までの待ちクロック数.
+        signal    SYNC_REQ      : out   SYNC_REQ_VECTOR;    --! SYNC要求信号出力.
+        signal    SYNC_ACK      : in    SYNC_ACK_VECTOR     --! SYNC応答信号入力.
     );
     -------------------------------------------------------------------------------
     --! @brief 次に読み取ることのできるイベントまで読み飛ばすサブプログラム.
     -------------------------------------------------------------------------------
     procedure SEEK_EVENT(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-        file     STREAM     :       TEXT;                 --! 入力ストリーム.
-                 NEXT_EVENT : out   READER.EVENT_TYPE     --! 見つかったイベント.
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT;               --! 入力ストリーム.
+                  NEXT_EVENT    : out   EVENT_TYPE          --! 見つかったイベント.
     );
     -------------------------------------------------------------------------------
     --! @brief ストリームからイベントを読み取るサブプログラム.
     --!        ただしスカラー、文字列などは読み捨てる.
     -------------------------------------------------------------------------------
     procedure READ_EVENT(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-        file     STREAM     :       TEXT;                 --! 入力ストリーム.
-                 EVENT      : in    READER.EVENT_TYPE     --! 読み取るイベント.
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT;               --! 入力ストリーム.
+                  EVENT         : in    EVENT_TYPE          --! 読み取るイベント.
     );
     -------------------------------------------------------------------------------
     --! @brief ストリームからEVENTを読み飛ばすサブプログラム.
@@ -197,78 +201,115 @@ package CORE is
     --!        読み飛ばすことに注意.
     -------------------------------------------------------------------------------
     procedure SKIP_EVENT(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-        file     STREAM     :       TEXT;                 --! 入力ストリーム.
-                 EVENT      : in    READER.EVENT_TYPE     --! 読み飛ばすイベント.
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT;               --! 入力ストリーム.
+                  EVENT         : in    EVENT_TYPE          --! 読み飛ばすイベント.
     );
     -------------------------------------------------------------------------------
     --! @brief ストリームから読んだスカラーとキーワードがマッチするかどうか調べる.
     -------------------------------------------------------------------------------
     procedure MATCH_KEY_WORD(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-                 KEY_WORD   : in    STRING;               --! キーワード.
-                 MATCH      : out   boolean               --! マッチするかどうか.
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+                  KEY_WORD      : in    STRING;             --! キーワード.
+                  MATCH         : out   boolean             --! マッチするかどうか.
     );
     -------------------------------------------------------------------------------
     --! @brief READ_EVENTで読み取った文字列をキーワードに変換する.
     -------------------------------------------------------------------------------
     procedure COPY_KEY_WORD(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-                 KEY_WORD   : out   STRING                --! キーワード.
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+                  KEY_WORD      : out   STRING              --! キーワード.
     );
     -------------------------------------------------------------------------------
     --! @brief SAYオペレーションを実行する.
     -------------------------------------------------------------------------------
     procedure EXECUTE_SAY(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-        file     STREAM     :       TEXT                  --! 入力ストリーム.
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT                --! 入力ストリーム.
+    );
+    -------------------------------------------------------------------------------
+    --! @brief OUTオペレーション.GPO(General Purpose Output)に値を出力する.
+    ---------------------------------------------------------------------------
+    procedure EXECUTE_OUT(
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT;               --! 入力ストリーム.
+                  SIGNALS       : inout std_logic_vector;   --! 出力する値を保持している変数.
+        signal    GPO           : out   std_logic_vector    --! GPO信号出力.
     );
     -------------------------------------------------------------------------------
     --! @brief SKIPオペレーションを実行する.
     -------------------------------------------------------------------------------
     procedure EXECUTE_SKIP(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-        file     STREAM     :       TEXT                  --! 入力ストリーム.
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT                --! 入力ストリーム.
     );
     -------------------------------------------------------------------------------
     --! @brief REPORTフラグを書き換えるオペレーションを実行する.
     -------------------------------------------------------------------------------
     procedure EXECUTE_REPORT(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-        file     STREAM     :       TEXT                  --! 入力ストリーム.
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT                --! 入力ストリーム.
     );
     -------------------------------------------------------------------------------
     --! @brief DEBUGフラグを書き換えるオペレーションを実行する.
     -------------------------------------------------------------------------------
     procedure EXECUTE_DEBUG(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-        file     STREAM     :       TEXT                  --! 入力ストリーム.
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT                --! 入力ストリーム.
     );
     -------------------------------------------------------------------------------
     --! @brief 不正なSCALARオペレーションを警告して読み飛ばす.
     -------------------------------------------------------------------------------
     procedure EXECUTE_UNDEFINED_SCALAR(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-        file     STREAM     :       TEXT;                 --! 入力ストリーム.
-                 OP_WORD    : in    STRING
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT;               --! 入力ストリーム.
+                  OP_WORD       : in    STRING
     );
-    -------------------------------------------------------------------------------
+    ------------------------------------------------------------------------------
     --! @brief 不正なMAPオペレーションを警告して読み飛ばす.
     -------------------------------------------------------------------------------
     procedure EXECUTE_UNDEFINED_MAP_KEY(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-        file     STREAM     :       TEXT;                 --! 入力ストリーム.
-                 OP_WORD    : in    STRING
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT;               --! 入力ストリーム.
+                  OP_WORD       : in    STRING
+    );
+    ------------------------------------------------------------------------------
+    --! @brief シナリオのマップからキーと値を読み出す準備をするサブプログラム.
+    -------------------------------------------------------------------------------
+    procedure MAP_READ_PREPARE_FOR_NEXT(
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT;               --! 入力ストリーム.
+                  EVENT         : inout EVENT_TYPE          --! 次のイベント.
     );
     -------------------------------------------------------------------------------
-    --! @brief READERのマップから信号の値を読み取るサブプログラム.
+    --! @brief シナリオのマップからキーを指定してstd_logic_vectorタイプの値を読む.
     -------------------------------------------------------------------------------
-    procedure READ_SIGNALS(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-        file     STREAM     :       TEXT;                 --! 入力ストリーム.
-                 SIG_NAME   : in    STRING;               --! 信号名
-                 SIG_VALUE  : out   std_logic_vector;     --! GPI信号出力.
-                 EVENT      : inout READER.EVENT_TYPE     --! 次のイベント.
+    procedure MAP_READ_STD_LOGIC_VECTOR(
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT;               --! 入力ストリーム.
+                  KEY           : in    STRING;             --! 信号名
+                  VAL           : inout std_logic_vector;   --! 値出力.
+                  EVENT         : inout EVENT_TYPE          --! 次のイベント.
+    );
+    -------------------------------------------------------------------------------
+    --! @brief シナリオのマップからキーを指定してintegerタイプの値を読む.
+    -------------------------------------------------------------------------------
+    procedure MAP_READ_INTEGER(
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT;               --! 入力ストリーム.
+                  KEY           : in    STRING;             --! 信号名
+                  VAL           : inout integer;            --! 値出力.
+                  EVENT         : inout EVENT_TYPE          --! 次のイベント.
+    );
+    -------------------------------------------------------------------------------
+    --! @brief シナリオのマップからキーを指定してbooleanタイプの値を読む.
+    -------------------------------------------------------------------------------
+    procedure MAP_READ_BOOLEAN(
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT;               --! 入力ストリーム.
+                  KEY           : in    STRING;             --! 信号名
+                  VAL           : inout boolean;            --! 値出力.
+                  EVENT         : inout EVENT_TYPE          --! 次のイベント.
     );
     -------------------------------------------------------------------------------
     --! @brief コア変数のデバッグ用ダンプ
@@ -329,14 +370,14 @@ package CORE is
         generic (
             SCENARIO_FILE   : STRING;
             NAME            : STRING;
-            SYNC_PLUG_NUM   : SYNC.SYNC_PLUG_NUM_TYPE;
+            SYNC_PLUG_NUM   : SYNC_PLUG_NUM_TYPE;
             SYNC_WIDTH      : integer;
             FINISH_ABORT    : boolean
         );
         port(
             CLK             : in    std_logic;
             RESET           : out   std_logic;
-            SYNC            : inout SYNC.SYNC_SIG_VECTOR(SYNC_WIDTH-1 downto 0);
+            SYNC            : inout SYNC_SIG_VECTOR(SYNC_WIDTH-1 downto 0);
             REPORT_STATUS   : out   REPORT_STATUS_TYPE;
             FINISH          : out   std_logic
         );
@@ -353,6 +394,7 @@ use     DUMMY_PLUG.READER.all;
 use     DUMMY_PLUG.VOCAL.all;
 use     DUMMY_PLUG.SYNC.all;
 use     DUMMY_PLUG.UTIL.INTEGER_TO_STRING;
+use     DUMMY_PLUG.UTIL.BOOLEAN_TO_STRING;
 use     DUMMY_PLUG.UTIL.STRING_TO_BOOLEAN;
 use     DUMMY_PLUG.UTIL.STRING_TO_INTEGER;
 use     DUMMY_PLUG.UTIL.STRING_TO_STD_LOGIC_VECTOR;
@@ -425,8 +467,8 @@ package body CORE is
     --! @brief コア変数の初期化用定数を生成する関数.
     -------------------------------------------------------------------------------
     function  NEW_CORE(
-                 NAME       : STRING;                     --! コアの識別名.
-                 STREAM_NAME: STRING                      --! シナリオのストリーム名.
+                  NAME          : STRING;                   --! コアの識別名.
+                  STREAM_NAME   : STRING                    --! シナリオのストリーム名.
     ) return CORE_TYPE is
         variable self       : CORE_TYPE;
     begin
@@ -436,9 +478,9 @@ package body CORE is
     --! @brief コア変数の初期化用定数を生成する関数.
     -------------------------------------------------------------------------------
     function  NEW_CORE(
-                 NAME       : STRING;                     --! コアの識別名.
-                 VOCAL_NAME : STRING;                     --! コアの識別名.
-                 STREAM_NAME: STRING                      --! シナリオのストリーム名.
+                  NAME          : STRING;                   --! コアの識別名.
+                  VOCAL_NAME    : STRING;                   --! メッセージ用の識別名.
+                  STREAM_NAME   : STRING                    --! シナリオのストリーム名.
     ) return CORE_TYPE is
         variable self       : CORE_TYPE;
     begin
@@ -456,11 +498,11 @@ package body CORE is
     --! @brief コア変数の初期化サブプログラム.
     -------------------------------------------------------------------------------
     procedure CORE_INIT(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-                 NAME       : in    STRING;               --! コアの識別名.
-        file     STREAM     :       TEXT;                 --! シナリオのストリーム.
-                 STREAM_NAME: in    STRING;               --! シナリオのストリーム名.
-        variable OPERATION  : out   OPERATION_TYPE        --! オペレーションコマンド.
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+                  NAME          : in    STRING;             --! コアの識別名.
+        file      STREAM        :       TEXT;               --! シナリオのストリーム.
+                  STREAM_NAME   : in    STRING;             --! シナリオのストリーム名.
+        variable  OPERATION     : out   OPERATION_TYPE      --! オペレーションコマンド.
     ) is
     begin
         file_open(STREAM, STREAM_NAME, READ_MODE);
@@ -471,12 +513,12 @@ package body CORE is
     --! @brief コア変数の初期化サブプログラム.
     -------------------------------------------------------------------------------
     procedure CORE_INIT(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-                 NAME       : in    STRING;               --! コアの識別名.
-                 VOCAL_NAME :       STRING;               --! メッセージ用の識別名.
-        file     STREAM     :       TEXT;                 --! シナリオのストリーム.
-                 STREAM_NAME: in    STRING;               --! シナリオのストリーム名.
-        variable OPERATION  : out   OPERATION_TYPE        --! オペレーションコマンド.
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+                  NAME          : in    STRING;             --! コアの識別名.
+                  VOCAL_NAME    :       STRING;             --! メッセージ用の識別名.
+        file      STREAM        :       TEXT;               --! シナリオのストリーム.
+                  STREAM_NAME   : in    STRING;             --! シナリオのストリーム名.
+        variable  OPERATION     : out   OPERATION_TYPE      --! オペレーションコマンド.
     ) is
     begin
         file_open(STREAM, STREAM_NAME, READ_MODE);
@@ -487,9 +529,9 @@ package body CORE is
     --! @brief 次に読み取ることのできるイベントまで読み飛ばすサブプログラム.
     -------------------------------------------------------------------------------
     procedure SEEK_EVENT(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-        file     STREAM     :       TEXT;                 --! 入力ストリーム.
-                 NEXT_EVENT : out   EVENT_TYPE            --! 見つかったイベント.
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT;               --! 入力ストリーム.
+                  NEXT_EVENT    : out   EVENT_TYPE          --! 見つかったイベント.
     ) is
     begin
         SEEK_EVENT(SELF.reader, STREAM, NEXT_EVENT);
@@ -499,13 +541,13 @@ package body CORE is
     --!        ただしスカラー、文字列などは読み捨てる.
     -------------------------------------------------------------------------------
     procedure READ_EVENT(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-        file     STREAM     :       TEXT;                 --! 入力ストリーム.
-                 EVENT      : in    EVENT_TYPE            --! 読み取るイベント.
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT;               --! 入力ストリーム.
+                  EVENT         : in    EVENT_TYPE          --! 読み取るイベント.
     ) is
-        constant PROC_NAME  :       string := "READ_EVENT";
-        variable read_len   :       integer;
-        variable read_good  :       boolean;
+        constant  PROC_NAME     :       string := "READ_EVENT";
+        variable  read_len      :       integer;
+        variable  read_good     :       boolean;
     begin 
         READ_EVENT(SELF.reader, STREAM, EVENT, SELF.str_buf, SELF.str_len, read_len, read_good);
         if (read_good = FALSE) then
@@ -518,12 +560,12 @@ package body CORE is
     --!        読み飛ばすことに注意.
     -------------------------------------------------------------------------------
     procedure SKIP_EVENT(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-        file     STREAM     :       TEXT;                 --! 入力ストリーム.
-                 EVENT      : in    EVENT_TYPE            --! 読み飛ばすイベント.
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT;               --! 入力ストリーム.
+                  EVENT         : in    EVENT_TYPE          --! 読み飛ばすイベント.
     ) is
-        constant PROC_NAME  :       string := "SKIP_EVENT";
-        variable skip_good  :       boolean;
+        constant  PROC_NAME     :       string := "SKIP_EVENT";
+        variable  skip_good     :       boolean;
     begin
         SKIP_EVENT(SELF.reader, STREAM, EVENT, skip_good);
         if (skip_good = FALSE) then
@@ -534,9 +576,9 @@ package body CORE is
     --! @brief ストリームから読んだスカラーとキーワードがマッチするかどうか調べる.
     -------------------------------------------------------------------------------
     procedure MATCH_KEY_WORD(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-                 KEY_WORD   : in    STRING;               --! キーワード.
-                 MATCH      : out   boolean               --! マッチするかどうか.
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+                  KEY_WORD      : in    STRING;             --! キーワード.
+                  MATCH         : out   boolean             --! マッチするかどうか.
     ) is
     begin
         if (SELF.str_len /= KEY_WORD'length) then
@@ -550,14 +592,14 @@ package body CORE is
     --         自分の名前があるか調べる.
     -------------------------------------------------------------------------------
     procedure check_my_name(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-        file     STREAM     :       TEXT;                 --! シナリオのストリーム.
-        variable FOUND      : out   boolean               --! 名前があるかどうかを返す.
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT;               --! シナリオのストリーム.
+        variable  FOUND         : out   boolean             --! 名前があるかどうかを返す.
     ) is
-        constant PROC_NAME  :       string := "check_my_name";
-        variable get_event  :       EVENT_TYPE;
-        variable seq_level  :       integer;
-        variable match      :       boolean;
+        constant  PROC_NAME     :       string := "check_my_name";
+        variable  get_event     :       EVENT_TYPE;
+        variable  seq_level     :       integer;
+        variable  match         :       boolean;
     begin
         seq_level := 0;
         FOUND     := FALSE;
@@ -592,13 +634,13 @@ package body CORE is
     --         次に遷移する状態を返す.
     -------------------------------------------------------------------------------
     procedure check_first_node(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-        file     STREAM     :       TEXT;                 --! シナリオのストリーム.
-        variable NEXT_STATE : out   STATE_TYPE            --! 次に遷移する状態.
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT;               --! シナリオのストリーム.
+        variable  NEXT_STATE    : out   STATE_TYPE          --! 次に遷移する状態.
     ) is
-        constant PROC_NAME  :       string := "check_first_node";
-        variable next_event :       EVENT_TYPE;
-        variable found      :       boolean;
+        constant  PROC_NAME     :       string := "check_first_node";
+        variable  next_event    :       EVENT_TYPE;
+        variable  found         :       boolean;
     begin
         CHECK_LOOP: loop
             SEEK_EVENT(SELF, STREAM, next_event);
@@ -663,11 +705,11 @@ package body CORE is
     --! @brief READ_EVENTで読み取った文字列をキーワードに変換する.
     -------------------------------------------------------------------------------
     procedure COPY_KEY_WORD(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-        variable KEY_WORD   : out   STRING                --! キーワード文字列.
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+                  KEY_WORD      : out   STRING              --! キーワード.
     ) is
-        variable skip       :       boolean;
-        alias    key_buf    :       string(1 to KEY_WORD'length) is KEY_WORD;
+        variable  skip          :       boolean;
+        alias     key_buf       :       string(1 to KEY_WORD'length) is KEY_WORD;
     begin
         skip := false;
         for i in key_buf'range loop
@@ -715,14 +757,14 @@ package body CORE is
     --! @brief コアからオペレーションコマンドを読むサブプログラム.
     -------------------------------------------------------------------------------
     procedure READ_OPERATION(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-        file     STREAM     :       TEXT;                 --! シナリオのストリーム.
-        variable OPERATION  : out   OPERATION_TYPE;       --! オペレーションコマンド.
-        variable OP_WORD    : out   string                --! オペレーションキーワード.
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT;               --! シナリオのストリーム.
+        variable  OPERATION     : out   OPERATION_TYPE;     --! オペレーションコマンド.
+        variable  OP_WORD       : out   string              --! オペレーションキーワード.
     ) is
-        constant PROC_NAME  :       string := "READ_OPERATION";
-        variable next_event :       EVENT_TYPE;
-        variable next_state :       STATE_TYPE;
+        constant  PROC_NAME     :       string := "READ_OPERATION";
+        variable  next_event    :       EVENT_TYPE;
+        variable  next_state    :       STATE_TYPE;
         procedure REPORT_DEBUG(state:in STRING;event:EVENT_TYPE) is
         begin
             REPORT_DEBUG(SELF, PROC_NAME, string'("state=") & state & 
@@ -936,26 +978,32 @@ package body CORE is
     --! @brief SYNCオペレーションの引数を読むサブプログラム.
     -------------------------------------------------------------------------------
     procedure READ_SYNC_ARGS(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-        file     STREAM     :       TEXT;                 --! 入力ストリーム.
-                 OPERATION  : in    OPERATION_TYPE;       --! オペレーションコマンド.
-                 SYNC_PORT  : out   integer;              --! ポート番号.
-                 SYNC_WAIT  : out   integer               --! ウェイトクロック数.
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT;               --! 入力ストリーム.
+                  OPERATION     : in    OPERATION_TYPE;     --! オペレーションコマンド.
+                  SYNC_PORT     : out   integer;            --! ポート番号.
+                  SYNC_WAIT     : out   integer             --! ウェイトクロック数.
     ) is
-        constant PROC_NAME  : string := "READ_SYNC_ARGS";
-        variable next_event : EVENT_TYPE;
-        variable port_num   : integer;
-        variable wait_num   : integer;
-        variable scan_len   : integer;
-        variable match      : boolean;
-        variable map_level  : integer;
-        type     STATE_TYPE is (STATE_NULL, STATE_SCALAR_PORT,
-                                STATE_MAP_KEY, STATE_MAP_PORT, STATE_MAP_WAIT, STATE_ERROR);
-        variable state      : STATE_TYPE;
-        variable keyword    : STRING(1 to 5);
-        constant KEY_WAIT   : STRING(1 to 5) := "WAIT ";
-        constant KEY_PORT   : STRING(1 to 5) := "PORT ";
-        constant KEY_LOCAL  : STRING(1 to 5) := "LOCAL";
+        constant  PROC_NAME     :       string := "READ_SYNC_ARGS";
+        type     STATE_TYPE is (
+                     STATE_NULL,
+                     STATE_SCALAR_PORT,
+                     STATE_MAP_KEY,
+                     STATE_MAP_PORT,
+                     STATE_MAP_WAIT,
+                     STATE_ERROR
+        );
+        variable  state         :       STATE_TYPE;
+        variable  next_event    :       EVENT_TYPE;
+        variable  port_num      :       integer;
+        variable  wait_num      :       integer;
+        variable  scan_len      :       integer;
+        variable  match         :       boolean;
+        variable  map_level     :       integer;
+        variable  keyword       :       STRING(1 to 5);
+        constant  KEY_WAIT      :       STRING(1 to 5) := "WAIT ";
+        constant  KEY_PORT      :       STRING(1 to 5) := "PORT ";
+        constant  KEY_LOCAL     :       STRING(1 to 5) := "LOCAL";
     begin
         port_num := 0;
         wait_num := 2;
@@ -1024,13 +1072,13 @@ package body CORE is
     --! @brief 同期オペレーション.
     -------------------------------------------------------------------------------
     procedure CORE_SYNC(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-                 NUM        : in    integer;              --! 同期チャネル番号.
-                 COUNT      : in    integer;              --! 同期までの待ちクロック数.
-        signal   SYNC_REQ   : out   SYNC_REQ_VECTOR;      --! SYNC要求信号出力.
-        signal   SYNC_ACK   : in    SYNC_ACK_VECTOR       --! SYNC応答信号入力.
-    ) is 
-        variable sync_count :       SYNC_REQ_VECTOR(SYNC_REQ'range);
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+                  NUM           : in    integer;            --! 同期チャネル番号.
+                  COUNT         : in    integer;            --! 同期までの待ちクロック数.
+        signal    SYNC_REQ      : out   SYNC_REQ_VECTOR;    --! SYNC要求信号出力.
+        signal    SYNC_ACK      : in    SYNC_ACK_VECTOR     --! SYNC応答信号入力.
+    ) is
+        variable  sync_count    :       SYNC_REQ_VECTOR(SYNC_REQ'range);
     begin 
         sync_count(NUM) := COUNT;
         SYNC_BEGIN(SYNC_REQ,           sync_count);
@@ -1040,11 +1088,11 @@ package body CORE is
     --! @brief SAYオペレーションを実行する.
     -------------------------------------------------------------------------------
     procedure EXECUTE_SAY(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-        file     STREAM     :       TEXT                  --! 入力ストリーム.
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT                --! 入力ストリーム.
     ) is
-        constant PROC_NAME  :       STRING := "EXECUTE_SAY";
-        variable next_event :       EVENT_TYPE;
+        constant  PROC_NAME     :       STRING := "EXECUTE_SAY";
+        variable  next_event    :       EVENT_TYPE;
     begin
         REPORT_DEBUG(SELF, PROC_NAME, "BEGIN");
         SEEK_EVENT(SELF, STREAM, next_event);
@@ -1057,14 +1105,65 @@ package body CORE is
         REPORT_DEBUG(SELF, PROC_NAME, "END");
     end procedure;
     -------------------------------------------------------------------------------
+    --! @brief OUTオペレーション.GPO(General Purpose Output)に値を出力する.
+    ---------------------------------------------------------------------------
+    procedure EXECUTE_OUT(
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT;               --! 入力ストリーム.
+                  SIGNALS       : inout std_logic_vector;   --! 出力する値を保持している変数.
+        signal    GPO           : out   std_logic_vector    --! GPO信号出力.
+    ) is
+        constant  PROC_NAME     :       string := "EXECUTE_OUT";
+        variable  next_event    :       EVENT_TYPE;
+        variable  match         :       boolean;
+    begin
+        REPORT_DEBUG(SELF, PROC_NAME, "BEGIN");
+        SEEK_EVENT(SELF, STREAM, next_event);
+        case next_event is
+            when EVENT_MAP_BEGIN =>
+                READ_EVENT(SELF, STREAM, EVENT_MAP_BEGIN);
+                MAP_READ_LOOP: loop
+                    MAP_READ_PREPARE_FOR_NEXT(
+                        SELF       => SELF            ,  -- I/O:
+                        STREAM     => STREAM          ,  -- I/O:
+                        EVENT      => next_event         -- I/O:
+                    );
+                    MAP_READ_STD_LOGIC_VECTOR(
+                        SELF       => SELF            ,  -- I/O:
+                        STREAM     => STREAM          ,  -- I/O:
+                        KEY        => "GPO"           ,  -- In :
+                        VAL        => SIGNALS         ,  -- I/O:
+                        EVENT      => next_event         -- I/O:
+                    );
+                    case next_event is
+                        when EVENT_SCALAR  =>
+                            EXECUTE_UNDEFINED_MAP_KEY(
+                                SELF    => SELF  ,
+                                STREAM  => STREAM,
+                                OP_WORD => SELF.str_buf(1 to SELF.str_len)
+                            );
+                        when EVENT_MAP_END =>
+                            exit MAP_READ_LOOP;
+                        when others        =>
+                            READ_ERROR(SELF, PROC_NAME, "need EVENT_MAP_END but " &
+                                       EVENT_TO_STRING(next_event));
+                    end case;
+                end loop;
+                GPO <= SIGNALS;
+            when others =>
+                READ_ERROR(SELF, PROC_NAME, "SEEK_EVENT NG");
+        end case;
+        REPORT_DEBUG(SELF, PROC_NAME, "END");
+    end procedure;
+    -------------------------------------------------------------------------------
     --! @brief SKIPオペレーションを実行する.
     -------------------------------------------------------------------------------
     procedure EXECUTE_SKIP(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-        file     STREAM     :       TEXT                  --! 入力ストリーム.
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT                --! 入力ストリーム.
     ) is
-        constant PROC_NAME  :       STRING := "EXECUTE_SKIP";
-        variable next_event :       EVENT_TYPE;
+        constant  PROC_NAME     :       STRING := "EXECUTE_SKIP";
+        variable  next_event    :       EVENT_TYPE;
     begin
         REPORT_DEBUG(SELF, PROC_NAME, "BEGIN");
         SEEK_EVENT(SELF, STREAM, next_event);
@@ -1079,24 +1178,24 @@ package body CORE is
     --! @brief REPORTフラグを書き換えるオペレーションを実行する.
     -------------------------------------------------------------------------------
     procedure EXECUTE_REPORT(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-        file     STREAM     :       TEXT                  --! 入力ストリーム.
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT                --! 入力ストリーム.
     ) is
-        constant PROC_NAME  :       STRING := "EXECUTE_REPORT";
-        variable next_event :       EVENT_TYPE;
-        constant KEY_DEBUG  :       STRING(1 to 3) := "DEB";
-        constant KEY_REMARK :       STRING(1 to 3) := "REM";
-        constant KEY_NOTE   :       STRING(1 to 3) := "NOT";
-        constant KEY_WARNING:       STRING(1 to 3) := "WAR";
-        constant KEY_MISMATCH:      STRING(1 to 3) := "MIS";
-        constant KEY_ERROR  :       STRING(1 to 3) := "ERR";
-        constant KEY_FAILURE:       STRING(1 to 3) := "FAI";
-        constant KEY_GET    :       STRING(1 to 3) := "GET";
-        constant KEY_NONE   :       STRING(1 to 3) := "   ";
-        variable key_word   :       STRING(1 to 3);
-        variable map_level  :       integer;
-        variable map_value  :       boolean;
-        variable scan_len   :       integer;
+        constant  PROC_NAME     :       STRING := "EXECUTE_REPORT";
+        variable  next_event    :       EVENT_TYPE;
+        constant  KEY_DEBUG     :       STRING(1 to 3) := "DEB";
+        constant  KEY_REMARK    :       STRING(1 to 3) := "REM";
+        constant  KEY_NOTE      :       STRING(1 to 3) := "NOT";
+        constant  KEY_WARNING   :       STRING(1 to 3) := "WAR";
+        constant  KEY_MISMATCH  :       STRING(1 to 3) := "MIS";
+        constant  KEY_ERROR     :       STRING(1 to 3) := "ERR";
+        constant  KEY_FAILURE   :       STRING(1 to 3) := "FAI";
+        constant  KEY_GET       :       STRING(1 to 3) := "GET";
+        constant  KEY_NONE      :       STRING(1 to 3) := "   ";
+        variable  key_word      :       STRING(1 to 3);
+        variable  map_level     :       integer;
+        variable  map_value     :       boolean;
+        variable  scan_len      :       integer;
     begin
         REPORT_DEBUG(SELF, PROC_NAME, "BEGIN");
         map_level := 0;
@@ -1159,13 +1258,13 @@ package body CORE is
     --! @brief DEBUGフラグを書き換えるオペレーションを実行する.
     -------------------------------------------------------------------------------
     procedure EXECUTE_DEBUG(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-        file     STREAM     :       TEXT                  --! 入力ストリーム.
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT                --! 入力ストリーム.
     ) is
-        constant PROC_NAME  :       string := "EXECUTE_DEBUG";
-        variable next_event :       EVENT_TYPE;
-        variable scan_len   :       integer;
-        variable debug      :       integer;
+        constant  PROC_NAME     :       string := "EXECUTE_DEBUG";
+        variable  next_event    :       EVENT_TYPE;
+        variable  scan_len      :       integer;
+        variable  debug         :       integer;
     begin 
         REPORT_DEBUG(SELF, PROC_NAME, "BEGIN");
         SEEK_EVENT(SELF, STREAM, next_event);
@@ -1187,9 +1286,9 @@ package body CORE is
     --! @brief 不正なSCALARオペレーションを警告して読み飛ばす.
     -------------------------------------------------------------------------------
     procedure EXECUTE_UNDEFINED_SCALAR(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-        file     STREAM     :       TEXT;                 --! 入力ストリーム.
-                 OP_WORD    : in    STRING
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT;               --! 入力ストリーム.
+                  OP_WORD       : in    STRING
     ) is
     begin
         REPORT_READ_ERROR(SELF.vocal, string'("Undefined Scalar Operation(") & OP_WORD & ")");
@@ -1199,11 +1298,11 @@ package body CORE is
     --! @brief 不正なMAPオペレーションを警告して読み飛ばす.
     -------------------------------------------------------------------------------
     procedure EXECUTE_UNDEFINED_MAP_KEY(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-        file     STREAM     :       TEXT;                 --! 入力ストリーム.
-                 OP_WORD    : in    STRING
-   ) is
-        variable next_event :       EVENT_TYPE;
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT;               --! 入力ストリーム.
+                  OP_WORD       : in    STRING
+    ) is
+        variable  next_event    :       EVENT_TYPE;
     begin
         REPORT_READ_ERROR(SELF.vocal, string'("Undefined Map Operation(") & OP_WORD & ")");
         DEBUG_DUMP(SELF.reader);
@@ -1250,7 +1349,7 @@ package body CORE is
     --! @brief ステータスレポートを集計する関数.
     -------------------------------------------------------------------------------
     function  MARGE_REPORT_STATUS(REPORTS: REPORT_STATUS_VECTOR) return REPORT_STATUS_TYPE is
-        variable status : REPORT_STATUS_TYPE;
+        variable  status : REPORT_STATUS_TYPE;
     begin
         status := REPORT_STATUS_NULL;
         for i in REPORTS'range loop
@@ -1265,24 +1364,43 @@ package body CORE is
         return status;
     end function;
     -------------------------------------------------------------------------------
-    --! @brief READERのマップからGPIOの値を読み取るサブプログラム.
+    --! @brief シナリオのマップからキーと値を読み出す準備をするサブプログラム.
     -------------------------------------------------------------------------------
-    procedure READ_SIGNALS(
-        variable SELF       : inout CORE_TYPE;            --! コア変数.
-        file     STREAM     :       TEXT;                 --! 入力ストリーム.
-                 SIG_NAME   : in    STRING;               --! 信号名
-                 SIG_VALUE  : out   std_logic_vector;     --! 信号の値.
-                 EVENT      : inout EVENT_TYPE            --! 次のイベント.
+    procedure MAP_READ_PREPARE_FOR_NEXT(
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT;               --! 入力ストリーム.
+                  EVENT         : inout EVENT_TYPE          --! 次のイベント.
     ) is
-        constant PROC_NAME  :       string := "READ_GPI";
-        variable next_event :       EVENT_TYPE;
-        variable key_word   :       string(1 to SIG_NAME'length);
-        variable pos        :       integer;
-        variable port_num   :       integer;
-        variable read_len   :       integer;
-        variable value      :       std_logic_vector(0 downto 0);
-        variable val_size   :       integer;
     begin
+        SEEK_EVENT(SELF, STREAM, EVENT);
+        if (EVENT = EVENT_SCALAR) then
+            READ_EVENT(SELF, STREAM, EVENT_SCALAR);
+        end if;
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief シナリオのマップからキーを指定してstd_logic_vectorタイプの値を読む.
+    --!      * マップに指定されたキーが無いときは、何もしない。
+    --!        VALに値を上書きすることも無い.
+    --!      * このサブプログラムを呼ぶときは、前もって MAP_READ_PREPARE_FOR_NEXTを
+    --!        実行しておかなければならない。
+    -------------------------------------------------------------------------------
+    procedure MAP_READ_STD_LOGIC_VECTOR(
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT;               --! 入力ストリーム.
+                  KEY           : in    STRING;             --! 信号名
+                  VAL           : inout std_logic_vector;   --! 値出力.
+                  EVENT         : inout EVENT_TYPE          --! 次のイベント.
+    ) is
+        constant  PROC_NAME     :       string := "MAP_READ_STD_LOGIC_VECTOR";
+        variable  next_event    :       EVENT_TYPE;
+        variable  key_word      :       string(1 to KEY'length);
+        variable  pos           :       integer;
+        variable  port_num      :       integer;
+        variable  read_len      :       integer;
+        variable  value         :       std_logic_vector(0 downto 0);
+        variable  val_size      :       integer;
+    begin
+        REPORT_DEBUG(SELF, PROC_NAME, "BEGIN");
         next_event := EVENT;
         MAP_LOOP: loop
             case next_event is
@@ -1292,7 +1410,7 @@ package body CORE is
                         exit MAP_LOOP;
                     end if;
                     COPY_KEY_WORD(SELF, key_word);
-                    if (key_word = SIG_NAME) then
+                    if (key_word = KEY) then
                         pos := pos + key_word'length;
                         if (SELF.str_buf(pos) /= '(' ) then
                             exit MAP_LOOP;
@@ -1311,7 +1429,7 @@ package body CORE is
                         end if;
                         SEEK_EVENT(SELF, STREAM, next_event);
                         if (next_event /= EVENT_SCALAR) then
-                            READ_ERROR(SELF, PROC_NAME, "READ_VAL NG");
+                            READ_ERROR(SELF, PROC_NAME, "READ_VAL NG KEY=" & KEY);
                         end if;
                         READ_EVENT(SELF, STREAM, EVENT_SCALAR);
                         STRING_TO_STD_LOGIC_VECTOR(
@@ -1320,18 +1438,119 @@ package body CORE is
                             LEN  => read_len,
                             SIZE => val_size
                         );
-                        SIG_VALUE(port_num) := value(0);
+                        if (VAL'low <= port_num and port_num <= VAL'high) then
+                            VAL(port_num) := value(0);
+                        else
+                            READ_ERROR(SELF, PROC_NAME, "OUT OF RANGE KEY =" & KEY &
+                                       " index=" & INTEGER_TO_STRING(port_num) &
+                                       " range=" & INTEGER_TO_STRING(VAL'low ) &
+                                       ":"       & INTEGER_TO_STRING(VAL'high));
+                        end if;
                     else
                         exit MAP_LOOP;
                     end if;
                 when EVENT_MAP_END => exit MAP_LOOP;
                 when others        => exit MAP_LOOP;
             end case;
-            SEEK_EVENT(SELF, STREAM, next_event);
-            if (next_event = EVENT_SCALAR) then
-                READ_EVENT(SELF, STREAM, EVENT_SCALAR);
-            end if;
+            MAP_READ_PREPARE_FOR_NEXT(SELF, STREAM, next_event);
         end loop;
         EVENT := next_event;
+        REPORT_DEBUG(SELF, PROC_NAME, "END");
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief シナリオのマップからキーを指定してintegerタイプの値を読む.
+    --!      * マップに指定されたキーが無いときは、何もしない。
+    --!        VALに値を上書きすることも無い.
+    --!      * このサブプログラムを呼ぶときは、前もって MAP_READ_PREPARE_FOR_NEXTを
+    --!        実行しておかなければならない。
+    -------------------------------------------------------------------------------
+    procedure MAP_READ_INTEGER(
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT;               --! 入力ストリーム.
+                  KEY           : in    STRING;             --! 信号名
+                  VAL           : inout integer;            --! 値出力.
+                  EVENT         : inout EVENT_TYPE          --! 次のイベント.
+    ) is
+        constant  PROC_NAME     :       string := "MAP_READ_INTEGER";
+        variable  next_event    :       EVENT_TYPE;
+        variable  key_word      :       string(1 to KEY'length);
+        variable  read_len      :       integer;
+        variable  value         :       integer;
+    begin
+        REPORT_DEBUG(SELF, PROC_NAME, "BEGIN");
+        next_event := EVENT;
+        if (next_event = EVENT_SCALAR) then
+            COPY_KEY_WORD(SELF, key_word);
+            if (key_word = KEY) then
+                SEEK_EVENT(SELF, STREAM, next_event);
+                read_len := 0;
+                if (next_event = EVENT_SCALAR) then
+                    READ_EVENT(SELF, STREAM, next_event);
+                    STRING_TO_INTEGER(
+                        STR  => SELF.str_buf(1 to SELF.str_len),
+                        VAL  => value,
+                        LEN  => read_len
+                    );
+                end if;
+                if (read_len > 0) then
+                     VAL := value;
+                     REPORT_DEBUG(SELF, PROC_NAME, "KEY="  & KEY &
+                                  " VAL=" & INTEGER_TO_STRING(VAL));
+                else
+                     READ_ERROR(SELF, PROC_NAME, "READ_VAL NG KEY=" & KEY);
+                end if;
+                MAP_READ_PREPARE_FOR_NEXT(SELF, STREAM, next_event);
+            end if;
+        end if;
+        EVENT := next_event;
+        REPORT_DEBUG(SELF, PROC_NAME, "END");
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief シナリオのマップからキーを指定してbooleanタイプの値を読む.
+    --!      * マップに指定されたキーが無いときは、何もしない。
+    --!        VALに値を上書きすることも無い.
+    --!      * このサブプログラムを呼ぶときは、前もって MAP_READ_PREPARE_FOR_NEXTを
+    --!        実行しておかなければならない。
+    -------------------------------------------------------------------------------
+    procedure MAP_READ_BOOLEAN(
+        variable  SELF          : inout CORE_TYPE;          --! コア変数.
+        file      STREAM        :       TEXT;               --! 入力ストリーム.
+                  KEY           : in    STRING;             --! 信号名
+                  VAL           : inout boolean;            --! 値出力.
+                  EVENT         : inout EVENT_TYPE          --! 次のイベント.
+    ) is
+        constant  PROC_NAME     :       string := "MAP_READ_BOOLEAN";
+        variable  next_event    :       EVENT_TYPE;
+        variable  key_word      :       string(1 to KEY'length);
+        variable  read_len      :       integer;
+        variable  value         :       boolean;
+    begin
+        REPORT_DEBUG(SELF, PROC_NAME, "BEGIN");
+        next_event := EVENT;
+        if (next_event = EVENT_SCALAR) then
+            COPY_KEY_WORD(SELF, key_word);
+            if (key_word = KEY) then
+                SEEK_EVENT(SELF, STREAM, next_event);
+                read_len := 0;
+                if (next_event = EVENT_SCALAR) then
+                    READ_EVENT(SELF, STREAM, next_event);
+                    STRING_TO_BOOLEAN(
+                        STR  => SELF.str_buf(1 to SELF.str_len),
+                        VAL  => value,
+                        LEN  => read_len
+                    );
+                end if;
+                if (read_len > 0) then
+                     VAL := value;
+                     REPORT_DEBUG(SELF, PROC_NAME, "KEY="  & KEY &
+                                  " VAL=" & BOOLEAN_TO_STRING(VAL));
+                else
+                     READ_ERROR(SELF, PROC_NAME, "READ_VAL NG KEY=" & KEY);
+                end if;
+                MAP_READ_PREPARE_FOR_NEXT(SELF, STREAM, next_event);
+            end if;
+        end if;
+        EVENT := next_event;
+        REPORT_DEBUG(SELF, PROC_NAME, "END");
     end procedure;
 end CORE;
