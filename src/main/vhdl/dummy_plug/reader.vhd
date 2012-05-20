@@ -90,68 +90,68 @@ package READER is
     --! @brief リーダーの状態を保持する構造体の初期化用定数を生成する関数.
     -------------------------------------------------------------------------------
     function  NEW_READER(
-                 name       : STRING;             --! リーダーの識別名を指定する.
-                 stream_name: STRING              --! シナリオファイルの名前を指定する.
+                  NAME          : STRING;         --! コアの識別名.
+                  STREAM_NAME   : STRING          --! シナリオファイルの名前を指定する.
     ) return READER_TYPE;
     -------------------------------------------------------------------------------
     --! @brief 次に読み取ることのできるイベントまで読み飛ばすサブプログラム.
     -------------------------------------------------------------------------------
     procedure SEEK_EVENT(
-        variable SELF       : inout READER_TYPE;  --! リーダーの状態.
-        file     STREAM     :       TEXT;         --! 入力ストリーム.
-                 NEXT_EVENT : out   EVENT_TYPE    --! 見つかったイベント.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! 入力ストリーム.
+                  NEXT_EVENT    : out   EVENT_TYPE      --! 見つかったイベント.
     );
     -------------------------------------------------------------------------------
     --! @brief ストリームからイベントを読み取るサブプログラム.
     --!        ただしスカラー、文字列などは読み捨てる.
     -------------------------------------------------------------------------------
     procedure READ_EVENT(
-        variable SELF       : inout READER_TYPE;  --! リーダーの状態.
-        file     STREAM     :       TEXT;         --! 入力ストリーム.
-                 EVENT      : in    EVENT_TYPE;   --! 読み取るイベント.
-                 GOOD       : out   boolean       --! 正常に読み取れたことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! 入力ストリーム.
+                  EVENT         : in    EVENT_TYPE;     --! 読み取るイベント.
+                  GOOD          : out   boolean         --! 正常に読み取れたことを示す.
     );
     -------------------------------------------------------------------------------
     --! @brief ストリームからイベントを読み取るサブプログラム.
     -------------------------------------------------------------------------------
     procedure READ_EVENT(
-        variable SELF       : inout READER_TYPE;  --! リーダーの状態.
-        file     STREAM     :       TEXT;         --! 入力ストリーム.
-                 EVENT      : in    EVENT_TYPE;   --! 読み取るイベント.
-                 STR        : out   string;       --! 文字列格納バッファ.
-                 STR_LEN    : out   integer;      --! 格納した文字列の文字数.
-                 READ_LEN   : out   integer;      --! ストリームから読み込んだ文字数.
-                 GOOD       : out   boolean       --! 正常に読み取れたことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! 入力ストリーム.
+                  EVENT         : in    EVENT_TYPE;     --! 読み取るイベント.
+                  STR           : out   string;         --! 文字列格納バッファ.
+                  STR_LEN       : out   integer;        --! 格納した文字列の文字数.
+                  READ_LEN      : out   integer;        --! ストリームから読み込んだ文字数.
+                  GOOD          : out   boolean         --! 正常に読み取れたことを示す.
     );
     -------------------------------------------------------------------------------
     --! @brief ストリームからEVENT_SCALAR,EVENT_TAG_PROP,EVENT_ANCHOR,EVENT_ALIASを
     --!        文字列として取り出すサブプログラム.
     -------------------------------------------------------------------------------
     procedure READ_STRING(
-        variable SELF       : inout READER_TYPE;  --! リーダーの状態.
-        file     STREAM     :       TEXT;         --! 入力ストリーム.
-                 STR        : out   string;       --! 文字列格納バッファ.
-                 STR_LEN    : out   integer;      --! 格納した文字列の文字数.
-                 READ_LEN   : out   integer;      --! ストリームから読み込んだ文字数.
-                 GOOD       : out   boolean       --! 正常に読み取れたことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! 入力ストリーム.
+                  STR           : out   string;         --! 文字列格納バッファ.
+                  STR_LEN       : out   integer;        --! 格納した文字列の文字数.
+                  READ_LEN      : out   integer;        --! ストリームから読み込んだ文字数.
+                  GOOD          : out   boolean         --! 正常に読み取れたことを示す.
     );
     -------------------------------------------------------------------------------
     --! @brief ストリームからEVENT_SCALARを整数(INTEGER)として取り出すサブプログラム.
     -------------------------------------------------------------------------------
     procedure READ_INTEGER(
-        variable SELF       : inout READER_TYPE;  --! リーダーの状態.
-        file     STREAM     :       TEXT;         --! 入力ストリーム.
-                 VALUE      : out   integer;      --! 読み取った整数の値.
-                 GOOD       : out   boolean       --! 正常に読み取れたことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! 入力ストリーム.
+                  VALUE         : out   integer;        --! 読み取った整数の値.
+                  GOOD          : out   boolean         --! 正常に読み取れたことを示す.
     );
     -------------------------------------------------------------------------------
     --! @brief ストリームからEVENT_SCALARを真偽値数(BOOLEAN)として取り出すサブプログラム.
     -------------------------------------------------------------------------------
     procedure READ_BOOLEAN(
-        variable SELF       : inout READER_TYPE;  --! リーダーの状態.
-        file     STREAM     :       TEXT;         --! 入力ストリーム.
-                 VALUE      : out   boolean;      --! 読み取った整数の値.
-                 GOOD       : out   boolean       --! 正常に読み取れたことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! 入力ストリーム.
+                  VALUE         : out   boolean;        --! 読み取った整数の値.
+                  GOOD          : out   boolean         --! 正常に読み取れたことを示す.
     );
     -------------------------------------------------------------------------------
     --! @brief ストリームからEVENTを読み飛ばすサブプログラム.
@@ -159,10 +159,10 @@ package READER is
     --!        読み飛ばすことに注意.
     -------------------------------------------------------------------------------
     procedure SKIP_EVENT(
-        variable SELF       : inout READER_TYPE;  --! リーダーの状態.
-        file     STREAM     :       TEXT;         --! 入力ストリーム.
-                 EVENT      : in    EVENT_TYPE;   --! 読み飛ばすイベント.
-                 GOOD       : out   boolean       --! 正常に読み取れたことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! 入力ストリーム.
+                  EVENT         : in    EVENT_TYPE;     --! 読み飛ばすイベント.
+                  GOOD          : out   boolean         --! 正常に読み取れたことを示す.
     );
     -------------------------------------------------------------------------------
     --! @brief イベントを文字列に変換する関数.
@@ -172,21 +172,21 @@ package READER is
     --! @brief 標準出力にリーダーの状態をダンプするサブプログラム.
     -------------------------------------------------------------------------------
     procedure DEBUG_DUMP (
-        variable SELF       : inout READER_TYPE
+        variable  SELF          : inout READER_TYPE     --! リーダー変数.
     );
     -------------------------------------------------------------------------------
     --! @brief 標準出力にリーダーの状態をダンプするサブプログラム.
     -------------------------------------------------------------------------------
     procedure DEBUG_DUMP (
-        variable SELF       : inout READER_TYPE;
-                 MESSAGE    : in    STRING
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  MESSAGE       : in    STRING          --! メッセージ.
     );
     -------------------------------------------------------------------------------
     --! @brief 標準出力にリーダーの状態をダンプするサブプログラム.
     -------------------------------------------------------------------------------
     procedure DEBUG_DUMP (
-        variable SELF       : inout READER_TYPE;
-                 POS        : in    integer
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  POS           : in    integer
     );
 end READER;
 -----------------------------------------------------------------------------------
@@ -273,10 +273,10 @@ package body  READER is
     --! @brief 構造の状態を整数に変換.
     -------------------------------------------------------------------------------
     procedure pack_struct_state_value(
-        variable VALUE      : out   integer    ;
-                 STATE      : in    STATE_TYPE ;
-                 INDENT     : in    INDENT_TYPE;
-                 MAPKEY     : in    MAPKEY_MODE 
+        variable  VALUE         : out   integer    ;
+                  STATE         : in    STATE_TYPE ;
+                  INDENT        : in    INDENT_TYPE;
+                  MAPKEY        : in    MAPKEY_MODE 
     ) is
     begin 
         VALUE := (MAPKEY * MAPKEY_OFFSET)
@@ -287,10 +287,10 @@ package body  READER is
     --! @brief 整数から構造の状態に変換.
     -------------------------------------------------------------------------------
     procedure unpack_struct_state_value(
-                 VALUE      : in    integer    ;
-                 STATE      : out   STATE_TYPE ;
-                 INDENT     : out   INDENT_TYPE;
-                 MAPKEY     : out   MAPKEY_MODE 
+                  VALUE         : in    integer    ;
+                  STATE         : out   STATE_TYPE ;
+                  INDENT        : out   INDENT_TYPE;
+                  MAPKEY        : out   MAPKEY_MODE 
     ) is
     begin 
         MAPKEY := (VALUE / MAPKEY_OFFSET) mod MAPKEY_MAX_SIZE;
@@ -301,9 +301,9 @@ package body  READER is
     --! @brief 構造の状態の初期化.
     -------------------------------------------------------------------------------
     procedure init_struct_state(
-        variable SELF       : inout READER_TYPE    --! コンテキスト.
+        variable  SELF          : inout READER_TYPE     --! リーダー変数.
     ) is
-        variable value      :       integer;
+        variable  value         :       integer;
     begin
         pack_struct_state_value(value, STATE_NONE, 0, MAPKEY_NULL);
         SELF.state_top   := SELF.state_stack'low;
@@ -313,12 +313,12 @@ package body  READER is
     --! @brief 現在の構造の状態を得る.
     -------------------------------------------------------------------------------
     procedure get_struct_state(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 CURR_STATE : out   STATE_TYPE;    --! 現在の構造の状態を出力.
-                 CURR_INDENT: out   INDENT_TYPE;   --! 現在のインデントを出力.
-                 CURR_MAPKEY: out   MAPKEY_MODE    --! 暗黙のマップキー探索状態.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  CURR_STATE    : out   STATE_TYPE;     --! 現在の構造の状態を出力.
+                  CURR_INDENT   : out   INDENT_TYPE;    --! 現在のインデントを出力.
+                  CURR_MAPKEY   : out   MAPKEY_MODE     --! 暗黙のマップキー探索状態.
     ) is
-        variable curr_value :       integer;
+        variable  curr_value    :       integer;
     begin
         curr_value := SELF.state_stack(SELF.state_top);
         unpack_struct_state_value(curr_value, CURR_STATE, CURR_INDENT, CURR_MAPKEY);
@@ -327,11 +327,11 @@ package body  READER is
     --! @brief 現在の構造の状態を得る.
     -------------------------------------------------------------------------------
     procedure get_struct_state(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 CURR_STATE : out   STATE_TYPE;    --! 現在の構造の状態を出力.
-                 CURR_INDENT: out   INDENT_TYPE    --! 現在のインデントを出力.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  CURR_STATE    : out   STATE_TYPE;     --! 現在の構造の状態を出力.
+                  CURR_INDENT   : out   INDENT_TYPE     --! 現在のインデントを出力.
     ) is
-        variable curr_mapkey:       MAPKEY_MODE;   --!
+        variable  curr_mapkey   :       MAPKEY_MODE;    --!
     begin
         get_struct_state(SELF, CURR_STATE, CURR_INDENT, curr_mapkey);
     end procedure;
@@ -339,11 +339,11 @@ package body  READER is
     --! @brief 現在の構造の状態を得る.
     -------------------------------------------------------------------------------
     procedure get_struct_state(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 CURR_STATE : out   STATE_TYPE     --! 現在の構造の状態を出力.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  CURR_STATE    : out   STATE_TYPE      --! 現在の構造の状態を出力.
     ) is
-        variable curr_indent:       INDENT_TYPE;
-        variable curr_mapkey:       MAPKEY_MODE;   --!
+        variable  curr_indent   :       INDENT_TYPE;    --!
+        variable  curr_mapkey   :       MAPKEY_MODE;    --!
     begin
         get_struct_state(SELF, CURR_STATE, curr_indent, curr_mapkey);
     end procedure;
@@ -351,12 +351,12 @@ package body  READER is
     --! @brief 現在の構造の状態を変更する(indent/mapkeyの変更も行う).
     -------------------------------------------------------------------------------
     procedure set_struct_state(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 NEW_STATE  : in    STATE_TYPE ;   --! 新しい構造の状態.
-                 NEW_INDENT : in    INDENT_TYPE;   --! 新しいインデント.
-                 NEW_MAPKEY : in    MAPKEY_MODE    --! 新しい暗黙のマップキー探索状態.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  NEW_STATE     : in    STATE_TYPE ;    --! 新しい構造の状態.
+                  NEW_INDENT    : in    INDENT_TYPE;    --! 新しいインデント.
+                  NEW_MAPKEY    : in    MAPKEY_MODE     --! 新しい暗黙のマップキー探索状態.
     ) is
-        variable new_value  :       integer;
+        variable  new_value     :       integer;
     begin
         pack_struct_state_value(new_value, NEW_STATE, NEW_INDENT, NEW_MAPKEY);
         SELF.state_stack(SELF.state_top) := new_value;
@@ -365,13 +365,13 @@ package body  READER is
     --! @brief 現在の構造の状態を変更する(indentの変更も行う).
     -------------------------------------------------------------------------------
     procedure set_struct_state(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 NEW_STATE  : in    STATE_TYPE;    --! 新しい構造の状態.
-                 NEW_INDENT : in    INDENT_TYPE    --! 新しいインデント.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  NEW_STATE     : in    STATE_TYPE;     --! 新しい構造の状態.
+                  NEW_INDENT    : in    INDENT_TYPE     --! 新しいインデント.
     ) is
-        variable curr_state :       STATE_TYPE;
-        variable curr_indent:       INDENT_TYPE;
-        variable curr_mapkey:       MAPKEY_MODE;
+        variable  curr_state    :       STATE_TYPE;     --! 
+        variable  curr_indent   :       INDENT_TYPE;    --! 
+        variable  curr_mapkey   :       MAPKEY_MODE;    --! 
     begin
         get_struct_state(SELF, curr_state, curr_indent, curr_mapkey);
         set_struct_state(SELF,  NEW_STATE,  NEW_indent, curr_mapkey);
@@ -380,12 +380,12 @@ package body  READER is
     --! @brief 現在の構造の状態を変更する(indentの変更は行わない).
     -------------------------------------------------------------------------------
     procedure set_struct_state(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 NEW_STATE  : in    STATE_TYPE     --! 新しい構造の状態.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  NEW_STATE     : in    STATE_TYPE      --! 新しい構造の状態.
     ) is
-        variable curr_state :       STATE_TYPE;
-        variable curr_indent:       INDENT_TYPE;
-        variable curr_mapkey:       MAPKEY_MODE;
+        variable  curr_state    :       STATE_TYPE;     --! 
+        variable  curr_indent   :       INDENT_TYPE;    --! 
+        variable  curr_mapkey   :       MAPKEY_MODE;    --! 
     begin
         get_struct_state(SELF, curr_state, curr_indent, curr_mapkey);
         set_struct_state(SELF,  NEW_STATE, curr_indent, curr_mapkey);
@@ -394,14 +394,14 @@ package body  READER is
     --! @brief 現在の構造の状態を保存してから状態を変更する.
     -------------------------------------------------------------------------------
     procedure call_struct_state(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 RET_STATE  : in    STATE_TYPE;    --! 新しい状態から戻ったときの状態.
-                 RET_INDENT : in    INDENT_TYPE;   --! 新しい状態から戻ったときのインデント.
-                 RET_MAPKEY : in    MAPKEY_MODE;   --! 新しい状態から戻ったときのMAPKEY.
-                 NEW_STATE  : in    STATE_TYPE;    --! 新しい構造の状態.
-                 NEW_INDENT : in    INDENT_TYPE;   --! 新しいインデント.
-                 NEW_MAPKEY : in    MAPKEY_MODE;   --! 新しい暗黙のマップキー探索状態.
-                 GOOD       : out   boolean        --! スタックチェック結果.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  RET_STATE     : in    STATE_TYPE;     --! 新しい状態から戻ったときの状態.
+                  RET_INDENT    : in    INDENT_TYPE;    --! 新しい状態から戻ったときのインデント.
+                  RET_MAPKEY    : in    MAPKEY_MODE;    --! 新しい状態から戻ったときのMAPKEY.
+                  NEW_STATE     : in    STATE_TYPE;     --! 新しい構造の状態.
+                  NEW_INDENT    : in    INDENT_TYPE;    --! 新しいインデント.
+                  NEW_MAPKEY    : in    MAPKEY_MODE;    --! 新しい暗黙のマップキー探索状態.
+                  GOOD          : out   boolean         --! スタックチェック結果.
     ) is
     begin
         if (SELF.state_top < SELF.state_stack'high) then
@@ -417,12 +417,12 @@ package body  READER is
     --! @brief 現在の構造の状態を保存してから状態を変更する.
     -------------------------------------------------------------------------------
     procedure call_struct_state(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 RET_STATE  : in    STATE_TYPE;    --! 新しい状態から戻ったときの状態.
-                 RET_INDENT : in    INDENT_TYPE;   --! 新しい状態から戻ったときのインデント.
-                 NEW_STATE  : in    STATE_TYPE;    --! 新しい構造の状態.
-                 NEW_INDENT : in    INDENT_TYPE;   --! 新しいインデント.
-                 GOOD       : out   boolean        --! スタックチェック結果.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  RET_STATE     : in    STATE_TYPE;     --! 新しい状態から戻ったときの状態.
+                  RET_INDENT    : in    INDENT_TYPE;    --! 新しい状態から戻ったときのインデント.
+                  NEW_STATE     : in    STATE_TYPE;     --! 新しい構造の状態.
+                  NEW_INDENT    : in    INDENT_TYPE;    --! 新しいインデント.
+                  GOOD          : out   boolean         --! スタックチェック結果.
     ) is
     begin
         if (SELF.state_top < SELF.state_stack'high) then
@@ -438,13 +438,13 @@ package body  READER is
     --! @brief 前の構造の状態を復元する.
     -------------------------------------------------------------------------------
     procedure return_struct_state(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 CURR_STATE : out   STATE_TYPE;    --! 復元時の構造の状態.
-                 CURR_INDENT: out   INDENT_TYPE;   --! 復元時のインデント.
-                 CURR_MAPKEY: out   MAPKEY_MODE;   --! 復元時の暗黙のマップキー探索状態.
-                 GOOD       : out   boolean        --! スタックチェック結果.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  CURR_STATE    : out   STATE_TYPE;     --! 復元時の構造の状態.
+                  CURR_INDENT   : out   INDENT_TYPE;    --! 復元時のインデント.
+                  CURR_MAPKEY   : out   MAPKEY_MODE;    --! 復元時の暗黙のマップキー探索状態.
+                  GOOD          : out   boolean         --! スタックチェック結果.
     ) is
-        variable struct     :       integer;
+        variable  struct        :       integer;        --! 
     begin
         if (SELF.state_top >  SELF.state_stack'low) then
             SELF.state_top := SELF.state_top - 1;
@@ -458,13 +458,13 @@ package body  READER is
     --! @brief 前の構造の状態を復元する.
     -------------------------------------------------------------------------------
     procedure return_struct_state(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 GOOD       : out   boolean        --! スタックチェック結果.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  GOOD          : out   boolean         --! スタックチェック結果.
     ) is
-        variable struct     :       integer;
-        variable next_state :       STATE_TYPE;
-        variable next_indent:       INDENT_TYPE;
-        variable next_mapkey:       INDENT_TYPE;
+        variable  struct        :       integer;        --!
+        variable  next_state    :       STATE_TYPE;     --!
+        variable  next_indent   :       INDENT_TYPE;    --!
+        variable  next_mapkey   :       INDENT_TYPE;    --!
     begin
         return_struct_state(SELF, next_state, next_indent, next_mapkey, GOOD);
     end procedure;
@@ -472,11 +472,11 @@ package body  READER is
     --! @brief 現在の暗黙のマップキー読み取り状態を得る.
     -------------------------------------------------------------------------------
     procedure get_map_key_mode(
-        variable SELF       : inout READER_TYPE;
-                 CURR_MAPKEY: out   MAPKEY_MODE
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  CURR_MAPKEY   : out   MAPKEY_MODE     --!
     ) is
-        variable curr_state :       STATE_TYPE;
-        variable curr_indent:       INDENT_TYPE;
+        variable  curr_state    :       STATE_TYPE;     --!
+        variable  curr_indent   :       INDENT_TYPE;    --!
     begin
         get_struct_state(SELF, curr_state, curr_indent, CURR_MAPKEY);
     end procedure;
@@ -484,12 +484,12 @@ package body  READER is
     --! @brief 暗黙のマップキー読み取り状態を設定する.
     -------------------------------------------------------------------------------
     procedure set_map_key_mode(
-        variable SELF       : inout READER_TYPE;
-                 NEW_MAPKEY : in    MAPKEY_MODE
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  NEW_MAPKEY    : in    MAPKEY_MODE     --!
     ) is
-        variable curr_state :       STATE_TYPE;
-        variable curr_indent:       INDENT_TYPE;
-        variable curr_mapkey:       MAPKEY_MODE;
+        variable  curr_state    :       STATE_TYPE;     --!
+        variable  curr_indent   :       INDENT_TYPE;    --!
+        variable  curr_mapkey   :       MAPKEY_MODE;    --!
     begin
         get_struct_state(SELF, curr_state, curr_indent, curr_mapkey);
         set_struct_state(SELF, curr_state, curr_indent,  NEW_MAPKEY);
@@ -552,8 +552,8 @@ package body  READER is
     --! @brief ストリームから１行読んでテキストラインにセットするサブプログラム.
     -------------------------------------------------------------------------------
     procedure read_text_line(
-        variable SELF       : inout READER_TYPE;
-        file     STREAM     :       TEXT
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT            --! 入力ストリーム.
     ) is
     begin
         if (EndFile(STREAM)) then
@@ -573,10 +573,10 @@ package body  READER is
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     -------------------------------------------------------------------------------
     procedure scan_char(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 POS        : in    integer;       --! スキャンするポイント.
-                 CHAR       : out   character;     --! ポインタが示している文字を出力.
-                 GOOD       : out   boolean        --! ポインタがまだ行内にあることを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  POS           : in    integer;        --! スキャンするポイント.
+                  CHAR          : out   character;      --! ポインタが示している文字を出力.
+                  GOOD          : out   boolean         --! ポインタがまだ行内にあることを示す.
     ) is
     begin
         if (SELF.end_of_file = TRUE) or
@@ -595,9 +595,9 @@ package body  READER is
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     -------------------------------------------------------------------------------
     procedure scan_char(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 CHAR       : out   character;     --! ポインタが示している文字を出力.
-                 GOOD       : out   boolean        --! ポインタがまだ行内にあることを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  CHAR          : out   character;      --! ポインタが示している文字を出力.
+                  GOOD          : out   boolean         --! ポインタがまだ行内にあることを示す.
     ) is
     begin
         scan_char(SELF, SELF.text_pos, CHAR, GOOD);
@@ -609,16 +609,16 @@ package body  READER is
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     -------------------------------------------------------------------------------
     procedure scan_space(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 START_POS  : in    integer;       --! スキャンを開始するポイント.
-                 CHAR       : out   character;     --! 見つかった空白以外のキャラクタ.
-                 FOUND      : out   boolean;       --! 見つかったことを示す.
-                 FOUND_LEN  : out   integer;       --! 見つかった空白の数.
-                 END_LINE   : out   boolean        --! ポインタが行末を越えたことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  START_POS     : in    integer;        --! スキャンを開始するポイント.
+                  CHAR          : out   character;      --! 見つかった空白以外のキャラクタ.
+                  FOUND         : out   boolean;        --! 見つかったことを示す.
+                  FOUND_LEN     : out   integer;        --! 見つかった空白の数.
+                  END_LINE      : out   boolean         --! ポインタが行末を越えたことを示す.
     ) is
-        variable pos        :       integer;
-        variable len        :       integer;
-        variable curr_char  :       character;
+        variable  pos           :       integer;        --!
+        variable  len           :       integer;        --!
+        variable  curr_char     :       character;      --!
     begin
         if (SELF.end_of_file  =  TRUE) or
            (SELF.text_line    =  null) or
@@ -683,13 +683,13 @@ package body  READER is
     --!      * 何も見付からずにファイルの終端に到達した場合はEND_STREAM=TRUEを返す.
     -------------------------------------------------------------------------------
     procedure skip_space(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-        file     STREAM     :       TEXT;          --! ストリーム.
-                 CHAR       : out   character;     --! 見つかった空白以外の文字.
-                 FOUND      : out   boolean;       --! 空白以外の文字が見つかったことを示す.
-                 END_STREAM : out   boolean        --! ストリームを越えたことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! 入力ストリーム.
+                  CHAR          : out   character;      --! 見つかった空白以外の文字.
+                  FOUND         : out   boolean;        --! 空白以外の文字が見つかったことを示す.
+                  END_STREAM    : out   boolean         --! ストリームを越えたことを示す.
     ) is
-        variable curr_char  :       character;
+        variable  curr_char     :       character;      --!
     begin
         while(SELF.end_of_file = FALSE) loop
             if (SELF.text_line = null) or
@@ -736,12 +736,12 @@ package body  READER is
     --!      * これは何もステータスを返さない.
     -------------------------------------------------------------------------------
     procedure skip_space(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-        file     STREAM     :       TEXT           --! ストリーム.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT            --! 入力ストリーム.
     ) is
-        variable char       :       character;
-        variable found      :       boolean;
-        variable stream_end :       boolean;
+        variable  char          :       character;      --!
+        variable  found         :       boolean;        --!
+        variable  stream_end    :       boolean;        --!
     begin
         skip_space(SELF, STREAM, char, found, stream_end);
     end skip_space;
@@ -753,13 +753,13 @@ package body  READER is
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     -------------------------------------------------------------------------------
     procedure scan_quoted_string(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 START_POS  : in    integer;       --! スキャンを開始するポイント.
-                 FOUND      : out   boolean;       --! 見つかったことを示す.
-                 FOUND_LEN  : out   integer;       --! 見つかった文字列の文字数.
-                 END_LINE   : out   boolean        --! ポインタが行末を越えたことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  START_POS     : in    integer;        --! スキャンを開始するポイント.
+                  FOUND         : out   boolean;        --! 見つかったことを示す.
+                  FOUND_LEN     : out   integer;        --! 見つかった文字列の文字数.
+                  END_LINE      : out   boolean         --! ポインタが行末を越えたことを示す.
     ) is
-        variable quote_char :       character;
+        variable  quote_char    :       character;      --!
     begin
         if (SELF.end_of_file  =  TRUE) or
            (SELF.text_line    =  null) or
@@ -803,10 +803,10 @@ package body  READER is
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     -------------------------------------------------------------------------------
     procedure scan_quoted_string(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 FOUND      : out   boolean;       --! 見つかったことを示す.
-                 FOUND_LEN  : out   integer;       --! 見つかった文字列の文字数.
-                 END_LINE   : out   boolean        --! ポインタが行末を越えたことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  FOUND         : out   boolean;        --! 見つかったことを示す.
+                  FOUND_LEN     : out   integer;        --! 見つかった文字列の文字数.
+                  END_LINE      : out   boolean         --! ポインタが行末を越えたことを示す.
     ) is
     begin
         scan_quoted_string(SELF, SELF.text_pos, FOUND, FOUND_LEN, END_LINE);
@@ -818,11 +818,11 @@ package body  READER is
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     -------------------------------------------------------------------------------
     procedure scan_doc_begin(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 START_POS  : in    integer;       --! スキャンを開始するポイント.
-                 FOUND      : out   boolean;       --! 見つかったことを示す.
-                 FOUND_LEN  : out   integer;       --! 見つかった文字列の文字数.
-                 END_LINE   : out   boolean        --! ポインタが行末を越えたことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  START_POS     : in    integer;        --! スキャンを開始するポイント.
+                  FOUND         : out   boolean;        --! 見つかったことを示す.
+                  FOUND_LEN     : out   integer;        --! 見つかった文字列の文字数.
+                  END_LINE      : out   boolean         --! ポインタが行末を越えたことを示す.
     ) is
     begin
         if (SELF.end_of_file  =  TRUE) or
@@ -853,10 +853,10 @@ package body  READER is
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     -------------------------------------------------------------------------------
     procedure scan_doc_begin(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 FOUND      : out   boolean;       --! 見つかったことを示す.
-                 FOUND_LEN  : out   integer;       --! 見つかった文字列の文字数.
-                 END_LINE   : out   boolean        --! ポインタが行末を越えたことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  FOUND         : out   boolean;        --! 見つかったことを示す.
+                  FOUND_LEN     : out   integer;        --! 見つかった文字列の文字数.
+                  END_LINE      : out   boolean         --! ポインタが行末を越えたことを示す.
     ) is
     begin
         scan_doc_begin(SELF, SELF.text_pos, FOUND, FOUND_LEN, END_LINE);
@@ -868,11 +868,11 @@ package body  READER is
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     -------------------------------------------------------------------------------
     procedure scan_doc_end(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 START_POS  : in    integer;       --! スキャンを開始するポイント.
-                 FOUND      : out   boolean;       --! 見つかったことを示す.
-                 FOUND_LEN  : out   integer;       --! 見つかった文字列の文字数.
-                 END_LINE   : out   boolean        --! ポインタが行末を越えたことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  START_POS     : in    integer;        --! スキャンを開始するポイント.
+                  FOUND         : out   boolean;        --! 見つかったことを示す.
+                  FOUND_LEN     : out   integer;        --! 見つかった文字列の文字数.
+                  END_LINE      : out   boolean         --! ポインタが行末を越えたことを示す.
     ) is
     begin
         if (SELF.end_of_file  =  TRUE) or
@@ -903,10 +903,10 @@ package body  READER is
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     -------------------------------------------------------------------------------
     procedure scan_doc_end(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 FOUND      : out   boolean;       --! 見つかったことを示す.
-                 FOUND_LEN  : out   integer;       --! 見つかった文字列の文字数.
-                 END_LINE   : out   boolean        --! ポインタが行末を越えたことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  FOUND         : out   boolean;        --! 見つかったことを示す.
+                  FOUND_LEN     : out   integer;        --! 見つかった文字列の文字数.
+                  END_LINE      : out   boolean         --! ポインタが行末を越えたことを示す.
     ) is
     begin
         scan_doc_end(SELF, SELF.text_pos, FOUND, FOUND_LEN, END_LINE);
@@ -919,12 +919,12 @@ package body  READER is
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     -------------------------------------------------------------------------------
     procedure scan_indicator(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 START_POS  : in    integer;       --! スキャンを開始するポイント.
-                 INDICATOR  : in    character;     --! 探すインジケーター.
-                 FOUND      : out   boolean;       --! 見つかったことを示す.
-                 FOUND_LEN  : out   integer;       --! 見つかった文字列の文字数.
-                 END_LINE   : out   boolean        --! ポインタが行末を越えたことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  START_POS     : in    integer;        --! スキャンを開始するポイント.
+                  INDICATOR     : in    character;      --! 探すインジケーター.
+                  FOUND         : out   boolean;        --! 見つかったことを示す.
+                  FOUND_LEN     : out   integer;        --! 見つかった文字列の文字数.
+                  END_LINE      : out   boolean         --! ポインタが行末を越えたことを示す.
     ) is
     begin
         if    (SELF.end_of_file  =  TRUE) or
@@ -959,11 +959,11 @@ package body  READER is
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     -------------------------------------------------------------------------------
     procedure scan_indicator(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 INDICATOR  : in    character;     --! 探すインジケーター.
-                 FOUND      : out   boolean;       --! 文字列が見つかったことを示す.
-                 FOUND_LEN  : out   integer;       --! 見つかった文字列の文字数.
-                 END_LINE   : out   boolean        --! ポインタが行末を越えたことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  INDICATOR     : in    character;      --! 探すインジケーター.
+                  FOUND         : out   boolean;        --! 文字列が見つかったことを示す.
+                  FOUND_LEN     : out   integer;        --! 見つかった文字列の文字数.
+                  END_LINE      : out   boolean         --! ポインタが行末を越えたことを示す.
     ) is
     begin
         scan_indicator(SELF, SELF.text_pos, INDICATOR, FOUND, FOUND_LEN, END_LINE);
@@ -976,25 +976,25 @@ package body  READER is
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     -------------------------------------------------------------------------------
     procedure find_indicator(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 START_POS  : in    integer;       --! スキャンを開始するポイント.
-                 INDICATOR  : in    character;     --! 探すインジケーター.
-                 FOUND      : out   boolean;       --! 見つかったことを示す.
-                 FOUND_POS  : out   integer;       --! 見つかったインジケータの場所.
-                 FOUND_LEN  : out   integer;       --! 見つかったインジケータの文字数.
-                 END_LINE   : out   boolean        --! ポインタが行末を越えたことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  START_POS     : in    integer;        --! スキャンを開始するポイント.
+                  INDICATOR     : in    character;      --! 探すインジケーター.
+                  FOUND         : out   boolean;        --! 見つかったことを示す.
+                  FOUND_POS     : out   integer;        --! 見つかったインジケータの場所.
+                  FOUND_LEN     : out   integer;        --! 見つかったインジケータの文字数.
+                  END_LINE      : out   boolean         --! ポインタが行末を越えたことを示す.
     ) is
-        variable pos        :       integer;
-        variable found_char :       boolean;
-        variable space_len  :       integer;
-        variable sep_len    :       integer;
-        variable char       :       character;
-        variable end_of_line:       boolean;
+        variable  pos           :       integer;        --!
+        variable  found_char    :       boolean;        --!
+        variable  space_len     :       integer;        --!
+        variable  sep_len       :       integer;        --!
+        variable  char          :       character;      --!
+        variable  end_of_line   :       boolean;        --!
     begin
         pos := START_POS;
-        scan_space    (SELF, pos, char, found_char , space_len , end_of_line);
+        scan_space    (SELF, pos, char, found_char, space_len, end_of_line);
         pos := pos + space_len;
-        scan_indicator(SELF, pos, ':' , found_char , sep_len   , end_of_line);
+        scan_indicator(SELF, pos, ':' , found_char, sep_len  , end_of_line);
         if (found_char = FALSE) then
             FOUND     := FALSE;
             FOUND_POS := START_POS;
@@ -1035,15 +1035,15 @@ package body  READER is
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     -------------------------------------------------------------------------------
     procedure scan_tag_prop(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 START_POS  : in    integer;       --! スキャンを開始するポイント.
-                 FOUND      : out   boolean;       --! 見つかったことを示す.
-                 FOUND_LEN  : out   integer;       --! 見つかった文字列の文字数.
-                 TAG_POS    : out   integer;       --! タグ文字列の開始位置.
-                 TAG_LEN    : out   integer;       --! タグ文字列の文字数.
-                 END_LINE   : out   boolean        --! ポインタが行末を越えたことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  START_POS     : in    integer;        --! スキャンを開始するポイント.
+                  FOUND         : out   boolean;        --! 見つかったことを示す.
+                  FOUND_LEN     : out   integer;        --! 見つかった文字列の文字数.
+                  TAG_POS       : out   integer;        --! タグ文字列の開始位置.
+                  TAG_LEN       : out   integer;        --! タグ文字列の文字数.
+                  END_LINE      : out   boolean         --! ポインタが行末を越えたことを示す.
     ) is
-        variable quote_char :       character;
+        variable  quote_char    :       character;
     begin
         if (SELF.end_of_file  =  TRUE) or
            (SELF.text_line    =  null) or
@@ -1123,12 +1123,12 @@ package body  READER is
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     -------------------------------------------------------------------------------
     procedure scan_tag_prop(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 FOUND      : out   boolean;       --! 見つかったことを示す.
-                 FOUND_LEN  : out   integer;       --! 見つかった文字列の文字数.
-                 TAG_POS    : out   integer;       --! タグ文字列の開始位置.
-                 TAG_LEN    : out   integer;       --! タグ文字列の文字数.
-                 END_LINE   : out   boolean        --! ポインタが行末を越えたことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  FOUND         : out   boolean;        --! 見つかったことを示す.
+                  FOUND_LEN     : out   integer;        --! 見つかった文字列の文字数.
+                  TAG_POS       : out   integer;        --! タグ文字列の開始位置.
+                  TAG_LEN       : out   integer;        --! タグ文字列の文字数.
+                  END_LINE      : out   boolean         --! ポインタが行末を越えたことを示す.
     ) is
     begin
         scan_tag_prop(SELF, SELF.text_pos, FOUND, FOUND_LEN, TAG_POS, TAG_LEN, END_LINE);
@@ -1142,18 +1142,18 @@ package body  READER is
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     -------------------------------------------------------------------------------
     procedure scan_plain_one_line(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 START_POS  : in    integer;       --! スキャンを開始するポイント.
-                 FOUND      : out   boolean;       --! 文字列が見つかったことを示す.
-                 FOUND_LEN  : out   integer;       --! 見つかった文字列の文字数.
-                 END_LINE   : out   boolean        --! ポインタが行末を越えたことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  START_POS     : in    integer;        --! スキャンを開始するポイント.
+                  FOUND         : out   boolean;        --! 文字列が見つかったことを示す.
+                  FOUND_LEN     : out   integer;        --! 見つかった文字列の文字数.
+                  END_LINE      : out   boolean         --! ポインタが行末を越えたことを示す.
     ) is
-        variable len        :       integer;
-        variable char       :       character;
-        variable curr_state :       STATE_TYPE;
-        variable scan_found :       boolean;
-        variable scan_pos   :       integer;
-        variable scan_len   :       integer;
+        variable  len           :       integer;        --!
+        variable  char          :       character;      --!
+        variable  curr_state    :       STATE_TYPE;     --!
+        variable  scan_found    :       boolean;        --!
+        variable  scan_pos      :       integer;        --!
+        variable  scan_len      :       integer;        --!
     begin
         len      := 1;
         END_LINE := FALSE;
@@ -1212,10 +1212,10 @@ package body  READER is
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     -------------------------------------------------------------------------------
     procedure scan_plain_one_line(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 FOUND      : out   boolean;       --! 文字列が見つかったことを示す.
-                 FOUND_LEN  : out   integer;       --! 見つかった文字列の文字数.
-                 END_LINE   : out   boolean        --! ポインタが行末を越えたことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  FOUND         : out   boolean;        --! 文字列が見つかったことを示す.
+                  FOUND_LEN     : out   integer;        --! 見つかった文字列の文字数.
+                  END_LINE      : out   boolean         --! ポインタが行末を越えたことを示す.
     ) is
     begin
         scan_plain_one_line(SELF, SELF.text_pos, FOUND, FOUND_LEN, END_LINE);
@@ -1227,19 +1227,19 @@ package body  READER is
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     -------------------------------------------------------------------------------
     procedure scan_plain_scalar(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 START_POS  : in    integer;       --! スキャンを開始するポイント.
-                 FOUND      : out   boolean;       --! 文字列が見つかったことを示す.
-                 FOUND_LEN  : out   integer;       --! 見つかった文字列の文字数.
-                 END_LINE   : out   boolean        --! ポインタが行末を越えたことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  START_POS     : in    integer;        --! スキャンを開始するポイント.
+                  FOUND         : out   boolean;        --! 文字列が見つかったことを示す.
+                  FOUND_LEN     : out   integer;        --! 見つかった文字列の文字数.
+                  END_LINE      : out   boolean         --! ポインタが行末を越えたことを示す.
     ) is
-        variable len        :       integer;
-        variable char       :       character;
-        variable found_key  :       boolean;
+        variable  len           :       integer;        --!
+        variable  char          :       character;      --!
+        variable  found_key     :       boolean;        --!
     begin
-        if    (SELF.end_of_file  =  TRUE) or
-              (SELF.text_line    =  null) or
-              (START_POS > SELF.text_end) then
+        if (SELF.end_of_file  =  TRUE) or
+           (SELF.text_line    =  null) or
+           (START_POS > SELF.text_end) then
             FOUND     := FALSE;
             FOUND_LEN := 0;
             END_LINE  := TRUE;
@@ -1286,10 +1286,10 @@ package body  READER is
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     -------------------------------------------------------------------------------
     procedure scan_plain_scalar(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 FOUND      : out   boolean;       --! 文字列が見つかったことを示す.
-                 FOUND_LEN  : out   integer;       --! 見つかった文字列の文字数.
-                 END_LINE   : out   boolean        --! ポインタが行末を越えたことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  FOUND         : out   boolean;        --! 文字列が見つかったことを示す.
+                  FOUND_LEN     : out   integer;        --! 見つかった文字列の文字数.
+                  END_LINE      : out   boolean         --! ポインタが行末を越えたことを示す.
     ) is
     begin
         scan_plain_scalar(SELF, SELF.text_pos, FOUND, FOUND_LEN, END_LINE);
@@ -1299,17 +1299,17 @@ package body  READER is
     --!        格納するサブプログラム
     -------------------------------------------------------------------------------
     procedure read_plain_scalar(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 STR        : out   string;        --! 見つかったワードを格納するバッファ.
-                 STR_LEN    : out   integer;       --! 格納したワードの文字数.
-                 READ_LEN   : out   integer;       --! 見つかったワードの文字数.
-                 END_LINE   : out   boolean        --! ポインタがまだ行内にあることを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  STR           : out   string;         --! 見つかったワードを格納するバッファ.
+                  STR_LEN       : out   integer;        --! 格納したワードの文字数.
+                  READ_LEN      : out   integer;        --! 見つかったワードの文字数.
+                  END_LINE      : out   boolean         --! ポインタがまだ行内にあることを示す.
     ) is
-        alias    str_buf    :       string(1 to STR'length) is STR;
-        variable pos        :       integer;
-        variable scalar_len :       integer;
-        variable found      :       boolean;
-        variable end_of_line:       boolean;
+        alias     str_buf       :       string(1 to STR'length) is STR;
+        variable  pos           :       integer;
+        variable  scalar_len    :       integer;
+        variable  found         :       boolean;
+        variable  end_of_line   :       boolean;
     begin
         scan_plain_scalar(SELF, found, scalar_len, end_of_line);
         if (found = TRUE) then
@@ -1335,18 +1335,18 @@ package body  READER is
     --! @brief ストリームからクォートされた文字列を取り出すサブプログラム.
     -------------------------------------------------------------------------------
     procedure read_quoted_string(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 STR        : out   string;        --! 見つかった文字列を格納するバッファ.
-                 STR_LEN    : out   integer;       --! 格納したワードの文字数.
-                 READ_LEN   : out   integer;       --! 見つかったワードの文字数.
-                 END_LINE   : out   boolean        --! ポインタがまだ行内にあることを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  STR           : out   string;         --! 見つかった文字列を格納するバッファ.
+                  STR_LEN       : out   integer;        --! 格納したワードの文字数.
+                  READ_LEN      : out   integer;        --! 見つかったワードの文字数.
+                  END_LINE      : out   boolean         --! ポインタがまだ行内にあることを示す.
     ) is
-        alias    str_buf    :       string(1 to STR'length) is STR;
-        variable pos        :       integer;
-        variable string_len :       integer;
-        variable quoted_len :       integer;
-        variable found      :       boolean;
-        variable end_of_line:       boolean;
+        alias     str_buf       :       string(1 to STR'length) is STR;
+        variable  pos           :       integer;
+        variable  string_len    :       integer;
+        variable  quoted_len    :       integer;
+        variable  found         :       boolean;
+        variable  end_of_line   :       boolean;
     begin
         scan_quoted_string(SELF, found, quoted_len, end_of_line);
         if (found = TRUE and end_of_line = FALSE) then
@@ -1375,15 +1375,15 @@ package body  READER is
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     -------------------------------------------------------------------------------
     procedure scan_token(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 TOKEN      : out   TOKEN_TYPE;    --! 見つかったトークンのタイプ.
-                 TOKEN_POS  : out   integer;       --! 見つかったトークンの位置.
-                 TOKEN_LEN  : out   integer        --! 見つかったトークンの文字数.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  TOKEN         : out   TOKEN_TYPE;     --! 見つかったトークンのタイプ.
+                  TOKEN_POS     : out   integer;        --! 見つかったトークンの位置.
+                  TOKEN_LEN     : out   integer         --! 見つかったトークンの文字数.
     ) is
-        variable char       :       character;
-        variable found      :       boolean;
-        variable found_len  :       integer;
-        variable line_end   :       boolean;
+        variable  char          :       character;      --!
+        variable  found         :       boolean;        --!
+        variable  found_len     :       integer;        --!
+        variable  line_end      :       boolean;        --!
     begin
         ---------------------------------------------------------------------------
         -- 現在のポインタにあるキャラクタをcharにセットする.
@@ -1531,14 +1531,12 @@ package body  READER is
     --! @brief テキストラインから指定したキーワードを読み飛ばすサブプログラム.
     -------------------------------------------------------------------------------
     procedure skip_token(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-        file     STREAM     :       TEXT;          --! ストリーム.
-                 TOKEN      : in    TOKEN_TYPE;    --! 
-                 POS        : in    integer;       --!
-                 LEN        : in    integer        --!
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! ストリーム.
+                  TOKEN         : in    TOKEN_TYPE;     --! 
+                  POS           : in    integer;        --!
+                  LEN           : in    integer         --!
     ) is
-        variable char       :       character;
-        variable good       :       boolean;
     begin
         SELF.text_pos := POS + LEN;
     end skip_token;
@@ -1546,8 +1544,8 @@ package body  READER is
     --! @brief リーダーの状態を保持する構造体の初期化用定数を生成する関数.
     -------------------------------------------------------------------------------
     function  NEW_READER(
-                 NAME       : STRING;              --! リーダーの識別子
-                 STREAM_NAME: STRING               --! ファイル名
+                  NAME          : STRING;               --! リーダーの識別子
+                  STREAM_NAME   : STRING                --! ファイル名
     ) return READER_TYPE is
         variable self    : READER_TYPE;
     begin
@@ -1571,17 +1569,17 @@ package body  READER is
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     -------------------------------------------------------------------------------
     procedure scan_flow_collection(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 START_POS  : in    integer;       --! スキャンを開始するポイント.
-                 END_CHAR   : in    character;     --! 閉じ括弧を指定する.
-                 FOUND      : out   boolean;       --! 見つけたことを示す.
-                 FOUND_LEN  : out   integer;       --! 見つけた文字数.
-                 END_LINE   : out   boolean        --! ポインタがまだ行内にあることを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  START_POS     : in    integer;        --! スキャンを開始するポイント.
+                  END_CHAR      : in    character;      --! 閉じ括弧を指定する.
+                  FOUND         : out   boolean;        --! 見つけたことを示す.
+                  FOUND_LEN     : out   integer;        --! 見つけた文字数.
+                  END_LINE      : out   boolean         --! ポインタがまだ行内にあることを示す.
     ) is
-        variable pos        :       integer;
-        variable scan_found :       boolean;
-        variable scan_len   :       integer;
-        variable end_of_line:       boolean;
+        variable  pos           :       integer;
+        variable  scan_found    :       boolean;
+        variable  scan_len      :       integer;
+        variable  end_of_line   :       boolean;
     begin
         if (START_POS > SELF.text_end) then
             FOUND     := FALSE;
@@ -1634,14 +1632,14 @@ package body  READER is
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     -------------------------------------------------------------------------------
     procedure scan_block_map_implicit_key(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-                 FOUND      : out   boolean        --! マップキーが見つかったことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  FOUND         : out   boolean         --! マップキーが見つかったことを示す.
     ) is
-        variable pos        :       integer;
-        variable len        :       integer;
-        variable scan_found :       boolean;
-        variable line_end   :       boolean;
-        variable map_key    :       MAPKEY_MODE;
+        variable  pos           :       integer;
+        variable  len           :       integer;
+        variable  scan_found    :       boolean;
+        variable  line_end      :       boolean;
+        variable  map_key       :       MAPKEY_MODE;
     begin
         get_map_key_mode(SELF, map_key);
         case map_key is
@@ -1679,17 +1677,17 @@ package body  READER is
     --! @brief 次に読み取ることのできるイベントをスキャンするサブプログラム.
     -------------------------------------------------------------------------------
     procedure SEEK_EVENT(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-        file     STREAM     :       TEXT;          --! ストリーム.
-                 NEXT_EVENT : out   EVENT_TYPE     --! 見つかったイベント.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! ストリーム.
+                  NEXT_EVENT    : out   EVENT_TYPE      --! 見つかったイベント.
     ) is
-        variable curr_state :       STATE_TYPE;
-        variable curr_indent:       INDENT_TYPE;
-        variable indent     :       INDENT_TYPE;
-        variable token      :       TOKEN_TYPE;
-        variable pos        :       integer;
-        variable len        :       integer;
-        variable found      :       boolean;
+        variable  curr_state    :       STATE_TYPE;     --!
+        variable  curr_indent   :       INDENT_TYPE;    --!
+        variable  indent        :       INDENT_TYPE;    --!
+        variable  token         :       TOKEN_TYPE;     --!
+        variable  pos           :       integer;        --!
+        variable  len           :       integer;        --!
+        variable  found         :       boolean;        --!
     begin
         ---------------------------------------------------------------------------
         -- まずは空白を読み飛ばす.
@@ -1906,16 +1904,16 @@ package body  READER is
     --! @brief ストリームからEVENT_DOC_BEGINを取り出すサブプログラム.
     -------------------------------------------------------------------------------
     procedure read_doc_begin(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-        file     STREAM     :       TEXT;          --! ストリーム.
-                 STATE      : in    STATE_TYPE;    --! 現在の構造の状態.
-                 INDENT     : in    INDENT_TYPE;   --! 現在のノインデント.
-                 LEN        : out   integer;       --! 読み出した文字数.
-                 GOOD       : out   boolean        --! 読み取りに成功したことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! ストリーム.
+                  STATE         : in    STATE_TYPE;     --! 現在の構造の状態.
+                  INDENT        : in    INDENT_TYPE;    --! 現在のノインデント.
+                  LEN           : out   integer;        --! 読み出した文字数.
+                  GOOD          : out   boolean         --! 読み取りに成功したことを示す.
     ) is
-        variable token      :       TOKEN_TYPE;
-        variable token_pos  :       integer;
-        variable token_len  :       integer;
+        variable  token         :       TOKEN_TYPE;     --!
+        variable  token_pos     :       integer;        --!
+        variable  token_len     :       integer;        --!
     begin
         case STATE is
             when STATE_NONE  =>
@@ -1935,17 +1933,17 @@ package body  READER is
     --! @brief ストリームからEVENT_DOC_ENDを取り出すサブプログラム.
     -------------------------------------------------------------------------------
     procedure read_doc_end(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-        file     STREAM     :       TEXT;          --! ストリーム.
-                 STATE      : in    STATE_TYPE;    --! 現在の構造の状態.
-                 INDENT     : in    INDENT_TYPE;   --! 現在のノインデント.
-                 LEN        : out   integer;       --! 読み出した文字数.
-                 GOOD       : out   boolean        --! 読み取りに成功したことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! ストリーム.
+                  STATE         : in    STATE_TYPE;     --! 現在の構造の状態.
+                  INDENT        : in    INDENT_TYPE;    --! 現在のノインデント.
+                  LEN           : out   integer;        --! 読み出した文字数.
+                  GOOD          : out   boolean         --! 読み取りに成功したことを示す.
     ) is
-        variable token      :       TOKEN_TYPE;
-        variable token_pos  :       integer;
-        variable token_len  :       integer;
-        variable stack_good :       boolean;
+        variable  token         :       TOKEN_TYPE;     --!
+        variable  token_pos     :       integer;        --!
+        variable  token_len     :       integer;        --!
+        variable  stack_good    :       boolean;        --!
     begin
         case STATE is
             when STATE_DOCUMENT  =>
@@ -1973,18 +1971,18 @@ package body  READER is
     --! @brief ストリームからEVENT_SEQ_BEGINを取り出すサブプログラム.
     -------------------------------------------------------------------------------
     procedure read_seq_begin(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-        file     STREAM     :       TEXT;          --! ストリーム.
-                 STATE      : in    STATE_TYPE;    --! 現在の構造の状態.
-                 INDENT     : in    INDENT_TYPE;   --! 現在のノインデント.
-                 LEN        : out   integer;       --! 読み出した文字数.
-                 GOOD       : out   boolean        --! 読み取りに成功したことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! ストリーム.
+                  STATE         : in    STATE_TYPE;     --! 現在の構造の状態.
+                  INDENT        : in    INDENT_TYPE;    --! 現在のノインデント.
+                  LEN           : out   integer;        --! 読み出した文字数.
+                  GOOD          : out   boolean         --! 読み取りに成功したことを示す.
     ) is
-        variable token      :       TOKEN_TYPE;
-        variable token_pos  :       integer;
-        variable token_len  :       integer;
-        variable next_state :       STATE_TYPE;
-        variable new_indent :       INDENT_TYPE;
+        variable  token         :       TOKEN_TYPE;     --!
+        variable  token_pos     :       integer;        --!
+        variable  token_len     :       integer;        --!
+        variable  next_state    :       STATE_TYPE;     --!
+        variable  new_indent    :       INDENT_TYPE;    --!
     begin
         case STATE is
             when STATE_DOCUMENT               => next_state := STATE_DOCUMENT;
@@ -2035,16 +2033,16 @@ package body  READER is
     --! @brief コンテキストからEVENT_SEQ_ENDを取り出すサブプログラム.
     -------------------------------------------------------------------------------
     procedure read_seq_end(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-        file     STREAM     :       TEXT;          --! ストリーム.
-                 STATE      : in    STATE_TYPE;    --! 現在の構造の状態.
-                 INDENT     : in    INDENT_TYPE;   --! 現在のノインデント.
-                 LEN        : out   integer;       --! 読み出した文字数.
-                 GOOD       : out   boolean        --! 読み取りに成功したことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! ストリーム.
+                  STATE         : in    STATE_TYPE;     --! 現在の構造の状態.
+                  INDENT        : in    INDENT_TYPE;    --! 現在のノインデント.
+                  LEN           : out   integer;        --! 読み出した文字数.
+                  GOOD          : out   boolean         --! 読み取りに成功したことを示す.
     ) is
-        variable token      :       TOKEN_TYPE;
-        variable token_pos  :       integer;
-        variable token_len  :       integer;
+        variable  token         :       TOKEN_TYPE;     --!
+        variable  token_pos     :       integer;        --!
+        variable  token_len     :       integer;        --!
     begin
         case STATE is
             when STATE_BLOCK_SEQ_END =>
@@ -2069,17 +2067,17 @@ package body  READER is
     --! @brief ストリームからEVENT_SEQ_NEXTを取り出すサブプログラム.
     -------------------------------------------------------------------------------
     procedure read_seq_next(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-        file     STREAM     :       TEXT;          --! ストリーム.
-                 STATE      : in    STATE_TYPE;    --! 現在の構造の状態.
-                 INDENT     : in    INDENT_TYPE;   --! 現在のノインデント.
-                 LEN        : out   integer;       --! 読み出した文字数.
-                 GOOD       : out   boolean        --! 読み取りに成功したことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! ストリーム.
+                  STATE         : in    STATE_TYPE;     --! 現在の構造の状態.
+                  INDENT        : in    INDENT_TYPE;    --! 現在のノインデント.
+                  LEN           : out   integer;        --! 読み出した文字数.
+                  GOOD          : out   boolean         --! 読み取りに成功したことを示す.
     ) is
-        variable token      :       TOKEN_TYPE;
-        variable token_pos  :       integer;
-        variable token_len  :       integer;
-        variable stack_good :       boolean;
+        variable  token         :       TOKEN_TYPE;     --!
+        variable  token_pos     :       integer;        --!
+        variable  token_len     :       integer;        --!
+        variable  stack_good    :       boolean;        --!
     begin
         case STATE is
             when STATE_BLOCK_SEQ_END => 
@@ -2113,19 +2111,19 @@ package body  READER is
     --! @brief ストリームからEVENT_MAP_BEGINを取り出すサブプログラム.
     -------------------------------------------------------------------------------
     procedure read_map_begin(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-        file     STREAM     :       TEXT;          --! ストリーム.
-                 STATE      : in    STATE_TYPE;    --! 現在の構造の状態.
-                 INDENT     : in    INDENT_TYPE;   --! 現在のノインデント.
-                 LEN        : out   integer;       --! 読み出した文字数.
-                 GOOD       : out   boolean        --! 読み取りに成功したことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! ストリーム.
+                  STATE         : in    STATE_TYPE;     --! 現在の構造の状態.
+                  INDENT        : in    INDENT_TYPE;    --! 現在のノインデント.
+                  LEN           : out   integer;        --! 読み出した文字数.
+                  GOOD          : out   boolean         --! 読み取りに成功したことを示す.
     ) is
-        variable token      :       TOKEN_TYPE;
-        variable token_pos  :       integer;
-        variable token_len  :       integer;
-        variable ret_state  :       STATE_TYPE;
-        variable new_indent :       INDENT_TYPE;
-        variable found      :       boolean;
+        variable  token         :       TOKEN_TYPE;     --!
+        variable  token_pos     :       integer;        --!
+        variable  token_len     :       integer;        --!
+        variable  ret_state     :       STATE_TYPE;     --!
+        variable  new_indent    :       INDENT_TYPE;    --!
+        variable  found         :       boolean;        --!
     begin
         case STATE is
             when STATE_DOCUMENT               => ret_state := STATE_DOCUMENT;
@@ -2206,16 +2204,16 @@ package body  READER is
     --! @brief ストリームからEVENT_MAP_SEPを取り出すサブプログラム.
     -------------------------------------------------------------------------------
     procedure read_map_sep(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-        file     STREAM     :       TEXT;          --! ストリーム.
-                 STATE      : in    STATE_TYPE;    --! 現在の構造の状態.
-                 INDENT     : in    INDENT_TYPE;   --! 現在のノインデント.
-                 LEN        : out   integer;       --! 読み出した文字数.
-                 GOOD       : out   boolean        --! 読み取りに成功したことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! ストリーム.
+                  STATE         : in    STATE_TYPE;     --! 現在の構造の状態.
+                  INDENT        : in    INDENT_TYPE;    --! 現在のノインデント.
+                  LEN           : out   integer;        --! 読み出した文字数.
+                  GOOD          : out   boolean         --! 読み取りに成功したことを示す.
     ) is
-        variable token      :       TOKEN_TYPE;
-        variable token_pos  :       integer;
-        variable token_len  :       integer;
+        variable  token         :       TOKEN_TYPE;     --!
+        variable  token_pos     :       integer;        --!
+        variable  token_len     :       integer;        --!
     begin
         case STATE is
             when STATE_BLOCK_MAP_IMPLICIT_SEP =>
@@ -2260,16 +2258,16 @@ package body  READER is
     --! @brief ストリームからEVENT_MAP_ENDを取り出すサブプログラム.
     -------------------------------------------------------------------------------
     procedure read_map_end(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-        file     STREAM     :       TEXT;          --! ストリーム.
-                 STATE      : in    STATE_TYPE;    --! 現在の構造の状態.
-                 INDENT     : in    INDENT_TYPE;   --! 現在のノインデント.
-                 LEN        : out   integer;       --! 読み出した文字数.
-                 GOOD       : out   boolean        --! 読み取りに成功したことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! ストリーム.
+                  STATE         : in    STATE_TYPE;     --! 現在の構造の状態.
+                  INDENT        : in    INDENT_TYPE;    --! 現在のノインデント.
+                  LEN           : out   integer;        --! 読み出した文字数.
+                  GOOD          : out   boolean         --! 読み取りに成功したことを示す.
     ) is
-        variable token      :       TOKEN_TYPE;
-        variable token_pos  :       integer;
-        variable token_len  :       integer;
+        variable  token         :       TOKEN_TYPE;     --!
+        variable  token_pos     :       integer;        --!
+        variable  token_len     :       integer;        --!
     begin
         case STATE is
             when STATE_BLOCK_MAP_IMPLICIT_END =>
@@ -2297,16 +2295,16 @@ package body  READER is
     --! @brief ストリームからEVENT_MAP_NEXTを取り出すサブプログラム.
     -------------------------------------------------------------------------------
     procedure read_map_next(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-        file     STREAM     :       TEXT;          --! ストリーム.
-                 STATE      : in    STATE_TYPE;    --! 現在の構造の状態.
-                 INDENT     : in    INDENT_TYPE;   --! 現在のノインデント.
-                 LEN        : out   integer;       --! 読み出した文字数.
-                 GOOD       : out   boolean        --! 読み取りに成功したことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! ストリーム.
+                  STATE         : in    STATE_TYPE;     --! 現在の構造の状態.
+                  INDENT        : in    INDENT_TYPE;    --! 現在のノインデント.
+                  LEN           : out   integer;        --! 読み出した文字数.
+                  GOOD          : out   boolean         --! 読み取りに成功したことを示す.
     ) is
-        variable token      :       TOKEN_TYPE;
-        variable token_pos  :       integer;
-        variable token_len  :       integer;
+        variable  token         :       TOKEN_TYPE;     --!
+        variable  token_pos     :       integer;        --!
+        variable  token_len     :       integer;        --!
     begin
         case STATE is
             when STATE_BLOCK_MAP_IMPLICIT_END |
@@ -2341,19 +2339,19 @@ package body  READER is
     --! @brief ストリームからEVENT_TAG_PROPを取り出す.
     -------------------------------------------------------------------------------
     procedure read_tag_prop(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-        file     STREAM     :       TEXT;          --! ストリーム.
-                 STR        : out   string;        --! 読み取ったタグを格納するバッファ.
-                 STR_LEN    : out   integer;       --! バッファに格納した文字数.
-                 READ_LEN   : out   integer;       --! 読み取った文字数.
-                 GOOD       : out   boolean        --! 読み取りに成功したことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! ストリーム.
+                  STR           : out   string;         --! 読み取ったタグを格納するバッファ.
+                  STR_LEN       : out   integer;        --! バッファに格納した文字数.
+                  READ_LEN      : out   integer;        --! 読み取った文字数.
+                  GOOD          : out   boolean         --! 読み取りに成功したことを示す.
     ) is
-        alias    str_buf    :       string(1 to STR'length) is STR;
-        variable string_pos :       integer;
-        variable string_len :       integer;
-        variable scan_len   :       integer;
-        variable found      :       boolean;
-        variable end_of_line:       boolean;
+        alias     str_buf       :       string(1 to STR'length) is STR;
+        variable  string_pos    :       integer;
+        variable  string_len    :       integer;
+        variable  scan_len      :       integer;
+        variable  found         :       boolean;
+        variable  end_of_line   :       boolean;
     begin
         scan_tag_prop(SELF, found, scan_len, string_pos, string_len, end_of_line);
         if (found = TRUE) then
@@ -2378,17 +2376,17 @@ package body  READER is
     --! @brief ストリームからEVENT_ANCHORを取り出す.
     -------------------------------------------------------------------------------
     procedure read_anchor(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-        file     STREAM     :       TEXT;          --! ストリーム.
-                 STR        : out   string;        --! 読み取った文字列を格納するバッファ.
-                 STR_LEN    : out   integer;       --! バッファに格納した文字数.
-                 READ_LEN   : out   integer;       --! 読み取った文字数.
-                 GOOD       : out   boolean        --! 読み取りに成功したことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! ストリーム.
+                  STR           : out   string;         --! 読み取った文字列を格納するバッファ.
+                  STR_LEN       : out   integer;        --! バッファに格納した文字数.
+                  READ_LEN      : out   integer;        --! 読み取った文字数.
+                  GOOD          : out   boolean         --! 読み取りに成功したことを示す.
     ) is
-        variable token      :       TOKEN_TYPE;
-        variable token_pos  :       integer;
-        variable token_len  :       integer;
-        variable line_end   :       boolean;
+        variable  token         :       TOKEN_TYPE;     --!
+        variable  token_pos     :       integer;        --!
+        variable  token_len     :       integer;        --!
+        variable  line_end      :       boolean;        --!
     begin
         scan_token(SELF, token, token_pos, token_len);
         if (token = TOKEN_ANCHOR_PROPERTY) then
@@ -2405,21 +2403,21 @@ package body  READER is
     --! @brief ストリームからEVENT_ALIASを取り出す.
     -------------------------------------------------------------------------------
     procedure read_alias(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-        file     STREAM     :       TEXT;          --! ストリーム.
-                 STR        : out   string;        --! 読み取った文字列を格納するバッファ.
-                 STR_LEN    : out   integer;       --! バッファに格納した文字数.
-                 READ_LEN   : out   integer;       --! 読み取った文字数.
-                 GOOD       : out   boolean        --! 読み取りに成功したことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! ストリーム.
+                  STR           : out   string;         --! 読み取った文字列を格納するバッファ.
+                  STR_LEN       : out   integer;        --! バッファに格納した文字数.
+                  READ_LEN      : out   integer;        --! 読み取った文字数.
+                  GOOD          : out   boolean         --! 読み取りに成功したことを示す.
     ) is
-        variable token      :       TOKEN_TYPE;
-        variable token_pos  :       integer;
-        variable token_len  :       integer;
-        variable line_end   :       boolean;
-        variable curr_state :       STATE_TYPE;
-        variable curr_indent:       INDENT_TYPE;
-        variable next_state :       STATE_TYPE;
-        variable next_event :       EVENT_TYPE;
+        variable  token         :       TOKEN_TYPE;     --!
+        variable  token_pos     :       integer;        --!
+        variable  token_len     :       integer;        --!
+        variable  line_end      :       boolean;        --!
+        variable  curr_state    :       STATE_TYPE;     --!
+        variable  curr_indent   :       INDENT_TYPE;    --!
+        variable  next_state    :       STATE_TYPE;     --!
+        variable  next_event    :       EVENT_TYPE;     --!
     begin
         scan_token(SELF, token, token_pos, token_len);
         if (token /= TOKEN_ALIAS_NODE) then
@@ -2459,19 +2457,19 @@ package body  READER is
     --! @brief ストリームからliteralの文字列を取り出す
     -------------------------------------------------------------------------------
     procedure read_literal_string(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-        file     STREAM     :       TEXT;          --! ストリーム.
-                 TOKEN      : in    TOKEN_TYPE;    --! リテラルのタイプ
-                 STR        : out   string;        --! 読み取った文字列を格納するバッファ.
-                 STR_LEN    : out   integer;       --! バッファに格納した文字数.
-                 READ_LEN   : out   integer;       --! 読み取った文字数.
-                 GOOD       : out   boolean        --! 読み取りに成功したことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! ストリーム.
+                  TOKEN         : in    TOKEN_TYPE;     --! リテラルのタイプ
+                  STR           : out   string;         --! 読み取った文字列を格納するバッファ.
+                  STR_LEN       : out   integer;        --! バッファに格納した文字数.
+                  READ_LEN      : out   integer;        --! 読み取った文字数.
+                  GOOD          : out   boolean         --! 読み取りに成功したことを示す.
     ) is
-        variable str_pos    :       integer;
-        variable literal_len:       integer;
-        variable char       :       character;
-        variable indent     :       integer;
-        variable now_literal:       boolean;
+        variable  str_pos       :       integer;        --!
+        variable  literal_len   :       integer;        --!
+        variable  char          :       character;      --!
+        variable  indent        :       integer;        --!
+        variable  now_literal   :       boolean;        --!
     begin
         --------------------------------------------------------------------------
         -- まず TOKEN_LITERAL または TOKEN_FOLDED のある行は捨てて次の行を読む.
@@ -2545,21 +2543,21 @@ package body  READER is
     --! @brief ストリームからEVENT_SCALARを文字列(STRING)として読み出すサブプログラム.
     -------------------------------------------------------------------------------
     procedure read_scalar(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-        file     STREAM     :       TEXT;          --! ストリーム.
-                 STR        : out   string;        --! 読み取った文字列を格納するバッファ.
-                 STR_LEN    : out   integer;       --! 読み取った文字列の文字数.
-                 READ_LEN   : out   integer;       --! スキャンした文字数.
-                 GOOD       : out   boolean        --! 読み取りに成功したことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! ストリーム.
+                  STR           : out   string;         --! 読み取った文字列を格納するバッファ.
+                  STR_LEN       : out   integer;        --! 読み取った文字列の文字数.
+                  READ_LEN      : out   integer;        --! スキャンした文字数.
+                  GOOD          : out   boolean         --! 読み取りに成功したことを示す.
     ) is
-        variable token      :       TOKEN_TYPE;
-        variable token_pos  :       integer;
-        variable token_len  :       integer;
-        variable curr_state :       STATE_TYPE;
-        variable curr_indent:       INDENT_TYPE;
-        variable line_end   :       boolean;
-        variable next_state :       STATE_TYPE;
-        variable next_event :       EVENT_TYPE;
+        variable  token         :       TOKEN_TYPE;     --!
+        variable  token_pos     :       integer;        --!
+        variable  token_len     :       integer;        --!
+        variable  curr_state    :       STATE_TYPE;     --!
+        variable  curr_indent   :       INDENT_TYPE;    --!
+        variable  line_end      :       boolean;        --!
+        variable  next_state    :       STATE_TYPE;     --!
+        variable  next_event    :       EVENT_TYPE;     --!
     begin
         get_struct_state(SELF, curr_state, curr_indent);
         case curr_state is
@@ -2615,14 +2613,14 @@ package body  READER is
     --!        文字列として取り出すサブプログラム.
     -------------------------------------------------------------------------------
     procedure READ_STRING(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-        file     STREAM     :       TEXT;          --! ストリーム.
-                 STR        : out   STRING;        --! 文字列などを格納するバッファ.
-                 STR_LEN    : out   integer;       --! バッファに格納した文字数.
-                 READ_LEN   : out   integer;       --! ストリームから読んだ文字数.
-                 GOOD       : out   boolean        --! 読み取りに成功したことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! ストリーム.
+                  STR           : out   STRING;         --! 文字列などを格納するバッファ.
+                  STR_LEN       : out   integer;        --! バッファに格納した文字数.
+                  READ_LEN      : out   integer;        --! ストリームから読んだ文字数.
+                  GOOD          : out   boolean         --! 読み取りに成功したことを示す.
     ) is
-        variable next_event :       EVENT_TYPE;
+        variable  next_event    :       EVENT_TYPE;     --!
     begin
         SEEK_EVENT(SELF, STREAM, next_event);
         case next_event is
@@ -2637,15 +2635,15 @@ package body  READER is
     --! @brief ストリームからEVENT_SCALARを整数(INTEGER)として取り出すサブプログラム.
     -------------------------------------------------------------------------------
     procedure READ_INTEGER(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-        file     STREAM     :       TEXT;          --! ストリーム.
-                 VALUE      : out   integer;       --! 読み取った整数値
-                 GOOD       : out   boolean        --! 読み取りに成功したことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! ストリーム.
+                  VALUE         : out   integer;        --! 読み取った整数値
+                  GOOD          : out   boolean         --! 読み取りに成功したことを示す.
     ) is
-        variable word       :       STRING(1 to 128);
-        variable word_len   :       integer;
-        variable read_len   :       integer;
-        variable value_len  :       integer;
+        variable  word          :       STRING(1 to 128);
+        variable  word_len      :       integer;
+        variable  read_len      :       integer;
+        variable  value_len     :       integer;
     begin
         read_scalar(SELF, STREAM, word, word_len, read_len, GOOD);
         if (word_len > 0) then
@@ -2660,15 +2658,15 @@ package body  READER is
     --! @brief ストリームからEVENT_SCALARを真偽値数(BOOLEAN)として取り出すサブプログラム.
     -------------------------------------------------------------------------------
     procedure READ_BOOLEAN(
-        variable SELF       : inout READER_TYPE;  --! リーダーの状態.
-        file     STREAM     :       TEXT;         --! 入力ストリーム.
-                 VALUE      : out   boolean;      --! 読み取った整数の値.
-                 GOOD       : out   boolean       --! 正常に読み取れたことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! 入力ストリーム.
+                  VALUE         : out   boolean;        --! 読み取った整数の値.
+                  GOOD          : out   boolean         --! 正常に読み取れたことを示す.
     ) is
-        variable word       :       STRING(1 to 5);
-        variable word_len   :       integer;
-        variable read_len   :       integer;
-        variable value_len  :       integer;
+        variable  word          :       STRING(1 to 5);
+        variable  word_len      :       integer;
+        variable  read_len      :       integer;
+        variable  value_len     :       integer;
     begin
         read_scalar(SELF, STREAM, word, word_len, read_len, GOOD);
         if (word_len > 0) then
@@ -2683,18 +2681,18 @@ package body  READER is
     --! @brief ストリームから指定されたイベントを読み出すサブプログラム.
     -------------------------------------------------------------------------------
     procedure READ_EVENT(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-        file     STREAM     :       TEXT;          --! ストリーム.
-                 EVENT      : in    EVENT_TYPE;    --! 読み取るイベントを指定.
-                 STR        : out   STRING;        --! 文字列などを格納するバッファ.
-                 STR_LEN    : out   integer;       --! バッファに格納した文字数.
-                 READ_LEN   : out   integer;       --! ストリームから読んだ文字数.
-                 GOOD       : out   boolean        --! 読み取りに成功したことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! ストリーム.
+                  EVENT         : in    EVENT_TYPE;     --! 読み取るイベントを指定.
+                  STR           : out   STRING;         --! 文字列などを格納するバッファ.
+                  STR_LEN       : out   integer;        --! バッファに格納した文字数.
+                  READ_LEN      : out   integer;        --! ストリームから読んだ文字数.
+                  GOOD          : out   boolean         --! 読み取りに成功したことを示す.
     ) is
-        variable state      :       STATE_TYPE;
-        variable indent     :       INDENT_TYPE;
-        variable next_event :       EVENT_TYPE;
-        variable dummy_len  :       integer;
+        variable  state         :       STATE_TYPE;     --!
+        variable  indent        :       INDENT_TYPE;    --!
+        variable  next_event    :       EVENT_TYPE;     --!
+        variable  dummy_len     :       integer;        --!
     begin
         if (EVENT = EVENT_ERROR) then
             DEBUG_DUMP(SELF, string'("READ_EVENT INTERNAL ERROR"));
@@ -2741,14 +2739,14 @@ package body  READER is
     --!        ただしスカラー、文字列などは読み捨てる.
     -------------------------------------------------------------------------------
     procedure READ_EVENT(
-        variable SELF       : inout READER_TYPE;   --! コンテキスト.
-        file     STREAM     :       TEXT;          --! ストリーム.
-                 EVENT      : in    EVENT_TYPE;    --! 読み取るイベントを指定.
-                 GOOD       : out   boolean        --! 読み取りに成功したことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! ストリーム.
+                  EVENT         : in    EVENT_TYPE;     --! 読み取るイベントを指定.
+                  GOOD          : out   boolean         --! 読み取りに成功したことを示す.
     ) is
-        variable str_buf    :       string(1 to 1);  --! どうせ捨てるので少なくてもかまわない.
-        variable str_len    :       integer;
-        variable read_len   :       integer;
+        variable  str_buf       :       string(1 to 1); --! どうせ捨てるので少なくてもかまわない.
+        variable  str_len       :       integer;        --!
+        variable  read_len      :       integer;        --!
     begin
         READ_EVENT(SELF, STREAM, EVENT, str_buf, str_len, read_len, GOOD);
     end procedure;
@@ -2758,21 +2756,21 @@ package body  READER is
     --!        読み飛ばすことに注意.
     -------------------------------------------------------------------------------
     procedure SKIP_EVENT(
-        variable SELF       : inout READER_TYPE;  --! リーダーの状態.
-        file     STREAM     :       TEXT;         --! 入力ストリーム.
-                 EVENT      : in    EVENT_TYPE;   --! 読み飛ばすイベント.
-                 STR_BUF    : out   STRING;       --! 文字列読み飛ばし用のバッファ.
-                 STR_LEN    : out   integer;      --! バッファに格納した文字数.
-                 GOOD       : out   boolean       --! 正常に読み取れたことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! 入力ストリーム.
+                  EVENT         : in    EVENT_TYPE;     --! 読み飛ばすイベント.
+                  STR_BUF       : out   STRING;         --! 文字列読み飛ばし用のバッファ.
+                  STR_LEN       : out   integer;        --! バッファに格納した文字数.
+                  GOOD          : out   boolean         --! 正常に読み取れたことを示す.
     ) is
-        variable state      :       STATE_TYPE;
-        variable indent     :       INDENT_TYPE;
-        variable end_event  :       EVENT_TYPE;
-        variable next_event :       EVENT_TYPE;
-        variable skip_done  :       boolean;
-        variable read_good  :       boolean;
-        variable read_len   :       integer;
-        variable dummy_len  :       integer;
+        variable  state         :       STATE_TYPE;     --!
+        variable  indent        :       INDENT_TYPE;    --!
+        variable  end_event     :       EVENT_TYPE;     --!
+        variable  next_event    :       EVENT_TYPE;     --!
+        variable  skip_done     :       boolean;        --!
+        variable  read_good     :       boolean;        --!
+        variable  read_len      :       integer;        --!
+        variable  dummy_len     :       integer;        --!
     begin
         get_struct_state(SELF, state, indent);
         SEEK_EVENT(SELF, STREAM, next_event);
@@ -2877,13 +2875,13 @@ package body  READER is
     --!        読み飛ばすことに注意.
     -------------------------------------------------------------------------------
     procedure SKIP_EVENT(
-        variable SELF       : inout READER_TYPE;  --! リーダーの状態.
-        file     STREAM     :       TEXT;         --! 入力ストリーム.
-                 EVENT      : in    EVENT_TYPE;   --! 読み飛ばすイベント.
-                 GOOD       : out   boolean       --! 正常に読み取れたことを示す.
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+        file      STREAM        :       TEXT;           --! 入力ストリーム.
+                  EVENT         : in    EVENT_TYPE;     --! 読み飛ばすイベント.
+                  GOOD          : out   boolean         --! 正常に読み取れたことを示す.
     ) is
-        variable skip_buf   :       string(1 to 1);  --! どうせ捨てるので少なくてもかまわない.
-        variable skip_len   :       integer;
+        variable  skip_buf      :       string(1 to 1); --! どうせ捨てるので少なくてもかまわない.
+        variable  skip_len      :       integer;
     begin
         SKIP_EVENT(SELF, STREAM, EVENT, skip_buf, skip_len, GOOD);
     end procedure;
@@ -2964,10 +2962,10 @@ package body  READER is
     --! @brief 標準出力にリーダーの状態をダンプするサブプログラム.
     -------------------------------------------------------------------------------
     procedure DEBUG_DUMP (
-        variable SELF       : inout READER_TYPE;
-                 MESSAGE    : in    STRING
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  MESSAGE       : in    STRING          --!
     ) is
-        variable line       :       LINE;
+        variable  line          :       LINE;           --!
     begin
         WRITE(line, "message    : " & MESSAGE);
         WRITELINE(OUTPUT, line);
@@ -2977,7 +2975,7 @@ package body  READER is
     --! @brief 標準出力にリーダーの状態をダンプするサブプログラム.
     -------------------------------------------------------------------------------
     procedure DEBUG_DUMP (
-        variable SELF       : inout READER_TYPE
+        variable  SELF          : inout READER_TYPE     --! リーダー変数.
     ) is
     begin
         DEBUG_DUMP(SELF, SELF.text_pos);
@@ -2986,13 +2984,13 @@ package body  READER is
     --! @brief 標準出力にリーダーの状態をダンプするサブプログラム.
     -------------------------------------------------------------------------------
     procedure DEBUG_DUMP (
-        variable SELF       : inout READER_TYPE;
-                 POS        : in    integer
+        variable  SELF          : inout READER_TYPE;    --! リーダー変数.
+                  POS           : in    integer         --!
     ) is
-        variable line       :       LINE;
-        variable state      :       STATE_TYPE;
-        variable indent     :       INDENT_TYPE;
-        variable mapkey     :       MAPKEY_MODE;
+        variable  line          :       LINE;           --!
+        variable  state         :       STATE_TYPE;     --!
+        variable  indent        :       INDENT_TYPE;    --!
+        variable  mapkey        :       MAPKEY_MODE;    --!
     begin
         get_struct_state(SELF, state, indent, mapkey);
         WRITE(line, "   name       : " & SELF.name     (SELF.name'range)     );
