@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_core.vhd
 --!     @brief   AXI4 Dummy Plug Core Package.
---!     @version 0.0.5
---!     @date    2012/5/15
+--!     @version 0.0.6
+--!     @date    2012/5/24
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -88,7 +88,7 @@ package AXI4_CORE is
     -------------------------------------------------------------------------------
     constant  AXI4_XFER_MAX_BYTES  : integer := 1024;
     -------------------------------------------------------------------------------
-    --! @brief AXI4 アドレスチャネル信号の構造体
+    --! @brief AXI4 アドレスチャネル信号のレコード宣言.
     -------------------------------------------------------------------------------
     type      AXI4_A_CHANNEL_SIGNAL_TYPE is record
         ADDR     : std_logic_vector(AXI4_ADDR_MAX_WIDTH -1 downto 0);
@@ -106,6 +106,9 @@ package AXI4_CORE is
         VALID    : std_logic;
         READY    : std_logic;
     end record;
+    -------------------------------------------------------------------------------
+    --! @brief AXI4 アドレスチャネル信号のドントケア定数.
+    -------------------------------------------------------------------------------
     constant  AXI4_A_CHANNEL_SIGNAL_DONTCARE : AXI4_A_CHANNEL_SIGNAL_TYPE := (
         ADDR    => (others => '-'),
         WRITE   => '-',
@@ -122,6 +125,9 @@ package AXI4_CORE is
         VALID   => '-',
         READY   => '-'
     );
+    -------------------------------------------------------------------------------
+    --! @brief AXI4 アドレスチャネル信号のNULL定数.
+    -------------------------------------------------------------------------------
     constant  AXI4_A_CHANNEL_SIGNAL_NULL     : AXI4_A_CHANNEL_SIGNAL_TYPE := (
         ADDR    => (others => '0'),
         WRITE   => '0',
@@ -139,7 +145,7 @@ package AXI4_CORE is
         READY   => '0'
     );
     -------------------------------------------------------------------------------
-    --! @brief AXI4 リードチャネル信号の構造体
+    --! @brief AXI4 リードチャネル信号のレコード宣言.
     -------------------------------------------------------------------------------
     type      AXI4_R_CHANNEL_SIGNAL_TYPE is record
         DATA     : std_logic_vector(AXI4_DATA_MAX_WIDTH-1 downto 0);
@@ -150,6 +156,9 @@ package AXI4_CORE is
         VALID    : std_logic;
         READY    : std_logic;
     end record;
+    -------------------------------------------------------------------------------
+    --! @brief AXI4 リードチャネル信号のドントケア定数.
+    -------------------------------------------------------------------------------
     constant  AXI4_R_CHANNEL_SIGNAL_DONTCARE : AXI4_R_CHANNEL_SIGNAL_TYPE := (
         DATA    => (others => '-'),
         RESP    => (others => '-'),
@@ -159,6 +168,9 @@ package AXI4_CORE is
         VALID   => '-',
         READY   => '-'
     );        
+    -------------------------------------------------------------------------------
+    --! @brief AXI4 リードチャネル信号のNULL定数.
+    -------------------------------------------------------------------------------
     constant  AXI4_R_CHANNEL_SIGNAL_NULL     : AXI4_R_CHANNEL_SIGNAL_TYPE := (
         DATA    => (others => '0'),
         RESP    => (others => '0'),
@@ -169,7 +181,7 @@ package AXI4_CORE is
         READY   => '0'
     );        
     -------------------------------------------------------------------------------
-    --! @brief AXI4 ライトチャネル信号の構造体
+    --! @brief AXI4 ライトチャネル信号のレコード宣言.
     -------------------------------------------------------------------------------
     type      AXI4_W_CHANNEL_SIGNAL_TYPE is record
         DATA     : std_logic_vector(AXI4_DATA_MAX_WIDTH-1 downto 0);
@@ -180,6 +192,9 @@ package AXI4_CORE is
         VALID    : std_logic;
         READY    : std_logic;
     end record;
+    -------------------------------------------------------------------------------
+    --! @brief AXI4 ライトチャネル信号のドントケア定数.
+    -------------------------------------------------------------------------------
     constant  AXI4_W_CHANNEL_SIGNAL_DONTCARE : AXI4_W_CHANNEL_SIGNAL_TYPE := (
         DATA    => (others => '-'),
         LAST    => '-',
@@ -189,6 +204,9 @@ package AXI4_CORE is
         VALID   => '-',
         READY   => '-'
     );        
+    -------------------------------------------------------------------------------
+    --! @brief AXI4 ライトチャネル信号のNULL定数.
+    -------------------------------------------------------------------------------
     constant  AXI4_W_CHANNEL_SIGNAL_NULL     : AXI4_W_CHANNEL_SIGNAL_TYPE := (
         DATA    => (others => '0'),
         LAST    => '0',
@@ -199,7 +217,7 @@ package AXI4_CORE is
         READY   => '0'
     );        
     -------------------------------------------------------------------------------
-    --! @brief AXI4 ライト応答チャネル信号の構造体
+    --! @brief AXI4 ライト応答チャネル信号のレコード宣言.
     -------------------------------------------------------------------------------
     type      AXI4_B_CHANNEL_SIGNAL_TYPE is record
         RESP     : AXI4_RESP_TYPE;
@@ -208,6 +226,9 @@ package AXI4_CORE is
         VALID    : std_logic;
         READY    : std_logic;
     end record;
+    -------------------------------------------------------------------------------
+    --! @brief AXI4 ライト応答チャネル信号のドントケア定数.
+    -------------------------------------------------------------------------------
     constant  AXI4_B_CHANNEL_SIGNAL_DONTCARE : AXI4_B_CHANNEL_SIGNAL_TYPE := (
         RESP    => (others => '-'),
         ID      => (others => '-'),
@@ -215,6 +236,9 @@ package AXI4_CORE is
         VALID   => '-',
         READY   => '-'
     );        
+    -------------------------------------------------------------------------------
+    --! @brief AXI4 ライト応答チャネル信号のNULL定数.
+    -------------------------------------------------------------------------------
     constant  AXI4_B_CHANNEL_SIGNAL_NULL     : AXI4_B_CHANNEL_SIGNAL_TYPE := (
         RESP    => (others => '0'),
         USER    => (others => '0'),
@@ -223,7 +247,7 @@ package AXI4_CORE is
         READY   => '0'
     );        
     -------------------------------------------------------------------------------
-    --! @brief AXI4 チャネル信号の構造体
+    --! @brief AXI4 チャネル信号のレコード宣言.
     -------------------------------------------------------------------------------
     type      AXI4_CHANNEL_SIGNAL_TYPE is record
         AR       : AXI4_A_CHANNEL_SIGNAL_TYPE;
@@ -232,6 +256,9 @@ package AXI4_CORE is
         W        : AXI4_W_CHANNEL_SIGNAL_TYPE;
         B        : AXI4_B_CHANNEL_SIGNAL_TYPE;
     end record;
+    -------------------------------------------------------------------------------
+    --! @brief AXI4 チャネル信号のドントケア定数.
+    -------------------------------------------------------------------------------
     constant  AXI4_CHANNEL_SIGNAL_DONTCARE : AXI4_CHANNEL_SIGNAL_TYPE := (
         AR      => AXI4_A_CHANNEL_SIGNAL_DONTCARE,
         R       => AXI4_R_CHANNEL_SIGNAL_DONTCARE,
@@ -239,6 +266,9 @@ package AXI4_CORE is
         W       => AXI4_W_CHANNEL_SIGNAL_DONTCARE,
         B       => AXI4_B_CHANNEL_SIGNAL_DONTCARE
     );
+    -------------------------------------------------------------------------------
+    --! @brief AXI4 チャネル信号のNULL定数.
+    -------------------------------------------------------------------------------
     constant  AXI4_CHANNEL_SIGNAL_NULL     : AXI4_CHANNEL_SIGNAL_TYPE := (
         AR      => AXI4_A_CHANNEL_SIGNAL_NULL,
         R       => AXI4_R_CHANNEL_SIGNAL_NULL,
@@ -247,33 +277,25 @@ package AXI4_CORE is
         B       => AXI4_B_CHANNEL_SIGNAL_NULL
     );
     -------------------------------------------------------------------------------
-    --! @brief シナリオのマップからチャネル信号構造体の値を読み取るサブプログラム.
+    --! @brief シナリオのマップからチャネル信号レコードの値を読み取るサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    CORE        コア変数.
+    --! @param    STREAM      シナリオのストリーム.
+    --! @param    CHANNEL     チャネルのタイプ.
+    --! @param    READ        リード可/不可を指定.
+    --! @param    WRITE       ライト可/不可を指定.
+    --! @param    WIDTH       チャネル信号のビット幅を指定する.
+    --! @param    SIGNALS     読み取った値が入るレコード変数. inoutであることに注意.
+    --! @param    EVENT       次のイベント. inoutであることに注意.
     -------------------------------------------------------------------------------
     procedure MAP_READ_AXI4_CHANNEL(
-        variable  CORE          : inout CORE_TYPE;          --! コア変数.
-        file      STREAM        :       TEXT;               --! 入力ストリーム.
-                  CHANNEL       : in    AXI4_CHANNEL_TYPE;  --! チャネルのタイプ.
-                  READ          : in    boolean;            --! リード可/不可を指定.
-                  WRITE         : in    boolean;            --! ライト可/不可を指定.
+        variable  CORE          : inout CORE_TYPE;
+        file      STREAM        :       TEXT;
+                  CHANNEL       : in    AXI4_CHANNEL_TYPE;
+                  READ          : in    boolean;
+                  WRITE         : in    boolean;
                   WIDTH         : in    AXI4_SIGNAL_WIDTH_TYPE;
                   SIGNALS       : inout AXI4_CHANNEL_SIGNAL_TYPE;
-                  EVENT         : inout EVENT_TYPE
-    );
-    -------------------------------------------------------------------------------
-    --! @brief シナリオのマップからトランザクションの値を読み取るサブプログラム.
-    --!      * このサブプログラムを呼ぶときは、すでにMAP_READ_BEGINを実行済みに
-    --!        しておかなければならない。
-    -------------------------------------------------------------------------------
-    procedure MAP_READ_AXI4_TRANSACTION(
-        variable  CORE          : inout CORE_TYPE;          --! コア変数.
-        file      STREAM        :       TEXT;               --! 入力ストリーム.
-                  ADDR_WIDTH    : in    integer;
-                  USER_WIDTH    : in    integer;
-                  ID_WIDTH      : in    integer;
-                  A_CHANNEL     : inout AXI4_A_CHANNEL_SIGNAL_TYPE;
-                  RESP          : inout AXI4_RESP_TYPE;
-                  DATA_BUF      : inout std_logic_vector;
-                  DATA_LEN      : inout integer;
                   EVENT         : inout EVENT_TYPE
     );
     -------------------------------------------------------------------------------
@@ -790,11 +812,17 @@ package body AXI4_CORE is
     );
     -------------------------------------------------------------------------------
     --! @brief KEY_WORD から READ_AXI4_SIGNAL_TYPEに変換する関数.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    KEY_WORD    キーワード.
+    --! @param    CHANNEL     チャネルのタイプ.
+    --! @param    R           リード可/不可を指定.
+    --! @param    W           ライト可/不可を指定.
+    --! @return               変換されたREAD_AXI4_SIGNAL_TYPE.
     -------------------------------------------------------------------------------
     function  to_read_axi4_signal(
-                 KEY_WORD   : KEY_TYPE;
-                 CHANNEL    : AXI4_CHANNEL_TYPE;
-                 R,W        : boolean
+                  KEY_WORD   : KEY_TYPE;
+                  CHANNEL    : AXI4_CHANNEL_TYPE;
+                  R,W        : boolean
     ) return READ_AXI4_SIGNAL_TYPE is
         variable val        : READ_AXI4_SIGNAL_TYPE;
     begin
@@ -1221,13 +1249,22 @@ package body AXI4_CORE is
     --! @brief シナリオのマップからチャネル信号構造体の値を読み取るサブプログラム.
     --!      * このサブプログラムを呼ぶときは、すでにMAP_READ_BEGINを実行済みに
     --!        しておかなければならない。
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    CORE        コア変数.
+    --! @param    STREAM      シナリオのストリーム.
+    --! @param    CHANNEL     チャネルのタイプ.
+    --! @param    READ        リード可/不可を指定.
+    --! @param    WRITE       ライト可/不可を指定.
+    --! @param    WIDTH       チャネル信号のビット幅を指定する.
+    --! @param    SIGNALS     読み取った値が入るレコード変数. inoutであることに注意.
+    --! @param    EVENT       次のイベント. inoutであることに注意.
     -------------------------------------------------------------------------------
     procedure MAP_READ_AXI4_CHANNEL(
-        variable  CORE          : inout CORE_TYPE;          --! コア変数.
-        file      STREAM        :       TEXT;               --! 入力ストリーム.
-                  CHANNEL       : in    AXI4_CHANNEL_TYPE;  --! チャネルタイプを指定.
-                  READ          : in    boolean;            --! リード可/不可を指定.
-                  WRITE         : in    boolean;            --! ライト可/不可を指定.
+        variable  CORE          : inout CORE_TYPE;
+        file      STREAM        :       TEXT;
+                  CHANNEL       : in    AXI4_CHANNEL_TYPE;
+                  READ          : in    boolean;
+                  WRITE         : in    boolean;
                   WIDTH         : in    AXI4_SIGNAL_WIDTH_TYPE;
                   SIGNALS       : inout AXI4_CHANNEL_SIGNAL_TYPE;
                   EVENT         : inout EVENT_TYPE
@@ -1896,106 +1933,5 @@ package body AXI4_CORE is
             r_match  := TRUE;
         end if;
         MATCH := aw_match and w_match and b_match and ar_match and r_match;
-    end procedure;
-    -------------------------------------------------------------------------------
-    --! @brief シナリオのマップからトランザクションの値を読み取るサブプログラム.
-    --!      * このサブプログラムを呼ぶときは、すでにMAP_READ_BEGINを実行済みに
-    --!        しておかなければならない。
-    -------------------------------------------------------------------------------
-    procedure MAP_READ_AXI4_TRANSACTION(
-        variable  CORE          : inout CORE_TYPE;            --! コア変数.
-        file      STREAM        :       TEXT;                 --! 入力ストリーム.
-                  ADDR_WIDTH    : in    integer;
-                  USER_WIDTH    : in    integer;
-                  ID_WIDTH      : in    integer;
-                  A_CHANNEL     : inout AXI4_A_CHANNEL_SIGNAL_TYPE;
-                  RESP          : inout AXI4_RESP_TYPE;
-                  DATA_BUF      : inout std_logic_vector;
-                  DATA_LEN      : inout integer;
-                  EVENT         : inout EVENT_TYPE
-    ) is
-        constant  PROC_NAME     :       string := "MAP_READ_AXI4_TRANSACTION";
-        variable  next_event    :       EVENT_TYPE;
-        variable  key_word      :       KEY_TYPE;
-        procedure READ_VAL(VAL: out std_logic_vector) is
-            variable  next_event    : EVENT_TYPE;
-            variable  read_len      : integer;
-            variable  val_size      : integer;
-        begin
-            SEEK_EVENT(CORE, STREAM, next_event  );
-            if (next_event /= EVENT_SCALAR) then
-                READ_ERROR(CORE, PROC_NAME, "READ_VAL NG");
-            end if;
-            READ_EVENT(CORE, STREAM, EVENT_SCALAR);
-            STRING_TO_STD_LOGIC_VECTOR(
-                STR    => CORE.str_buf(1 to CORE.str_len),
-                VAL    => VAL,
-                STR_LEN => read_len,
-                VAL_LEN => val_size
-            );
-        end procedure;
-        procedure READ_VAL(VAL: inout std_logic_vector;
-                           LEN: inout integer
-        ) is
-            variable  next_event    : EVENT_TYPE;
-            variable  read_len      : integer;
-            variable  val_size      : integer;
-            variable  seq_level     : integer;
-        begin
-            seq_level := 0;
-            SEEK_EVENT(CORE, STREAM, next_event);
-            SEQ_LOOP: loop
-                case next_event is
-                    when EVENT_SCALAR    =>
-                        READ_EVENT(CORE, STREAM, EVENT_SCALAR);
-                        STRING_TO_STD_LOGIC_VECTOR(
-                            STR     => CORE.str_buf(1 to CORE.str_len),
-                            VAL     => VAL(VAL'left downto LEN),
-                            STR_LEN => read_len,
-                            VAL_LEN => val_size
-                        );
-                        LEN := LEN + val_size;
-                    when EVENT_SEQ_BEGIN =>
-                        READ_EVENT(CORE, STREAM, EVENT_SEQ_BEGIN);
-                        seq_level := seq_level + 1;
-                    when EVENT_SEQ_END   =>
-                        READ_EVENT(CORE, STREAM, EVENT_SEQ_END  );
-                        seq_level := seq_level - 1;
-                    when others          =>
-                        READ_ERROR(CORE, PROC_NAME, "READ_VAL NG");
-                end case;
-                exit when (seq_level <= 0);
-            end loop;
-        end procedure;
-    begin
-        next_event := EVENT;
-        READ_MAP_LOOP: loop
-            case next_event is
-                when EVENT_SCALAR  =>
-                    COPY_KEY_WORD(CORE, key_word);
-                    case key_word is
-                        when KEY_SIZE   => READ_VAL(A_CHANNEL.SIZE  );
-                        when KEY_BURST  => READ_VAL(A_CHANNEL.BURST );
-                        when KEY_LOCK   => READ_VAL(A_CHANNEL.LOCK  );
-                        when KEY_CACHE  => READ_VAL(A_CHANNEL.CACHE );
-                        when KEY_PROT   => READ_VAL(A_CHANNEL.PROT  );
-                        when KEY_QOS    => READ_VAL(A_CHANNEL.QOS   );
-                        when KEY_REGION => READ_VAL(A_CHANNEL.REGION);
-                        when KEY_ADDR   => READ_VAL(A_CHANNEL.ADDR(ADDR_WIDTH-1 downto 0));
-                        when KEY_AUSER  => READ_VAL(A_CHANNEL.USER(USER_WIDTH-1 downto 0));
-                        when KEY_ID     => READ_VAL(A_CHANNEL.ID  (ID_WIDTH  -1 downto 0));
-                        when KEY_RESP   => READ_VAL(RESP);
-                        when KEY_DATA   => READ_VAL(DATA_BUF, DATA_LEN);
-                        when others     => exit READ_MAP_LOOP;
-                    end case;
-                when EVENT_MAP_END      => exit READ_MAP_LOOP;
-                when others             => exit READ_MAP_LOOP;
-            end case;
-            SEEK_EVENT(CORE, STREAM, next_event);
-            if (next_event = EVENT_SCALAR) then
-                READ_EVENT(CORE, STREAM, EVENT_SCALAR);
-            end if;
-        end loop;
-        EVENT := next_event;
     end procedure;
 end AXI4_CORE;

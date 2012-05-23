@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_signal_printer.vhd
 --!     @brief   AXI4 Signal Printer Module.
---!     @version 0.0.4
---!     @date    2012/5/7
+--!     @version 0.0.6
+--!     @date    2012/5/24
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -48,7 +48,7 @@ entity  AXI4_SIGNAL_PRINTER is
     generic (
         NAME            : --! @brief 固有名詞.
                           STRING;
-        TAG             : --! @brief
+        TAG             : --! @brief タグ.
                           STRING;
         TAG_WIDTH       : --! @brief タグを出力する際の文字幅.
                           --!      * TAG_WIDTH>0 =>  TAG_WIDTH幅の右詰.

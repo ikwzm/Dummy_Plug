@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    vocal.vhd
 --!     @brief   Package for Dummy Plug Message Output.
---!     @version 0.0.5
---!     @date    2012/5/20
+--!     @version 0.0.6
+--!     @date    2012/5/23
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -67,46 +67,79 @@ package VOCAL is
     end record;
     -------------------------------------------------------------------------------
     --! @brief 各種の状態を保持する構造体の初期化用定数を生成する関数.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    NAME    名前.
+    --! @return        生成した定数.
     -------------------------------------------------------------------------------
     function  NEW_VOCAL(NAME: STRING) return VOCAL_TYPE;
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にDEBUGメッセージを出力するサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF    ボーカル変数.
+    --! @param    MESSAGE 出力するメッセージ.
     -------------------------------------------------------------------------------
     procedure REPORT_DEBUG   (SELF:inout VOCAL_TYPE;MESSAGE:in STRING);
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にREMARKメッセージを出力するサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF    ボーカル変数.
+    --! @param    MESSAGE 出力するメッセージ.
     -------------------------------------------------------------------------------
     procedure REPORT_REMARK  (SELF:inout VOCAL_TYPE;MESSAGE:in STRING);
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にNOTEメッセージを出力するサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF    ボーカル変数.
+    --! @param    MESSAGE 出力するメッセージ.
     -------------------------------------------------------------------------------
     procedure REPORT_NOTE    (SELF:inout VOCAL_TYPE;MESSAGE:in STRING);
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にWARNINGメッセージを出力するサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF    ボーカル変数.
+    --! @param    MESSAGE 出力するメッセージ.
     -------------------------------------------------------------------------------
     procedure REPORT_WARNING (SELF:inout VOCAL_TYPE;MESSAGE:in STRING);
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にMISMATCHメッセージを出力するサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF    ボーカル変数.
+    --! @param    MESSAGE 出力するメッセージ.
     -------------------------------------------------------------------------------
     procedure REPORT_MISMATCH(SELF:inout VOCAL_TYPE;MESSAGE:in STRING);
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にERRORメッセージを出力するサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF    ボーカル変数.
+    --! @param    MESSAGE 出力するメッセージ.
     -------------------------------------------------------------------------------
     procedure REPORT_ERROR   (SELF:inout VOCAL_TYPE;MESSAGE:in STRING);
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にFAILUREメッセージを出力するサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF    ボーカル変数.
+    --! @param    MESSAGE 出力するメッセージ.
     -------------------------------------------------------------------------------
     procedure REPORT_FAILURE (SELF:inout VOCAL_TYPE;MESSAGE:in STRING);
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にシナリオリードエラーメッセージを出力するサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF    ボーカル変数.
+    --! @param    MESSAGE 出力するメッセージ.
     -------------------------------------------------------------------------------
     procedure REPORT_READ_ERROR(SELF:inout VOCAL_TYPE;MESSAGE:in STRING);
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)に適当にメッセージを出力するサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF    ボーカル変数.
+    --! @param    MESSAGE 出力するメッセージ.
     -------------------------------------------------------------------------------
     procedure SAY  (SELF:inout VOCAL_TYPE;MESSAGE:in STRING);
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)に適当にメッセージを出力するサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF    ボーカル変数.
+    --! @param    MESSAGE 出力するメッセージ.
     -------------------------------------------------------------------------------
     procedure SHOUT(SELF:inout VOCAL_TYPE;MESSAGE:in STRING);
 end VOCAL;
@@ -139,6 +172,9 @@ package body  VOCAL is
     constant  DEFAULT_TAG_FIELD_WIDTH    : integer := -15;
     -------------------------------------------------------------------------------
     --! @brief 各種の状態を保持する構造体の初期化用定数を生成する関数.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    NAME    名前.
+    --! @return           生成した定数.
     -------------------------------------------------------------------------------
     function  NEW_VOCAL(
                  NAME       : STRING 
@@ -168,15 +204,19 @@ package body  VOCAL is
     end function;
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にメッセージを出力するサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF    ボーカル変数.
+    --! @param    TAG     タグ.
+    --! @param    MESSAGE 出力するメッセージ.
     -------------------------------------------------------------------------------
-    procedure REPORT_MESSAGE(SELF:inout VOCAL_TYPE; tag:inout LINE; MESSAGE:in STRING) is
+    procedure REPORT_MESSAGE(SELF:inout VOCAL_TYPE; TAG:inout LINE; MESSAGE:in STRING) is
         variable text_line   : LINE;
     begin
         if    (SELF.tag_field_width > 0) then
-            WRITE(text_line, tag(tag'range), RIGHT,  SELF.tag_field_width);
+            WRITE(text_line, TAG(TAG'range), RIGHT,  SELF.tag_field_width);
             WRITE(text_line, string'(" "));
         elsif (SELF.tag_field_width < 0) then
-            WRITE(text_line, tag(tag'range), LEFT , -SELF.tag_field_width);
+            WRITE(text_line, TAG(TAG'range), LEFT , -SELF.tag_field_width);
             WRITE(text_line, string'(" "));
         end if;
         if    (SELF.time_field_width > 0) then
@@ -189,6 +229,9 @@ package body  VOCAL is
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にDEBUGメッセージを出力するサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF    ボーカル変数.
+    --! @param    MESSAGE 出力するメッセージ.
     -------------------------------------------------------------------------------
     procedure REPORT_DEBUG(SELF:inout VOCAL_TYPE;MESSAGE:in STRING) is
     begin
@@ -198,6 +241,9 @@ package body  VOCAL is
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にREMARKメッセージを出力するサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF    ボーカル変数.
+    --! @param    MESSAGE 出力するメッセージ.
     -------------------------------------------------------------------------------
     procedure REPORT_REMARK(SELF:inout VOCAL_TYPE;MESSAGE:in STRING) is
     begin
@@ -207,6 +253,9 @@ package body  VOCAL is
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にNOTEメッセージを出力するサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF    ボーカル変数.
+    --! @param    MESSAGE 出力するメッセージ.
     -------------------------------------------------------------------------------
     procedure REPORT_NOTE(SELF:inout VOCAL_TYPE;MESSAGE:in STRING) is
     begin
@@ -216,6 +265,9 @@ package body  VOCAL is
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にWARNINGメッセージを出力するサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF    ボーカル変数.
+    --! @param    MESSAGE 出力するメッセージ.
     -------------------------------------------------------------------------------
     procedure REPORT_WARNING(SELF:inout VOCAL_TYPE;MESSAGE:in STRING) is
     begin
@@ -225,6 +277,9 @@ package body  VOCAL is
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にMISMATCHメッセージを出力するサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF    ボーカル変数.
+    --! @param    MESSAGE 出力するメッセージ.
     -------------------------------------------------------------------------------
     procedure REPORT_MISMATCH(SELF:inout VOCAL_TYPE;MESSAGE:in STRING) is
     begin
@@ -234,6 +289,9 @@ package body  VOCAL is
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にERRORメッセージを出力するサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF    ボーカル変数.
+    --! @param    MESSAGE 出力するメッセージ.
     -------------------------------------------------------------------------------
     procedure REPORT_ERROR(SELF:inout VOCAL_TYPE;MESSAGE:in STRING) is
     begin
@@ -243,6 +301,9 @@ package body  VOCAL is
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)にFAILUREメッセージを出力するサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF    ボーカル変数.
+    --! @param    MESSAGE 出力するメッセージ.
     -------------------------------------------------------------------------------
     procedure REPORT_FAILURE(SELF:inout VOCAL_TYPE;MESSAGE:in STRING) is
     begin
@@ -251,7 +312,10 @@ package body  VOCAL is
         end if;
     end procedure;
     -------------------------------------------------------------------------------
-    --! @brief 標準出力(OUTPUT)にシナリオリードエラーを出力するサブプログラム.
+    --! @brief 標準出力(OUTPUT)にシナリオリードエラーメッセージを出力するサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF    ボーカル変数.
+    --! @param    MESSAGE 出力するメッセージ.
     -------------------------------------------------------------------------------
     procedure REPORT_READ_ERROR(SELF:inout VOCAL_TYPE;MESSAGE:in STRING) is
     begin
@@ -259,6 +323,9 @@ package body  VOCAL is
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)に適当にメッセージを出力するサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF    ボーカル変数.
+    --! @param    MESSAGE 出力するメッセージ.
     -------------------------------------------------------------------------------
     procedure SAY(SELF:inout VOCAL_TYPE;MESSAGE:in STRING) is
         variable text_line   : LINE;
@@ -282,6 +349,9 @@ package body  VOCAL is
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 標準出力(OUTPUT)に適当にメッセージを出力するサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF    ボーカル変数.
+    --! @param    MESSAGE 出力するメッセージ.
     -------------------------------------------------------------------------------
     procedure SHOUT(SELF:inout VOCAL_TYPE;MESSAGE:in STRING) is
         variable text_line   : LINE;

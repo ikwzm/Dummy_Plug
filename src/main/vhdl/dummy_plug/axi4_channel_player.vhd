@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_channel_player.vhd
 --!     @brief   AXI4 A/R/W/B Channel Dummy Plug Player.
---!     @version 0.0.5
---!     @date    2012/5/15
+--!     @version 0.0.6
+--!     @date    2012/5/24
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -206,15 +206,21 @@ entity  AXI4_CHANNEL_PLAYER is
         SYNC_ACK        : in    SYNC_ACK_VECTOR(SYNC_WIDTH-1 downto 0) := (others => '0');
         SYNC_LOCAL_REQ  : out   SYNC_REQ_VECTOR(SYNC_LOCAL_PORT downto SYNC_LOCAL_PORT);
         SYNC_LOCAL_ACK  : in    SYNC_ACK_VECTOR(SYNC_LOCAL_PORT downto SYNC_LOCAL_PORT);
-        ---------------------------------------------------------------------------
-        -- GPIO
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
+        -- General Purpose Input 信号
+        --------------------------------------------------------------------------
         GPI             : in    std_logic_vector(GPI_WIDTH-1 downto 0) := (others => '0');
+        --------------------------------------------------------------------------
+        -- General Purpose Output 信号
+        --------------------------------------------------------------------------
         GPO             : out   std_logic_vector(GPO_WIDTH-1 downto 0);
-        ---------------------------------------------------------------------------
-        -- 各種状態出力.
-        ---------------------------------------------------------------------------
+        --------------------------------------------------------------------------
+        -- レポートステータス出力.
+        --------------------------------------------------------------------------
         REPORT_STATUS   : out   REPORT_STATUS_TYPE;
+        --------------------------------------------------------------------------
+        -- シミュレーション終了通知信号.
+        --------------------------------------------------------------------------
         FINISH          : out   std_logic
     );
 end AXI4_CHANNEL_PLAYER;
@@ -236,7 +242,7 @@ use     DUMMY_PLUG.READER.all;
 -----------------------------------------------------------------------------------
 architecture MODEL of AXI4_CHANNEL_PLAYER is
     -------------------------------------------------------------------------------
-    --! 
+    --! @brief 入力信号のどれかに変化があるまで待つサブプログラム.
     -------------------------------------------------------------------------------
     procedure  WAIT_ON_SIGNALS is
     begin
@@ -290,224 +296,230 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
             GPI        ; -- In  :
     end procedure;
     -------------------------------------------------------------------------------
-    --! 
-    -------------------------------------------------------------------------------
-    procedure  MATCH_GPI(
-        variable CORE       : inout CORE_TYPE;
-                 SIGNALS    : in    std_logic_vector;
-                 MATCH      : out   boolean
-    ) is
-        variable count      :       integer;
-    begin
-        count := 0;
-        for i in GPI'range loop
-            if (MATCH_STD_LOGIC(SIGNALS(i), GPI(i)) = FALSE) then
-                REPORT_MISMATCH(CORE, string'("GPI(") & INTEGER_TO_STRING(i) & ") " &
-                                BIN_TO_STRING(GPI(i)) & " /= " &
-                                BIN_TO_STRING(SIGNALS(i)));
-                count := count + 1;
-            end if;
-        end loop;
-        MATCH := (count = 0);
-    end procedure;
-    -------------------------------------------------------------------------------
     --! @brief 全チャネルの期待値と信号の値を比較するサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SIGNALS     信号の期待値.
+    --! @param    MATCH       比較した結果。マッチすれば TRUE、しなければ FALSE.
     -------------------------------------------------------------------------------
     procedure  MATCH_AXI4_CHANNEL(
-                 SIGNALS    : in    AXI4_CHANNEL_SIGNAL_TYPE;
-                 MATCH      : out   boolean
+                  SIGNALS   : in    AXI4_CHANNEL_SIGNAL_TYPE;
+                  MATCH     : out   boolean
     ) is
     begin 
         MATCH_AXI4_CHANNEL(
-            SIGNALS    => SIGNALS    , -- In  :
-            READ       => READ       , -- In  :
-            WRITE      => WRITE      , -- In  :
-            MATCH      => MATCH      , -- Out :
-            ARADDR     => ARADDR_I   , -- In  :
-            ARLEN      => ARLEN_I    , -- In  :
-            ARSIZE     => ARSIZE_I   , -- In  :
-            ARBURST    => ARBURST_I  , -- In  :
-            ARLOCK     => ARLOCK_I   , -- In  :
-            ARCACHE    => ARCACHE_I  , -- In  :
-            ARPROT     => ARPROT_I   , -- In  :
-            ARQOS      => ARQOS_I    , -- In  :
-            ARREGION   => ARREGION_I , -- In  :
-            ARUSER     => ARUSER_I   , -- In  :
-            ARID       => ARID_I     , -- In  :
-            ARVALID    => ARVALID_I  , -- In  :
-            ARREADY    => ARREADY_I  , -- In  :
-            AWADDR     => AWADDR_I   , -- In  :
-            AWLEN      => AWLEN_I    , -- In  :
-            AWSIZE     => AWSIZE_I   , -- In  :
-            AWBURST    => AWBURST_I  , -- In  :
-            AWLOCK     => AWLOCK_I   , -- In  :
-            AWCACHE    => AWCACHE_I  , -- In  :
-            AWPROT     => AWPROT_I   , -- In  :
-            AWQOS      => AWQOS_I    , -- In  :
-            AWREGION   => AWREGION_I , -- In  :
-            AWUSER     => AWUSER_I   , -- In  :
-            AWID       => AWID_I     , -- In  :
-            AWVALID    => AWVALID_I  , -- In  :
-            AWREADY    => AWREADY_I  , -- In  :
-            RLAST      => RLAST_I    , -- In  :
-            RDATA      => RDATA_I    , -- In  :
-            RRESP      => RRESP_I    , -- In  :
-            RUSER      => RUSER_I    , -- In  :
-            RID        => RID_I      , -- In  :
-            RVALID     => RVALID_I   , -- In  :
-            RREADY     => RREADY_I   , -- In  :
-            WLAST      => WLAST_I    , -- In  :
-            WDATA      => WDATA_I    , -- In  :
-            WSTRB      => WSTRB_I    , -- In  :
-            WUSER      => WUSER_I    , -- In  :
-            WID        => WID_I      , -- In  :
-            WVALID     => WVALID_I   , -- In  :
-            WREADY     => WREADY_I   , -- In  :
-            BRESP      => BRESP_I    , -- In  :
-            BUSER      => BUSER_I    , -- In  :
-            BID        => BID_I      , -- In  :
-            BVALID     => BVALID_I   , -- In  :
-            BREADY     => BREADY_I     -- In  :
+            SIGNALS     => SIGNALS      , -- In  :
+            READ        => READ         , -- In  :
+            WRITE       => WRITE        , -- In  :
+            MATCH       => MATCH        , -- Out :
+            ARADDR      => ARADDR_I     , -- In  :
+            ARLEN       => ARLEN_I      , -- In  :
+            ARSIZE      => ARSIZE_I     , -- In  :
+            ARBURST     => ARBURST_I    , -- In  :
+            ARLOCK      => ARLOCK_I     , -- In  :
+            ARCACHE     => ARCACHE_I    , -- In  :
+            ARPROT      => ARPROT_I     , -- In  :
+            ARQOS       => ARQOS_I      , -- In  :
+            ARREGION    => ARREGION_I   , -- In  :
+            ARUSER      => ARUSER_I     , -- In  :
+            ARID        => ARID_I       , -- In  :
+            ARVALID     => ARVALID_I    , -- In  :
+            ARREADY     => ARREADY_I    , -- In  :
+            AWADDR      => AWADDR_I     , -- In  :
+            AWLEN       => AWLEN_I      , -- In  :
+            AWSIZE      => AWSIZE_I     , -- In  :
+            AWBURST     => AWBURST_I    , -- In  :
+            AWLOCK      => AWLOCK_I     , -- In  :
+            AWCACHE     => AWCACHE_I    , -- In  :
+            AWPROT      => AWPROT_I     , -- In  :
+            AWQOS       => AWQOS_I      , -- In  :
+            AWREGION    => AWREGION_I   , -- In  :
+            AWUSER      => AWUSER_I     , -- In  :
+            AWID        => AWID_I       , -- In  :
+            AWVALID     => AWVALID_I    , -- In  :
+            AWREADY     => AWREADY_I    , -- In  :
+            RLAST       => RLAST_I      , -- In  :
+            RDATA       => RDATA_I      , -- In  :
+            RRESP       => RRESP_I      , -- In  :
+            RUSER       => RUSER_I      , -- In  :
+            RID         => RID_I        , -- In  :
+            RVALID      => RVALID_I     , -- In  :
+            RREADY      => RREADY_I     , -- In  :
+            WLAST       => WLAST_I      , -- In  :
+            WDATA       => WDATA_I      , -- In  :
+            WSTRB       => WSTRB_I      , -- In  :
+            WUSER       => WUSER_I      , -- In  :
+            WID         => WID_I        , -- In  :
+            WVALID      => WVALID_I     , -- In  :
+            WREADY      => WREADY_I     , -- In  :
+            BRESP       => BRESP_I      , -- In  :
+            BUSER       => BUSER_I      , -- In  :
+            BID         => BID_I        , -- In  :
+            BVALID      => BVALID_I     , -- In  :
+            BREADY      => BREADY_I       -- In  :
          );
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief ライトアドレスチャネルの期待値と信号の値を比較するサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    CORE        コア変数.
+    --! @param    SIGNALS     信号の期待値.
+    --! @param    MATCH       比較した結果。マッチすれば TRUE、しなければ FALSE.
     -------------------------------------------------------------------------------
     procedure MATCH_AXI4_AW_CHANNEL(
-        variable CORE       : inout CORE_TYPE;
-                 SIGNALS    : in    AXI4_A_CHANNEL_SIGNAL_TYPE;
-                 MATCH      : out   boolean
+        variable  CORE      : inout CORE_TYPE;
+                  SIGNALS   : in    AXI4_A_CHANNEL_SIGNAL_TYPE;
+                  MATCH     : out   boolean
     ) is
     begin
         MATCH_AXI4_CHANNEL(
-            SELF    => CORE      , -- I/O :
-            NAME    => "AW"      , -- In  :
-            SIGNALS => SIGNALS   , -- In  :
-            MATCH   => MATCH     , -- Out :
-            ADDR    => AWADDR_I  , -- In  :
-            LEN     => AWLEN_I   , -- In  :
-            SIZE    => AWSIZE_I  , -- In  :
-            BURST   => AWBURST_I , -- In  :
-            LOCK    => AWLOCK_I  , -- In  :
-            CACHE   => AWCACHE_I , -- In  :
-            PROT    => AWPROT_I  , -- In  :
-            QOS     => AWQOS_I   , -- In  :
-            REGION  => AWREGION_I, -- In  :
-            USER    => AWUSER_I  , -- In  :
-            ID      => AWID_I    , -- In  :
-            VALID   => AWVALID_I , -- In  :
-            READY   => AWREADY_I   -- In  :
+            CORE        => CORE         , -- I/O :
+            NAME        => "AW"         , -- In  :
+            SIGNALS     => SIGNALS      , -- In  :
+            MATCH       => MATCH        , -- Out :
+            ADDR        => AWADDR_I     , -- In  :
+            LEN         => AWLEN_I      , -- In  :
+            SIZE        => AWSIZE_I     , -- In  :
+            BURST       => AWBURST_I    , -- In  :
+            LOCK        => AWLOCK_I     , -- In  :
+            CACHE       => AWCACHE_I    , -- In  :
+            PROT        => AWPROT_I     , -- In  :
+            QOS         => AWQOS_I      , -- In  :
+            REGION      => AWREGION_I   , -- In  :
+            USER        => AWUSER_I     , -- In  :
+            ID          => AWID_I       , -- In  :
+            VALID       => AWVALID_I    , -- In  :
+            READY       => AWREADY_I      -- In  :
         );
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief ライトデータチャネルの期待値と信号の値を比較するサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    CORE        コア変数.
+    --! @param    SIGNALS     信号の期待値.
+    --! @param    MATCH       比較した結果。マッチすれば TRUE、しなければ FALSE.
     -------------------------------------------------------------------------------
     procedure MATCH_AXI4_W_CHANNEL(
-        variable CORE       : inout CORE_TYPE;
-                 SIGNALS    : in    AXI4_W_CHANNEL_SIGNAL_TYPE;
-                 MATCH      : out   boolean
+        variable  CORE      : inout CORE_TYPE;
+                  SIGNALS   : in    AXI4_W_CHANNEL_SIGNAL_TYPE;
+                  MATCH     : out   boolean
     ) is
     begin
         MATCH_AXI4_CHANNEL(
-            SELF    => CORE      , -- I/O :
-            NAME    => "W"       , -- In  :
-            SIGNALS => SIGNALS   , -- In  :
-            MATCH   => MATCH     , -- Out :
-            LAST    => WLAST_I   , -- In  :
-            DATA    => WDATA_I   , -- In  :
-            STRB    => WSTRB_I   , -- In  :
-            USER    => WUSER_I   , -- In  :
-            ID      => WID_I     , -- In  :
-            VALID   => WVALID_I  , -- In  :
-            READY   => WREADY_I    -- In  :
+            CORE        => CORE         , -- I/O :
+            NAME        => "W"          , -- In  :
+            SIGNALS     => SIGNALS      , -- In  :
+            MATCH       => MATCH        , -- Out :
+            LAST        => WLAST_I      , -- In  :
+            DATA        => WDATA_I      , -- In  :
+            STRB        => WSTRB_I      , -- In  :
+            USER        => WUSER_I      , -- In  :
+            ID          => WID_I        , -- In  :
+            VALID       => WVALID_I     , -- In  :
+            READY       => WREADY_I       -- In  :
         );
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief ライト応答チャネルの期待値と信号の値を比較するサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    CORE        コア変数.
+    --! @param    SIGNALS     信号の期待値.
+    --! @param    MATCH       比較した結果。マッチすれば TRUE、しなければ FALSE.
     -------------------------------------------------------------------------------
     procedure MATCH_AXI4_B_CHANNEL(
-        variable CORE       : inout CORE_TYPE;
-                 SIGNALS    : in    AXI4_B_CHANNEL_SIGNAL_TYPE;
-                 MATCH      : out   boolean
+        variable  CORE      : inout CORE_TYPE;
+                  SIGNALS   : in    AXI4_B_CHANNEL_SIGNAL_TYPE;
+                  MATCH     : out   boolean
     ) is
     begin
         MATCH_AXI4_CHANNEL(
-            SELF    => CORE      , -- I/O :
-            NAME    => "B"       , -- In  :
-            SIGNALS => SIGNALS   , -- In  :
-            MATCH   => MATCH     , -- Out :
-            RESP    => BRESP_I   , -- In  :
-            USER    => BUSER_I   , -- In  :
-            ID      => BID_I     , -- In  :
-            VALID   => BVALID_I  , -- In  :
-            READY   => BREADY_I    -- In  :
+            CORE        => CORE         , -- I/O :
+            NAME        => "B"          , -- In  :
+            SIGNALS     => SIGNALS      , -- In  :
+            MATCH       => MATCH        , -- Out :
+            RESP        => BRESP_I      , -- In  :
+            USER        => BUSER_I      , -- In  :
+            ID          => BID_I        , -- In  :
+            VALID       => BVALID_I     , -- In  :
+            READY       => BREADY_I       -- In  :
         );
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief リードアドレスチャネルの期待値と信号の値を比較するサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    CORE        コア変数.
+    --! @param    SIGNALS     信号の期待値.
+    --! @param    MATCH       比較した結果。マッチすれば TRUE、しなければ FALSE.
     -------------------------------------------------------------------------------
     procedure MATCH_AXI4_AR_CHANNEL(
-        variable SELF       : inout CORE_TYPE;
-                 SIGNALS    : in    AXI4_A_CHANNEL_SIGNAL_TYPE;
-                 MATCH      : out   boolean
+        variable  CORE      : inout CORE_TYPE;
+                  SIGNALS   : in    AXI4_A_CHANNEL_SIGNAL_TYPE;
+                  MATCH     : out   boolean
     ) is
     begin
         MATCH_AXI4_CHANNEL(
-            SELF    => SELF      , -- I/O :
-            NAME    => "AR"      , -- In  :
-            SIGNALS => SIGNALS   , -- In  :
-            MATCH   => MATCH     , -- Out :
-            ADDR    => ARADDR_I  , -- In  :
-            LEN     => ARLEN_I   , -- In  :
-            SIZE    => ARSIZE_I  , -- In  :
-            BURST   => ARBURST_I , -- In  :
-            LOCK    => ARLOCK_I  , -- In  :
-            CACHE   => ARCACHE_I , -- In  :
-            PROT    => ARPROT_I  , -- In  :
-            QOS     => ARQOS_I   , -- In  :
-            REGION  => ARREGION_I, -- In  :
-            USER    => ARUSER_I  , -- In  :
-            ID      => ARID_I    , -- In  :
-            VALID   => ARVALID_I , -- In  :
-            READY   => ARREADY_I   -- In  :
+            CORE        => CORE         , -- I/O :
+            NAME        => "AR"         , -- In  :
+            SIGNALS     => SIGNALS      , -- In  :
+            MATCH       => MATCH        , -- Out :
+            ADDR        => ARADDR_I     , -- In  :
+            LEN         => ARLEN_I      , -- In  :
+            SIZE        => ARSIZE_I     , -- In  :
+            BURST       => ARBURST_I    , -- In  :
+            LOCK        => ARLOCK_I     , -- In  :
+            CACHE       => ARCACHE_I    , -- In  :
+            PROT        => ARPROT_I     , -- In  :
+            QOS         => ARQOS_I      , -- In  :
+            REGION      => ARREGION_I   , -- In  :
+            USER        => ARUSER_I     , -- In  :
+            ID          => ARID_I       , -- In  :
+            VALID       => ARVALID_I    , -- In  :
+            READY       => ARREADY_I      -- In  :
         );
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief リードデータチャネルの期待値と信号の値を比較するサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    CORE        コア変数.
+    --! @param    SIGNALS     信号の期待値.
+    --! @param    MATCH       比較した結果。マッチすれば TRUE、しなければ FALSE.
     -------------------------------------------------------------------------------
     procedure MATCH_AXI4_R_CHANNEL(
-        variable CORE       : inout CORE_TYPE;
-                 SIGNALS    : in    AXI4_R_CHANNEL_SIGNAL_TYPE;
-                 MATCH      : out   boolean
+        variable  CORE      : inout CORE_TYPE;
+                  SIGNALS   : in    AXI4_R_CHANNEL_SIGNAL_TYPE;
+                  MATCH     : out   boolean
     ) is
     begin
         MATCH_AXI4_CHANNEL(
-            SELF    => CORE      , -- I/O :
-            NAME    => "R"       , -- In  :
-            SIGNALS => SIGNALS   , -- In  :
-            MATCH   => MATCH     , -- Out :
-            LAST    => RLAST_I   , -- In  :
-            DATA    => RDATA_I   , -- In  :
-            RESP    => RRESP_I   , -- In  :
-            USER    => RUSER_I   , -- In  :
-            ID      => RID_I     , -- In  :
-            VALID   => RVALID_I  , -- In  :
-            READY   => RREADY_I    -- In  :
+            CORE        => CORE         , -- I/O :
+            NAME        => "R"          , -- In  :
+            SIGNALS     => SIGNALS      , -- In  :
+            MATCH       => MATCH        , -- Out :
+            LAST        => RLAST_I      , -- In  :
+            DATA        => RDATA_I      , -- In  :
+            RESP        => RRESP_I      , -- In  :
+            USER        => RUSER_I      , -- In  :
+            ID          => RID_I        , -- In  :
+            VALID       => RVALID_I     , -- In  :
+            READY       => RREADY_I       -- In  :
         );
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 全チャネルの期待値と信号の値を比較するサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    CORE        コア変数.
+    --! @param    SIGNALS     信号の期待値.
+    --! @param    MATCH       比較した結果。マッチすれば TRUE、しなければ FALSE.
     -------------------------------------------------------------------------------
     procedure  MATCH_AXI4_CHANNEL(
-        variable CORE       : inout CORE_TYPE;
-                 SIGNALS    : in    AXI4_CHANNEL_SIGNAL_TYPE;
-                 MATCH      : out   boolean
+        variable  CORE      : inout CORE_TYPE;
+                  SIGNALS   : in    AXI4_CHANNEL_SIGNAL_TYPE;
+                  MATCH     : out   boolean
     ) is
-        variable aw_match   :       boolean;
-        variable w_match    :       boolean;
-        variable b_match    :       boolean;
-        variable ar_match   :       boolean;
-        variable r_match    :       boolean;
+        variable  aw_match  :       boolean;
+        variable  w_match   :       boolean;
+        variable  b_match   :       boolean;
+        variable  ar_match  :       boolean;
+        variable  r_match   :       boolean;
     begin
         if (WRITE) then
             MATCH_AXI4_AW_CHANNEL(CORE, SIGNALS.AW, aw_match);
@@ -526,27 +538,6 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
             r_match  := TRUE;
         end if;
         MATCH := aw_match and w_match and b_match and ar_match and r_match;
-    end procedure;
-    -------------------------------------------------------------------------------
-    --! 
-    -------------------------------------------------------------------------------
-    procedure  MAP_READ_AXI4_CHANNEL(
-        variable  CORE     : inout CORE_TYPE;
-        file      STREAM   :       TEXT;
-        variable  SIGNALS  : inout AXI4_CHANNEL_SIGNAL_TYPE;
-        variable  EVENT    : inout EVENT_TYPE
-    ) is
-    begin
-        MAP_READ_AXI4_CHANNEL(
-            SELF           => CORE                 ,  -- In :
-            STREAM         => STREAM               ,  -- I/O:
-            CHANNEL        => CHANNEL              ,  -- In :
-            READ           => READ                 ,  -- In :
-            WRITE          => WRITE                ,  -- In :
-            WIDTH          => WIDTH                ,  -- In :
-            SIGNALS        => SIGNALS              ,  -- I/O:
-            EVENT          => EVENT                   -- I/O:
-        );
     end procedure;
 begin 
     -------------------------------------------------------------------------------
@@ -594,27 +585,6 @@ begin
         variable  tmp_signals   : AXI4_CHANNEL_SIGNAL_TYPE;
         variable  gpi_signals   : std_logic_vector(GPI'range);
         variable  gpo_signals   : std_logic_vector(GPO'range);
-        ---------------------------------------------------------------------------
-        --! @brief 
-        ---------------------------------------------------------------------------
-        procedure SCAN_INTEGER(VAL: out integer;LEN: out integer) is
-        begin
-            STRING_TO_INTEGER(core.str_buf(1 to core.str_len), VAL, LEN);
-        end procedure;
-        ---------------------------------------------------------------------------
-        --! @brief 
-        ---------------------------------------------------------------------------
-        procedure EXECUTE_UNDEFINED_MAP_KEY(KEY:in STRING) is
-        begin
-            EXECUTE_UNDEFINED_MAP_KEY(core, stream, KEY);
-        end procedure;
-        ---------------------------------------------------------------------------
-        --! @brief 
-        ---------------------------------------------------------------------------
-        procedure EXECUTE_UNDEFINED_SCALAR(KEY:in STRING) is
-        begin
-            EXECUTE_UNDEFINED_SCALAR(core, stream, KEY);
-        end procedure;
         ---------------------------------------------------------------------------
         --! @brief チャネル信号変数の初期化.
         ---------------------------------------------------------------------------
@@ -668,34 +638,34 @@ begin
         end function;
         constant  INIT_SIGNALS  : AXI4_CHANNEL_SIGNAL_TYPE := GEN_INIT_SIGNALS;
         ---------------------------------------------------------------------------
-        --! @brief 信号変数(out_signals)の値をポートに出力するサブプログラム.
+        --! @brief 信号変数(SIGNALS)の値をポートに出力するサブプログラム.
         ---------------------------------------------------------------------------
-        procedure EXECUTE_OUTPUT is
+        procedure EXECUTE_OUTPUT(SIGNALS: in AXI4_CHANNEL_SIGNAL_TYPE) is
         begin 
             if (MASTER and WRITE) then
                 case CHANNEL is
                     when AXI4_CHANNEL_AW =>
-                        AWADDR_O  <= out_signals.AW.ADDR(AWADDR_O'range)after OUTPUT_DELAY;
-                        AWVALID_O <= out_signals.AW.VALID               after OUTPUT_DELAY;
-                        AWLEN_O   <= out_signals.AW.LEN                 after OUTPUT_DELAY;
-                        AWSIZE_O  <= out_signals.AW.SIZE                after OUTPUT_DELAY;
-                        AWBURST_O <= out_signals.AW.BURST               after OUTPUT_DELAY;
-                        AWLOCK_O  <= out_signals.AW.LOCK                after OUTPUT_DELAY;
-                        AWCACHE_O <= out_signals.AW.CACHE               after OUTPUT_DELAY;
-                        AWPROT_O  <= out_signals.AW.PROT                after OUTPUT_DELAY;
-                        AWQOS_O   <= out_signals.AW.QOS                 after OUTPUT_DELAY;
-                        AWREGION_O<= out_signals.AW.REGION              after OUTPUT_DELAY;
-                        AWUSER_O  <= out_signals.AW.id(AWUSER_O'range)  after OUTPUT_DELAY;
-                        AWID_O    <= out_signals.AW.id(AWID_O'range)    after OUTPUT_DELAY;
+                        AWADDR_O  <= SIGNALS.AW.ADDR(AWADDR_O'range)after OUTPUT_DELAY;
+                        AWVALID_O <= SIGNALS.AW.VALID               after OUTPUT_DELAY;
+                        AWLEN_O   <= SIGNALS.AW.LEN                 after OUTPUT_DELAY;
+                        AWSIZE_O  <= SIGNALS.AW.SIZE                after OUTPUT_DELAY;
+                        AWBURST_O <= SIGNALS.AW.BURST               after OUTPUT_DELAY;
+                        AWLOCK_O  <= SIGNALS.AW.LOCK                after OUTPUT_DELAY;
+                        AWCACHE_O <= SIGNALS.AW.CACHE               after OUTPUT_DELAY;
+                        AWPROT_O  <= SIGNALS.AW.PROT                after OUTPUT_DELAY;
+                        AWQOS_O   <= SIGNALS.AW.QOS                 after OUTPUT_DELAY;
+                        AWREGION_O<= SIGNALS.AW.REGION              after OUTPUT_DELAY;
+                        AWUSER_O  <= SIGNALS.AW.id(AWUSER_O'range)  after OUTPUT_DELAY;
+                        AWID_O    <= SIGNALS.AW.id(AWID_O'range)    after OUTPUT_DELAY;
                     when AXI4_CHANNEL_W =>
-                        WDATA_O   <= out_signals.W.DATA(WDATA_O'range)  after OUTPUT_DELAY;
-                        WLAST_O   <= out_signals.W.LAST                 after OUTPUT_DELAY;
-                        WSTRB_O   <= out_signals.W.STRB(WSTRB_O'range)  after OUTPUT_DELAY;
-                        WUSER_O   <= out_signals.W.USER(WUSER_O'range)  after OUTPUT_DELAY;
-                        WID_O     <= out_signals.W.ID(WID_O'range)      after OUTPUT_DELAY;
-                        WVALID_O  <= out_signals.W.VALID                after OUTPUT_DELAY;
+                        WDATA_O   <= SIGNALS.W.DATA(WDATA_O'range)  after OUTPUT_DELAY;
+                        WLAST_O   <= SIGNALS.W.LAST                 after OUTPUT_DELAY;
+                        WSTRB_O   <= SIGNALS.W.STRB(WSTRB_O'range)  after OUTPUT_DELAY;
+                        WUSER_O   <= SIGNALS.W.USER(WUSER_O'range)  after OUTPUT_DELAY;
+                        WID_O     <= SIGNALS.W.ID(WID_O'range)      after OUTPUT_DELAY;
+                        WVALID_O  <= SIGNALS.W.VALID                after OUTPUT_DELAY;
                     when AXI4_CHANNEL_B =>
-                        BREADY_O  <= out_signals.B.READY                after OUTPUT_DELAY;
+                        BREADY_O  <= SIGNALS.B.READY                after OUTPUT_DELAY;
                     when others =>
                         null;
                 end case;
@@ -703,20 +673,20 @@ begin
             if (MASTER and READ) then
                 case CHANNEL is
                     when AXI4_CHANNEL_AR =>
-                        ARADDR_O  <= out_signals.AR.ADDR(ARADDR_O'range)after OUTPUT_DELAY;
-                        ARVALID_O <= out_signals.AR.VALID               after OUTPUT_DELAY;
-                        ARLEN_O   <= out_signals.AR.LEN                 after OUTPUT_DELAY;
-                        ARSIZE_O  <= out_signals.AR.SIZE                after OUTPUT_DELAY;
-                        ARBURST_O <= out_signals.AR.BURST               after OUTPUT_DELAY;
-                        ARLOCK_O  <= out_signals.AR.LOCK                after OUTPUT_DELAY;
-                        ARCACHE_O <= out_signals.AR.CACHE               after OUTPUT_DELAY;
-                        ARPROT_O  <= out_signals.AR.PROT                after OUTPUT_DELAY;
-                        ARQOS_O   <= out_signals.AR.QOS                 after OUTPUT_DELAY;
-                        ARREGION_O<= out_signals.AR.REGION              after OUTPUT_DELAY;
-                        ARUSER_O  <= out_signals.AR.id(ARUSER_O'range)  after OUTPUT_DELAY;
-                        ARID_O    <= out_signals.AR.id(ARID_O'range)    after OUTPUT_DELAY;
+                        ARADDR_O  <= SIGNALS.AR.ADDR(ARADDR_O'range)after OUTPUT_DELAY;
+                        ARVALID_O <= SIGNALS.AR.VALID               after OUTPUT_DELAY;
+                        ARLEN_O   <= SIGNALS.AR.LEN                 after OUTPUT_DELAY;
+                        ARSIZE_O  <= SIGNALS.AR.SIZE                after OUTPUT_DELAY;
+                        ARBURST_O <= SIGNALS.AR.BURST               after OUTPUT_DELAY;
+                        ARLOCK_O  <= SIGNALS.AR.LOCK                after OUTPUT_DELAY;
+                        ARCACHE_O <= SIGNALS.AR.CACHE               after OUTPUT_DELAY;
+                        ARPROT_O  <= SIGNALS.AR.PROT                after OUTPUT_DELAY;
+                        ARQOS_O   <= SIGNALS.AR.QOS                 after OUTPUT_DELAY;
+                        ARREGION_O<= SIGNALS.AR.REGION              after OUTPUT_DELAY;
+                        ARUSER_O  <= SIGNALS.AR.id(ARUSER_O'range)  after OUTPUT_DELAY;
+                        ARID_O    <= SIGNALS.AR.id(ARID_O'range)    after OUTPUT_DELAY;
                     when AXI4_CHANNEL_R =>
-                        RREADY_O  <= out_signals.R.READY                after OUTPUT_DELAY;
+                        RREADY_O  <= SIGNALS.R.READY                after OUTPUT_DELAY;
                     when others =>
                         null;
                 end case;
@@ -724,14 +694,14 @@ begin
             if (SLAVE and WRITE) then
                 case CHANNEL is
                     when AXI4_CHANNEL_AW =>
-                        AWREADY_O <= out_signals.AW.READY               after OUTPUT_DELAY;
+                        AWREADY_O <= SIGNALS.AW.READY               after OUTPUT_DELAY;
                     when AXI4_CHANNEL_W  =>
-                        WREADY_O  <= out_signals.W.READY                after OUTPUT_DELAY;
+                        WREADY_O  <= SIGNALS.W.READY                after OUTPUT_DELAY;
                     when AXI4_CHANNEL_B  =>
-                        BRESP_O   <= out_signals.B.RESP                 after OUTPUT_DELAY;
-                        BUSER_O   <= out_signals.B.USER(BUSER_O'range)  after OUTPUT_DELAY;
-                        BID_O     <= out_signals.B.ID(BID_O'range)      after OUTPUT_DELAY;
-                        BVALID_O  <= out_signals.B.VALID                after OUTPUT_DELAY;
+                        BRESP_O   <= SIGNALS.B.RESP                 after OUTPUT_DELAY;
+                        BUSER_O   <= SIGNALS.B.USER(BUSER_O'range)  after OUTPUT_DELAY;
+                        BID_O     <= SIGNALS.B.ID(BID_O'range)      after OUTPUT_DELAY;
+                        BVALID_O  <= SIGNALS.B.VALID                after OUTPUT_DELAY;
                     when others =>
                         null;
                 end case;
@@ -739,14 +709,14 @@ begin
             if (SLAVE and READ) then
                 case CHANNEL is
                     when AXI4_CHANNEL_AR =>
-                        ARREADY_O <= out_signals.AR.READY               after OUTPUT_DELAY;
+                        ARREADY_O <= SIGNALS.AR.READY               after OUTPUT_DELAY;
                     when AXI4_CHANNEL_R  =>
-                        RDATA_O   <= out_signals.R.DATA(RDATA_O'range)  after OUTPUT_DELAY;
-                        RRESP_O   <= out_signals.R.RESP                 after OUTPUT_DELAY;
-                        RLAST_O   <= out_signals.R.LAST                 after OUTPUT_DELAY;
-                        RUSER_O   <= out_signals.R.USER(RUSER_O'range)  after OUTPUT_DELAY;
-                        RID_O     <= out_signals.R.ID(RID_O'range)      after OUTPUT_DELAY;
-                        RVALID_O  <= out_signals.R.VALID                after OUTPUT_DELAY;
+                        RDATA_O   <= SIGNALS.R.DATA(RDATA_O'range)  after OUTPUT_DELAY;
+                        RRESP_O   <= SIGNALS.R.RESP                 after OUTPUT_DELAY;
+                        RLAST_O   <= SIGNALS.R.LAST                 after OUTPUT_DELAY;
+                        RUSER_O   <= SIGNALS.R.USER(RUSER_O'range)  after OUTPUT_DELAY;
+                        RID_O     <= SIGNALS.R.ID(RID_O'range)      after OUTPUT_DELAY;
+                        RVALID_O  <= SIGNALS.R.VALID                after OUTPUT_DELAY;
                     when others =>
                         null;
                 end case;
@@ -790,6 +760,10 @@ begin
                         MAP_READ_AXI4_CHANNEL(
                             CORE       => core            ,  -- I/O:
                             STREAM     => stream          ,  -- I/O:
+                            CHANNEL    => CHANNEL         ,  -- In :
+                            READ       => READ            ,  -- In :
+                            WRITE      => WRITE           ,  -- In :
+                            WIDTH      => WIDTH           ,  -- In :
                             SIGNALS    => chk_signals     ,  -- I/O:
                             EVENT      => next_event         -- I/O:
                         );
@@ -803,7 +777,7 @@ begin
                         case next_event is
                             when EVENT_SCALAR  =>
                                 COPY_KEY_WORD(core, keyword);
-                                EXECUTE_UNDEFINED_MAP_KEY(keyword);
+                                EXECUTE_UNDEFINED_MAP_KEY(core, stream, keyword);
                             when EVENT_MAP_END =>
                                 exit MAP_READ_LOOP;
                             when others        =>
@@ -812,7 +786,7 @@ begin
                         end case;
                     end loop;
                     MATCH_AXI4_CHANNEL(core, chk_signals, match);
-                    MATCH_GPI         (core, gpi_signals, match);
+                    MATCH_GPI         (core, gpi_signals, GPI, match);
                 when others =>
                     READ_ERROR(core, PROC_NAME, "SEEK_EVENT NG");
             end case;
@@ -838,7 +812,11 @@ begin
             case next_event is
                 when EVENT_SCALAR =>
                     READ_EVENT(core, stream, EVENT_SCALAR);
-                    SCAN_INTEGER(wait_count, scan_len);
+                    STRING_TO_INTEGER(
+                        STR     => core.str_buf(1 to core.str_len),
+                        VAL     => wait_count,
+                        STR_LEN => scan_len
+                    );
                     if (scan_len = 0) then
                         wait_count := 1;
                     end if;
@@ -862,6 +840,10 @@ begin
                         MAP_READ_AXI4_CHANNEL(
                             CORE       => core            ,  -- I/O:
                             STREAM     => stream          ,  -- I/O:
+                            CHANNEL    => CHANNEL         ,  -- In :
+                            READ       => READ            ,  -- In :
+                            WRITE      => WRITE           ,  -- In :
+                            WIDTH      => WIDTH           ,  -- In :
                             SIGNALS    => chk_signals     ,  -- I/O:
                             EVENT      => next_event         -- I/O:
                         );
@@ -889,7 +871,7 @@ begin
                         case next_event is
                             when EVENT_SCALAR  =>
                                 COPY_KEY_WORD(core, keyword);
-                                EXECUTE_UNDEFINED_MAP_KEY(keyword);
+                                EXECUTE_UNDEFINED_MAP_KEY(core, stream, keyword);
                             when EVENT_MAP_END =>
                                 exit MAP_READ_LOOP;
                             when others        =>
@@ -966,14 +948,22 @@ begin
             REPORT_DEBUG(core, PROC_NAME, "BEGIN");
             READ_EVENT(core, stream, EVENT_MAP_BEGIN);
             MAP_READ_LOOP: loop
-                MAP_READ_PREPARE_FOR_NEXT(core, stream, next_event);
+                MAP_READ_PREPARE_FOR_NEXT(
+                    SELF       => core            ,  -- I/O:
+                    STREAM     => stream          ,  -- I/O:
+                    EVENT      => next_event         -- I/O:
+                );
                 MAP_READ_AXI4_CHANNEL(
                     CORE       => core            ,  -- In :
                     STREAM     => stream          ,  -- I/O:
+                    CHANNEL    => CHANNEL         ,  -- In :
+                    READ       => READ            ,  -- In :
+                    WRITE      => WRITE           ,  -- In :
+                    WIDTH      => WIDTH           ,  -- In :
                     SIGNALS    => out_signals     ,  -- I/O:
                     EVENT      => next_event         -- Out:
                 );
-                EXECUTE_OUTPUT;
+                EXECUTE_OUTPUT(out_signals);
                 case next_event is
                     when EVENT_SCALAR  =>
                         COPY_KEY_WORD(core, keyword);
@@ -983,7 +973,7 @@ begin
                             when KEY_SAY    => EXECUTE_SAY   (core, stream);
                             when KEY_WAIT   => EXECUTE_WAIT;
                             when KEY_CHECK  => EXECUTE_CHECK;
-                            when others     => EXECUTE_UNDEFINED_MAP_KEY(keyword);
+                            when others     => EXECUTE_UNDEFINED_MAP_KEY(core, stream, keyword);
                         end case;
                     when EVENT_MAP_END =>
                         exit MAP_READ_LOOP;
@@ -1052,7 +1042,7 @@ begin
         SYNC_LOCAL_REQ <= (        others => 0);
         FINISH         <= '0';
         REPORT_STATUS  <= core.report_status;
-        EXECUTE_OUTPUT;
+        EXECUTE_OUTPUT(out_signals);
         core.debug := 0;
         ---------------------------------------------------------------------------
         -- メインオペレーションループ
@@ -1079,12 +1069,12 @@ begin
                             when KEY_SYNC   => EXECUTE_SYNC  (operation);
                             when KEY_WAIT   => EXECUTE_WAIT;
                             when KEY_CHECK  => EXECUTE_CHECK;
-                            when others     => EXECUTE_UNDEFINED_MAP_KEY(keyword);
+                            when others     => EXECUTE_UNDEFINED_MAP_KEY(core, stream, keyword);
                         end case;
                     when OP_SCALAR =>
                         case keyword is
-                            when KEY_SYNC  => EXECUTE_SYNC(operation);
-                            when others    => EXECUTE_UNDEFINED_SCALAR(keyword);
+                            when KEY_SYNC   => EXECUTE_SYNC(operation);
+                            when others     => EXECUTE_UNDEFINED_SCALAR(core, stream, keyword);
                         end case;
                     when OP_FINISH => exit;
                     when others    => null;
@@ -1114,7 +1104,7 @@ begin
                         if (keyword = KEY_SYNC) then
                             LOCAL_SYNC;
                         else
-                            EXECUTE_UNDEFINED_SCALAR(keyword);
+                            EXECUTE_UNDEFINED_SCALAR(core, stream, keyword);
                         end if;
                     when OP_FINISH      => exit;
                     when others         => null;

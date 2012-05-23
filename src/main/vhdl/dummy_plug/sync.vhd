@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    sync.vhd
 --!     @brief   Package for Synchronize some dummy-plugs.
---!     @version 0.0.4
---!     @date    2012/5/7
+--!     @version 0.0.6
+--!     @date    2012/5/23
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -64,6 +64,9 @@ package SYNC is
     type      SYNC_ACK_VECTOR      is array (INTEGER range <>) of SYNC_ACK_TYPE;
     -------------------------------------------------------------------------------
     --! @brief モデル間同期(SYNC)開始サブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SYNC_REQ    同期開始信号出力.
+    --! @param    SYNC_CNT    同期ウェイトクロック数.
     -------------------------------------------------------------------------------
     procedure SYNC_BEGIN(
         signal   SYNC_REQ : out   SYNC_REQ_VECTOR;
@@ -71,6 +74,11 @@ package SYNC is
     );
     -------------------------------------------------------------------------------
     --! @brief モデル間同期(SYNC)が完了したかどうかを調べるサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SYNC_REQ    同期開始信号出力.
+    --! @param    SYNC_ACK    同期応答信号入力.
+    --! @param    SYNC_CNT    同期ウェイトクロック数.
+    --! @param    DONE        終了フラグ.
     -------------------------------------------------------------------------------
     procedure SYNC_CHECK(
         signal   SYNC_REQ : out   SYNC_REQ_VECTOR;
@@ -80,6 +88,10 @@ package SYNC is
     );
     -------------------------------------------------------------------------------
     --! @brief モデル間同期(SYNC)終了サブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SYNC_REQ    同期開始信号出力.
+    --! @param    SYNC_ACK    同期応答信号入力.
+    --! @param    SYNC_CNT    同期ウェイトクロック数.
     -------------------------------------------------------------------------------
     procedure SYNC_END  (
         signal   SYNC_REQ : out   SYNC_REQ_VECTOR;
@@ -142,6 +154,9 @@ use     std.textio.all;
 package body SYNC is
     -------------------------------------------------------------------------------
     --! @brief モデル間同期(SYNC)開始サブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SYNC_REQ    同期開始信号出力.
+    --! @param    SYNC_CNT    同期ウェイトクロック数.
     -------------------------------------------------------------------------------
     procedure SYNC_BEGIN(
         signal   SYNC_REQ : out   SYNC_REQ_VECTOR;
@@ -169,6 +184,11 @@ package body SYNC is
     end SYNC_BEGIN;
     -------------------------------------------------------------------------------
     --! @brief モデル間同期(SYNC)が完了したかどうかを調べるサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SYNC_REQ    同期開始信号出力.
+    --! @param    SYNC_ACK    同期応答信号入力.
+    --! @param    SYNC_CNT    同期ウェイトクロック数.
+    --! @param    DONE        終了フラグ.
     -------------------------------------------------------------------------------
     procedure SYNC_CHECK(
         signal   SYNC_REQ : out   SYNC_REQ_VECTOR;
@@ -195,6 +215,10 @@ package body SYNC is
     end SYNC_CHECK;
     -------------------------------------------------------------------------------
     --! @brief モデル間同期(SYNC)終了サブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SYNC_REQ    同期開始信号出力.
+    --! @param    SYNC_ACK    同期応答信号入力.
+    --! @param    SYNC_CNT    同期ウェイトクロック数.
     -------------------------------------------------------------------------------
     procedure SYNC_END  (
         signal   SYNC_REQ : out   SYNC_REQ_VECTOR;
@@ -235,17 +259,17 @@ use     DUMMY_PLUG.SYNC.all;
 -----------------------------------------------------------------------------------
 entity  SYNC_SIG_DRIVER is
     generic (
-        NAME     :       STRING;
-        PLUG_NUM :       SYNC_PLUG_NUM_TYPE
+        NAME     :       STRING;            --! デバッグ出力用の名前.
+        PLUG_NUM :       SYNC_PLUG_NUM_TYPE --! プラグの番号.
     );
     port (
-        CLK      : in    std_logic;
-        RST      : in    std_logic;
-        CLR      : in    std_logic;
-        DEBUG    : in    boolean;
-        SYNC     : inout SYNC_SIG_TYPE;
-        REQ      : in    SYNC_REQ_TYPE;
-        ACK      : out   SYNC_ACK_TYPE
+        CLK      : in    std_logic;         --! クロック.
+        RST      : in    std_logic;         --! 非同期リセット.
+        CLR      : in    std_logic;         --! 同期リセット.
+        DEBUG    : in    boolean;           --! デバッグ出力をするための信号.
+        SYNC     : inout SYNC_SIG_TYPE;     --! モデル間同期用入出力信号.
+        REQ      : in    SYNC_REQ_TYPE;     --! 同期要求入力信号.
+        ACK      : out   SYNC_ACK_TYPE      --! 同期応答出力信号.
     );
 end     SYNC_SIG_DRIVER;
 architecture MODEL of SYNC_SIG_DRIVER is
@@ -308,17 +332,17 @@ use     DUMMY_PLUG.UTIL.INTEGER_TO_STRING;
 -----------------------------------------------------------------------------------
 entity SYNC_LOCAL_HUB is
     generic (
-        NAME     :       STRING;
-        PLUG_SIZE:       SYNC_PLUG_NUM_TYPE
+        NAME     :       STRING;            --! デバッグ出力用の名前.
+        PLUG_SIZE:       SYNC_PLUG_NUM_TYPE --! 接続するモデルの数.
     );
     port (
-        CLK      : in    std_logic;
-        RST      : in    std_logic;
-        CLR      : in    std_logic;
-        DEBUG    : in    boolean;
-        SYNC     : inout SYNC_SIG_TYPE;
-        REQ      : in    SYNC_REQ_VECTOR(1 to PLUG_SIZE);
-        ACK      : out   SYNC_ACK_VECTOR(1 to PLUG_SIZE)
+        CLK      : in    std_logic;         --! クロック.
+        RST      : in    std_logic;         --! 非同期リセット.
+        CLR      : in    std_logic;         --! 同期リセット.
+        DEBUG    : in    boolean;           --! デバッグ出力をするための信号.
+        SYNC     : inout SYNC_SIG_TYPE;     --! モデル間同期用入出力信号.
+        REQ      : in    SYNC_REQ_VECTOR(1 to PLUG_SIZE);  --! 同期要求入力信号.
+        ACK      : out   SYNC_ACK_VECTOR(1 to PLUG_SIZE)   --! 同期応答出力信号.
     );
 end SYNC_LOCAL_HUB;
 architecture MODEL of SYNC_LOCAL_HUB is
