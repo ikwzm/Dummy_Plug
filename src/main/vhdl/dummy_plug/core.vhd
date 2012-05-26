@@ -2,7 +2,7 @@
 --!     @file    core.vhd
 --!     @brief   Core Package for Dummy Plug.
 --!     @version 0.0.6
---!     @date    2012/5/23
+--!     @date    2012/5/24
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -377,6 +377,50 @@ package CORE is
         variable  SELF          : inout CORE_TYPE;
         file      STREAM        :       TEXT;
                   OP_WORD       : in    STRING
+    );
+    -------------------------------------------------------------------------------
+    --! @brief シナリオから整数型の値を読む.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF        コア変数.
+    --! @param    STREAM      入力ストリーム.
+    --! @param    VAL         読んだ整数型の値.
+    --! @param    GOOD        読み取れたことを示す.
+    -------------------------------------------------------------------------------
+    procedure READ_INTEGER(
+        variable  SELF          : inout CORE_TYPE;
+        file      STREAM        :       TEXT;
+                  VAL           : inout integer;
+                  GOOD          : out   boolean
+    );
+    -------------------------------------------------------------------------------
+    --! @brief シナリオからboolean型の値を読む.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF        コア変数.
+    --! @param    STREAM      入力ストリーム.
+    --! @param    VAL         読んだboolean型の値.
+    --! @param    GOOD        読み取れたことを示す.
+    -------------------------------------------------------------------------------
+    procedure READ_BOOLEAN(
+        variable  SELF          : inout CORE_TYPE;
+        file      STREAM        :       TEXT;
+                  VAL           : inout boolean;
+                  GOOD          : out   boolean
+    );
+    -------------------------------------------------------------------------------
+    --! @brief シナリオからstd_logic_vector型の値を読む.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF        コア変数.
+    --! @param    STREAM      入力ストリーム.
+    --! @param    SIZE        デフォルトのビット数.
+    --! @param    VAL         読んだstd_logic_vector型の値.
+    --! @param    VAL_LEN     読んだstd_logic_vectorのビット数.
+    -------------------------------------------------------------------------------
+    procedure READ_STD_LOGIC_VECTOR(
+        variable  SELF          : inout CORE_TYPE;
+        file      STREAM        :       TEXT;
+                  SIZE          : in    integer;
+                  VAL           : inout std_logic_vector;
+                  VAL_LEN       : out   integer
     );
     ------------------------------------------------------------------------------
     --! @brief シナリオのマップからキーと値を読み出す準備をするサブプログラム.
@@ -771,7 +815,7 @@ package body CORE is
         file      STREAM        :       TEXT;
                   EVENT         : in    EVENT_TYPE
     ) is
-        constant  PROC_NAME     :       string := "READ_EVENT";
+        constant  PROC_NAME     :       string := "CORE.READ_EVENT";
         variable  read_len      :       integer;
         variable  read_good     :       boolean;
     begin 
@@ -794,7 +838,7 @@ package body CORE is
         file      STREAM        :       TEXT;
                   EVENT         : in    EVENT_TYPE
     ) is
-        constant  PROC_NAME     :       string := "SKIP_EVENT";
+        constant  PROC_NAME     :       string := "CORE.SKIP_EVENT";
         variable  skip_good     :       boolean;
     begin
         SKIP_EVENT(SELF.reader, STREAM, EVENT, skip_good);
@@ -834,7 +878,7 @@ package body CORE is
         file      STREAM        :       TEXT;
         variable  FOUND         : out   boolean
     ) is
-        constant  PROC_NAME     :       string := "check_my_name";
+        constant  PROC_NAME     :       string := "CORE.check_my_name";
         variable  get_event     :       EVENT_TYPE;
         variable  seq_level     :       integer;
         variable  match         :       boolean;
@@ -880,7 +924,7 @@ package body CORE is
         file      STREAM        :       TEXT;
         variable  NEXT_STATE    : out   STATE_TYPE
     ) is
-        constant  PROC_NAME     :       string := "check_first_node";
+        constant  PROC_NAME     :       string := "CORE.check_first_node";
         variable  next_event    :       EVENT_TYPE;
         variable  found         :       boolean;
     begin
@@ -1012,7 +1056,7 @@ package body CORE is
         variable  OPERATION     : out   OPERATION_TYPE;
         variable  OP_WORD       : out   string
     ) is
-        constant  PROC_NAME     :       string := "READ_OPERATION";
+        constant  PROC_NAME     :       string := "CORE.READ_OPERATION";
         variable  next_event    :       EVENT_TYPE;
         variable  next_state    :       STATE_TYPE;
         procedure REPORT_DEBUG(state:in STRING;event:EVENT_TYPE) is
@@ -1240,8 +1284,8 @@ package body CORE is
                   SYNC_PORT     : out   integer;
                   SYNC_WAIT     : out   integer
     ) is
-        constant  PROC_NAME     :       string := "READ_SYNC_ARGS";
-        type     STATE_TYPE is (
+        constant  PROC_NAME     :       string := "CORE.READ_SYNC_ARGS";
+        type      STATE_TYPE is (
                      STATE_NULL,
                      STATE_SCALAR_PORT,
                      STATE_MAP_KEY,
@@ -1356,7 +1400,7 @@ package body CORE is
         variable  SELF          : inout CORE_TYPE;
         file      STREAM        :       TEXT
     ) is
-        constant  PROC_NAME     :       STRING := "EXECUTE_SAY";
+        constant  PROC_NAME     :       STRING := "CORE.EXECUTE_SAY";
         variable  next_event    :       EVENT_TYPE;
     begin
         REPORT_DEBUG(SELF, PROC_NAME, "BEGIN");
@@ -1383,7 +1427,7 @@ package body CORE is
                   SIGNALS       : inout std_logic_vector;
         signal    GPO           : out   std_logic_vector
     ) is
-        constant  PROC_NAME     :       string := "EXECUTE_OUT";
+        constant  PROC_NAME     :       string := "CORE.EXECUTE_OUT";
         variable  next_event    :       EVENT_TYPE;
         variable  match         :       boolean;
     begin
@@ -1464,7 +1508,7 @@ package body CORE is
         variable  SELF          : inout CORE_TYPE;
         file      STREAM        :       TEXT
     ) is
-        constant  PROC_NAME     :       STRING := "EXECUTE_SKIP";
+        constant  PROC_NAME     :       STRING := "CORE.EXECUTE_SKIP";
         variable  next_event    :       EVENT_TYPE;
     begin
         REPORT_DEBUG(SELF, PROC_NAME, "BEGIN");
@@ -1486,7 +1530,7 @@ package body CORE is
         variable  SELF          : inout CORE_TYPE;
         file      STREAM        :       TEXT
     ) is
-        constant  PROC_NAME     :       STRING := "EXECUTE_REPORT";
+        constant  PROC_NAME     :       STRING := "CORE.EXECUTE_REPORT";
         variable  next_event    :       EVENT_TYPE;
         constant  KEY_DEBUG     :       STRING(1 to 3) := "DEB";
         constant  KEY_REMARK    :       STRING(1 to 3) := "REM";
@@ -1569,7 +1613,7 @@ package body CORE is
         variable  SELF          : inout CORE_TYPE;
         file      STREAM        :       TEXT
     ) is
-        constant  PROC_NAME     :       string := "EXECUTE_DEBUG";
+        constant  PROC_NAME     :       string := "CORE.EXECUTE_DEBUG";
         variable  next_event    :       EVENT_TYPE;
         variable  scan_len      :       integer;
         variable  debug         :       integer;
@@ -1696,6 +1740,154 @@ package body CORE is
         end loop;
         return status;
     end function;
+    -------------------------------------------------------------------------------
+    --! @brief シナリオから整数型の値を読む.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF        コア変数.
+    --! @param    STREAM      入力ストリーム.
+    --! @param    VAL         読んだ整数型の値.
+    --! @param    GOOD        読み取れたことを示す.
+    -------------------------------------------------------------------------------
+    procedure READ_INTEGER(
+        variable  SELF          : inout CORE_TYPE;
+        file      STREAM        :       TEXT;
+                  VAL           : inout integer;
+                  GOOD          : out   boolean
+    ) is
+        constant  PROC_NAME     :       string := "CORE.READ_INTEGER";
+        variable  next_event    :       EVENT_TYPE;
+        variable  read_len      :       integer;
+        variable  read_val      :       integer;
+    begin 
+        REPORT_DEBUG(SELF, PROC_NAME, "BEGIN");
+        SEEK_EVENT(SELF, STREAM, next_event);
+        case next_event is
+            when EVENT_SCALAR =>
+                read_len := 0;
+                READ_EVENT(SELF, STREAM, next_event);
+                STRING_TO_INTEGER(
+                    STR     => SELF.str_buf(1 to SELF.str_len),
+                    VAL     => read_val,
+                    STR_LEN => read_len
+                );
+                if (read_len > 0) then
+                    VAL  := read_val;
+                    GOOD := TRUE;
+                    REPORT_DEBUG(SELF, PROC_NAME, "GOOD => " & INTEGER_TO_STRING(read_val));
+                else
+                    VAL  := 0;
+                    GOOD := FALSE;
+                    REPORT_DEBUG(SELF, PROC_NAME, "NG");
+                end if;
+            when others =>
+                READ_ERROR(SELF, PROC_NAME, EVENT_TO_STRING(next_event));
+                SKIP_EVENT(SELF, STREAM, next_event);
+        end case;
+        REPORT_DEBUG(SELF, PROC_NAME, "END");
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief シナリオからboolean型の値を読む.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF        コア変数.
+    --! @param    STREAM      入力ストリーム.
+    --! @param    VAL         読んだboolean型の値.
+    --! @param    GOOD        読み取れたことを示す.
+    -------------------------------------------------------------------------------
+    procedure READ_BOOLEAN(
+        variable  SELF          : inout CORE_TYPE;
+        file      STREAM        :       TEXT;
+                  VAL           : inout boolean;
+                  GOOD          : out   boolean
+    ) is
+        constant  PROC_NAME     :       string := "CORE.READ_BOOLEAN";
+        variable  next_event    :       EVENT_TYPE;
+        variable  read_len      :       integer;
+        variable  read_val      :       boolean;
+    begin 
+        REPORT_DEBUG(SELF, PROC_NAME, "BEGIN");
+        SEEK_EVENT(SELF, STREAM, next_event);
+        case next_event is
+            when EVENT_SCALAR =>
+                read_len := 0;
+                READ_EVENT(SELF, STREAM, next_event);
+                STRING_TO_BOOLEAN(
+                    STR     => SELF.str_buf(1 to SELF.str_len),
+                    VAL     => read_val,
+                    STR_LEN => read_len
+                );
+                if (read_len > 0) then
+                    VAL  := read_val;
+                    GOOD := TRUE;
+                    REPORT_DEBUG(SELF, PROC_NAME, "GOOD => " & BOOLEAN_TO_STRING(read_val));
+                else
+                    VAL  := FALSE;
+                    GOOD := FALSE;
+                    REPORT_DEBUG(SELF, PROC_NAME, "NG");
+                end if;
+            when others =>
+                READ_ERROR(SELF, PROC_NAME, EVENT_TO_STRING(next_event));
+                SKIP_EVENT(SELF, STREAM, next_event);
+        end case;
+        REPORT_DEBUG(SELF, PROC_NAME, "END");
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief シナリオからstd_logic_vector型の値を読む.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF        コア変数.
+    --! @param    STREAM      入力ストリーム.
+    --! @param    SIZE        デフォルトのビット数.
+    --! @param    VAL         読んだstd_logic_vector型の値.
+    --! @param    VAL_LEN     読んだstd_logic_vectorのビット数.
+    -------------------------------------------------------------------------------
+    procedure READ_STD_LOGIC_VECTOR(
+        variable  SELF          : inout CORE_TYPE;
+        file      STREAM        :       TEXT;
+                  SIZE          : in    integer;
+                  VAL           : inout std_logic_vector;
+                  VAL_LEN       : out   integer
+    ) is
+        constant  PROC_NAME     :       string := "CORE.READ_STD_LOGIC_VECTOR";
+        variable  next_event    :       EVENT_TYPE;
+        variable  str_len       :       integer;
+        variable  seq_level     :       integer;
+        variable  pos           :       integer;
+        variable  len           :       integer;
+    begin
+        REPORT_DEBUG(SELF, PROC_NAME, "BEGIN");
+        seq_level := 0;
+        pos       := VAL'low;
+        MAIN_LOOP: loop
+            SEEK_EVENT(SELF, STREAM, next_event);
+            case next_event is
+                when EVENT_SEQ_BEGIN  =>
+                    READ_EVENT(SELF, STREAM, next_event);
+                    seq_level := seq_level + 1;
+                when EVENT_SEQ_END    =>
+                    if (seq_level > 0) then
+                        READ_EVENT(SELF, STREAM, next_event);
+                        seq_level := seq_level - 1;
+                    end if;
+                    exit when (seq_level = 0);
+                when EVENT_SCALAR     =>
+                    READ_EVENT(SELF, STREAM, next_event);
+                    if (pos < VAL'high) then
+                        STRING_TO_STD_LOGIC_VECTOR(
+                            STR     => SELF.str_buf(1 to SELF.str_len),
+                            VAL     => VAL(pos to VAL'high),
+                            STR_LEN => str_len,
+                            VAL_LEN => len
+                        );
+                        pos := pos + len;
+                    end if;
+                when EVENT_ERROR      =>
+                    READ_ERROR(SELF, PROC_NAME, "SEEK_EVENT NG");
+                when others =>
+                    SKIP_EVENT(SELF, STREAM, next_event);
+            end case;
+        end loop;
+        VAL_LEN := pos - VAL'low;
+        REPORT_DEBUG(SELF, PROC_NAME, "END");
+    end procedure;
     ------------------------------------------------------------------------------
     --! @brief シナリオのマップからキーと値を読み出す準備をするサブプログラム.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1735,7 +1927,7 @@ package body CORE is
                   VAL           : inout std_logic_vector;
                   EVENT         : inout EVENT_TYPE
     ) is
-        constant  PROC_NAME     :       string := "MAP_READ_STD_LOGIC_VECTOR";
+        constant  PROC_NAME     :       string := "CORE.MAP_READ_STD_LOGIC_VECTOR";
         variable  next_event    :       EVENT_TYPE;
         variable  key_word      :       string(1 to KEY'length);
         variable  pos           :       integer;
@@ -1822,33 +2014,19 @@ package body CORE is
                   VAL           : inout integer;
                   EVENT         : inout EVENT_TYPE
     ) is
-        constant  PROC_NAME     :       string := "MAP_READ_INTEGER";
+        constant  PROC_NAME     :       string := "CORE.MAP_READ_INTEGER";
         variable  next_event    :       EVENT_TYPE;
         variable  key_word      :       string(1 to KEY'length);
-        variable  read_len      :       integer;
-        variable  value         :       integer;
+        variable  read_good     :       boolean;
     begin
-        REPORT_DEBUG(SELF, PROC_NAME, "BEGIN");
+        REPORT_DEBUG(SELF, PROC_NAME, "BEGIN KEY=" & KEY);
         next_event := EVENT;
         if (next_event = EVENT_SCALAR) then
             COPY_KEY_WORD(SELF, key_word);
             if (key_word = KEY) then
-                SEEK_EVENT(SELF, STREAM, next_event);
-                read_len := 0;
-                if (next_event = EVENT_SCALAR) then
-                    READ_EVENT(SELF, STREAM, next_event);
-                    STRING_TO_INTEGER(
-                        STR     => SELF.str_buf(1 to SELF.str_len),
-                        VAL     => value,
-                        STR_LEN => read_len
-                    );
-                end if;
-                if (read_len > 0) then
-                     VAL := value;
-                     REPORT_DEBUG(SELF, PROC_NAME, "KEY="  & KEY &
-                                  " VAL=" & INTEGER_TO_STRING(VAL));
-                else
-                     READ_ERROR(SELF, PROC_NAME, "READ_VAL NG KEY=" & KEY);
+                READ_INTEGER(SELF, STREAM, VAL, read_good);
+                if (read_good = FALSE) then
+                     READ_ERROR(SELF, PROC_NAME, "READ_INTEGER NG");
                 end if;
                 MAP_READ_PREPARE_FOR_NEXT(SELF, STREAM, next_event);
             end if;
@@ -1877,33 +2055,19 @@ package body CORE is
                   VAL           : inout boolean;
                   EVENT         : inout EVENT_TYPE
     ) is
-        constant  PROC_NAME     :       string := "MAP_READ_BOOLEAN";
+        constant  PROC_NAME     :       string := "CORE.MAP_READ_BOOLEAN";
         variable  next_event    :       EVENT_TYPE;
         variable  key_word      :       string(1 to KEY'length);
-        variable  read_len      :       integer;
-        variable  value         :       boolean;
+        variable  read_good     :       boolean;
     begin
-        REPORT_DEBUG(SELF, PROC_NAME, "BEGIN");
+        REPORT_DEBUG(SELF, PROC_NAME, "BEGIN KEY=" & KEY);
         next_event := EVENT;
         if (next_event = EVENT_SCALAR) then
             COPY_KEY_WORD(SELF, key_word);
             if (key_word = KEY) then
-                SEEK_EVENT(SELF, STREAM, next_event);
-                read_len := 0;
-                if (next_event = EVENT_SCALAR) then
-                    READ_EVENT(SELF, STREAM, next_event);
-                    STRING_TO_BOOLEAN(
-                        STR     => SELF.str_buf(1 to SELF.str_len),
-                        VAL     => value,
-                        STR_LEN => read_len
-                    );
-                end if;
-                if (read_len > 0) then
-                     VAL := value;
-                     REPORT_DEBUG(SELF, PROC_NAME, "KEY="  & KEY &
-                                  " VAL=" & BOOLEAN_TO_STRING(VAL));
-                else
-                     READ_ERROR(SELF, PROC_NAME, "READ_VAL NG KEY=" & KEY);
+                READ_BOOLEAN(SELF, STREAM, VAL, read_good);
+                if (read_good = FALSE) then
+                     READ_ERROR(SELF, PROC_NAME, "READ_BOOLEAN NG");
                 end if;
                 MAP_READ_PREPARE_FOR_NEXT(SELF, STREAM, next_event);
             end if;
