@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    core.vhd
 --!     @brief   Core Package for Dummy Plug.
---!     @version 0.0.6
---!     @date    2012/5/24
+--!     @version 1.0.0
+--!     @date    2012/5/31
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -411,14 +411,12 @@ package CORE is
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --! @param    SELF        コア変数.
     --! @param    STREAM      入力ストリーム.
-    --! @param    SIZE        デフォルトのビット数.
     --! @param    VAL         読んだstd_logic_vector型の値.
     --! @param    VAL_LEN     読んだstd_logic_vectorのビット数.
     -------------------------------------------------------------------------------
     procedure READ_STD_LOGIC_VECTOR(
         variable  SELF          : inout CORE_TYPE;
         file      STREAM        :       TEXT;
-                  SIZE          : in    integer;
                   VAL           : inout std_logic_vector;
                   VAL_LEN       : out   integer
     );
@@ -1842,7 +1840,6 @@ package body CORE is
     procedure READ_STD_LOGIC_VECTOR(
         variable  SELF          : inout CORE_TYPE;
         file      STREAM        :       TEXT;
-                  SIZE          : in    integer;
                   VAL           : inout std_logic_vector;
                   VAL_LEN       : out   integer
     ) is
@@ -1867,13 +1864,12 @@ package body CORE is
                         READ_EVENT(SELF, STREAM, next_event);
                         seq_level := seq_level - 1;
                     end if;
-                    exit when (seq_level = 0);
                 when EVENT_SCALAR     =>
                     READ_EVENT(SELF, STREAM, next_event);
                     if (pos < VAL'high) then
                         STRING_TO_STD_LOGIC_VECTOR(
                             STR     => SELF.str_buf(1 to SELF.str_len),
-                            VAL     => VAL(pos to VAL'high),
+                            VAL     => VAL(VAL'high downto pos),
                             STR_LEN => str_len,
                             VAL_LEN => len
                         );
@@ -1884,6 +1880,7 @@ package body CORE is
                 when others =>
                     SKIP_EVENT(SELF, STREAM, next_event);
             end case;
+            exit when (seq_level = 0);
         end loop;
         VAL_LEN := pos - VAL'low;
         REPORT_DEBUG(SELF, PROC_NAME, "END");
