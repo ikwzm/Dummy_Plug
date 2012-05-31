@@ -8,7 +8,6 @@ var searchData=
   ['axi4_5fsignal_5fprinter_2evhd',['axi4_signal_printer.vhd',['../axi4__signal__printer_8vhd.html',1,'']]],
   ['axi4_5fslave_5fplayer_2evhd',['axi4_slave_player.vhd',['../axi4__slave__player_8vhd.html',1,'']]],
   ['axi4_5ftest_5f1_2evhd',['axi4_test_1.vhd',['../axi4__test__1_8vhd.html',1,'']]],
-  ['axi4_5ftest_5f2_2evhd',['axi4_test_2.vhd',['../axi4__test__2_8vhd.html',1,'']]],
-  ['axi4_5ftypes_2evhd',['axi4_types.vhd',['../axi4__types_8vhd.html',1,'']]],
-  ['axi_5fmaster_5fbfm_2evhd',['axi_master_bfm.vhd',['../axi__master__bfm_8vhd.html',1,'']]]
+  ['axi4_5ftest_5f1_5f1_2evhd',['axi4_test_1_1.vhd',['../axi4__test__1__1_8vhd.html',1,'']]],
+  ['axi4_5ftypes_2evhd',['axi4_types.vhd',['../axi4__types_8vhd.html',1,'']]]
 ];

@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['m_5fseq16_5fbfm_5ff',['M_SEQ16_BFM_F',['../classm__seq__bfm__pack.html#abe2f1c4b468b5c89b9585dfb3c002b59',1,'m_seq_bfm_pack.M_SEQ16_BFM_F()'],['../class__m__seq__bfm__pack.html#abe2f1c4b468b5c89b9585dfb3c002b59',1,'_m_seq_bfm_pack.M_SEQ16_BFM_F()']]],
   ['main',['MAIN',['../classMARCHAL_1_1MODEL.html#ac1a6694e960a318275c010997d8bbc66',1,'MARCHAL::MODEL']]],
   ['map_5fread_5faxi4_5fchannel',['MAP_READ_AXI4_CHANNEL',['../classAXI4__CORE.html#a611a4d4ab0eb4f55d5d7ab27f77919b9',1,'AXI4_CORE.MAP_READ_AXI4_CHANNEL()'],['../class__AXI4__CORE.html#a611a4d4ab0eb4f55d5d7ab27f77919b9',1,'_AXI4_CORE.MAP_READ_AXI4_CHANNEL()']]],
+  ['map_5fread_5faxi4_5ftransaction',['MAP_READ_AXI4_TRANSACTION',['../classAXI4__CORE.html#ac34a54af196cfebc53d0d29e61faab5f',1,'AXI4_CORE.MAP_READ_AXI4_TRANSACTION()'],['../class__AXI4__CORE.html#ac34a54af196cfebc53d0d29e61faab5f',1,'_AXI4_CORE.MAP_READ_AXI4_TRANSACTION()']]],
   ['map_5fread_5fboolean',['MAP_READ_BOOLEAN',['../classCORE.html#aa7ceacea13909abd6d3189ade12ffd54',1,'CORE.MAP_READ_BOOLEAN()'],['../class__CORE.html#aa7ceacea13909abd6d3189ade12ffd54',1,'_CORE.MAP_READ_BOOLEAN()']]],
   ['map_5fread_5finteger',['MAP_READ_INTEGER',['../classCORE.html#ab86ca810abb545eb66878fa5429b2be5',1,'CORE.MAP_READ_INTEGER()'],['../class__CORE.html#ab86ca810abb545eb66878fa5429b2be5',1,'_CORE.MAP_READ_INTEGER()']]],
   ['map_5fread_5fprepare_5ffor_5fnext',['MAP_READ_PREPARE_FOR_NEXT',['../classCORE.html#a76d3300e1ec11df7aaa0def1acfe5b00',1,'CORE.MAP_READ_PREPARE_FOR_NEXT()'],['../class__CORE.html#a76d3300e1ec11df7aaa0def1acfe5b00',1,'_CORE.MAP_READ_PREPARE_FOR_NEXT()']]],

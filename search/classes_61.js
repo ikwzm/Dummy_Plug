@@ -7,6 +7,5 @@ var searchData=
   ['axi4_5fmodels',['AXI4_MODELS',['../classAXI4__MODELS.html',1,'']]],
   ['axi4_5fsignal_5fprinter',['AXI4_SIGNAL_PRINTER',['../classAXI4__SIGNAL__PRINTER.html',1,'']]],
   ['axi4_5fslave_5fplayer',['AXI4_SLAVE_PLAYER',['../classAXI4__SLAVE__PLAYER.html',1,'']]],
-  ['axi4_5ftypes',['AXI4_TYPES',['../classAXI4__TYPES.html',1,'']]],
-  ['axi_5fmaster_5fbfm',['axi_master_bfm',['../classaxi__master__bfm.html',1,'']]]
+  ['axi4_5ftypes',['AXI4_TYPES',['../classAXI4__TYPES.html',1,'']]]
 ];

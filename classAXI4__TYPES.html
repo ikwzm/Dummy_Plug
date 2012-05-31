@@ -23,6 +23,7 @@
   <td style="padding-left: 0.5em;">
    <div id="projectname">Dummy Plug
    </div>
+   <div id="projectbrief">Dummy Plug is a simple bus functional model library written by VHDL Only.</div>
   </td>
  </tr>
  </tbody>
@@ -90,7 +91,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 
-<p>AXI_TYPES.  
+<p>AXI4 の各種タイプ/定数を定義しているパッケージ.  
  <a href="classAXI4__TYPES.html#details">More...</a></p>
 
 <p><a href="classAXI4__TYPES-members.html">List of all members.</a></p>
@@ -147,20 +148,30 @@ Constants</h2></td></tr>
 <tr class="memitem:a400a050d5944460b4586f9c04c947d0f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__TYPES.html#a400a050d5944460b4586f9c04c947d0f">AXI4_RESP_EXOKAY</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="classAXI4__TYPES.html#ad674fd3df5b7fce9c8561011a3bd03af">AXI4_RESP_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; 01 &quot;</span><span class="vhdlchar"> </span></b></td></tr>
 <tr class="memitem:acc8493f1e05acba91996f8a65c80f39e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__TYPES.html#acc8493f1e05acba91996f8a65c80f39e">AXI4_RESP_SLVERR</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="classAXI4__TYPES.html#ad674fd3df5b7fce9c8561011a3bd03af">AXI4_RESP_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; 10 &quot;</span><span class="vhdlchar"> </span></b></td></tr>
 <tr class="memitem:af89235cccb0b1520e0b8e7e01aab1558"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__TYPES.html#af89235cccb0b1520e0b8e7e01aab1558">AXI4_RESP_DECERR</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="classAXI4__TYPES.html#ad674fd3df5b7fce9c8561011a3bd03af">AXI4_RESP_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; 11 &quot;</span><span class="vhdlchar"> </span></b></td></tr>
+<tr class="memitem:ad8871ec283bbc42e879d6427b6753d84"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__TYPES.html#ad8871ec283bbc42e879d6427b6753d84">AXI4_ID_MAX_WIDTH</a> &#160;</td><td class="memItemRight" valign="bottom"><b><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span> <span class="vhdldigit">8</span> <span class="vhdlchar"> </span></b></td></tr>
+<tr class="memdesc:ad8871ec283bbc42e879d6427b6753d84"><td class="mdescLeft">&#160;</td><td class="mdescRight">AXI4 ID の最大ビット幅  <a href="#ad8871ec283bbc42e879d6427b6753d84"></a><br/></td></tr>
+<tr class="memitem:afdd57acc10c67f78186b604ed3f8ff9e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__TYPES.html#afdd57acc10c67f78186b604ed3f8ff9e">AXI4_ADDR_MAX_WIDTH</a> &#160;</td><td class="memItemRight" valign="bottom"><b><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span> <span class="vhdldigit">64</span> <span class="vhdlchar"> </span></b></td></tr>
+<tr class="memdesc:afdd57acc10c67f78186b604ed3f8ff9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">AXI4 ADDR の最大ビット幅  <a href="#afdd57acc10c67f78186b604ed3f8ff9e"></a><br/></td></tr>
+<tr class="memitem:a26805d061668ba29ffb1386b089e8ddf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__TYPES.html#a26805d061668ba29ffb1386b089e8ddf">AXI4_DATA_MAX_WIDTH</a> &#160;</td><td class="memItemRight" valign="bottom"><b><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span> <span class="vhdldigit">1024</span> <span class="vhdlchar"> </span></b></td></tr>
+<tr class="memdesc:a26805d061668ba29ffb1386b089e8ddf"><td class="mdescLeft">&#160;</td><td class="mdescRight">AXI4 DATA の最大ビット幅  <a href="#a26805d061668ba29ffb1386b089e8ddf"></a><br/></td></tr>
+<tr class="memitem:ac12ca53b88af815ea33fd8a5c1e8c094"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__TYPES.html#ac12ca53b88af815ea33fd8a5c1e8c094">AXI4_STRB_MAX_WIDTH</a> &#160;</td><td class="memItemRight" valign="bottom"><b><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#a26805d061668ba29ffb1386b089e8ddf">AXI4_DATA_MAX_WIDTH</a></b> <span class="vhdlchar"> </span><span class="vhdlchar">/</span> <span class="vhdldigit">8</span> <span class="vhdlchar"> </span></b></td></tr>
+<tr class="memdesc:ac12ca53b88af815ea33fd8a5c1e8c094"><td class="mdescLeft">&#160;</td><td class="mdescRight">AXI4 WSTRB の最大ビット幅  <a href="#ac12ca53b88af815ea33fd8a5c1e8c094"></a><br/></td></tr>
+<tr class="memitem:a74f0106e870889408aa19e62a9337ca2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__TYPES.html#a74f0106e870889408aa19e62a9337ca2">AXI4_USER_MAX_WIDTH</a> &#160;</td><td class="memItemRight" valign="bottom"><b><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span> <span class="vhdldigit">32</span> <span class="vhdlchar"> </span></b></td></tr>
+<tr class="memdesc:a74f0106e870889408aa19e62a9337ca2"><td class="mdescLeft">&#160;</td><td class="mdescRight">AXI4 USER の最大ビット幅  <a href="#a74f0106e870889408aa19e62a9337ca2"></a><br/></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="Types"></a>
 Types</h2></td></tr>
- <tr class="memitem:a46088d90ff916961caebbbbd1eea6087"><td class="memItemLeft" align="right" valign="top"><b>record: <a class="el" href="classAXI4__TYPES.html#a46088d90ff916961caebbbbd1eea6087">AXI4_SIGNAL_WIDTH_TYPE</a>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar">ID</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b><br/>
-<b><span class="vhdlchar">AWADDR</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b><br/>
-<b><span class="vhdlchar">AWUSER</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b><br/>
-<b><span class="vhdlchar">ARADDR</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b><br/>
-<b><span class="vhdlchar">ARUSER</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b><br/>
-<b><span class="vhdlchar">WDATA</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b><br/>
-<b><span class="vhdlchar">WUSER</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b><br/>
-<b><span class="vhdlchar">RDATA</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b><br/>
-<b><span class="vhdlchar">RUSER</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b><br/>
-<b><span class="vhdlchar">BUSER</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b></td></tr>
-<tr class="memdesc:a46088d90ff916961caebbbbd1eea6087"><td class="mdescLeft">&#160;</td><td class="mdescRight">AXI4 チャネルの可変長信号のビット幅を指定するレコードタイプ.  <a href="#a46088d90ff916961caebbbbd1eea6087"></a><br/></td></tr>
+ <tr class="memitem:a05038ae802d2d2bc54e4578f48e0b322"><td class="memItemLeft" align="right" valign="top"><b>record: <a class="el" href="classAXI4__TYPES.html#a05038ae802d2d2bc54e4578f48e0b322">AXI4_SIGNAL_WIDTH_TYPE</a>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar">ID</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlkeyword">range</span><span class="vhdlchar"> </span> <span class="vhdldigit">1</span> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">to</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#ad8871ec283bbc42e879d6427b6753d84">AXI4_ID_MAX_WIDTH</a></b> <span class="vhdlchar"> </span></b><br/>
+<b><span class="vhdlchar">AWADDR</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlkeyword">range</span><span class="vhdlchar"> </span> <span class="vhdldigit">1</span> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">to</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#a74f0106e870889408aa19e62a9337ca2">AXI4_USER_MAX_WIDTH</a></b> <span class="vhdlchar"> </span></b><br/>
+<b><span class="vhdlchar">AWUSER</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlkeyword">range</span><span class="vhdlchar"> </span> <span class="vhdldigit">1</span> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">to</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#a74f0106e870889408aa19e62a9337ca2">AXI4_USER_MAX_WIDTH</a></b> <span class="vhdlchar"> </span></b><br/>
+<b><span class="vhdlchar">ARADDR</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlkeyword">range</span><span class="vhdlchar"> </span> <span class="vhdldigit">1</span> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">to</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#a74f0106e870889408aa19e62a9337ca2">AXI4_USER_MAX_WIDTH</a></b> <span class="vhdlchar"> </span></b><br/>
+<b><span class="vhdlchar">ARUSER</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlkeyword">range</span><span class="vhdlchar"> </span> <span class="vhdldigit">1</span> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">to</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#a74f0106e870889408aa19e62a9337ca2">AXI4_USER_MAX_WIDTH</a></b> <span class="vhdlchar"> </span></b><br/>
+<b><span class="vhdlchar">WDATA</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlkeyword">range</span><span class="vhdlchar"> </span> <span class="vhdldigit">8</span> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">to</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#a26805d061668ba29ffb1386b089e8ddf">AXI4_DATA_MAX_WIDTH</a></b> <span class="vhdlchar"> </span></b><br/>
+<b><span class="vhdlchar">WUSER</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlkeyword">range</span><span class="vhdlchar"> </span> <span class="vhdldigit">1</span> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">to</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#a74f0106e870889408aa19e62a9337ca2">AXI4_USER_MAX_WIDTH</a></b> <span class="vhdlchar"> </span></b><br/>
+<b><span class="vhdlchar">RDATA</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlkeyword">range</span><span class="vhdlchar"> </span> <span class="vhdldigit">8</span> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">to</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#a26805d061668ba29ffb1386b089e8ddf">AXI4_DATA_MAX_WIDTH</a></b> <span class="vhdlchar"> </span></b><br/>
+<b><span class="vhdlchar">RUSER</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlkeyword">range</span><span class="vhdlchar"> </span> <span class="vhdldigit">1</span> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">to</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#a74f0106e870889408aa19e62a9337ca2">AXI4_USER_MAX_WIDTH</a></b> <span class="vhdlchar"> </span></b><br/>
+<b><span class="vhdlchar">BUSER</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlkeyword">range</span><span class="vhdlchar"> </span> <span class="vhdldigit">1</span> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">to</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#a74f0106e870889408aa19e62a9337ca2">AXI4_USER_MAX_WIDTH</a></b> <span class="vhdlchar"> </span></b></b></td></tr>
+<tr class="memdesc:a05038ae802d2d2bc54e4578f48e0b322"><td class="mdescLeft">&#160;</td><td class="mdescRight">AXI4 チャネルの可変長信号のビット幅を指定するレコードタイプ.  <a href="#a05038ae802d2d2bc54e4578f48e0b322"></a><br/></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="Subtypes"></a>
 Subtypes</h2></td></tr>
@@ -184,7 +195,7 @@ Subtypes</h2></td></tr>
 <tr class="memdesc:ad674fd3df5b7fce9c8561011a3bd03af"><td class="mdescLeft">&#160;</td><td class="mdescRight">応答信号のタイプ.  <a href="#ad674fd3df5b7fce9c8561011a3bd03af"></a><br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p>AXI_TYPES. </p>
+<div class="textblock"><p>AXI4 の各種タイプ/定数を定義しているパッケージ. </p>
 </div><hr/><h2>Member Data Documentation</h2>
 <a class="anchor" id="a2d3bb141a4b75fbe822c94b0025f7f46"></a>
 <div class="memitem">
@@ -351,6 +362,28 @@ Subtypes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>アドレスチャネルのキャッシュ信号のビット数. </p>
+
+</div>
+</div>
+<a class="anchor" id="afdd57acc10c67f78186b604ed3f8ff9e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAXI4__TYPES.html#afdd57acc10c67f78186b604ed3f8ff9e">AXI4_ADDR_MAX_WIDTH</a> <b><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span> <span class="vhdldigit">64</span> <span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>AXI4 ADDR の最大ビット幅 </p>
 
 </div>
 </div>
@@ -1098,6 +1131,50 @@ Subtypes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a26805d061668ba29ffb1386b089e8ddf"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAXI4__TYPES.html#a26805d061668ba29ffb1386b089e8ddf">AXI4_DATA_MAX_WIDTH</a> <b><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span> <span class="vhdldigit">1024</span> <span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>AXI4 DATA の最大ビット幅 </p>
+
+</div>
+</div>
+<a class="anchor" id="ad8871ec283bbc42e879d6427b6753d84"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAXI4__TYPES.html#ad8871ec283bbc42e879d6427b6753d84">AXI4_ID_MAX_WIDTH</a> <b><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span> <span class="vhdldigit">8</span> <span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>AXI4 ID の最大ビット幅 </p>
+
+</div>
+</div>
 <a class="anchor" id="af89235cccb0b1520e0b8e7e01aab1558"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1222,7 +1299,7 @@ Subtypes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a46088d90ff916961caebbbbd1eea6087"></a>
+<a class="anchor" id="a05038ae802d2d2bc54e4578f48e0b322"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1230,53 +1307,53 @@ Subtypes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classAXI4__TYPES.html#a46088d90ff916961caebbbbd1eea6087">AXI4_SIGNAL_WIDTH_TYPE</a>           <td>(</td>
-          <td class="paramtype"><b><span class="vhdlchar">ID</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></td>
+          <td class="memname"><a class="el" href="classAXI4__TYPES.html#a05038ae802d2d2bc54e4578f48e0b322">AXI4_SIGNAL_WIDTH_TYPE</a>           <td>(</td>
+          <td class="paramtype"><b><span class="vhdlchar">ID</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlkeyword">range</span><span class="vhdlchar"> </span> <span class="vhdldigit">1</span> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">to</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#ad8871ec283bbc42e879d6427b6753d84">AXI4_ID_MAX_WIDTH</a></b> <span class="vhdlchar"> </span></b></td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><b><span class="vhdlchar">AWADDR</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></td>
+          <td class="paramtype"><b><span class="vhdlchar">AWADDR</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlkeyword">range</span><span class="vhdlchar"> </span> <span class="vhdldigit">1</span> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">to</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#a74f0106e870889408aa19e62a9337ca2">AXI4_USER_MAX_WIDTH</a></b> <span class="vhdlchar"> </span></b></td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><b><span class="vhdlchar">AWUSER</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></td>
+          <td class="paramtype"><b><span class="vhdlchar">AWUSER</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlkeyword">range</span><span class="vhdlchar"> </span> <span class="vhdldigit">1</span> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">to</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#a74f0106e870889408aa19e62a9337ca2">AXI4_USER_MAX_WIDTH</a></b> <span class="vhdlchar"> </span></b></td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><b><span class="vhdlchar">ARADDR</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></td>
+          <td class="paramtype"><b><span class="vhdlchar">ARADDR</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlkeyword">range</span><span class="vhdlchar"> </span> <span class="vhdldigit">1</span> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">to</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#a74f0106e870889408aa19e62a9337ca2">AXI4_USER_MAX_WIDTH</a></b> <span class="vhdlchar"> </span></b></td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><b><span class="vhdlchar">ARUSER</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></td>
+          <td class="paramtype"><b><span class="vhdlchar">ARUSER</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlkeyword">range</span><span class="vhdlchar"> </span> <span class="vhdldigit">1</span> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">to</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#a74f0106e870889408aa19e62a9337ca2">AXI4_USER_MAX_WIDTH</a></b> <span class="vhdlchar"> </span></b></td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><b><span class="vhdlchar">WDATA</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></td>
+          <td class="paramtype"><b><span class="vhdlchar">WDATA</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlkeyword">range</span><span class="vhdlchar"> </span> <span class="vhdldigit">8</span> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">to</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#a26805d061668ba29ffb1386b089e8ddf">AXI4_DATA_MAX_WIDTH</a></b> <span class="vhdlchar"> </span></b></td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><b><span class="vhdlchar">WUSER</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></td>
+          <td class="paramtype"><b><span class="vhdlchar">WUSER</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlkeyword">range</span><span class="vhdlchar"> </span> <span class="vhdldigit">1</span> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">to</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#a74f0106e870889408aa19e62a9337ca2">AXI4_USER_MAX_WIDTH</a></b> <span class="vhdlchar"> </span></b></td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><b><span class="vhdlchar">RDATA</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></td>
+          <td class="paramtype"><b><span class="vhdlchar">RDATA</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlkeyword">range</span><span class="vhdlchar"> </span> <span class="vhdldigit">8</span> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">to</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#a26805d061668ba29ffb1386b089e8ddf">AXI4_DATA_MAX_WIDTH</a></b> <span class="vhdlchar"> </span></b></td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><b><span class="vhdlchar">RUSER</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></td>
+          <td class="paramtype"><b><span class="vhdlchar">RUSER</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlkeyword">range</span><span class="vhdlchar"> </span> <span class="vhdldigit">1</span> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">to</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#a74f0106e870889408aa19e62a9337ca2">AXI4_USER_MAX_WIDTH</a></b> <span class="vhdlchar"> </span></b></td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><b><span class="vhdlchar">BUSER</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b>&#160;</td>
+          <td class="paramtype"><b><span class="vhdlchar">BUSER</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlkeyword">range</span><span class="vhdlchar"> </span> <span class="vhdldigit">1</span> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">to</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#a74f0106e870889408aa19e62a9337ca2">AXI4_USER_MAX_WIDTH</a></b> <span class="vhdlchar"> </span></b>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1295,13 +1372,57 @@ Subtypes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ac12ca53b88af815ea33fd8a5c1e8c094"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAXI4__TYPES.html#ac12ca53b88af815ea33fd8a5c1e8c094">AXI4_STRB_MAX_WIDTH</a> <b><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#a26805d061668ba29ffb1386b089e8ddf">AXI4_DATA_MAX_WIDTH</a></b> <span class="vhdlchar"> </span><span class="vhdlchar">/</span> <span class="vhdldigit">8</span> <span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>AXI4 WSTRB の最大ビット幅 </p>
+
+</div>
+</div>
+<a class="anchor" id="a74f0106e870889408aa19e62a9337ca2"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAXI4__TYPES.html#a74f0106e870889408aa19e62a9337ca2">AXI4_USER_MAX_WIDTH</a> <b><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span> <span class="vhdldigit">32</span> <span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>AXI4 USER の最大ビット幅 </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/main/vhdl/dummy_plug/<a class="el" href="axi4__types_8vhd.html">axi4_types.vhd</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 24 2012 01:48:58 for Dummy Plug by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 1 2012 01:18:15 for Dummy Plug by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.1
 </small></address>

@@ -23,6 +23,7 @@
   <td style="padding-left: 0.5em;">
    <div id="projectname">Dummy Plug
    </div>
+   <div id="projectbrief">Dummy Plug is a simple bus functional model library written by VHDL Only.</div>
   </td>
  </tr>
  </tbody>
@@ -87,7 +88,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#Constants">Constants</a> &#124;
-<a href="#Files">Files</a> &#124;
+<a href="#Subtypes">Subtypes</a> &#124;
 <a href="#Use Clauses">Use Clauses</a> &#124;
 <a href="#Libraries">Libraries</a> &#124;
 <a href="#Procedures">Procedures</a> &#124;
@@ -105,14 +106,15 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="Functions"></a>
 Functions</h2></td></tr>
- <tr class="memitem:a3bdfea8f1398b0b2ccb7cc72dca7256b"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar">KEYWORD_TYPE</span><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a3bdfea8f1398b0b2ccb7cc72dca7256b">GENERATE_KEY_CHANNEL</a><b> ( </b><b> )</b></td></tr>
-<tr class="memitem:a8b1db27020d35a86c539d87c57cc2c11"><td class="memItemLeft" align="right" valign="top"><b><b><b><a class="el" href="classAXI4__CORE.html#a8a47d66c55f9f42702a74be821087918">AXI4_CHANNEL_SIGNAL_TYPE</a></b> <span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a8b1db27020d35a86c539d87c57cc2c11">GEN_INIT_SIGNALS</a><b> ( </b><b> )</b></td></tr>
+ <tr class="memitem:a8b1db27020d35a86c539d87c57cc2c11"><td class="memItemLeft" align="right" valign="top"><b><b><b><a class="el" href="classAXI4__CORE.html#a8a47d66c55f9f42702a74be821087918">AXI4_CHANNEL_SIGNAL_TYPE</a></b> <span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a8b1db27020d35a86c539d87c57cc2c11">GEN_INIT_SIGNALS</a><b> ( </b><b> )</b></td></tr>
 <tr class="memdesc:a8b1db27020d35a86c539d87c57cc2c11"><td class="mdescLeft">&#160;</td><td class="mdescRight">チャネル信号変数の初期化.  <a href="#a8b1db27020d35a86c539d87c57cc2c11"></a><br/></td></tr>
+<tr class="memitem:a3bdfea8f1398b0b2ccb7cc72dca7256b"><td class="memItemLeft" align="right" valign="top"><b><b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a3bdfea8f1398b0b2ccb7cc72dca7256b">GENERATE_KEY_CHANNEL</a><b> ( </b><b> )</b></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="Processes"></a>
 Processes</h2></td></tr>
- <tr class="memitem:a5742fe7bf212e020ef29ba1ecac27700"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a5742fe7bf212e020ef29ba1ecac27700">PROCESS_1</a>&#160;</td><td class="memItemRight" valign="bottom"><b> (  )</b></td></tr>
-<tr class="memdesc:a5742fe7bf212e020ef29ba1ecac27700"><td class="mdescLeft">&#160;</td><td class="mdescRight">初期化するコア変数.  <a href="#a5742fe7bf212e020ef29ba1ecac27700"></a><br/></td></tr>
+ <tr class="memitem:aa70654bdb6e12b0bbb56db317423279e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#aa70654bdb6e12b0bbb56db317423279e">PROCESS_M</a>&#160;</td><td class="memItemRight" valign="bottom"><b> (  )</b></td></tr>
+<tr class="memitem:a3a7b345a13dbc2f9fe09108e5255a76c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a3a7b345a13dbc2f9fe09108e5255a76c">PROCESS_A</a>&#160;</td><td class="memItemRight" valign="bottom"><b> (  )</b></td></tr>
+<tr class="memitem:a2e92e6d6f9bde5306e87037901b7808d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a2e92e6d6f9bde5306e87037901b7808d">PROCESS_D</a>&#160;</td><td class="memItemRight" valign="bottom"><b> (  )</b></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="Procedures"></a>
 Procedures</h2></td></tr>
@@ -156,16 +158,89 @@ Procedures</h2></td></tr>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">MATCH: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
 <tr class="memdesc:aba0c56eb8b4ef1abbfc5a756fb943023"><td class="mdescLeft">&#160;</td><td class="mdescRight">全チャネルの期待値と信号の値を比較するサブプログラム.  <a href="#aba0c56eb8b4ef1abbfc5a756fb943023"></a><br/></td></tr>
+<tr class="memitem:abf08f4204b6f91bb164c38960c1f3622"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#abf08f4204b6f91bb164c38960c1f3622">WAIT_UNTIL_XFER_AR</a>( <br/>
+<b><span class="vhdlkeyword">variable </span><span class="vhdlchar">CORE: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><b><a class="el" href="classCORE.html#a3ddf08e45a796c68d2b97185a92f370f">CORE_TYPE</a></b> <span class="vhdlchar"> </span></b></b><br/>
+  <b><span class="vhdlchar"> </span><span class="vhdlchar">PROC_NAME: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">STRING</span><span class="vhdlchar"> </span></b></b><br/>
+  <b><span class="vhdlchar"> </span><span class="vhdlchar">TIMEOUT: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
+   )</td></tr>
+<tr class="memitem:aa0a67eb4c7867eb95246638eb79ed403"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#aa0a67eb4c7867eb95246638eb79ed403">WAIT_UNTIL_XFER_AW</a>( <br/>
+<b><span class="vhdlkeyword">variable </span><span class="vhdlchar">CORE: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><b><a class="el" href="classCORE.html#a3ddf08e45a796c68d2b97185a92f370f">CORE_TYPE</a></b> <span class="vhdlchar"> </span></b></b><br/>
+  <b><span class="vhdlchar"> </span><span class="vhdlchar">PROC_NAME: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">STRING</span><span class="vhdlchar"> </span></b></b><br/>
+  <b><span class="vhdlchar"> </span><span class="vhdlchar">TIMEOUT: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
+   )</td></tr>
+<tr class="memitem:ad534634bded51979ee6913c73e659d4f"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ad534634bded51979ee6913c73e659d4f">WAIT_UNTIL_XFER_R</a>( <br/>
+<b><span class="vhdlkeyword">variable </span><span class="vhdlchar">CORE: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><b><a class="el" href="classCORE.html#a3ddf08e45a796c68d2b97185a92f370f">CORE_TYPE</a></b> <span class="vhdlchar"> </span></b></b><br/>
+  <b><span class="vhdlchar"> </span><span class="vhdlchar">PROC_NAME: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">STRING</span><span class="vhdlchar"> </span></b></b><br/>
+  <b><span class="vhdlchar"> </span><span class="vhdlchar">TIMEOUT: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
+  <b><span class="vhdlchar"> </span><span class="vhdlchar">LAST: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">std_logic</span><span class="vhdlchar"> </span></b></b><br/>
+   )</td></tr>
+<tr class="memitem:a28515700fc67d93fa66c38181498142e"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a28515700fc67d93fa66c38181498142e">WAIT_UNTIL_XFER_W</a>( <br/>
+<b><span class="vhdlkeyword">variable </span><span class="vhdlchar">CORE: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><b><a class="el" href="classCORE.html#a3ddf08e45a796c68d2b97185a92f370f">CORE_TYPE</a></b> <span class="vhdlchar"> </span></b></b><br/>
+  <b><span class="vhdlchar"> </span><span class="vhdlchar">PROC_NAME: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">STRING</span><span class="vhdlchar"> </span></b></b><br/>
+  <b><span class="vhdlchar"> </span><span class="vhdlchar">TIMEOUT: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
+  <b><span class="vhdlchar"> </span><span class="vhdlchar">LAST: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">std_logic</span><span class="vhdlchar"> </span></b></b><br/>
+   )</td></tr>
+<tr class="memitem:a0355b178d0aa7088fee40bcf1d596669"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a0355b178d0aa7088fee40bcf1d596669">WAIT_UNTIL_XFER_B</a>( <br/>
+<b><span class="vhdlkeyword">variable </span><span class="vhdlchar">CORE: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><b><a class="el" href="classCORE.html#a3ddf08e45a796c68d2b97185a92f370f">CORE_TYPE</a></b> <span class="vhdlchar"> </span></b></b><br/>
+  <b><span class="vhdlchar"> </span><span class="vhdlchar">PROC_NAME: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">STRING</span><span class="vhdlchar"> </span></b></b><br/>
+  <b><span class="vhdlchar"> </span><span class="vhdlchar">TIMEOUT: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
+   )</td></tr>
+<tr class="memitem:a63ae54be8a2051d3212f7cccf6c0b397"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a63ae54be8a2051d3212f7cccf6c0b397">LOCAL_SYNC</a>( <br/>
+<b><span class="vhdlkeyword">variable </span><span class="vhdlchar">CORE: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><b><a class="el" href="classCORE.html#a3ddf08e45a796c68d2b97185a92f370f">CORE_TYPE</a></b> <span class="vhdlchar"> </span></b></b><br/>
+  <b><span class="vhdlkeyword">signal </span><span class="vhdlchar">SYNC_REQ: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><b><a class="el" href="classSYNC.html#ae6f8b25e382daff5078519f8b675e6fa">SYNC_REQ_VECTOR</a></b> <span class="vhdlchar"> </span><span class="vhdlchar">(</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span> <span class="vhdldigit">0</span> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">downto</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span> <span class="vhdldigit">0</span> <span class="vhdlchar"> </span><span class="vhdlchar">)</span><span class="vhdlchar"> </span></b></b><br/>
+  <b><span class="vhdlkeyword">signal </span><span class="vhdlchar">SYNC_ACK: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><b><a class="el" href="classSYNC.html#ab364fdcf99675b2f867e24c6ee94083f">SYNC_ACK_VECTOR</a></b> <span class="vhdlchar"> </span><span class="vhdlchar">(</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span> <span class="vhdldigit">0</span> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">downto</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span> <span class="vhdldigit">0</span> <span class="vhdlchar"> </span><span class="vhdlchar">)</span><span class="vhdlchar"> </span></b></b><br/>
+   )</td></tr>
+<tr class="memdesc:a63ae54be8a2051d3212f7cccf6c0b397"><td class="mdescLeft">&#160;</td><td class="mdescRight">ローカル同期オペレーション.  <a href="#a63ae54be8a2051d3212f7cccf6c0b397"></a><br/></td></tr>
+<tr class="memitem:ab59b7ce4f40a4a2273187eb5ea4e72a6"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ab59b7ce4f40a4a2273187eb5ea4e72a6">EXECUTE_CHECK</a>( <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">CORE: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><b><a class="el" href="classCORE.html#a3ddf08e45a796c68d2b97185a92f370f">CORE_TYPE</a></b> <span class="vhdlchar"> </span></b></b><b>,<span class="vhdlkeyword">file </span><span class="vhdlchar">STREAM: </span><span class="stringliteral"></span> <b><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span></b></b> )</td></tr>
+<tr class="memdesc:ab59b7ce4f40a4a2273187eb5ea4e72a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">CHECKオペレーション.信号が指定された値になっているかチェック.  <a href="#ab59b7ce4f40a4a2273187eb5ea4e72a6"></a><br/></td></tr>
+<tr class="memitem:a4442521154b652efd9c1fe1eb90e1ef3"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a4442521154b652efd9c1fe1eb90e1ef3">EXECUTE_WAIT</a>( <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">CORE: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><b><a class="el" href="classCORE.html#a3ddf08e45a796c68d2b97185a92f370f">CORE_TYPE</a></b> <span class="vhdlchar"> </span></b></b><b>,<span class="vhdlkeyword">file </span><span class="vhdlchar">STREAM: </span><span class="stringliteral"></span> <b><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span></b></b> )</td></tr>
+<tr class="memdesc:a4442521154b652efd9c1fe1eb90e1ef3"><td class="mdescLeft">&#160;</td><td class="mdescRight">WAITオペレーション. 指定された条件まで待機.  <a href="#a4442521154b652efd9c1fe1eb90e1ef3"></a><br/></td></tr>
+<tr class="memitem:ab449af5d383b23edc9761796d8fec495"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ab449af5d383b23edc9761796d8fec495">EXECUTE_SYNC</a>( <br/>
+<b><span class="vhdlkeyword">variable </span><span class="vhdlchar">CORE: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><b><a class="el" href="classCORE.html#a3ddf08e45a796c68d2b97185a92f370f">CORE_TYPE</a></b> <span class="vhdlchar"> </span></b></b><br/>
+  <b><span class="vhdlkeyword">file </span><span class="vhdlchar">STREAM: </span><span class="stringliteral"></span> <b><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span></b></b><br/>
+  <b><span class="vhdlchar"> </span><span class="vhdlchar">OPERATION: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><b><a class="el" href="classCORE.html#af02daa629e17b397ebe3238f510944bb">OPERATION_TYPE</a></b> <span class="vhdlchar"> </span></b></b><br/>
+   )</td></tr>
+<tr class="memdesc:ab449af5d383b23edc9761796d8fec495"><td class="mdescLeft">&#160;</td><td class="mdescRight">SYNCオペレーション.  <a href="#ab449af5d383b23edc9761796d8fec495"></a><br/></td></tr>
 <tr class="memitem:a7effb8e40bbc0982cd45568692373247"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a7effb8e40bbc0982cd45568692373247">EXECUTE_OUTPUT</a>( <b><span class="vhdlchar"> </span><span class="vhdlchar">SIGNALS: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__CORE.html#a8a47d66c55f9f42702a74be821087918">AXI4_CHANNEL_SIGNAL_TYPE</a></b> <span class="vhdlchar"> </span></b></b> )</td></tr>
 <tr class="memdesc:a7effb8e40bbc0982cd45568692373247"><td class="mdescLeft">&#160;</td><td class="mdescRight">信号変数(SIGNALS)の値をポートに出力するサブプログラム.  <a href="#a7effb8e40bbc0982cd45568692373247"></a><br/></td></tr>
-<tr class="memitem:a4a8b827a214ba48eb65df06e2ec5437b"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a4a8b827a214ba48eb65df06e2ec5437b">LOCAL_SYNC</a>(  )</td></tr>
-<tr class="memdesc:a4a8b827a214ba48eb65df06e2ec5437b"><td class="mdescLeft">&#160;</td><td class="mdescRight">ローカル同期オペレーション.  <a href="#a4a8b827a214ba48eb65df06e2ec5437b"></a><br/></td></tr>
-<tr class="memitem:adcd04b57922b5b6060fb38fcc7b77a62"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#adcd04b57922b5b6060fb38fcc7b77a62">EXECUTE_CHECK</a>(  )</td></tr>
-<tr class="memdesc:adcd04b57922b5b6060fb38fcc7b77a62"><td class="mdescLeft">&#160;</td><td class="mdescRight">CHECKオペレーション.信号が指定された値になっているかチェック.  <a href="#adcd04b57922b5b6060fb38fcc7b77a62"></a><br/></td></tr>
-<tr class="memitem:ada7131aa5892dfb0f7dcc6e5c8394b14"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ada7131aa5892dfb0f7dcc6e5c8394b14">EXECUTE_WAIT</a>(  )</td></tr>
-<tr class="memdesc:ada7131aa5892dfb0f7dcc6e5c8394b14"><td class="mdescLeft">&#160;</td><td class="mdescRight">WAITオペレーション. 指定された条件まで待機.  <a href="#ada7131aa5892dfb0f7dcc6e5c8394b14"></a><br/></td></tr>
-<tr class="memitem:a475035e30f4f14799955924b7ecb6a3b"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a475035e30f4f14799955924b7ecb6a3b">EXECUTE_SYNC</a>( <b><span class="vhdlchar"> </span><span class="vhdlchar">operation: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><b><a class="el" href="classCORE.html#af02daa629e17b397ebe3238f510944bb">OPERATION_TYPE</a></b> <span class="vhdlchar"> </span></b></b> )</td></tr>
-<tr class="memdesc:a475035e30f4f14799955924b7ecb6a3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">SYNCオペレーション.  <a href="#a475035e30f4f14799955924b7ecb6a3b"></a><br/></td></tr>
+<tr class="memitem:a07a39199d28bcf286a754725a52cfd25"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a07a39199d28bcf286a754725a52cfd25">READ_TRANSACTION_INFO</a>( <b><span class="vhdlchar"> </span><span class="vhdlchar">PROC_NAME: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">string</span><span class="vhdlchar"> </span></b></b><b>,<span class="vhdlkeyword">variable </span><span class="vhdlchar">TIMEOUT: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b> )</td></tr>
+<tr class="memdesc:a07a39199d28bcf286a754725a52cfd25"><td class="mdescLeft">&#160;</td><td class="mdescRight">トランザクションの情報をシナリオから読むサブプログラム.  <a href="#a07a39199d28bcf286a754725a52cfd25"></a><br/></td></tr>
+<tr class="memitem:a5d34a4eb64cd5f163c50d92167dd780e"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a5d34a4eb64cd5f163c50d92167dd780e">EXECUTE_TRANSACTION_MASTER_READ_ADDR</a>(  )</td></tr>
+<tr class="memdesc:a5d34a4eb64cd5f163c50d92167dd780e"><td class="mdescLeft">&#160;</td><td class="mdescRight">マスターリードランザクション(アドレスチャネル)実行サブプログラム.  <a href="#a5d34a4eb64cd5f163c50d92167dd780e"></a><br/></td></tr>
+<tr class="memitem:a65c34199376351b93e646d09036c12aa"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a65c34199376351b93e646d09036c12aa">EXECUTE_TRANSACTION_MASTER_WRITE_ADDR</a>(  )</td></tr>
+<tr class="memdesc:a65c34199376351b93e646d09036c12aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">マスターライトトランザクション(アドレスチャネル)実行サブプログラム.  <a href="#a65c34199376351b93e646d09036c12aa"></a><br/></td></tr>
+<tr class="memitem:a9df65b8790ffcf5d077805ecfdd09da1"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a9df65b8790ffcf5d077805ecfdd09da1">EXECUTE_TRANSACTION_SLAVE_READ_ADDR</a>(  )</td></tr>
+<tr class="memdesc:a9df65b8790ffcf5d077805ecfdd09da1"><td class="mdescLeft">&#160;</td><td class="mdescRight">スレーブリードトランザクション(アドレスチャネル)実行サブプログラム.  <a href="#a9df65b8790ffcf5d077805ecfdd09da1"></a><br/></td></tr>
+<tr class="memitem:a6f992faa2d4859585c366f9f6e30a1ef"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a6f992faa2d4859585c366f9f6e30a1ef">EXECUTE_TRANSACTION_SLAVE_WRITE_ADDR</a>(  )</td></tr>
+<tr class="memdesc:a6f992faa2d4859585c366f9f6e30a1ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">スレーブライトトランザクション(アドレスチャネル)実行サブプログラム.  <a href="#a6f992faa2d4859585c366f9f6e30a1ef"></a><br/></td></tr>
+<tr class="memitem:a0ef415fedaf5a3b5e5ac8ba3c8543eb9"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a0ef415fedaf5a3b5e5ac8ba3c8543eb9">EXECUTE_CHANNEL_SCALAR_OPERATION</a>(  )</td></tr>
+<tr class="memdesc:a0ef415fedaf5a3b5e5ac8ba3c8543eb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">チャネルオペレーション(SCALAR)実行サブプログラム.  <a href="#a0ef415fedaf5a3b5e5ac8ba3c8543eb9"></a><br/></td></tr>
+<tr class="memitem:a9cc6995184557f8ecd4934ef6b61145c"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a9cc6995184557f8ecd4934ef6b61145c">EXECUTE_CHANNEL_MAP_OPERATION</a>(  )</td></tr>
+<tr class="memdesc:a9cc6995184557f8ecd4934ef6b61145c"><td class="mdescLeft">&#160;</td><td class="mdescRight">チャネルオペレーション(MAP)実行サブプログラム.  <a href="#a9cc6995184557f8ecd4934ef6b61145c"></a><br/></td></tr>
+<tr class="memitem:a7e3e1685068907482a827a49818d1fb5"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a7e3e1685068907482a827a49818d1fb5">EXECUTE_CHANNEL_OPERATION</a>(  )</td></tr>
+<tr class="memdesc:a7e3e1685068907482a827a49818d1fb5"><td class="mdescLeft">&#160;</td><td class="mdescRight">チャネルオペレーションループ  <a href="#a7e3e1685068907482a827a49818d1fb5"></a><br/></td></tr>
+<tr class="memitem:a7effb8e40bbc0982cd45568692373247"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a7effb8e40bbc0982cd45568692373247">EXECUTE_OUTPUT</a>( <b><span class="vhdlchar"> </span><span class="vhdlchar">SIGNALS: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__CORE.html#a8a47d66c55f9f42702a74be821087918">AXI4_CHANNEL_SIGNAL_TYPE</a></b> <span class="vhdlchar"> </span></b></b> )</td></tr>
+<tr class="memdesc:a7effb8e40bbc0982cd45568692373247"><td class="mdescLeft">&#160;</td><td class="mdescRight">信号変数(SIGNALS)の値をポートに出力するサブプログラム.  <a href="#a7effb8e40bbc0982cd45568692373247"></a><br/></td></tr>
+<tr class="memitem:a9909b1fa5e0776df25563f9c5436d8d7"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a9909b1fa5e0776df25563f9c5436d8d7">GET_TRANSACTION_INFO</a>( <b><span class="vhdlchar"> </span><span class="vhdlchar">PROC_NAME: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">string</span><span class="vhdlchar"> </span></b></b><b>,<span class="vhdlchar"> </span><span class="vhdlchar">DATA_WIDTH: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b> )</td></tr>
+<tr class="memdesc:a9909b1fa5e0776df25563f9c5436d8d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">アドレスチャネルからのトランザクション情報をTRAN_I信号から 取り込んで内部変数にセットするサブプログラム.  <a href="#a9909b1fa5e0776df25563f9c5436d8d7"></a><br/></td></tr>
+<tr class="memitem:afd752c585ce2ddcf072fab38c872f241"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#afd752c585ce2ddcf072fab38c872f241">GENERATE_R_SIGNAL</a>( <b><span class="vhdlchar"> </span><span class="vhdlchar">PROC_NAME: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">string</span><span class="vhdlchar"> </span></b></b><b>,<span class="vhdlchar"> </span><span class="vhdlchar">LAST: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b> )</td></tr>
+<tr class="memdesc:afd752c585ce2ddcf072fab38c872f241"><td class="mdescLeft">&#160;</td><td class="mdescRight">GET_TRANSACTION_INFO で取り込んだトランザクション情報から ワード毎のリードデータチャネル信号の値を生成するサブプログラム.  <a href="#afd752c585ce2ddcf072fab38c872f241"></a><br/></td></tr>
+<tr class="memitem:ab70963303cfe19ab46091c631c8a6b28"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ab70963303cfe19ab46091c631c8a6b28">GENERATE_W_SIGNAL</a>( <b><span class="vhdlchar"> </span><span class="vhdlchar">PROC_NAME: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">string</span><span class="vhdlchar"> </span></b></b><b>,<span class="vhdlchar"> </span><span class="vhdlchar">LAST: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b> )</td></tr>
+<tr class="memdesc:ab70963303cfe19ab46091c631c8a6b28"><td class="mdescLeft">&#160;</td><td class="mdescRight">GET_TRANSACTION_INFO で取り込んだトランザクション情報から ワード毎のライトデータチャネル信号の値を生成するサブプログラム.  <a href="#ab70963303cfe19ab46091c631c8a6b28"></a><br/></td></tr>
+<tr class="memitem:a33cc464aac4a3acaa97e9a3e966f18e8"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a33cc464aac4a3acaa97e9a3e966f18e8">GENERATE_B_SIGNAL</a>( <b><span class="vhdlchar"> </span><span class="vhdlchar">PROC_NAME: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">string</span><span class="vhdlchar"> </span></b></b><b>,<span class="vhdlchar"> </span><span class="vhdlchar">SIGNALS: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__CORE.html#a98015a980d61a18fe48c9575746fb21a">AXI4_B_CHANNEL_SIGNAL_TYPE</a></b> <span class="vhdlchar"> </span></b></b> )</td></tr>
+<tr class="memdesc:a33cc464aac4a3acaa97e9a3e966f18e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">GET_TRANSACTION_INFO で取り込んだトランザクション情報から ワード毎のライト応答チャネル信号の値を生成するサブプログラム.  <a href="#a33cc464aac4a3acaa97e9a3e966f18e8"></a><br/></td></tr>
+<tr class="memitem:ac9eddeac86d14de1794ebd14354847c5"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac9eddeac86d14de1794ebd14354847c5">EXECUTE_TRANSACTION_MASTER_READ_DATA</a>(  )</td></tr>
+<tr class="memdesc:ac9eddeac86d14de1794ebd14354847c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">マスターリードトランザクション(データチャネル)実行サブプログラム.  <a href="#ac9eddeac86d14de1794ebd14354847c5"></a><br/></td></tr>
+<tr class="memitem:a6ffe380e88b13c925a5e781fe760483f"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a6ffe380e88b13c925a5e781fe760483f">EXECUTE_TRANSACTION_SLAVE_READ_DATA</a>(  )</td></tr>
+<tr class="memdesc:a6ffe380e88b13c925a5e781fe760483f"><td class="mdescLeft">&#160;</td><td class="mdescRight">スレーブリードトランザクション(データチャネル)実行サブプログラム.  <a href="#a6ffe380e88b13c925a5e781fe760483f"></a><br/></td></tr>
+<tr class="memitem:a2d5f83df91a20bf194827ab433edf648"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a2d5f83df91a20bf194827ab433edf648">EXECUTE_TRANSACTION_MASTER_WRITE_DATA</a>(  )</td></tr>
+<tr class="memdesc:a2d5f83df91a20bf194827ab433edf648"><td class="mdescLeft">&#160;</td><td class="mdescRight">マスターライトトランザクション(データチャネル)実行サブプログラム.  <a href="#a2d5f83df91a20bf194827ab433edf648"></a><br/></td></tr>
+<tr class="memitem:a37523f6f62eb619db889d91a53023bf6"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a37523f6f62eb619db889d91a53023bf6">EXECUTE_TRANSACTION_SLAVE_WRITE_DATA</a>(  )</td></tr>
+<tr class="memdesc:a37523f6f62eb619db889d91a53023bf6"><td class="mdescLeft">&#160;</td><td class="mdescRight">スレーブライトトランザクション(データチャネル)実行サブプログラム.  <a href="#a37523f6f62eb619db889d91a53023bf6"></a><br/></td></tr>
+<tr class="memitem:a8236bae0c4e88150818996a7a9257820"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a8236bae0c4e88150818996a7a9257820">EXECUTE_TRANSACTION_MASTER_WRITE_RESP</a>(  )</td></tr>
+<tr class="memdesc:a8236bae0c4e88150818996a7a9257820"><td class="mdescLeft">&#160;</td><td class="mdescRight">マスターライトトランザクション(応答チャネル)実行サブプログラム.  <a href="#a8236bae0c4e88150818996a7a9257820"></a><br/></td></tr>
+<tr class="memitem:ad433d0267bd466fe717c6ad451e6612b"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ad433d0267bd466fe717c6ad451e6612b">EXECUTE_TRANSACTION_SLAVE_WRITE_RESP</a>(  )</td></tr>
+<tr class="memdesc:ad433d0267bd466fe717c6ad451e6612b"><td class="mdescLeft">&#160;</td><td class="mdescRight">スレーブライトトランザクション(応答チャネル)実行サブプログラム.  <a href="#ad433d0267bd466fe717c6ad451e6612b"></a><br/></td></tr>
 <tr class="memitem:a0ef415fedaf5a3b5e5ac8ba3c8543eb9"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a0ef415fedaf5a3b5e5ac8ba3c8543eb9">EXECUTE_CHANNEL_SCALAR_OPERATION</a>(  )</td></tr>
 <tr class="memdesc:a0ef415fedaf5a3b5e5ac8ba3c8543eb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">チャネルオペレーション(SCALAR)実行サブプログラム.  <a href="#a0ef415fedaf5a3b5e5ac8ba3c8543eb9"></a><br/></td></tr>
 <tr class="memitem:a9cc6995184557f8ecd4934ef6b61145c"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a9cc6995184557f8ecd4934ef6b61145c">EXECUTE_CHANNEL_MAP_OPERATION</a>(  )</td></tr>
@@ -179,7 +254,8 @@ Libraries</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="Use Clauses"></a>
 Use Clauses</h2></td></tr>
- <tr class="memitem:aa8c4e25998323a84db5b1fa701b92fcb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#aa8c4e25998323a84db5b1fa701b92fcb">textio</a>&#160;</td><td class="memItemRight" valign="bottom">  </td></tr>
+ <tr class="memitem:a2edc34402b573437d5f25fa90ba4013e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a2edc34402b573437d5f25fa90ba4013e">numeric_std</a>&#160;</td><td class="memItemRight" valign="bottom">  </td></tr>
+<tr class="memitem:aa8c4e25998323a84db5b1fa701b92fcb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#aa8c4e25998323a84db5b1fa701b92fcb">textio</a>&#160;</td><td class="memItemRight" valign="bottom">  </td></tr>
 <tr class="memitem:aa7f7643703985348d36560dcc4e3af6d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#aa7f7643703985348d36560dcc4e3af6d">AXI4_TYPES</a>&#160;</td><td class="memItemRight" valign="bottom">   <b>Package</b><em><a class="el" href="classAXI4__TYPES.html"> &lt;AXI4_TYPES&gt;</a></td></tr>
 <tr class="memitem:a6b87185c14dc84edf21d30ab8584f5f3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a6b87185c14dc84edf21d30ab8584f5f3">AXI4_CORE</a>&#160;</td><td class="memItemRight" valign="bottom">   <b>Package</b><em><a class="el" href="classAXI4__CORE.html"> &lt;AXI4_CORE&gt;</a></td></tr>
 <tr class="memitem:a1d29ef905b0792c4cfd4c628f0a42945"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a1d29ef905b0792c4cfd4c628f0a42945">CORE</a>&#160;</td><td class="memItemRight" valign="bottom">   <b>Package</b><em><a class="el" href="classCORE.html"> &lt;CORE&gt;</a></td></tr>
@@ -189,12 +265,27 @@ Use Clauses</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="Constants"></a>
 Constants</h2></td></tr>
- <tr class="memitem:a31b9935f3d28948c2349ee86efc85dd5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a31b9935f3d28948c2349ee86efc85dd5">KEY_CHANNEL</a> &#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar">KEYWORD_TYPE</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a3bdfea8f1398b0b2ccb7cc72dca7256b">GENERATE_KEY_CHANNEL</a></b> <span class="vhdlchar"> </span></b></td></tr>
-<tr class="memitem:a8285127a000cbbec310a644ca69dd6ec"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a8285127a000cbbec310a644ca69dd6ec">INIT_SIGNALS</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="classAXI4__CORE.html#a8a47d66c55f9f42702a74be821087918">AXI4_CHANNEL_SIGNAL_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a8b1db27020d35a86c539d87c57cc2c11">GEN_INIT_SIGNALS</a></b> <span class="vhdlchar"> </span></b></td></tr>
+ <tr class="memitem:a8285127a000cbbec310a644ca69dd6ec"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a8285127a000cbbec310a644ca69dd6ec">INIT_SIGNALS</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="classAXI4__CORE.html#a8a47d66c55f9f42702a74be821087918">AXI4_CHANNEL_SIGNAL_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a8b1db27020d35a86c539d87c57cc2c11">GEN_INIT_SIGNALS</a></b> <span class="vhdlchar"> </span></b></td></tr>
+<tr class="memitem:aa073b56887e4850b23e50352913c7515"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#aa073b56887e4850b23e50352913c7515">KEY_NULL</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot;      &quot;</span><span class="vhdlchar"> </span></b></td></tr>
+<tr class="memitem:a8a84e10052e136a2ddfe62e8f941b2fe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a8a84e10052e136a2ddfe62e8f941b2fe">KEY_AR</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; AR   &quot;</span><span class="vhdlchar"> </span></b></td></tr>
+<tr class="memitem:aa9644b0c5371a668fe358e01c87e99e7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#aa9644b0c5371a668fe358e01c87e99e7">KEY_AW</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; AW   &quot;</span><span class="vhdlchar"> </span></b></td></tr>
+<tr class="memitem:ad154e3331bc397437dbb74455fd560c7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ad154e3331bc397437dbb74455fd560c7">KEY_W</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; W    &quot;</span><span class="vhdlchar"> </span></b></td></tr>
+<tr class="memitem:ad173593794a43c377e41b966a73b02e4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ad173593794a43c377e41b966a73b02e4">KEY_R</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; R    &quot;</span><span class="vhdlchar"> </span></b></td></tr>
+<tr class="memitem:a0bf7f5ebcd66eee1cf5d87df3076afc3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a0bf7f5ebcd66eee1cf5d87df3076afc3">KEY_B</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; B    &quot;</span><span class="vhdlchar"> </span></b></td></tr>
+<tr class="memitem:aac5f3dfa58f52916ea55c2eaf821291b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#aac5f3dfa58f52916ea55c2eaf821291b">KEY_SAY</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; SAY  &quot;</span><span class="vhdlchar"> </span></b></td></tr>
+<tr class="memitem:a4c2d05c9e74314edb0a16a21b1658f89"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a4c2d05c9e74314edb0a16a21b1658f89">KEY_SYNC</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; SYNC &quot;</span><span class="vhdlchar"> </span></b></td></tr>
+<tr class="memitem:a1cd8a770a84d9a1bf68e25a2b55fb51e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a1cd8a770a84d9a1bf68e25a2b55fb51e">KEY_WAIT</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; WAIT &quot;</span><span class="vhdlchar"> </span></b></td></tr>
+<tr class="memitem:ab66d9d24cc5d6f863727c01c198dc9cb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ab66d9d24cc5d6f863727c01c198dc9cb">KEY_CHECK</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; CHECK &quot;</span><span class="vhdlchar"> </span></b></td></tr>
+<tr class="memitem:a2ba5133a8c67732339148fc7398383a6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a2ba5133a8c67732339148fc7398383a6">KEY_OUT</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; OUT  &quot;</span><span class="vhdlchar"> </span></b></td></tr>
+<tr class="memitem:a98ef2e32e2066f0388ab5a6ab4c78199"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a98ef2e32e2066f0388ab5a6ab4c78199">KEY_DEBUG</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; DEBUG &quot;</span><span class="vhdlchar"> </span></b></td></tr>
+<tr class="memitem:af39b9d82341f991c83cbfc4f25dd7b7a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#af39b9d82341f991c83cbfc4f25dd7b7a">KEY_REPORT</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; REPOR &quot;</span><span class="vhdlchar"> </span></b></td></tr>
+<tr class="memitem:a23262c45dd7033f03506a9de3704a8e1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a23262c45dd7033f03506a9de3704a8e1">KEY_READ</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; READ &quot;</span><span class="vhdlchar"> </span></b></td></tr>
+<tr class="memitem:ae76eefa3f6ed65a5b8fff97bb350b4c7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ae76eefa3f6ed65a5b8fff97bb350b4c7">KEY_WRITE</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; WRITE &quot;</span><span class="vhdlchar"> </span></b></td></tr>
+<tr class="memitem:a31b9935f3d28948c2349ee86efc85dd5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a31b9935f3d28948c2349ee86efc85dd5">KEY_CHANNEL</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a3bdfea8f1398b0b2ccb7cc72dca7256b">GENERATE_KEY_CHANNEL</a></b> <span class="vhdlchar"> </span></b></td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2><a name="Files"></a>
-Files</h2></td></tr>
- <tr class="memitem:a2eb7d1ce4987478eb166e42dcd25fd9a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a2eb7d1ce4987478eb166e42dcd25fd9a">stream</a> &#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span></b></td></tr>
+<tr class="heading"><td colspan="2"><h2><a name="Subtypes"></a>
+Subtypes</h2></td></tr>
+ <tr class="memitem:ac687d5d4b38ed585270f6d4a740d4be3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a> &#160;</td><td class="memItemRight" valign="bottom"><b><span class="comment">STRING</span><span class="vhdlchar"> </span><span class="vhdlchar">(</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span> <span class="vhdldigit">1</span> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">to</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span> <span class="vhdldigit">5</span> <span class="vhdlchar"> </span><span class="vhdlchar">)</span><span class="vhdlchar"> </span></b></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classAXI4__CHANNEL__PLAYER.html" title="AXI4_CHANNEL_PLAYER :">AXI4_CHANNEL_PLAYER</a> : </p>
@@ -218,6 +309,50 @@ Files</h2></td></tr>
 </div><div class="memdoc">
 
 <p>チャネルオペレーション(MAP)実行サブプログラム. </p>
+
+</div>
+</div>
+<a class="anchor" id="a9cc6995184557f8ecd4934ef6b61145c"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> EXECUTE_CHANNEL_MAP_OPERATION ( ) </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Procedure</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>チャネルオペレーション(MAP)実行サブプログラム. </p>
+
+</div>
+</div>
+<a class="anchor" id="a7e3e1685068907482a827a49818d1fb5"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> EXECUTE_CHANNEL_OPERATION ( ) </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Procedure</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>チャネルオペレーションループ </p>
 
 </div>
 </div>
@@ -265,7 +400,7 @@ Files</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="adcd04b57922b5b6060fb38fcc7b77a62"></a>
+<a class="anchor" id="a0ef415fedaf5a3b5e5ac8ba3c8543eb9"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -273,7 +408,42 @@ Files</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"> <b><span class="vhdlchar"> </span></b> EXECUTE_CHECK ( ) </td>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> EXECUTE_CHANNEL_SCALAR_OPERATION ( ) </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Procedure</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>チャネルオペレーション(SCALAR)実行サブプログラム. </p>
+
+</div>
+</div>
+<a class="anchor" id="ab59b7ce4f40a4a2273187eb5ea4e72a6"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> EXECUTE_CHECK          <td>(</td>
+          <td class="paramtype"><span class="keywordtype">variable </span> &#160;</td>
+          <td class="paramname"><b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a1d29ef905b0792c4cfd4c628f0a42945">CORE</a></b> <span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><b><a class="el" href="classCORE.html#a3ddf08e45a796c68d2b97185a92f370f">CORE_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype">file </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">STREAM</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlchar"> </span><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -284,6 +454,14 @@ Files</h2></td></tr>
 </div><div class="memdoc">
 
 <p>CHECKオペレーション.信号が指定された値になっているかチェック. </p>
+<hr/>
+ <dl class="params"><dt>Parameters:</dt><dd>
+  <table class="params">
+    <tr><td class="paramname"><a class="el" href="classCORE.html" title="Dummy Plug のコアパッケージ.">CORE</a></td><td>コア変数. </td></tr>
+    <tr><td class="paramname">STREAM</td><td>入力ストリーム. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -313,10 +491,53 @@ Files</h2></td></tr>
 </div><div class="memdoc">
 
 <p>信号変数(SIGNALS)の値をポートに出力するサブプログラム. </p>
+<hr/>
+ <dl class="params"><dt>Parameters:</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">SIGNALS</td><td>出力する信号の値を指定する変数. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a class="anchor" id="a475035e30f4f14799955924b7ecb6a3b"></a>
+<a class="anchor" id="a7effb8e40bbc0982cd45568692373247"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> EXECUTE_OUTPUT          <td>(</td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">SIGNALS</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__CORE.html#a8a47d66c55f9f42702a74be821087918">AXI4_CHANNEL_SIGNAL_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Procedure</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>信号変数(SIGNALS)の値をポートに出力するサブプログラム. </p>
+<hr/>
+ <dl class="params"><dt>Parameters:</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">SIGNALS</td><td>出力する信号の値を指定する変数. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ab449af5d383b23edc9761796d8fec495"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -325,8 +546,20 @@ Files</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname"> <b><span class="vhdlchar"> </span></b> EXECUTE_SYNC          <td>(</td>
+          <td class="paramtype"><span class="keywordtype">variable </span> &#160;</td>
+          <td class="paramname"><b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a1d29ef905b0792c4cfd4c628f0a42945">CORE</a></b> <span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><b><a class="el" href="classCORE.html#a3ddf08e45a796c68d2b97185a92f370f">CORE_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype">file </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">STREAM</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlchar"> </span><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
-          <td class="paramname"><b><span class="vhdlchar">operation</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><b><a class="el" href="classCORE.html#af02daa629e17b397ebe3238f510944bb">OPERATION_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em>&#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">OPERATION</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><b><a class="el" href="classCORE.html#af02daa629e17b397ebe3238f510944bb">OPERATION_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -342,10 +575,19 @@ Files</h2></td></tr>
 </div><div class="memdoc">
 
 <p>SYNCオペレーション. </p>
+<hr/>
+ <dl class="params"><dt>Parameters:</dt><dd>
+  <table class="params">
+    <tr><td class="paramname"><a class="el" href="classCORE.html" title="Dummy Plug のコアパッケージ.">CORE</a></td><td>コア変数. </td></tr>
+    <tr><td class="paramname">STREAM</td><td>入力ストリーム. </td></tr>
+    <tr><td class="paramname">OPERATION</td><td>オペレーション. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a class="anchor" id="ada7131aa5892dfb0f7dcc6e5c8394b14"></a>
+<a class="anchor" id="a5d34a4eb64cd5f163c50d92167dd780e"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -353,7 +595,240 @@ Files</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"> <b><span class="vhdlchar"> </span></b> EXECUTE_WAIT ( ) </td>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> EXECUTE_TRANSACTION_MASTER_READ_ADDR ( ) </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Procedure</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>マスターリードランザクション(アドレスチャネル)実行サブプログラム. </p>
+
+</div>
+</div>
+<a class="anchor" id="ac9eddeac86d14de1794ebd14354847c5"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> EXECUTE_TRANSACTION_MASTER_READ_DATA ( ) </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Procedure</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>マスターリードトランザクション(データチャネル)実行サブプログラム. </p>
+
+</div>
+</div>
+<a class="anchor" id="a65c34199376351b93e646d09036c12aa"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> EXECUTE_TRANSACTION_MASTER_WRITE_ADDR ( ) </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Procedure</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>マスターライトトランザクション(アドレスチャネル)実行サブプログラム. </p>
+
+</div>
+</div>
+<a class="anchor" id="a2d5f83df91a20bf194827ab433edf648"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> EXECUTE_TRANSACTION_MASTER_WRITE_DATA ( ) </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Procedure</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>マスターライトトランザクション(データチャネル)実行サブプログラム. </p>
+
+</div>
+</div>
+<a class="anchor" id="a8236bae0c4e88150818996a7a9257820"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> EXECUTE_TRANSACTION_MASTER_WRITE_RESP ( ) </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Procedure</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>マスターライトトランザクション(応答チャネル)実行サブプログラム. </p>
+
+</div>
+</div>
+<a class="anchor" id="a9df65b8790ffcf5d077805ecfdd09da1"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> EXECUTE_TRANSACTION_SLAVE_READ_ADDR ( ) </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Procedure</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>スレーブリードトランザクション(アドレスチャネル)実行サブプログラム. </p>
+
+</div>
+</div>
+<a class="anchor" id="a6ffe380e88b13c925a5e781fe760483f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> EXECUTE_TRANSACTION_SLAVE_READ_DATA ( ) </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Procedure</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>スレーブリードトランザクション(データチャネル)実行サブプログラム. </p>
+
+</div>
+</div>
+<a class="anchor" id="a6f992faa2d4859585c366f9f6e30a1ef"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> EXECUTE_TRANSACTION_SLAVE_WRITE_ADDR ( ) </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Procedure</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>スレーブライトトランザクション(アドレスチャネル)実行サブプログラム. </p>
+
+</div>
+</div>
+<a class="anchor" id="a37523f6f62eb619db889d91a53023bf6"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> EXECUTE_TRANSACTION_SLAVE_WRITE_DATA ( ) </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Procedure</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>スレーブライトトランザクション(データチャネル)実行サブプログラム. </p>
+
+</div>
+</div>
+<a class="anchor" id="ad433d0267bd466fe717c6ad451e6612b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> EXECUTE_TRANSACTION_SLAVE_WRITE_RESP ( ) </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Procedure</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>スレーブライトトランザクション(応答チャネル)実行サブプログラム. </p>
+
+</div>
+</div>
+<a class="anchor" id="a4442521154b652efd9c1fe1eb90e1ef3"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> EXECUTE_WAIT          <td>(</td>
+          <td class="paramtype"><span class="keywordtype">variable </span> &#160;</td>
+          <td class="paramname"><b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a1d29ef905b0792c4cfd4c628f0a42945">CORE</a></b> <span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><b><a class="el" href="classCORE.html#a3ddf08e45a796c68d2b97185a92f370f">CORE_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype">file </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">STREAM</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlchar"> </span><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -364,6 +839,14 @@ Files</h2></td></tr>
 </div><div class="memdoc">
 
 <p>WAITオペレーション. 指定された条件まで待機. </p>
+<hr/>
+ <dl class="params"><dt>Parameters:</dt><dd>
+  <table class="params">
+    <tr><td class="paramname"><a class="el" href="classCORE.html" title="Dummy Plug のコアパッケージ.">CORE</a></td><td>コア変数. </td></tr>
+    <tr><td class="paramname">STREAM</td><td>入力ストリーム. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -389,6 +872,49 @@ Files</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a33cc464aac4a3acaa97e9a3e966f18e8"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> GENERATE_B_SIGNAL          <td>(</td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">PROC_NAME</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">string</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">SIGNALS</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__CORE.html#a98015a980d61a18fe48c9575746fb21a">AXI4_B_CHANNEL_SIGNAL_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Procedure</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>GET_TRANSACTION_INFO で取り込んだトランザクション情報から ワード毎のライト応答チャネル信号の値を生成するサブプログラム. </p>
+<hr/>
+ <dl class="params"><dt>Parameters:</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">PROC_NAME</td><td>プロシージャの名前. </td></tr>
+    <tr><td class="paramname">SIGNALS</td><td>生成されたワード毎の信号を出力する. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a class="anchor" id="a3bdfea8f1398b0b2ccb7cc72dca7256b"></a>
 <div class="memitem">
 <div class="memproto">
@@ -397,7 +923,7 @@ Files</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"> <b><span class="vhdlchar">KEYWORD_TYPE</span><span class="vhdlchar"> </span></b> GENERATE_KEY_CHANNEL ( ) </td>
+          <td class="memname"> <b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> GENERATE_KEY_CHANNEL ( ) </td>
         </tr>
       </table>
   </td>
@@ -409,7 +935,7 @@ Files</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a4a8b827a214ba48eb65df06e2ec5437b"></a>
+<a class="anchor" id="afd752c585ce2ddcf072fab38c872f241"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -417,7 +943,159 @@ Files</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"> <b><span class="vhdlchar"> </span></b> LOCAL_SYNC ( ) </td>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> GENERATE_R_SIGNAL          <td>(</td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">PROC_NAME</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">string</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">LAST</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Procedure</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>GET_TRANSACTION_INFO で取り込んだトランザクション情報から ワード毎のリードデータチャネル信号の値を生成するサブプログラム. </p>
+<hr/>
+ <dl class="params"><dt>Parameters:</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">PROC_NAME</td><td>プロシージャの名前. </td></tr>
+    <tr><td class="paramname">LAST</td><td>最後のワードであることを指定する. </td></tr>
+    <tr><td class="paramname">DEFAULT</td><td>指定の無いstd_logicの値. </td></tr>
+    <tr><td class="paramname">SIGNALS</td><td>生成されたワード毎の信号を出力する. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ab70963303cfe19ab46091c631c8a6b28"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> GENERATE_W_SIGNAL          <td>(</td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">PROC_NAME</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">string</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">LAST</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Procedure</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>GET_TRANSACTION_INFO で取り込んだトランザクション情報から ワード毎のライトデータチャネル信号の値を生成するサブプログラム. </p>
+<hr/>
+ <dl class="params"><dt>Parameters:</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">PROC_NAME</td><td>プロシージャの名前. </td></tr>
+    <tr><td class="paramname">LAST</td><td>最後のワードであることを指定する. </td></tr>
+    <tr><td class="paramname">DEFAULT</td><td>指定の無いstd_logicの値. </td></tr>
+    <tr><td class="paramname">SIGNALS</td><td>生成されたワード毎の信号を出力する. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a9909b1fa5e0776df25563f9c5436d8d7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> GET_TRANSACTION_INFO          <td>(</td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">PROC_NAME</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">string</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">DATA_WIDTH</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Procedure</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>アドレスチャネルからのトランザクション情報をTRAN_I信号から 取り込んで内部変数にセットするサブプログラム. </p>
+<hr/>
+ <dl class="params"><dt>Parameters:</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">PROC_NAME</td><td>プロシージャの名前. </td></tr>
+    <tr><td class="paramname">DATA_WIDTH</td><td>データのビット幅. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a63ae54be8a2051d3212f7cccf6c0b397"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> LOCAL_SYNC          <td>(</td>
+          <td class="paramtype"><span class="keywordtype">variable </span> &#160;</td>
+          <td class="paramname"><b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a1d29ef905b0792c4cfd4c628f0a42945">CORE</a></b> <span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><b><a class="el" href="classCORE.html#a3ddf08e45a796c68d2b97185a92f370f">CORE_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype">signal </span> &#160;</td>
+          <td class="paramname"><b><b><a class="el" href="classAXI4__CHANNEL__PLAYER.html#a359be5b33dedb6b1954e0ceaabae6934">SYNC_REQ</a></b> <span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><b><a class="el" href="classSYNC.html#ae6f8b25e382daff5078519f8b675e6fa">SYNC_REQ_VECTOR</a></b> <span class="vhdlchar"> </span><span class="vhdlchar">(</span><span class="vhdlchar"> </span> <span class="vhdldigit">0</span> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">downto</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span> <span class="vhdldigit">0</span> <span class="vhdlchar"> </span><span class="vhdlchar">)</span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype">signal </span> &#160;</td>
+          <td class="paramname"><b><b><a class="el" href="classAXI4__CHANNEL__PLAYER.html#a2dfc3ae7c508a9325cba589671e9fa5e">SYNC_ACK</a></b> <span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><b><a class="el" href="classSYNC.html#ab364fdcf99675b2f867e24c6ee94083f">SYNC_ACK_VECTOR</a></b> <span class="vhdlchar"> </span><span class="vhdlchar">(</span><span class="vhdlchar"> </span> <span class="vhdldigit">0</span> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">downto</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span> <span class="vhdldigit">0</span> <span class="vhdlchar"> </span><span class="vhdlchar">)</span><span class="vhdlchar"> </span></b></em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -428,6 +1106,15 @@ Files</h2></td></tr>
 </div><div class="memdoc">
 
 <p>ローカル同期オペレーション. </p>
+<hr/>
+ <dl class="params"><dt>Parameters:</dt><dd>
+  <table class="params">
+    <tr><td class="paramname"><a class="el" href="classCORE.html" title="Dummy Plug のコアパッケージ.">CORE</a></td><td>コア変数. </td></tr>
+    <tr><td class="paramname">SYNC_REQ</td><td>同期開始信号出力. </td></tr>
+    <tr><td class="paramname">SYNC_ACK</td><td>同期応答信号入力. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -617,10 +1304,10 @@ Files</h2></td></tr>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
     <tr><td class="paramname">SIGNALS</td><td>信号の期待値. </td></tr>
-    <tr><td class="paramname">MATCH</td><td>比較した結果。マッチすれば TRUE、しなければ FALSE. </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns:</dt><dd>比較した結果。マッチすれば TRUE、しなければ FALSE. </dd></dl>
 
 </div>
 </div>
@@ -774,7 +1461,7 @@ Files</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a5742fe7bf212e020ef29ba1ecac27700"></a>
+<a class="anchor" id="a3a7b345a13dbc2f9fe09108e5255a76c"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -782,7 +1469,7 @@ Files</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"> <b><span class="vhdlchar"> </span></b> PROCESS_1 ( ) </td>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> PROCESS_A ( ) </td>
         </tr>
       </table>
   </td>
@@ -792,7 +1479,88 @@ Files</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>初期化するコア変数. </p>
+</div>
+</div>
+<a class="anchor" id="a2e92e6d6f9bde5306e87037901b7808d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> PROCESS_D ( ) </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Process</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aa70654bdb6e12b0bbb56db317423279e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> PROCESS_M ( ) </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Process</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a07a39199d28bcf286a754725a52cfd25"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> READ_TRANSACTION_INFO          <td>(</td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">PROC_NAME</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">string</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype">variable </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">TIMEOUT</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Procedure</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>トランザクションの情報をシナリオから読むサブプログラム. </p>
+<hr/>
+ <dl class="params"><dt>Parameters:</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">PROC_NAME</td><td>プロシージャの名前. </td></tr>
+    <tr><td class="paramname">TIMEOUT</td><td>タイムアウトのクロック数. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -815,6 +1583,213 @@ Files</h2></td></tr>
 </div><div class="memdoc">
 
 <p>入力信号のどれかに変化があるまで待つサブプログラム. </p>
+
+</div>
+</div>
+<a class="anchor" id="abf08f4204b6f91bb164c38960c1f3622"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> WAIT_UNTIL_XFER_AR          <td>(</td>
+          <td class="paramtype"><span class="keywordtype">variable </span> &#160;</td>
+          <td class="paramname"><b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a1d29ef905b0792c4cfd4c628f0a42945">CORE</a></b> <span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><b><a class="el" href="classCORE.html#a3ddf08e45a796c68d2b97185a92f370f">CORE_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">PROC_NAME</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">STRING</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">TIMEOUT</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Procedure</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aa0a67eb4c7867eb95246638eb79ed403"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> WAIT_UNTIL_XFER_AW          <td>(</td>
+          <td class="paramtype"><span class="keywordtype">variable </span> &#160;</td>
+          <td class="paramname"><b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a1d29ef905b0792c4cfd4c628f0a42945">CORE</a></b> <span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><b><a class="el" href="classCORE.html#a3ddf08e45a796c68d2b97185a92f370f">CORE_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">PROC_NAME</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">STRING</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">TIMEOUT</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Procedure</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a0355b178d0aa7088fee40bcf1d596669"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> WAIT_UNTIL_XFER_B          <td>(</td>
+          <td class="paramtype"><span class="keywordtype">variable </span> &#160;</td>
+          <td class="paramname"><b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a1d29ef905b0792c4cfd4c628f0a42945">CORE</a></b> <span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><b><a class="el" href="classCORE.html#a3ddf08e45a796c68d2b97185a92f370f">CORE_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">PROC_NAME</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">STRING</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">TIMEOUT</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Procedure</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ad534634bded51979ee6913c73e659d4f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> WAIT_UNTIL_XFER_R          <td>(</td>
+          <td class="paramtype"><span class="keywordtype">variable </span> &#160;</td>
+          <td class="paramname"><b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a1d29ef905b0792c4cfd4c628f0a42945">CORE</a></b> <span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><b><a class="el" href="classCORE.html#a3ddf08e45a796c68d2b97185a92f370f">CORE_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">PROC_NAME</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">STRING</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">TIMEOUT</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">LAST</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">std_logic</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Procedure</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a28515700fc67d93fa66c38181498142e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> WAIT_UNTIL_XFER_W          <td>(</td>
+          <td class="paramtype"><span class="keywordtype">variable </span> &#160;</td>
+          <td class="paramname"><b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a1d29ef905b0792c4cfd4c628f0a42945">CORE</a></b> <span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><b><a class="el" href="classCORE.html#a3ddf08e45a796c68d2b97185a92f370f">CORE_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">PROC_NAME</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">STRING</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">TIMEOUT</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">LAST</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">std_logic</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Procedure</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -919,6 +1894,66 @@ Files</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a8a84e10052e136a2ddfe62e8f941b2fe"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a8a84e10052e136a2ddfe62e8f941b2fe">KEY_AR</a> <b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; AR   &quot;</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aa9644b0c5371a668fe358e01c87e99e7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#aa9644b0c5371a668fe358e01c87e99e7">KEY_AW</a> <b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; AW   &quot;</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a0bf7f5ebcd66eee1cf5d87df3076afc3"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a0bf7f5ebcd66eee1cf5d87df3076afc3">KEY_B</a> <b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; B    &quot;</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a31b9935f3d28948c2349ee86efc85dd5"></a>
 <div class="memitem">
 <div class="memproto">
@@ -927,12 +1962,292 @@ Files</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a31b9935f3d28948c2349ee86efc85dd5">KEY_CHANNEL</a> <b><span class="vhdlchar">KEYWORD_TYPE</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a3bdfea8f1398b0b2ccb7cc72dca7256b">GENERATE_KEY_CHANNEL</a></b> <span class="vhdlchar"> </span></b> </td>
+          <td class="memname"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a31b9935f3d28948c2349ee86efc85dd5">KEY_CHANNEL</a> <b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a3bdfea8f1398b0b2ccb7cc72dca7256b">GENERATE_KEY_CHANNEL</a></b> <span class="vhdlchar"> </span></b> </td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ab66d9d24cc5d6f863727c01c198dc9cb"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ab66d9d24cc5d6f863727c01c198dc9cb">KEY_CHECK</a> <b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; CHECK &quot;</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a98ef2e32e2066f0388ab5a6ab4c78199"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a98ef2e32e2066f0388ab5a6ab4c78199">KEY_DEBUG</a> <b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; DEBUG &quot;</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aa073b56887e4850b23e50352913c7515"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#aa073b56887e4850b23e50352913c7515">KEY_NULL</a> <b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot;      &quot;</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a2ba5133a8c67732339148fc7398383a6"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a2ba5133a8c67732339148fc7398383a6">KEY_OUT</a> <b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; OUT  &quot;</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ad173593794a43c377e41b966a73b02e4"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ad173593794a43c377e41b966a73b02e4">KEY_R</a> <b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; R    &quot;</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a23262c45dd7033f03506a9de3704a8e1"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a23262c45dd7033f03506a9de3704a8e1">KEY_READ</a> <b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; READ &quot;</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="af39b9d82341f991c83cbfc4f25dd7b7a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#af39b9d82341f991c83cbfc4f25dd7b7a">KEY_REPORT</a> <b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; REPOR &quot;</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aac5f3dfa58f52916ea55c2eaf821291b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#aac5f3dfa58f52916ea55c2eaf821291b">KEY_SAY</a> <b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; SAY  &quot;</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a4c2d05c9e74314edb0a16a21b1658f89"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a4c2d05c9e74314edb0a16a21b1658f89">KEY_SYNC</a> <b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; SYNC &quot;</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ad154e3331bc397437dbb74455fd560c7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ad154e3331bc397437dbb74455fd560c7">KEY_W</a> <b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; W    &quot;</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a1cd8a770a84d9a1bf68e25a2b55fb51e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a1cd8a770a84d9a1bf68e25a2b55fb51e">KEY_WAIT</a> <b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; WAIT &quot;</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ae76eefa3f6ed65a5b8fff97bb350b4c7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ae76eefa3f6ed65a5b8fff97bb350b4c7">KEY_WRITE</a> <b><b><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; WRITE &quot;</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ac687d5d4b38ed585270f6d4a740d4be3"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac687d5d4b38ed585270f6d4a740d4be3">KEYWORD_TYPE</a> <b><span class="comment">STRING</span><span class="vhdlchar"> </span><span class="vhdlchar">(</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span> <span class="vhdldigit">1</span> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">to</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span> <span class="vhdldigit">5</span> <span class="vhdlchar"> </span><span class="vhdlchar">)</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Subtype</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a2edc34402b573437d5f25fa90ba4013e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a2edc34402b573437d5f25fa90ba4013e">numeric_std</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Package</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -953,26 +2268,6 @@ Files</h2></td></tr>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel">Package</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a2eb7d1ce4987478eb166e42dcd25fd9a"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a2eb7d1ce4987478eb166e42dcd25fd9a">stream</a> <b><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span></b> </td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">File</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -1045,7 +2340,7 @@ Files</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 24 2012 01:48:58 for Dummy Plug by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 1 2012 01:18:14 for Dummy Plug by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.1
 </small></address>

@@ -23,6 +23,7 @@
   <td style="padding-left: 0.5em;">
    <div id="projectname">Dummy Plug
    </div>
+   <div id="projectbrief">Dummy Plug is a simple bus functional model library written by VHDL Only.</div>
   </td>
  </tr>
  </tbody>
@@ -118,13 +119,34 @@ Procedures</h2></td></tr>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">CHANNEL: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="vhdlchar">AXI4_CHANNEL_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">READ: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">WRITE: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
-  <b><span class="vhdlchar"> </span><span class="vhdlchar">WIDTH: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#a46088d90ff916961caebbbbd1eea6087">AXI4_SIGNAL_WIDTH_TYPE</a></b> <span class="vhdlchar"> </span></b></b><br/>
+  <b><span class="vhdlchar"> </span><span class="vhdlchar">WIDTH: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#a05038ae802d2d2bc54e4578f48e0b322">AXI4_SIGNAL_WIDTH_TYPE</a></b> <span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">SIGNALS: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">AXI4_CHANNEL_SIGNAL_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">EVENT: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><b><a class="el" href="classREADER.html#a327b804ddfa6a1156a4da024557e2510">EVENT_TYPE</a></b> <span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
 <tr class="memdesc:a611a4d4ab0eb4f55d5d7ab27f77919b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">シナリオのマップからチャネル信号構造体の値を読み取るサブプログラム.  <a href="#a611a4d4ab0eb4f55d5d7ab27f77919b9"></a><br/></td></tr>
 <tr class="memitem:ac1df37240d042fe9dead5af951ca9d8b"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__AXI4__CORE.html#ac1df37240d042fe9dead5af951ca9d8b">READ_VAL</a>( <b><span class="vhdlchar"> </span><span class="vhdlchar">VAL: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">std_logic_vector</span><span class="vhdlchar"> </span></b></b> )</td></tr>
 <tr class="memitem:ac1df37240d042fe9dead5af951ca9d8b"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__AXI4__CORE.html#ac1df37240d042fe9dead5af951ca9d8b">READ_VAL</a>( <b><span class="vhdlchar"> </span><span class="vhdlchar">VAL: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">std_logic</span><span class="vhdlchar"> </span></b></b> )</td></tr>
+<tr class="memitem:ac34a54af196cfebc53d0d29e61faab5f"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__AXI4__CORE.html#ac34a54af196cfebc53d0d29e61faab5f">MAP_READ_AXI4_TRANSACTION</a>( <br/>
+<b><span class="vhdlkeyword">variable </span><span class="vhdlchar">CORE: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><b><a class="el" href="classCORE.html#a3ddf08e45a796c68d2b97185a92f370f">CORE_TYPE</a></b> <span class="vhdlchar"> </span></b></b><br/>
+  <b><span class="vhdlkeyword">file </span><span class="vhdlchar">STREAM: </span><span class="stringliteral"></span> <b><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span></b></b><br/>
+  <b><span class="vhdlchar"> </span><span class="vhdlchar">ADDR_WIDTH: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
+  <b><span class="vhdlchar"> </span><span class="vhdlchar">AUSER_WIDTH: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
+  <b><span class="vhdlchar"> </span><span class="vhdlchar">DUSER_WIDTH: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
+  <b><span class="vhdlchar"> </span><span class="vhdlchar">BUSER_WIDTH: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
+  <b><span class="vhdlchar"> </span><span class="vhdlchar">ID_WIDTH: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
+  <b><span class="vhdlchar"> </span><span class="vhdlchar">TRANS: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">AXI4_TRANSACTION_SIGNAL_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
+  <b><span class="vhdlchar"> </span><span class="vhdlchar">EVENT: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><b><a class="el" href="classREADER.html#a327b804ddfa6a1156a4da024557e2510">EVENT_TYPE</a></b> <span class="vhdlchar"> </span></b></b><br/>
+   )</td></tr>
+<tr class="memdesc:ac34a54af196cfebc53d0d29e61faab5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">シナリオのマップからトランザクションの値を読み取るサブプログラム.  <a href="#ac34a54af196cfebc53d0d29e61faab5f"></a><br/></td></tr>
+<tr class="memitem:a931f0fed838dfebcb49692da2195f0c7"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__AXI4__CORE.html#a931f0fed838dfebcb49692da2195f0c7">READ_TRANSACTION_SIZE</a>( <b><span class="vhdlchar"> </span><span class="vhdlchar">VAL: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#aca48eaf75edb84dcde1ecaed4e282406">AXI4_ASIZE_TYPE</a></b> <span class="vhdlchar"> </span></b></b> )</td></tr>
+<tr class="memitem:a0ae15233d3dcc5925ab6d4c9e4a6e5e2"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__AXI4__CORE.html#a0ae15233d3dcc5925ab6d4c9e4a6e5e2">READ_TRANSACTION_BURST</a>( <b><span class="vhdlchar"> </span><span class="vhdlchar">VAL: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#aeabc342b4e04fd362759f63ecb7e147b">AXI4_ABURST_TYPE</a></b> <span class="vhdlchar"> </span></b></b> )</td></tr>
+<tr class="memitem:a7bf54d2587fd354c69f4de0615322018"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__AXI4__CORE.html#a7bf54d2587fd354c69f4de0615322018">READ_TRANSACTION_RESP</a>( <b><span class="vhdlchar"> </span><span class="vhdlchar">VAL: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#ad674fd3df5b7fce9c8561011a3bd03af">AXI4_RESP_TYPE</a></b> <span class="vhdlchar"> </span></b></b> )</td></tr>
+<tr class="memitem:a8bf68445de54a244a081b78a28587e12"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__AXI4__CORE.html#a8bf68445de54a244a081b78a28587e12">TRANSACTION_TO_ADDR_AND_BYTES</a>( <br/>
+<b><span class="vhdlchar"> </span><span class="vhdlchar">TRANS: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="vhdlchar">AXI4_TRANSACTION_SIGNAL_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
+  <b><span class="vhdlchar"> </span><span class="vhdlchar">ADDR: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
+  <b><span class="vhdlchar"> </span><span class="vhdlchar">SIZE: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
+   )</td></tr>
+<tr class="memdesc:a8bf68445de54a244a081b78a28587e12"><td class="mdescLeft">&#160;</td><td class="mdescRight">トランザクション情報からアドレスの下位ビットと１ワードのバイト数を生成  <a href="#a8bf68445de54a244a081b78a28587e12"></a><br/></td></tr>
 <tr class="memitem:ae2a0c51934e6157302bb76c252218b75"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__AXI4__CORE.html#ae2a0c51934e6157302bb76c252218b75">MATCH_AXI4_CHANNEL</a>( <br/>
 <b><span class="vhdlchar"> </span><span class="vhdlchar">SIGNALS: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="vhdlchar">AXI4_CHANNEL_SIGNAL_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">READ: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
@@ -297,7 +319,8 @@ Libraries</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="Use Clauses"></a>
 Use Clauses</h2></td></tr>
- <tr class="memitem:aa8c4e25998323a84db5b1fa701b92fcb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__AXI4__CORE.html#aa8c4e25998323a84db5b1fa701b92fcb">textio</a>&#160;</td><td class="memItemRight" valign="bottom">  </td></tr>
+ <tr class="memitem:a2edc34402b573437d5f25fa90ba4013e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__AXI4__CORE.html#a2edc34402b573437d5f25fa90ba4013e">numeric_std</a>&#160;</td><td class="memItemRight" valign="bottom">  </td></tr>
+<tr class="memitem:aa8c4e25998323a84db5b1fa701b92fcb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__AXI4__CORE.html#aa8c4e25998323a84db5b1fa701b92fcb">textio</a>&#160;</td><td class="memItemRight" valign="bottom">  </td></tr>
 <tr class="memitem:aa7f7643703985348d36560dcc4e3af6d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__AXI4__CORE.html#aa7f7643703985348d36560dcc4e3af6d">AXI4_TYPES</a>&#160;</td><td class="memItemRight" valign="bottom">   <b>Package</b><em><a class="el" href="classAXI4__TYPES.html"> &lt;AXI4_TYPES&gt;</a></td></tr>
 <tr class="memitem:a1d29ef905b0792c4cfd4c628f0a42945"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__AXI4__CORE.html#a1d29ef905b0792c4cfd4c628f0a42945">CORE</a>&#160;</td><td class="memItemRight" valign="bottom">   <b>Package</b><em><a class="el" href="classCORE.html"> &lt;CORE&gt;</a></td></tr>
 <tr class="memitem:a981bfde619c5d6595b60241a941a0c8f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__AXI4__CORE.html#a981bfde619c5d6595b60241a941a0c8f">READER</a>&#160;</td><td class="memItemRight" valign="bottom">   <b>Package</b><em><a class="el" href="classREADER.html"> &lt;READER&gt;</a></td></tr>
@@ -383,6 +406,14 @@ Constants</h2></td></tr>
 <tr class="memitem:abafee3329631a0a2d968665eb98ad3e0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__AXI4__CORE.html#abafee3329631a0a2d968665eb98ad3e0">KEY_BVALID</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="class__AXI4__CORE.html#a1df57cd909ed3a8ee1346d9c9f11f369">KEY_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; BVALID &quot;</span><span class="vhdlchar"> </span></b></td></tr>
 <tr class="memitem:ae970d5db0aa9e709c40652187a0ada53"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__AXI4__CORE.html#ae970d5db0aa9e709c40652187a0ada53">KEY_BREADY</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="class__AXI4__CORE.html#a1df57cd909ed3a8ee1346d9c9f11f369">KEY_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; BREADY &quot;</span><span class="vhdlchar"> </span></b></td></tr>
 <tr class="memitem:ad8ae87820475113e80f60160591b9a71"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__AXI4__CORE.html#ad8ae87820475113e80f60160591b9a71">KEY_DUSER</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="class__AXI4__CORE.html#a1df57cd909ed3a8ee1346d9c9f11f369">KEY_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; DUSER  &quot;</span><span class="vhdlchar"> </span></b></td></tr>
+<tr class="memitem:a74ee0dc69c299f5c24725745b3af51fe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__AXI4__CORE.html#a74ee0dc69c299f5c24725745b3af51fe">KEY_OKEY</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="class__AXI4__CORE.html#a1df57cd909ed3a8ee1346d9c9f11f369">KEY_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; OKEY   &quot;</span><span class="vhdlchar"> </span></b></td></tr>
+<tr class="memitem:ad95815dcc041cfc0867c518533210e1c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__AXI4__CORE.html#ad95815dcc041cfc0867c518533210e1c">KEY_EXOKAY</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="class__AXI4__CORE.html#a1df57cd909ed3a8ee1346d9c9f11f369">KEY_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; EXOKAY &quot;</span><span class="vhdlchar"> </span></b></td></tr>
+<tr class="memitem:a8af5e14dd68539c1984d03a37a218c2a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__AXI4__CORE.html#a8af5e14dd68539c1984d03a37a218c2a">KEY_SLVERR</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="class__AXI4__CORE.html#a1df57cd909ed3a8ee1346d9c9f11f369">KEY_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; SLVERR &quot;</span><span class="vhdlchar"> </span></b></td></tr>
+<tr class="memitem:a090c3d5a0345a18701ba5c6ad607a95c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__AXI4__CORE.html#a090c3d5a0345a18701ba5c6ad607a95c">KEY_DECERR</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="class__AXI4__CORE.html#a1df57cd909ed3a8ee1346d9c9f11f369">KEY_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; DECERR &quot;</span><span class="vhdlchar"> </span></b></td></tr>
+<tr class="memitem:ac93fe35494ff1c8502f6c6a03eb4a72a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__AXI4__CORE.html#ac93fe35494ff1c8502f6c6a03eb4a72a">KEY_FIXED</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="class__AXI4__CORE.html#a1df57cd909ed3a8ee1346d9c9f11f369">KEY_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; FIXED  &quot;</span><span class="vhdlchar"> </span></b></td></tr>
+<tr class="memitem:ad0e56b6f3ea1f7694bfa4a3b27aa05f9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__AXI4__CORE.html#ad0e56b6f3ea1f7694bfa4a3b27aa05f9">KEY_INCR</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="class__AXI4__CORE.html#a1df57cd909ed3a8ee1346d9c9f11f369">KEY_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; INCR   &quot;</span><span class="vhdlchar"> </span></b></td></tr>
+<tr class="memitem:a35d54123c38022f7a2448f8826fc4de2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__AXI4__CORE.html#a35d54123c38022f7a2448f8826fc4de2">KEY_WRAP</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="class__AXI4__CORE.html#a1df57cd909ed3a8ee1346d9c9f11f369">KEY_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; WRAP   &quot;</span><span class="vhdlchar"> </span></b></td></tr>
+<tr class="memitem:afe4bf8e9f020ec2f243c9c88593f0016"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__AXI4__CORE.html#afe4bf8e9f020ec2f243c9c88593f0016">KEY_RESV</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="class__AXI4__CORE.html#a1df57cd909ed3a8ee1346d9c9f11f369">KEY_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; RESV   &quot;</span><span class="vhdlchar"> </span></b></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="Types"></a>
 Types</h2></td></tr>
@@ -437,7 +468,7 @@ Subtypes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
-          <td class="paramname"><b><span class="vhdlchar">WIDTH</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#a46088d90ff916961caebbbbd1eea6087">AXI4_SIGNAL_WIDTH_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+          <td class="paramname"><b><span class="vhdlchar">WIDTH</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#a05038ae802d2d2bc54e4578f48e0b322">AXI4_SIGNAL_WIDTH_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -477,6 +508,98 @@ Subtypes</h2></td></tr>
     <tr><td class="paramname">WRITE</td><td>ライト可/不可を指定. </td></tr>
     <tr><td class="paramname">WIDTH</td><td>チャネル信号のビット幅を指定する. </td></tr>
     <tr><td class="paramname">SIGNALS</td><td>読み取った値が入るレコード変数. inoutであることに注意. </td></tr>
+    <tr><td class="paramname">EVENT</td><td>次のイベント. inoutであることに注意. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ac34a54af196cfebc53d0d29e61faab5f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> MAP_READ_AXI4_TRANSACTION          <td>(</td>
+          <td class="paramtype"><span class="keywordtype">variable </span> &#160;</td>
+          <td class="paramname"><b><b><a class="el" href="class__AXI4__CORE.html#a1d29ef905b0792c4cfd4c628f0a42945">CORE</a></b> <span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><b><a class="el" href="classCORE.html#a3ddf08e45a796c68d2b97185a92f370f">CORE_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype">file </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">STREAM</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlchar"> </span><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">ADDR_WIDTH</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">AUSER_WIDTH</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">DUSER_WIDTH</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">BUSER_WIDTH</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">ID_WIDTH</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">TRANS</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">AXI4_TRANSACTION_SIGNAL_TYPE</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">EVENT</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><b><a class="el" href="classREADER.html#a327b804ddfa6a1156a4da024557e2510">EVENT_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Procedure</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>シナリオのマップからトランザクションの値を読み取るサブプログラム. </p>
+<hr/>
+ <dl class="params"><dt>Parameters:</dt><dd>
+  <table class="params">
+    <tr><td class="paramname"><a class="el" href="classCORE.html" title="Dummy Plug のコアパッケージ.">CORE</a></td><td>コア変数. </td></tr>
+    <tr><td class="paramname">STREAM</td><td>シナリオのストリーム. </td></tr>
+    <tr><td class="paramname">ADDR_WIDTH</td><td>アドレスのビット幅. </td></tr>
+    <tr><td class="paramname">AUSER_WIDTH</td><td>ユーザー信号のビット幅. </td></tr>
+    <tr><td class="paramname">DUSER_WIDTH</td><td>ユーザー信号のビット幅. </td></tr>
+    <tr><td class="paramname">BUSER_WIDTH</td><td>ユーザー信号のビット幅. </td></tr>
+    <tr><td class="paramname">ID_WIDTH</td><td>ID信号のビット幅. </td></tr>
+    <tr><td class="paramname">TRANS</td><td>トランザクション信号. </td></tr>
     <tr><td class="paramname">EVENT</td><td>次のイベント. inoutであることに注意. </td></tr>
   </table>
   </dd>
@@ -1504,6 +1627,87 @@ Subtypes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a0ae15233d3dcc5925ab6d4c9e4a6e5e2"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> READ_TRANSACTION_BURST          <td>(</td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">VAL</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#aeabc342b4e04fd362759f63ecb7e147b">AXI4_ABURST_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Procedure</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a7bf54d2587fd354c69f4de0615322018"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> READ_TRANSACTION_RESP          <td>(</td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">VAL</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#ad674fd3df5b7fce9c8561011a3bd03af">AXI4_RESP_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Procedure</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a931f0fed838dfebcb49692da2195f0c7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> READ_TRANSACTION_SIZE          <td>(</td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">VAL</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><b><a class="el" href="classAXI4__TYPES.html#aca48eaf75edb84dcde1ecaed4e282406">AXI4_ASIZE_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Procedure</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="ac1df37240d042fe9dead5af951ca9d8b"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1613,6 +1817,56 @@ Subtypes</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns:</dt><dd>変換されたREAD_AXI4_SIGNAL_TYPE. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a8bf68445de54a244a081b78a28587e12"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> TRANSACTION_TO_ADDR_AND_BYTES          <td>(</td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">TRANS</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="vhdlchar">AXI4_TRANSACTION_SIGNAL_TYPE</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">ADDR</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em> , </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><span class="keywordtype"> </span> &#160;</td>
+          <td class="paramname"><b><span class="vhdlchar">SIZE</span><span class="vhdlchar"> </span></b> : <span class="stringliteral"></span> <em><b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span></b></em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Procedure</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>トランザクション情報からアドレスの下位ビットと１ワードのバイト数を生成 </p>
+<hr/>
+ <dl class="params"><dt>Parameters:</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">TRANS</td><td>トランザクション情報. </td></tr>
+    <tr><td class="paramname">ADDR</td><td>アドレスの下位ビットの整数値. </td></tr>
+    <tr><td class="paramname">SIZE</td><td>１ワードのバイト数. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -2637,6 +2891,26 @@ Subtypes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a090c3d5a0345a18701ba5c6ad607a95c"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class__AXI4__CORE.html#a090c3d5a0345a18701ba5c6ad607a95c">KEY_DECERR</a> <b><b><a class="el" href="class__AXI4__CORE.html#a1df57cd909ed3a8ee1346d9c9f11f369">KEY_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; DECERR &quot;</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="ad8ae87820475113e80f60160591b9a71"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2657,6 +2931,46 @@ Subtypes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ad95815dcc041cfc0867c518533210e1c"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class__AXI4__CORE.html#ad95815dcc041cfc0867c518533210e1c">KEY_EXOKAY</a> <b><b><a class="el" href="class__AXI4__CORE.html#a1df57cd909ed3a8ee1346d9c9f11f369">KEY_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; EXOKAY &quot;</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ac93fe35494ff1c8502f6c6a03eb4a72a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class__AXI4__CORE.html#ac93fe35494ff1c8502f6c6a03eb4a72a">KEY_FIXED</a> <b><b><a class="el" href="class__AXI4__CORE.html#a1df57cd909ed3a8ee1346d9c9f11f369">KEY_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; FIXED  &quot;</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a37c017e4c81563a347b0db1dcfdfe635"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2666,6 +2980,26 @@ Subtypes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="class__AXI4__CORE.html#a37c017e4c81563a347b0db1dcfdfe635">KEY_ID</a> <b><b><a class="el" href="class__AXI4__CORE.html#a1df57cd909ed3a8ee1346d9c9f11f369">KEY_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; ID     &quot;</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ad0e56b6f3ea1f7694bfa4a3b27aa05f9"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class__AXI4__CORE.html#ad0e56b6f3ea1f7694bfa4a3b27aa05f9">KEY_INCR</a> <b><b><a class="el" href="class__AXI4__CORE.html#a1df57cd909ed3a8ee1346d9c9f11f369">KEY_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; INCR   &quot;</span><span class="vhdlchar"> </span></b> </td>
         </tr>
       </table>
   </td>
@@ -2726,6 +3060,26 @@ Subtypes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="class__AXI4__CORE.html#a1daf7ab0cec272bff00378d024321044">KEY_LOCK</a> <b><b><a class="el" href="class__AXI4__CORE.html#a1df57cd909ed3a8ee1346d9c9f11f369">KEY_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; LOCK   &quot;</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a74ee0dc69c299f5c24725745b3af51fe"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class__AXI4__CORE.html#a74ee0dc69c299f5c24725745b3af51fe">KEY_OKEY</a> <b><b><a class="el" href="class__AXI4__CORE.html#a1df57cd909ed3a8ee1346d9c9f11f369">KEY_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; OKEY   &quot;</span><span class="vhdlchar"> </span></b> </td>
         </tr>
       </table>
   </td>
@@ -2846,6 +3200,26 @@ Subtypes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="class__AXI4__CORE.html#ac95e807253dc114e2553fe63b8a737c8">KEY_RESP</a> <b><b><a class="el" href="class__AXI4__CORE.html#a1df57cd909ed3a8ee1346d9c9f11f369">KEY_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; RESP   &quot;</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="afe4bf8e9f020ec2f243c9c88593f0016"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class__AXI4__CORE.html#afe4bf8e9f020ec2f243c9c88593f0016">KEY_RESV</a> <b><b><a class="el" href="class__AXI4__CORE.html#a1df57cd909ed3a8ee1346d9c9f11f369">KEY_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; RESV   &quot;</span><span class="vhdlchar"> </span></b> </td>
         </tr>
       </table>
   </td>
@@ -2986,6 +3360,26 @@ Subtypes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="class__AXI4__CORE.html#a3d25eea5356071f8b8470634751aa039">KEY_SIZE</a> <b><b><a class="el" href="class__AXI4__CORE.html#a1df57cd909ed3a8ee1346d9c9f11f369">KEY_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; SIZE   &quot;</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a8af5e14dd68539c1984d03a37a218c2a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class__AXI4__CORE.html#a8af5e14dd68539c1984d03a37a218c2a">KEY_SLVERR</a> <b><b><a class="el" href="class__AXI4__CORE.html#a1df57cd909ed3a8ee1346d9c9f11f369">KEY_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; SLVERR &quot;</span><span class="vhdlchar"> </span></b> </td>
         </tr>
       </table>
   </td>
@@ -3139,6 +3533,26 @@ Subtypes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a35d54123c38022f7a2448f8826fc4de2"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class__AXI4__CORE.html#a35d54123c38022f7a2448f8826fc4de2">KEY_WRAP</a> <b><b><a class="el" href="class__AXI4__CORE.html#a1df57cd909ed3a8ee1346d9c9f11f369">KEY_TYPE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; WRAP   &quot;</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a85b4f112a219b86b4594828ef3fbb01c"></a>
 <div class="memitem">
 <div class="memproto">
@@ -3233,6 +3647,26 @@ Subtypes</h2></td></tr>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel">Constant</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a2edc34402b573437d5f25fa90ba4013e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class__AXI4__CORE.html#a2edc34402b573437d5f25fa90ba4013e">numeric_std</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Package</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -3347,7 +3781,7 @@ Subtypes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 24 2012 01:48:57 for Dummy Plug by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 1 2012 01:18:13 for Dummy Plug by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.1
 </small></address>
