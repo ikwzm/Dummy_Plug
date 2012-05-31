@@ -1721,7 +1721,7 @@ package body CORE is
     --! @brief ステータスレポートを集計する関数.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --! @param    REPORTS     集計するステータスレポート.
-    --! @retrun               集計したステータスレポート.
+    --! @return               集計したステータスレポート.
     -------------------------------------------------------------------------------
     function  MARGE_REPORT_STATUS(REPORTS: REPORT_STATUS_VECTOR) return REPORT_STATUS_TYPE is
         variable  status : REPORT_STATUS_TYPE;
@@ -1833,7 +1833,6 @@ package body CORE is
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --! @param    SELF        コア変数.
     --! @param    STREAM      入力ストリーム.
-    --! @param    SIZE        デフォルトのビット数.
     --! @param    VAL         読んだstd_logic_vector型の値.
     --! @param    VAL_LEN     読んだstd_logic_vectorのビット数.
     -------------------------------------------------------------------------------
