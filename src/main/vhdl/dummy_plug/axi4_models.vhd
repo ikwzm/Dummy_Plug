@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_models.vhd
 --!     @brief   AXI4 Dummy Plug Component Package.
---!     @version 0.0.6
---!     @date    2012/5/24
+--!     @version 0.9.0
+--!     @date    2012/6/1
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -42,7 +42,7 @@ use     DUMMY_PLUG.CORE.REPORT_STATUS_TYPE;
 use     DUMMY_PLUG.SYNC.SYNC_SIG_VECTOR;
 use     DUMMY_PLUG.SYNC.SYNC_PLUG_NUM_TYPE;
 -----------------------------------------------------------------------------------
---! @brief AXI4 Master/Slave Bus Function Model Package.
+--! @brief AXI4 Dummy Plug の各種モデルのコンポーネント宣言をまとめたパッケージ.
 -----------------------------------------------------------------------------------
 package AXI4_MODELS is
 

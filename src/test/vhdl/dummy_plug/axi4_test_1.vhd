@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    aix4_test_1.vhd
 --!     @brief   TEST BENCH No.1 for DUMMY_PLUG.AXI4_MODELS
---!     @version 0.0.5
---!     @date    2012/5/15
+--!     @version 0.9.0
+--!     @date    2012/5/31
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -46,13 +46,21 @@ use     DUMMY_PLUG.AXI4_MODELS.AXI4_SIGNAL_PRINTER;
 use     DUMMY_PLUG.SYNC.all;
 use     DUMMY_PLUG.CORE.MARCHAL;
 use     DUMMY_PLUG.CORE.REPORT_STATUS_TYPE;
+use     DUMMY_PLUG.CORE.REPORT_STATUS_VECTOR;
+use     DUMMY_PLUG.CORE.MARGE_REPORT_STATUS;
 entity  DUMMY_PLUG_AXI4_TEST_1 is
+    generic (
+        NAME            : --! @brief テストベンチの識別名.
+                          STRING;
+        SCENARIO_FILE   : --! @brief シナリオファイルの名前.
+                          STRING;
+        DATA_WIDTH      : --! @brief データチャネルのビット幅.
+                          integer;
+        EXP_REPORT      : --! @brief 期待しているREPORT_STATUSの値.
+                          REPORT_STATUS_TYPE
+    );
 end     DUMMY_PLUG_AXI4_TEST_1;
 architecture MODEL of DUMMY_PLUG_AXI4_TEST_1 is
-    -------------------------------------------------------------------------------
-    -- シナリオファイル名.
-    -------------------------------------------------------------------------------
-    constant SCENARIO_FILE   : STRING  := "../../src/test/resouces/axi4_test_1.snr";
     -------------------------------------------------------------------------------
     -- 各種定数
     -------------------------------------------------------------------------------
@@ -62,8 +70,8 @@ architecture MODEL of DUMMY_PLUG_AXI4_TEST_1 is
                                  ID          =>  4,
                                  AWADDR      => 32,
                                  ARADDR      => 32,
-                                 WDATA       => 32,
-                                 RDATA       => 32,
+                                 WDATA       => DATA_WIDTH,
+                                 RDATA       => DATA_WIDTH,
                                  ARUSER      =>  1,
                                  AWUSER      =>  1,
                                  WUSER       =>  1,
@@ -161,7 +169,6 @@ architecture MODEL of DUMMY_PLUG_AXI4_TEST_1 is
     signal   S_FINISH        : std_logic;
     
 begin
-
     -------------------------------------------------------------------------------
     -- 
     -------------------------------------------------------------------------------
@@ -384,8 +391,8 @@ begin
     -------------------------------------------------------------------------------
     PRINT: AXI4_SIGNAL_PRINTER
         generic map (
-            NAME            => "AXI4_TEST_1",
-            TAG             => "AXI4_TEST_1",
+            NAME            => NAME,
+            TAG             => NAME,
             TAG_WIDTH       => 0,
             TIME_WIDTH      => 13,
             WIDTH           => WIDTH
@@ -469,13 +476,15 @@ begin
     M_GPI   <= S_GPO & M_GPO;
     S_GPI   <= S_GPO & M_GPO;
     process
-        variable L : LINE;
-        constant T : STRING(1 to 7) := "  ***  ";
+        variable L   : LINE;
+        constant T   : STRING(1 to 7) := "  ***  ";
+        variable rep : REPORT_STATUS_TYPE;
+        variable rv  : REPORT_STATUS_VECTOR(1 to 2);
     begin
         wait until (N_FINISH'event and N_FINISH = '1');
         wait for DELAY;
         WRITE(L,T);                                                   WRITELINE(OUTPUT,L);
-        WRITE(L,T & "ERROR REPORT");                                  WRITELINE(OUTPUT,L);
+        WRITE(L,T & "ERROR REPORT " & NAME);                          WRITELINE(OUTPUT,L);
         WRITE(L,T & "[ MASTER ]");                                    WRITELINE(OUTPUT,L);
         WRITE(L,T & "  Error    : ");WRITE(L,M_REPORT.error_count   );WRITELINE(OUTPUT,L);
         WRITE(L,T & "  Mismatch : ");WRITE(L,M_REPORT.mismatch_count);WRITELINE(OUTPUT,L);
@@ -486,14 +495,13 @@ begin
         WRITE(L,T & "  Mismatch : ");WRITE(L,S_REPORT.mismatch_count);WRITELINE(OUTPUT,L);
         WRITE(L,T & "  Warning  : ");WRITE(L,S_REPORT.warning_count );WRITELINE(OUTPUT,L);
         WRITE(L,T);                                                   WRITELINE(OUTPUT,L);
-        assert (M_REPORT.error_count    =  0) and
-               (M_REPORT.mismatch_count = 11) and
-               (M_REPORT.warning_count  =  0) and
-               (M_REPORT.failure_count  =  0) and
-               (S_REPORT.error_count    =  0) and
-               (S_REPORT.mismatch_count = 20) and
-               (S_REPORT.warning_count  =  0) and
-               (S_REPORT.failure_count  =  0)
+        rv(1) := M_REPORT;
+        rv(2) := S_REPORT;
+        rep := MARGE_REPORT_STATUS(rv);
+        assert (rep.error_count    = EXP_REPORT.error_count   ) and
+               (rep.mismatch_count = EXP_REPORT.mismatch_count) and
+               (rep.warning_count  = EXP_REPORT.warning_count ) and
+               (rep.failure_count  = EXP_REPORT.failure_count )
         report "REPORT Mismatch !!" severity FAILURE;
         assert FALSE report "Simulation complete." severity FAILURE;
         wait;
@@ -502,4 +510,3 @@ begin
  -- SYNC_PRINT_0: SYNC_PRINT generic map(string'("AXI4_TEST_1:SYNC(0)")) port map (SYNC(0));
  -- SYNC_PRINT_1: SYNC_PRINT generic map(string'("AXI4_TEST_1:SYNC(1)")) port map (SYNC(1));
 end MODEL;
-

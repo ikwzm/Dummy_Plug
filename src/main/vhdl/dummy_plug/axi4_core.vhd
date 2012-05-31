@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_core.vhd
 --!     @brief   AXI4 Dummy Plug Core Package.
---!     @version 0.0.6
---!     @date    2012/5/24
+--!     @version 0.9.0
+--!     @date    2012/6/1
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -63,26 +63,6 @@ package AXI4_CORE is
     --! @brief WAITオペレーション実行時のデフォルトのタイムアウトクロック数
     -------------------------------------------------------------------------------
     constant  DEFAULT_WAIT_TIMEOUT : integer := 10000;
-    -------------------------------------------------------------------------------
-    --! @brief AXI4 ID の最大ビット幅
-    -------------------------------------------------------------------------------
-    constant  AXI4_ID_MAX_WIDTH    : integer := 8;
-    -------------------------------------------------------------------------------
-    --! @brief AXI4 ADDR の最大ビット幅
-    -------------------------------------------------------------------------------
-    constant  AXI4_ADDR_MAX_WIDTH  : integer := 64;
-    -------------------------------------------------------------------------------
-    --! @brief AXI4 DATA の最大ビット幅
-    -------------------------------------------------------------------------------
-    constant  AXI4_DATA_MAX_WIDTH  : integer := 256;
-    -------------------------------------------------------------------------------
-    --! @brief AXI4 WSTRB の最大ビット幅
-    -------------------------------------------------------------------------------
-    constant  AXI4_STRB_MAX_WIDTH  : integer := AXI4_DATA_MAX_WIDTH/8;
-    -------------------------------------------------------------------------------
-    --! @brief AXI4 USER の最大ビット幅
-    -------------------------------------------------------------------------------
-    constant  AXI4_USER_MAX_WIDTH  : integer := 32;
     -------------------------------------------------------------------------------
     --! @brief AXI4 トランザクションデータの最大バイト数.
     -------------------------------------------------------------------------------
@@ -277,6 +257,72 @@ package AXI4_CORE is
         B       => AXI4_B_CHANNEL_SIGNAL_NULL
     );
     -------------------------------------------------------------------------------
+    --! @brief AXI4トランザクション信号のレコード宣言.
+    -------------------------------------------------------------------------------
+    type      AXI4_TRANSACTION_SIGNAL_TYPE is record
+        ID       : std_logic_vector(AXI4_ID_MAX_WIDTH    -1 downto 0);
+        ADDR     : std_logic_vector(AXI4_ADDR_MAX_WIDTH  -1 downto 0);
+        AUSER    : std_logic_vector(AXI4_USER_MAX_WIDTH  -1 downto 0);
+        DUSER    : std_logic_vector(AXI4_USER_MAX_WIDTH  -1 downto 0);
+        BUSER    : std_logic_vector(AXI4_USER_MAX_WIDTH  -1 downto 0);
+        DATA     : std_logic_vector(AXI4_XFER_MAX_BYTES*8-1 downto 0);
+        DATA_LEN : integer;
+        WRITE    : std_logic;
+        LEN      : AXI4_ALEN_TYPE;
+        SIZE     : AXI4_ASIZE_TYPE;
+        BURST    : AXI4_ABURST_TYPE;
+        LOCK     : AXI4_ALOCK_TYPE;
+        CACHE    : AXI4_ACACHE_TYPE;
+        PROT     : AXI4_APROT_TYPE;
+        QOS      : AXI4_AQOS_TYPE;
+        REGION   : AXI4_AREGION_TYPE;
+        RESP     : AXI4_RESP_TYPE;
+    end record;
+    -------------------------------------------------------------------------------
+    --! @brief AXI4トランザクション信号のNULL定数.
+    -------------------------------------------------------------------------------
+    constant  AXI4_TRANSACTION_SIGNAL_NULL     : AXI4_TRANSACTION_SIGNAL_TYPE := (
+        ID       => (others => '0')  ,
+        ADDR     => (others => '0')  ,
+        AUSER    => (others => '0')  ,
+        DUSER    => (others => '0')  ,
+        BUSER    => (others => '0')  ,
+        DATA     => (others => '0')  ,
+        DATA_LEN =>  0               ,
+        WRITE    => '0'              ,
+        LEN      => (others => '0')  ,
+        SIZE     => (others => '0')  ,
+        BURST    => (others => '0')  ,
+        LOCK     => (others => '0')  ,
+        CACHE    => (others => '0')  ,
+        PROT     => (others => '0')  ,
+        QOS      => (others => '0')  ,
+        REGION   => (others => '0')  ,
+        RESP     => (others => '0')
+    );
+    -------------------------------------------------------------------------------
+    --! @brief AXI4トランザクション信号のドントケア定数.
+    -------------------------------------------------------------------------------
+    constant  AXI4_TRANSACTION_SIGNAL_DONTCARE : AXI4_TRANSACTION_SIGNAL_TYPE := (
+        ID       => (others => '-')  ,
+        ADDR     => (others => '-')  ,
+        AUSER    => (others => '-')  ,
+        DUSER    => (others => '-')  ,
+        BUSER    => (others => '-')  ,
+        DATA     => (others => '-')  ,
+        DATA_LEN =>  0               ,
+        WRITE    => '-'              ,
+        LEN      => (others => '-')  ,
+        SIZE     => (others => '-')  ,
+        BURST    => (others => '-')  ,
+        LOCK     => (others => '-')  ,
+        CACHE    => (others => '-')  ,
+        PROT     => (others => '-')  ,
+        QOS      => (others => '-')  ,
+        REGION   => (others => '-')  ,
+        RESP     => (others => '-')
+    );
+    -------------------------------------------------------------------------------
     --! @brief シナリオのマップからチャネル信号レコードの値を読み取るサブプログラム.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --! @param    CORE        コア変数.
@@ -297,6 +343,42 @@ package AXI4_CORE is
                   WIDTH         : in    AXI4_SIGNAL_WIDTH_TYPE;
                   SIGNALS       : inout AXI4_CHANNEL_SIGNAL_TYPE;
                   EVENT         : inout EVENT_TYPE
+    );
+    -------------------------------------------------------------------------------
+    --! @brief シナリオのマップからトランザクションの値を読み取るサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    CORE        コア変数.
+    --! @param    STREAM      シナリオのストリーム.
+    --! @param    ADDR_WIDTH  アドレスチャネルのビット幅.
+    --! @param    AUSER_WIDTH ユーザー信号のビット幅.
+    --! @param    DUSER_WIDTH ユーザー信号のビット幅.
+    --! @param    BUSER_WIDTH ユーザー信号のビット幅.
+    --! @param    ID_WIDTH    ID信号のビット幅.
+    --! @param    TRANS       トランザクション信号.
+    --! @param    EVENT       次のイベント. inoutであることに注意.
+    -------------------------------------------------------------------------------
+    procedure MAP_READ_AXI4_TRANSACTION(
+        variable  CORE          : inout CORE_TYPE;
+        file      STREAM        :       TEXT;
+                  ADDR_WIDTH    : in    integer;
+                  AUSER_WIDTH   : in    integer;
+                  DUSER_WIDTH   : in    integer;
+                  BUSER_WIDTH   : in    integer;
+                  ID_WIDTH      : in    integer;
+                  TRANS         : inout AXI4_TRANSACTION_SIGNAL_TYPE;
+                  EVENT         : inout EVENT_TYPE
+    );
+    -------------------------------------------------------------------------------
+    --! @brief トランザクション情報からアドレスの下位ビットと１ワードのバイト数を生成
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    TRANS       トランザクション情報.
+    --! @param    ADDR        アドレスの下位ビットの整数値.
+    --! @param    SIZE        １ワードのバイト数.
+    -------------------------------------------------------------------------------
+    procedure TRANSACTION_TO_ADDR_AND_BYTES(
+                  TRANS         : in    AXI4_TRANSACTION_SIGNAL_TYPE;
+                  ADDR          : out   integer;
+                  SIZE          : out   integer
     );
     -------------------------------------------------------------------------------
     --! @brief 構造体の値と信号を比較するサブプログラム.
@@ -505,8 +587,6 @@ package AXI4_CORE is
                               AXI4_SIGNAL_WIDTH_TYPE;
             SYNC_WIDTH      : --! @brief シンクロ用信号の本数.
                               integer :=  1;
-            SYNC_LOCAL_PORT : --! @brief ローカル同期信号のポート番号.
-                              integer := 0;
             SYNC_LOCAL_WAIT : --! @brief ローカル同期時のウェイトクロック数.
                               integer := 2;
             GPI_WIDTH       : --! @brief GPI(General Purpose Input)信号のビット幅.
@@ -636,8 +716,15 @@ package AXI4_CORE is
             -----------------------------------------------------------------------
             SYNC_REQ        : out   SYNC_REQ_VECTOR(SYNC_WIDTH-1 downto 0);
             SYNC_ACK        : in    SYNC_ACK_VECTOR(SYNC_WIDTH-1 downto 0) := (others => '0');
-            SYNC_LOCAL_REQ  : out   SYNC_REQ_VECTOR(SYNC_LOCAL_PORT downto SYNC_LOCAL_PORT);
-            SYNC_LOCAL_ACK  : in    SYNC_ACK_VECTOR(SYNC_LOCAL_PORT downto SYNC_LOCAL_PORT);
+            SYNC_LOCAL_REQ  : out   SYNC_REQ_VECTOR(0 downto 0);
+            SYNC_LOCAL_ACK  : in    SYNC_ACK_VECTOR(0 downto 0);
+            SYNC_TRANS_REQ  : out   SYNC_REQ_VECTOR(0 downto 0);
+            SYNC_TRANS_ACK  : in    SYNC_ACK_VECTOR(0 downto 0);
+            -----------------------------------------------------------------------
+            -- トランザクション用信号.
+            -----------------------------------------------------------------------
+            TRAN_I          : in    AXI4_TRANSACTION_SIGNAL_TYPE;
+            TRAN_O          : out   AXI4_TRANSACTION_SIGNAL_TYPE;
             -----------------------------------------------------------------------
             -- GPIO
             -----------------------------------------------------------------------
@@ -656,6 +743,7 @@ end     AXI4_CORE;
 -----------------------------------------------------------------------------------
 library ieee;
 use     ieee.std_logic_1164.all;
+use     ieee.numeric_std.all;
 use     std.textio.all;
 library DUMMY_PLUG;
 use     DUMMY_PLUG.AXI4_TYPES.all;
@@ -666,6 +754,7 @@ use     DUMMY_PLUG.UTIL.STRING_TO_STD_LOGIC_VECTOR;
 use     DUMMY_PLUG.UTIL.MATCH_STD_LOGIC;
 use     DUMMY_PLUG.UTIL.BIN_TO_STRING;
 use     DUMMY_PLUG.UTIL.HEX_TO_STRING;
+use     DUMMY_PLUG.UTIL.INTEGER_TO_STRING;
 -----------------------------------------------------------------------------------
 --! @brief AXI4 Dummy Plug のコアパッケージ本体.
 -----------------------------------------------------------------------------------
@@ -759,6 +848,14 @@ package body AXI4_CORE is
     constant  KEY_BREADY    : KEY_TYPE := "BREADY ";
 
     constant  KEY_DUSER     : KEY_TYPE := "DUSER  ";
+    constant  KEY_OKEY      : KEY_TYPE := "OKEY   ";
+    constant  KEY_EXOKAY    : KEY_TYPE := "EXOKAY ";
+    constant  KEY_SLVERR    : KEY_TYPE := "SLVERR ";
+    constant  KEY_DECERR    : KEY_TYPE := "DECERR ";
+    constant  KEY_FIXED     : KEY_TYPE := "FIXED  ";
+    constant  KEY_INCR      : KEY_TYPE := "INCR   ";
+    constant  KEY_WRAP      : KEY_TYPE := "WRAP   ";
+    constant  KEY_RESV      : KEY_TYPE := "RESV   ";
     -------------------------------------------------------------------------------
     --! @brief READERから読み取る信号の種類を示すタイプの定義.
     -------------------------------------------------------------------------------
@@ -1309,6 +1406,7 @@ package body AXI4_CORE is
             VAL := vec(0);
         end procedure;
     begin
+        REPORT_DEBUG(CORE, PROC_NAME, "BEGIN");
         next_event := EVENT;
         MAP_LOOP: loop
             case next_event is
@@ -1371,6 +1469,162 @@ package body AXI4_CORE is
             end if;
         end loop;
         EVENT := next_event;
+        REPORT_DEBUG(CORE, PROC_NAME, "END");
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief シナリオのマップからトランザクションの値を読み取るサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    CORE        コア変数.
+    --! @param    STREAM      シナリオのストリーム.
+    --! @param    ADDR_WIDTH  アドレスのビット幅.
+    --! @param    AUSER_WIDTH ユーザー信号のビット幅.
+    --! @param    DUSER_WIDTH ユーザー信号のビット幅.
+    --! @param    BUSER_WIDTH ユーザー信号のビット幅.
+    --! @param    ID_WIDTH    ID信号のビット幅.
+    --! @param    TRANS       トランザクション信号.
+    --! @param    EVENT       次のイベント. inoutであることに注意.
+    -------------------------------------------------------------------------------
+    procedure MAP_READ_AXI4_TRANSACTION(
+        variable  CORE          : inout CORE_TYPE;
+        file      STREAM        :       TEXT;
+                  ADDR_WIDTH    : in    integer;
+                  AUSER_WIDTH   : in    integer;
+                  DUSER_WIDTH   : in    integer;
+                  BUSER_WIDTH   : in    integer;
+                  ID_WIDTH      : in    integer;
+                  TRANS         : inout AXI4_TRANSACTION_SIGNAL_TYPE;
+                  EVENT         : inout EVENT_TYPE
+    ) is
+        constant  PROC_NAME     :       string := "AXI4_CORE.MAP_READ_AXI4_TRANSACTION";
+        variable  next_event    :       EVENT_TYPE;
+        variable  key_word      :       KEY_TYPE;
+        variable  len           :       integer;
+        variable  pos           :       integer;
+        variable  number_bytes  :       integer;
+        variable  address       :       integer;
+        variable  data_bytes    :       integer;
+        variable  burst_len     :       integer;
+        procedure READ_TRANSACTION_SIZE(VAL : inout AXI4_ASIZE_TYPE) is
+            variable  size : integer;
+            variable  good : boolean;
+        begin
+            READ_INTEGER(CORE, STREAM, size, good);
+            if (good) then
+                case size is
+                    when    128 => VAL := AXI4_ASIZE_128BYTE;
+                    when     64 => VAL := AXI4_ASIZE_64BYTE;
+                    when     32 => VAL := AXI4_ASIZE_32BYTE;
+                    when     16 => VAL := AXI4_ASIZE_16BYTE;
+                    when      8 => VAL := AXI4_ASIZE_8BYTE;
+                    when      4 => VAL := AXI4_ASIZE_4BYTE;
+                    when      2 => VAL := AXI4_ASIZE_2BYTE;
+                    when      1 => VAL := AXI4_ASIZE_1BYTE;
+                    when others => READ_ERROR(CORE, PROC_NAME, "KEY=SIZE illegal number=" & INTEGER_TO_STRING(size));
+                end case;
+            else                   READ_ERROR(CORE, PROC_NAME, "KEY=SIZE READ_INTEGER not good");
+            end if;
+        end procedure;
+        procedure READ_TRANSACTION_BURST(VAL : inout AXI4_ABURST_TYPE) is
+        begin
+            SEEK_EVENT(CORE, STREAM, next_event);
+            if (next_event = EVENT_SCALAR) then
+                READ_EVENT(CORE, STREAM, EVENT_SCALAR);
+                COPY_KEY_WORD(CORE, key_word);
+                case key_word is
+                    when KEY_FIXED   => VAL := AXI4_ABURST_FIXED;
+                    when KEY_INCR    => VAL := AXI4_ABURST_INCR;
+                    when KEY_WRAP    => VAL := AXI4_ABURST_WRAP;
+                    when KEY_RESV    => VAL := AXI4_ABURST_RESV;
+                    when others      => READ_ERROR(CORE, PROC_NAME, "KEY=BURST illegal key_word=" & key_word);
+                end case;
+            else
+                READ_ERROR(CORE, PROC_NAME, "KEY=BURST SEEK_EVENT NG");
+            end if;
+        end procedure;
+        procedure READ_TRANSACTION_RESP(VAL : inout AXI4_RESP_TYPE) is
+        begin
+            SEEK_EVENT(CORE, STREAM, next_event);
+            if (next_event = EVENT_SCALAR) then
+                READ_EVENT(CORE, STREAM, EVENT_SCALAR);
+                COPY_KEY_WORD(CORE, key_word);
+                case key_word is
+                    when KEY_OKEY    => VAL := AXI4_RESP_OKAY  ;
+                    when KEY_EXOKAY  => VAL := AXI4_RESP_EXOKAY;
+                    when KEY_SLVERR  => VAL := AXI4_RESP_SLVERR;
+                    when KEY_DECERR  => VAL := AXI4_RESP_DECERR;
+                    when others      => READ_ERROR(CORE, PROC_NAME, "KEY=RESP illegal key_word=" & key_word);
+                end case;
+            else
+                READ_ERROR(CORE, PROC_NAME, "KEY=RESP SEEK_EVENT NG");
+            end if;
+        end procedure;
+    begin
+        REPORT_DEBUG(CORE, PROC_NAME, "BEGIN");
+        next_event := EVENT;
+        pos        := TRANS.DATA_LEN;
+        READ_MAP_LOOP: loop
+            case next_event is
+                when EVENT_SCALAR  =>
+                    COPY_KEY_WORD(CORE, key_word);
+                    REPORT_DEBUG(CORE, PROC_NAME, "KEY=" & key_word);
+                    case key_word is
+                        when KEY_SIZE   => READ_TRANSACTION_SIZE (TRANS.SIZE );
+                        when KEY_RESP   => READ_TRANSACTION_RESP (TRANS.RESP );
+                        when KEY_BURST  => READ_TRANSACTION_BURST(TRANS.BURST);
+                        when KEY_LOCK   => READ_STD_LOGIC_VECTOR(CORE, STREAM, TRANS.LOCK  , len);
+                        when KEY_CACHE  => READ_STD_LOGIC_VECTOR(CORE, STREAM, TRANS.CACHE , len);
+                        when KEY_PROT   => READ_STD_LOGIC_VECTOR(CORE, STREAM, TRANS.PROT  , len);
+                        when KEY_QOS    => READ_STD_LOGIC_VECTOR(CORE, STREAM, TRANS.QOS   , len);
+                        when KEY_REGION => READ_STD_LOGIC_VECTOR(CORE, STREAM, TRANS.REGION, len);
+                        when KEY_ADDR   => READ_STD_LOGIC_VECTOR(CORE, STREAM, TRANS.ADDR (ADDR_WIDTH   -1 downto   0), len);
+                        when KEY_AUSER  => READ_STD_LOGIC_VECTOR(CORE, STREAM, TRANS.AUSER(AUSER_WIDTH  -1 downto   0), len);
+                        when KEY_DUSER  => READ_STD_LOGIC_VECTOR(CORE, STREAM, TRANS.DUSER(DUSER_WIDTH  -1 downto   0), len);
+                        when KEY_BUSER  => READ_STD_LOGIC_VECTOR(CORE, STREAM, TRANS.BUSER(BUSER_WIDTH  -1 downto   0), len);
+                        when KEY_ID     => READ_STD_LOGIC_VECTOR(CORE, STREAM, TRANS.ID   (ID_WIDTH     -1 downto   0), len);
+                        when KEY_DATA   => READ_STD_LOGIC_VECTOR(CORE, STREAM, TRANS.DATA (TRANS.DATA'high downto pos), len);
+                                           pos := pos + len;
+                        when others     => exit READ_MAP_LOOP;
+                    end case;
+                when EVENT_MAP_END      => exit READ_MAP_LOOP;
+                when others             => exit READ_MAP_LOOP;
+            end case;
+            SEEK_EVENT(CORE, STREAM, next_event);
+            if (next_event = EVENT_SCALAR) then
+                READ_EVENT(CORE, STREAM, EVENT_SCALAR);
+            end if;
+        end loop;
+        EVENT          := next_event;
+        TRANS.DATA_LEN := pos;
+        TRANSACTION_TO_ADDR_AND_BYTES(TRANS, address, number_bytes);
+        data_bytes := (pos+7)/8;
+        burst_len  := (address + data_bytes + number_bytes - 1) / number_bytes;
+        TRANS.LEN  := std_logic_vector(TO_UNSIGNED(burst_len-1, AXI4_ALEN_WIDTH));
+        REPORT_DEBUG(CORE, PROC_NAME, "END");
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief トランザクション情報からアドレスの下位ビットと１ワードのバイト数を生成
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    TRANS       トランザクション情報.
+    --! @param    ADDR        アドレスの下位ビットの整数値.
+    --! @param    SIZE        １ワードのバイト数.
+    -------------------------------------------------------------------------------
+    procedure TRANSACTION_TO_ADDR_AND_BYTES(
+                  TRANS         : in    AXI4_TRANSACTION_SIGNAL_TYPE;
+                  ADDR          : out   integer;
+                  SIZE          : out   integer
+    ) is
+    begin
+        case TRANS.SIZE is
+            when AXI4_ASIZE_1BYTE   => SIZE :=   1; ADDR := 0;
+            when AXI4_ASIZE_2BYTE   => SIZE :=   2; ADDR := TO_INTEGER(unsigned(TRANS.ADDR(0 downto 0)));
+            when AXI4_ASIZE_4BYTE   => SIZE :=   4; ADDR := TO_INTEGER(unsigned(TRANS.ADDR(1 downto 0)));
+            when AXI4_ASIZE_8BYTE   => SIZE :=   8; ADDR := TO_INTEGER(unsigned(TRANS.ADDR(2 downto 0)));
+            when AXI4_ASIZE_16BYTE  => SIZE :=  16; ADDR := TO_INTEGER(unsigned(TRANS.ADDR(3 downto 0)));
+            when AXI4_ASIZE_32BYTE  => SIZE :=  32; ADDR := TO_INTEGER(unsigned(TRANS.ADDR(4 downto 0)));
+            when AXI4_ASIZE_64BYTE  => SIZE :=  64; ADDR := TO_INTEGER(unsigned(TRANS.ADDR(5 downto 0)));
+            when AXI4_ASIZE_128BYTE => SIZE := 128; ADDR := TO_INTEGER(unsigned(TRANS.ADDR(6 downto 0)));
+            when others             => SIZE :=   0; ADDR := 0;
+        end case;
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 構造体の値と信号を比較するサブプログラム.
@@ -1755,31 +2009,31 @@ package body AXI4_CORE is
         count := 0;
         if (MATCH_STD_LOGIC(SIGNALS.VALID           ,VALID) = FALSE) then
             REPORT_MISMATCH(CORE, NAME & "VALID " & 
-                            BIN_TO_STRING(VALID) & " /= " &
+                            BIN_TO_STRING(VALID)  & " /= " &
                             BIN_TO_STRING(SIGNALS.VALID));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.READY           ,READY) = FALSE) then
             REPORT_MISMATCH(CORE, NAME & "READY " &
-                            BIN_TO_STRING(READY) & " /= " &
+                            BIN_TO_STRING(READY)  & " /= " &
                             BIN_TO_STRING(SIGNALS.READY));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.RESP            ,RESP ) = FALSE) then
-            REPORT_MISMATCH(CORE, NAME & "RESP " &
-                            BIN_TO_STRING(RESP ) & " /= " &
+            REPORT_MISMATCH(CORE, NAME & "RESP "  &
+                            BIN_TO_STRING(RESP )  & " /= " &
                             BIN_TO_STRING(SIGNALS.RESP));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.ID(ID'range)    ,ID   ) = FALSE) then
-            REPORT_MISMATCH(CORE, NAME & "ID " &
-                            HEX_TO_STRING(ID   ) & " /= " &
+            REPORT_MISMATCH(CORE, NAME & "ID "    &
+                            HEX_TO_STRING(ID   )  & " /= " &
                             HEX_TO_STRING(SIGNALS.ID(ID'range)));
             count := count + 1;
         end if;
         if (MATCH_STD_LOGIC(SIGNALS.USER(USER'range),USER ) = FALSE) then
-            REPORT_MISMATCH(CORE, NAME & "USER " &
-                            HEX_TO_STRING(USER ) & " /= " &
+            REPORT_MISMATCH(CORE, NAME & "USER "  &
+                            HEX_TO_STRING(USER )  & " /= " &
                             HEX_TO_STRING(SIGNALS.USER(USER'range)));
             count := count + 1;
         end if;

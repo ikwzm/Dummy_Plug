@@ -5,8 +5,7 @@ SRC_MAIN_VHDL_PATH=../../src/main/vhdl
 SRC_TEST_VHDL_PATH=../../src/test/vhdl
 
 TEST_BENCH = dummy_plug_reader_test_1 \
-             dummy_plug_axi4_test_1   \
-             dummy_plug_axi4_test_2   \
+             dummy_plug_axi4_test_1_1 \
              $(END_LIST)
 
 all: $(TEST_BENCH)
@@ -89,6 +88,9 @@ dummy_plug_reader_test_1.o : $(SRC_TEST_VHDL_PATH)/dummy_plug/reader_test_1.vhd 
 	 $(GHDL) -a $(GHDLFLAGS) --work=work $<
 
 dummy_plug_axi4_test_1.o   : $(SRC_TEST_VHDL_PATH)/dummy_plug/axi4_test_1.vhd   $(DUMMY_PLUG_AXI4)
+	 $(GHDL) -a $(GHDLFLAGS) --work=work $<
+
+dummy_plug_axi4_test_1_1.o : $(SRC_TEST_VHDL_PATH)/dummy_plug/axi4_test_1_1.vhd dummy_plug_axi4_test_1.o $(DUMMY_PLUG_AXI4)
 	 $(GHDL) -a $(GHDLFLAGS) --work=work $<
 
 axi_master_bfm.o           : $(SRC_TEST_VHDL_PATH)/dummy_plug/axi_master_bfm.vhd

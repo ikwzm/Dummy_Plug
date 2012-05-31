@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_signal_printer.vhd
 --!     @brief   AXI4 Signal Printer Module.
---!     @version 0.0.6
---!     @date    2012/5/24
+--!     @version 0.9.0
+--!     @date    2012/6/1
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -283,7 +283,7 @@ begin
                    string'("|") & HEX_TO_STRING(resize(BID,8)) &
                    string'("|") & HEX_TO_STRING(BRESP  ) &
                    string'(" ") & BIN_TO_STRING(BVALID ) &
-                   string'(" ") & BIN_TO_STRING(BREADY ));
+                   string'(" ") & BIN_TO_STRING(BREADY ) );
         end loop;
     end process;
 end MODEL;

@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_types.vhd
 --!     @brief   AXI4 Channel Signal Type Package.
---!     @version 0.0.6
---!     @date    2012/5/24
+--!     @version 0.9.0
+--!     @date    2012/6/1
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -37,7 +37,7 @@
 library ieee;
 use     ieee.std_logic_1164.all;
 -----------------------------------------------------------------------------------
---! @brief AXI_TYPES 
+--! @brief AXI4 の各種タイプ/定数を定義しているパッケージ.
 -----------------------------------------------------------------------------------
 package AXI4_TYPES is
     -------------------------------------------------------------------------------
@@ -145,18 +145,38 @@ package AXI4_TYPES is
     constant  AXI4_RESP_SLVERR     : AXI4_RESP_TYPE := "10";
     constant  AXI4_RESP_DECERR     : AXI4_RESP_TYPE := "11";
     -------------------------------------------------------------------------------
+    --! @brief AXI4 ID の最大ビット幅
+    -------------------------------------------------------------------------------
+    constant  AXI4_ID_MAX_WIDTH    : integer := 8;
+    -------------------------------------------------------------------------------
+    --! @brief AXI4 ADDR の最大ビット幅
+    -------------------------------------------------------------------------------
+    constant  AXI4_ADDR_MAX_WIDTH  : integer := 64;
+    -------------------------------------------------------------------------------
+    --! @brief AXI4 DATA の最大ビット幅
+    -------------------------------------------------------------------------------
+    constant  AXI4_DATA_MAX_WIDTH  : integer := 1024;
+    -------------------------------------------------------------------------------
+    --! @brief AXI4 WSTRB の最大ビット幅
+    -------------------------------------------------------------------------------
+    constant  AXI4_STRB_MAX_WIDTH  : integer := AXI4_DATA_MAX_WIDTH/8;
+    -------------------------------------------------------------------------------
+    --! @brief AXI4 USER の最大ビット幅
+    -------------------------------------------------------------------------------
+    constant  AXI4_USER_MAX_WIDTH  : integer := 32;
+    -------------------------------------------------------------------------------
     --! @brief AXI4 チャネルの可変長信号のビット幅を指定するレコードタイプ.
     -------------------------------------------------------------------------------
     type      AXI4_SIGNAL_WIDTH_TYPE is record
-              ID                   : integer;
-              AWADDR               : integer;
-              AWUSER               : integer;
-              ARADDR               : integer;
-              ARUSER               : integer;
-              WDATA                : integer;
-              WUSER                : integer;
-              RDATA                : integer;
-              RUSER                : integer;
-              BUSER                : integer;
+              ID                   : integer range 1 to AXI4_ID_MAX_WIDTH;
+              AWADDR               : integer range 1 to AXI4_USER_MAX_WIDTH;
+              AWUSER               : integer range 1 to AXI4_USER_MAX_WIDTH;
+              ARADDR               : integer range 1 to AXI4_USER_MAX_WIDTH;
+              ARUSER               : integer range 1 to AXI4_USER_MAX_WIDTH;
+              WDATA                : integer range 8 to AXI4_DATA_MAX_WIDTH;
+              WUSER                : integer range 1 to AXI4_USER_MAX_WIDTH;
+              RDATA                : integer range 8 to AXI4_DATA_MAX_WIDTH;
+              RUSER                : integer range 1 to AXI4_USER_MAX_WIDTH;
+              BUSER                : integer range 1 to AXI4_USER_MAX_WIDTH;
     end record;
 end package;
