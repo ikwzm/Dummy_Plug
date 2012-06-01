@@ -3,6 +3,13 @@
 # AXI4 DUMMY-PLUG Test Bench Scenario 1.1
 #
 #----------------------------------------------------------------------------------
+- - [MARCHAL]
+  -  SAY: >
+       DUMMY-PLUG AXI4 TEST BENCH SCENARIO 1.1
+       READ_ENABLE  = TRUE
+       WRITE_ENABLE = TRUE
+       DATA_WIDTH   = 32
+#----------------------------------------------------------------------------------
 #
 # DUMMY-PLUG AXI4 TEST BENCH SCENARIO 1.1.1
 #
@@ -576,11 +583,11 @@
   - SYNC  : {PORT: 0, TIMEOUT: 1000}
 #----------------------------------------------------------------------------------
 #
-# DUMMY-PLUG AXI4 TEST BENCH SCENARIO ALL DONE
+# DUMMY-PLUG AXI4 TEST BENCH SCENARIO 1.1 ALL DONE
 #
 #----------------------------------------------------------------------------------
 ---                                       # これで全てのダミープラグが同期.
 - - [MARCHAL,MASTER,SLAVE]
   - SAY: >
-       DUMMY-PLUG AXI4 TEST BENCH SCENARIO ALL DONE
+       DUMMY-PLUG AXI4 TEST BENCH SCENARIO 1.1 ALL DONE
 ---

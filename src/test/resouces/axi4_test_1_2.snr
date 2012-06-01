@@ -1,0 +1,21 @@
+#----------------------------------------------------------------------------------
+#
+# AXI4 DUMMY-PLUG Test Bench Scenario 1.2
+#
+#----------------------------------------------------------------------------------
+- - [MARCHAL]
+  -  SAY: >
+       DUMMY-PLUG AXI4 TEST BENCH SCENARIO 1.2
+       READ_ENABLE  = TRUE
+       WRITE_ENABLE = FALSE
+       DATA_WIDTH   = 64
+#----------------------------------------------------------------------------------
+#
+# DUMMY-PLUG AXI4 TEST BENCH SCENARIO 1.2 ALL DONE
+#
+#----------------------------------------------------------------------------------
+---
+- - [MARCHAL,MASTER,SLAVE]
+  - SAY: >
+       DUMMY-PLUG AXI4 TEST BENCH SCENARIO 1.2 ALL DONE
+---

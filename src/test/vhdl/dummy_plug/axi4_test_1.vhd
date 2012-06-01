@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    aix4_test_1.vhd
 --!     @brief   TEST BENCH No.1 for DUMMY_PLUG.AXI4_MODELS
---!     @version 0.9.0
---!     @date    2012/5/31
+--!     @version 0.9.1
+--!     @date    2012/6/1
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -56,6 +56,10 @@ entity  DUMMY_PLUG_AXI4_TEST_1 is
                           STRING;
         DATA_WIDTH      : --! @brief データチャネルのビット幅.
                           integer;
+        READ_ENABLE     : --! @brief リードモードを指定する.
+                          boolean   := TRUE;
+        WRITE_ENABLE    : --! @brief ライトモードを指定する.
+                          boolean   := TRUE;
         EXP_REPORT      : --! @brief 期待しているREPORT_STATUSの値.
                           REPORT_STATUS_TYPE
     );
@@ -193,16 +197,16 @@ begin
     ------------------------------------------------------------------------------
     M: AXI4_MASTER_PLAYER
         generic map (
-            SCENARIO_FILE   => SCENARIO_FILE,
-            NAME            => "MASTER",
-            READ            => TRUE,
-            WRITE           => TRUE,
-            OUTPUT_DELAY    => DELAY,
-            WIDTH           => WIDTH,
-            SYNC_PLUG_NUM   => 2,
-            SYNC_WIDTH      => SYNC_WIDTH,
-            GPI_WIDTH       => GPI_WIDTH,
-            GPO_WIDTH       => GPO_WIDTH,
+            SCENARIO_FILE   => SCENARIO_FILE   ,
+            NAME            => "MASTER"        ,
+            READ_ENABLE     => READ_ENABLE     ,
+            WRITE_ENABLE    => WRITE_ENABLE    ,
+            OUTPUT_DELAY    => DELAY           ,
+            WIDTH           => WIDTH           ,
+            SYNC_PLUG_NUM   => 2               ,
+            SYNC_WIDTH      => SYNC_WIDTH      ,
+            GPI_WIDTH       => GPI_WIDTH       ,
+            GPO_WIDTH       => GPO_WIDTH       ,
             FINISH_ABORT    => FALSE
         )
         port map(
@@ -292,16 +296,16 @@ begin
     ------------------------------------------------------------------------------
     S: AXI4_SLAVE_PLAYER
         generic map (
-            SCENARIO_FILE   => SCENARIO_FILE,
-            NAME            => "SLAVE",
-            READ            => TRUE,
-            WRITE           => TRUE,
-            OUTPUT_DELAY    => DELAY,
-            WIDTH           => WIDTH,
-            SYNC_PLUG_NUM   => 3,
-            SYNC_WIDTH      => SYNC_WIDTH,
-            GPI_WIDTH       => GPI_WIDTH,
-            GPO_WIDTH       => GPO_WIDTH,
+            SCENARIO_FILE   => SCENARIO_FILE   ,
+            NAME            => "SLAVE"         ,
+            READ_ENABLE     => READ_ENABLE     ,
+            WRITE_ENABLE    => WRITE_ENABLE    ,
+            OUTPUT_DELAY    => DELAY           ,
+            WIDTH           => WIDTH           ,
+            SYNC_PLUG_NUM   => 3               ,
+            SYNC_WIDTH      => SYNC_WIDTH      ,
+            GPI_WIDTH       => GPI_WIDTH       ,
+            GPO_WIDTH       => GPO_WIDTH       ,
             FINISH_ABORT    => FALSE
         )
         port map(
@@ -395,7 +399,9 @@ begin
             TAG             => NAME,
             TAG_WIDTH       => 0,
             TIME_WIDTH      => 13,
-            WIDTH           => WIDTH
+            WIDTH           => WIDTH,
+            READ_ENABLE     => READ_ENABLE,
+            WRITE_ENABLE    => WRITE_ENABLE
         )
         port map (
         ---------------------------------------------------------------------------
