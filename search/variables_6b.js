@@ -64,7 +64,7 @@ var searchData=
   ['key_5flen',['KEY_LEN',['../class__AXI4__CORE.html#ad1d62b594a591d4281a1c787c1ad7be3',1,'_AXI4_CORE']]],
   ['key_5flock',['KEY_LOCK',['../class__AXI4__CORE.html#a1daf7ab0cec272bff00378d024321044',1,'_AXI4_CORE']]],
   ['key_5fnull',['KEY_NULL',['../classAXI4__CHANNEL__PLAYER_1_1MODEL.html#aa073b56887e4850b23e50352913c7515',1,'AXI4_CHANNEL_PLAYER::MODEL']]],
-  ['key_5fokey',['KEY_OKEY',['../class__AXI4__CORE.html#a74ee0dc69c299f5c24725745b3af51fe',1,'_AXI4_CORE']]],
+  ['key_5fokay',['KEY_OKAY',['../class__AXI4__CORE.html#a202313da8df006e4f68ae845ff75d981',1,'_AXI4_CORE']]],
   ['key_5fout',['KEY_OUT',['../classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a2ba5133a8c67732339148fc7398383a6',1,'AXI4_CHANNEL_PLAYER::MODEL']]],
   ['key_5fprot',['KEY_PROT',['../class__AXI4__CORE.html#a4a1517ccdaf409d44731bdb2d3bb4525',1,'_AXI4_CORE']]],
   ['key_5fqos',['KEY_QOS',['../class__AXI4__CORE.html#a7a3d22b131cd6dda29aab67f4ca02533',1,'_AXI4_CORE']]],

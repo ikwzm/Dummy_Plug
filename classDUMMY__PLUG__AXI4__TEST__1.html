@@ -114,7 +114,10 @@ Inheritance diagram for DUMMY_PLUG_AXI4_TEST_1:</div>
 <area href="classSYNC__SIG__DRIVER.html" title="モデル間同期(SYNC)信号を制御するコンポーネント." alt="SYNC_SIG_DRIVER" shape="rect" coords="1254,56,1453,80"/>
 <area href="classSYNC__SIG__DRIVER__SUB__UNIT.html" title="モデル間同期(SYNC)信号を制御するコンポーネントのサブユニット." alt="SYNC_SIG_DRIVER_SUB_UNIT" shape="rect" coords="627,0,826,24"/>
 <area href="classSYNC__SIG__DRIVER__SUB__UNIT.html" title="モデル間同期(SYNC)信号を制御するコンポーネントのサブユニット." alt="SYNC_SIG_DRIVER_SUB_UNIT" shape="rect" coords="1254,0,1453,24"/>
-<area href="classDUMMY__PLUG__AXI4__TEST__1__1.html" alt="DUMMY_PLUG_AXI4_TEST_1_1" shape="rect" coords="731,280,930,304"/>
+<area href="classDUMMY__PLUG__AXI4__TEST__1__1.html" alt="DUMMY_PLUG_AXI4_TEST_1_1" shape="rect" coords="418,280,617,304"/>
+<area href="classDUMMY__PLUG__AXI4__TEST__1__2.html" alt="DUMMY_PLUG_AXI4_TEST_1_2" shape="rect" coords="627,280,826,304"/>
+<area href="classDUMMY__PLUG__AXI4__TEST__1__3.html" alt="DUMMY_PLUG_AXI4_TEST_1_3" shape="rect" coords="836,280,1035,304"/>
+<area href="classDUMMY__PLUG__AXI4__TEST__1__4.html" alt="DUMMY_PLUG_AXI4_TEST_1_4" shape="rect" coords="1045,280,1244,304"/>
 </map>
  </div></div>
 
@@ -145,6 +148,10 @@ Generics</h2></td></tr>
 <tr class="memdesc:ae0dab25a73430d77f21f922c8ac025ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">シナリオファイルの名前.  <a href="#ae0dab25a73430d77f21f922c8ac025ad"></a><br/></td></tr>
 <tr class="memitem:a449a5a86d049982bfb447ce6ed0a398c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classDUMMY__PLUG__AXI4__TEST__1.html#a449a5a86d049982bfb447ce6ed0a398c">DATA_WIDTH</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><span class="comment">integer</span><span class="vhdlchar"> </span></b></b></td></tr>
 <tr class="memdesc:a449a5a86d049982bfb447ce6ed0a398c"><td class="mdescLeft">&#160;</td><td class="mdescRight">データチャネルのビット幅.  <a href="#a449a5a86d049982bfb447ce6ed0a398c"></a><br/></td></tr>
+<tr class="memitem:a3b5f3e0b2ba016735a9bb21e1dc3631c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classDUMMY__PLUG__AXI4__TEST__1.html#a3b5f3e0b2ba016735a9bb21e1dc3631c">READ_ENABLE</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><span class="comment">boolean</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="vhdlchar">TRUE</span><span class="vhdlchar"> </span></b></b></td></tr>
+<tr class="memdesc:a3b5f3e0b2ba016735a9bb21e1dc3631c"><td class="mdescLeft">&#160;</td><td class="mdescRight">リードモードを指定する.  <a href="#a3b5f3e0b2ba016735a9bb21e1dc3631c"></a><br/></td></tr>
+<tr class="memitem:a77366a4da7852e1d0e83679577bbdbed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classDUMMY__PLUG__AXI4__TEST__1.html#a77366a4da7852e1d0e83679577bbdbed">WRITE_ENABLE</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><span class="comment">boolean</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="vhdlchar">TRUE</span><span class="vhdlchar"> </span></b></b></td></tr>
+<tr class="memdesc:a77366a4da7852e1d0e83679577bbdbed"><td class="mdescLeft">&#160;</td><td class="mdescRight">ライトモードを指定する.  <a href="#a77366a4da7852e1d0e83679577bbdbed"></a><br/></td></tr>
 <tr class="memitem:afc9ceb07845bd0ce2f314f9174fcadeb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classDUMMY__PLUG__AXI4__TEST__1.html#afc9ceb07845bd0ce2f314f9174fcadeb">EXP_REPORT</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><b><a class="el" href="classCORE.html#a0dcb918f98dddcf569edc91b94339c1b">REPORT_STATUS_TYPE</a></b> <span class="vhdlchar"> </span></b></b></td></tr>
 <tr class="memdesc:afc9ceb07845bd0ce2f314f9174fcadeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">期待しているREPORT_STATUSの値.  <a href="#afc9ceb07845bd0ce2f314f9174fcadeb"></a><br/></td></tr>
 </table>
@@ -211,7 +218,7 @@ Generics</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classAXI4__MASTER__PLAYER.html#a1d29ef905b0792c4cfd4c628f0a42945">AXI4_MASTER_PLAYER</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classDUMMY__PLUG__AXI4__TEST__1__1.html#a1d29ef905b0792c4cfd4c628f0a42945">DUMMY_PLUG_AXI4_TEST_1_1</a>.</p>
+<p>Reimplemented in <a class="el" href="classDUMMY__PLUG__AXI4__TEST__1__1.html#a1d29ef905b0792c4cfd4c628f0a42945">DUMMY_PLUG_AXI4_TEST_1_1</a>, <a class="el" href="classDUMMY__PLUG__AXI4__TEST__1__2.html#a1d29ef905b0792c4cfd4c628f0a42945">DUMMY_PLUG_AXI4_TEST_1_2</a>, <a class="el" href="classDUMMY__PLUG__AXI4__TEST__1__3.html#a1d29ef905b0792c4cfd4c628f0a42945">DUMMY_PLUG_AXI4_TEST_1_3</a>, and <a class="el" href="classDUMMY__PLUG__AXI4__TEST__1__4.html#a1d29ef905b0792c4cfd4c628f0a42945">DUMMY_PLUG_AXI4_TEST_1_4</a>.</p>
 
 </div>
 </div>
@@ -257,7 +264,7 @@ Generics</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classAXI4__MASTER__PLAYER.html#a7e9d608e272e25db0abd057d516fb285">AXI4_MASTER_PLAYER</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classDUMMY__PLUG__AXI4__TEST__1__1.html#a7e9d608e272e25db0abd057d516fb285">DUMMY_PLUG_AXI4_TEST_1_1</a>.</p>
+<p>Reimplemented in <a class="el" href="classDUMMY__PLUG__AXI4__TEST__1__1.html#a7e9d608e272e25db0abd057d516fb285">DUMMY_PLUG_AXI4_TEST_1_1</a>, <a class="el" href="classDUMMY__PLUG__AXI4__TEST__1__2.html#a7e9d608e272e25db0abd057d516fb285">DUMMY_PLUG_AXI4_TEST_1_2</a>, <a class="el" href="classDUMMY__PLUG__AXI4__TEST__1__3.html#a7e9d608e272e25db0abd057d516fb285">DUMMY_PLUG_AXI4_TEST_1_3</a>, and <a class="el" href="classDUMMY__PLUG__AXI4__TEST__1__4.html#a7e9d608e272e25db0abd057d516fb285">DUMMY_PLUG_AXI4_TEST_1_4</a>.</p>
 
 </div>
 </div>
@@ -324,6 +331,30 @@ Generics</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a3b5f3e0b2ba016735a9bb21e1dc3631c"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classDUMMY__PLUG__AXI4__TEST__1.html#a3b5f3e0b2ba016735a9bb21e1dc3631c">READ_ENABLE</a> <b><span class="vhdlchar"> </span></b> <b><span class="comment">boolean</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="vhdlchar">TRUE</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Generic</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>リードモードを指定する. </p>
+
+<p>Reimplemented from <a class="el" href="classAXI4__MASTER__PLAYER.html#a3b5f3e0b2ba016735a9bb21e1dc3631c">AXI4_MASTER_PLAYER</a>.</p>
 
 </div>
 </div>
@@ -395,13 +426,37 @@ Generics</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a77366a4da7852e1d0e83679577bbdbed"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classDUMMY__PLUG__AXI4__TEST__1.html#a77366a4da7852e1d0e83679577bbdbed">WRITE_ENABLE</a> <b><span class="vhdlchar"> </span></b> <b><span class="comment">boolean</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="vhdlchar">TRUE</span><span class="vhdlchar"> </span></b> </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">Generic</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>ライトモードを指定する. </p>
+
+<p>Reimplemented from <a class="el" href="classAXI4__MASTER__PLAYER.html#a77366a4da7852e1d0e83679577bbdbed">AXI4_MASTER_PLAYER</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/test/vhdl/dummy_plug/<a class="el" href="axi4__test__1_8vhd.html">axi4_test_1.vhd</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jun 1 2012 01:18:15 for Dummy Plug by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Jun 2 2012 17:23:39 for Dummy Plug by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.1
 </small></address>
