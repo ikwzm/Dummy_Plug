@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="H:/gist/Dummy_Plug/sim/isim/DUMMY_PLUG_AXI4_TEST_1_3_isim_beh.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="axi4_core" />
+            <top_module name="axi4_models" />
+            <top_module name="axi4_types" />
+            <top_module name="core" />
+            <top_module name="dummy_plug_axi4_test_1_3" />
+            <top_module name="numeric_std" />
+            <top_module name="reader" />
+            <top_module name="std_logic_1164" />
+            <top_module name="sync" />
+            <top_module name="textio" />
+            <top_module name="util" />
+            <top_module name="vocal" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="22" />
+   <wvobject fp_name="/dummy_plug_axi4_test_1_3/name" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">name[1:13]</obj_property>
+      <obj_property name="ObjectShortName">name[1:13]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dummy_plug_axi4_test_1_3/scenario_file" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">scenario_file[1:41]</obj_property>
+      <obj_property name="ObjectShortName">scenario_file[1:41]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dummy_plug_axi4_test_1_3/U/aclk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">aclk</obj_property>
+      <obj_property name="ObjectShortName">aclk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dummy_plug_axi4_test_1_3/U/aresetn" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">aresetn</obj_property>
+      <obj_property name="ObjectShortName">aresetn</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dummy_plug_axi4_test_1_3/U/awaddr" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">awaddr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">awaddr[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dummy_plug_axi4_test_1_3/U/awlen" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">awlen[7:0]</obj_property>
+      <obj_property name="ObjectShortName">awlen[7:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dummy_plug_axi4_test_1_3/U/awsize" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">awsize[2:0]</obj_property>
+      <obj_property name="ObjectShortName">awsize[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dummy_plug_axi4_test_1_3/U/awburst" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">awburst[1:0]</obj_property>
+      <obj_property name="ObjectShortName">awburst[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dummy_plug_axi4_test_1_3/U/awuser" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">awuser[0:0]</obj_property>
+      <obj_property name="ObjectShortName">awuser[0:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dummy_plug_axi4_test_1_3/U/awid" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">awid[3:0]</obj_property>
+      <obj_property name="ObjectShortName">awid[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dummy_plug_axi4_test_1_3/U/awvalid" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">awvalid</obj_property>
+      <obj_property name="ObjectShortName">awvalid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dummy_plug_axi4_test_1_3/U/awready" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">awready</obj_property>
+      <obj_property name="ObjectShortName">awready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dummy_plug_axi4_test_1_3/U/wdata" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">wdata[63:0]</obj_property>
+      <obj_property name="ObjectShortName">wdata[63:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dummy_plug_axi4_test_1_3/U/wstrb" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">wstrb[7:0]</obj_property>
+      <obj_property name="ObjectShortName">wstrb[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dummy_plug_axi4_test_1_3/U/wid" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">wid[3:0]</obj_property>
+      <obj_property name="ObjectShortName">wid[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dummy_plug_axi4_test_1_3/U/wlast" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">wlast</obj_property>
+      <obj_property name="ObjectShortName">wlast</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dummy_plug_axi4_test_1_3/U/wvalid" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">wvalid</obj_property>
+      <obj_property name="ObjectShortName">wvalid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dummy_plug_axi4_test_1_3/U/wready" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">wready</obj_property>
+      <obj_property name="ObjectShortName">wready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dummy_plug_axi4_test_1_3/U/bresp" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">bresp[1:0]</obj_property>
+      <obj_property name="ObjectShortName">bresp[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dummy_plug_axi4_test_1_3/U/bid" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">bid[3:0]</obj_property>
+      <obj_property name="ObjectShortName">bid[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dummy_plug_axi4_test_1_3/U/bvalid" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">bvalid</obj_property>
+      <obj_property name="ObjectShortName">bvalid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dummy_plug_axi4_test_1_3/U/bready" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">bready</obj_property>
+      <obj_property name="ObjectShortName">bready</obj_property>
+   </wvobject>
+</wave_config>
