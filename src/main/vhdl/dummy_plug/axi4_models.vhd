@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_models.vhd
 --!     @brief   AXI4 Dummy Plug Component Package.
---!     @version 0.9.0
---!     @date    2012/6/1
+--!     @version 1.0.0
+--!     @date    2012/6/2
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -58,9 +58,9 @@ component AXI4_MASTER_PLAYER is
                           STRING;
         NAME            : --! @brief 固有名詞.
                           STRING;
-        READ            : --! @brief リードモードを指定する.
+        READ_ENABLE     : --! @brief リードトランザクションの可/不可を指定する.
                           boolean   := TRUE;
-        WRITE           : --! @brief ライトモードを指定する.
+        WRITE_ENABLE    : --! @brief ライトトランザクションの可/不可を指定する.
                           boolean   := TRUE;
         OUTPUT_DELAY    : --! @brief 出力信号遅延時間
                           time    := 0 ns;
@@ -175,9 +175,9 @@ component AXI4_SLAVE_PLAYER is
                           STRING;
         NAME            : --! @brief 固有名詞.
                           STRING;
-        READ            : --! @brief リードモードを指定する.
+        READ_ENABLE     : --! @brief リードトランザクションの可/不可を指定する.
                           boolean   := TRUE;
-        WRITE           : --! @brief ライトモードを指定する.
+        WRITE_ENABLE    : --! @brief ライトトランザクションの可/不可を指定する.
                           boolean   := TRUE;
         OUTPUT_DELAY    : --! @brief 出力信号遅延時間
                           time    := 0 ns;
@@ -292,6 +292,10 @@ component AXI4_SIGNAL_PRINTER is
                           STRING;
         TAG             : --! @brief
                           STRING;
+        READ_ENABLE     : --! @brief リードチャネルを出力するか否かを指定する.
+                          boolean   := TRUE;
+        WRITE_ENABLE    : --! @brief ライトチャネルを出力するか否かを指定する.
+                          boolean   := TRUE;
         TAG_WIDTH       : --! @brief タグを出力する際の文字幅.
                           --!      * TAG_WIDTH>0 =>  TAG_WIDTH幅の右詰.
                           --!      * TAG_WIDTH<0 => -TAG_WIDTH幅の左詰.

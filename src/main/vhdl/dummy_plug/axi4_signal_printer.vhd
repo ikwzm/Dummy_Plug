@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_signal_printer.vhd
 --!     @brief   AXI4 Signal Printer Module.
---!     @version 0.9.0
---!     @date    2012/6/1
+--!     @version 1.0.0
+--!     @date    2012/6/2
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -50,6 +50,10 @@ entity  AXI4_SIGNAL_PRINTER is
                           STRING;
         TAG             : --! @brief タグ.
                           STRING;
+        READ_ENABLE     : --! @brief リードチャネルを出力するか否かを指定する.
+                          boolean   := TRUE;
+        WRITE_ENABLE    : --! @brief ライトチャネルを出力するか否かを指定する.
+                          boolean   := TRUE;
         TAG_WIDTH       : --! @brief タグを出力する際の文字幅.
                           --!      * TAG_WIDTH>0 =>  TAG_WIDTH幅の右詰.
                           --!      * TAG_WIDTH<0 => -TAG_WIDTH幅の左詰.
@@ -231,59 +235,164 @@ begin
         constant wstrb_sp : string := strcont(' '     , WSTRB'length   ,1);
         constant wstrb_hl : string := strcont('-'     , WSTRB'length   ,1);
         constant wstrb_fm : string := strcont('b'     , WSTRB'length   ,1);
+        constant s_head_0 : string := strcont(' '     , ABS(TIME_WIDTH),1);
+        constant s_head_1 : string := strcont(' '     , ABS(TIME_WIDTH),1);
+        constant s_head_2 : string := strcont(' '     , ABS(TIME_WIDTH),1);
+        constant s_head_3 : string := strcont(' '     , ABS(TIME_WIDTH),1);
+        constant s_head_4 : string := strcont(' '     , ABS(TIME_WIDTH),1);
+        constant s_head_5 : string := strcont(' '     , ABS(TIME_WIDTH),1);
+        constant s_head_6 : string := strcont("TIME"  , ABS(TIME_WIDTH),1);
+        constant s_head_7 : string := strcont(' '     , ABS(TIME_WIDTH),1);
+        constant s_head_8 : string := strcont(' '     , ABS(TIME_WIDTH),1);
+        constant s_head_h : string := strcont('-'     , ABS(TIME_WIDTH),1);
+        constant r_head_0 : string := "|   " & raddr_sp & "      A   A     A A|   " & rdata_sp & "        |";
+        constant r_head_1 : string := "|   " & raddr_sp & "    A R A R A   R R|   " & rdata_sp & "     R R|";
+        constant r_head_2 : string := "|   " & raddr_sp & "  A R B R C R A V R|   " & rdata_sp & " R R V R|";
+        constant r_head_3 : string := "|   " & raddr_sp & "  R S U L A P R A E|   " & rdata_sp & " R L A E|";
+        constant r_head_4 : string := "|   " & raddr_sp & "  L I R O C R Q L A|   " & rdata_sp & " E A L A|";
+        constant r_head_5 : string := "|   " & raddr_sp & "  E Z S C H O O I D|   " & rdata_sp & " S S I D|";
+        constant r_head_6 : string := "|ID " & raddr_id & "  N E T K E T S D Y|ID " & rdata_id & " P T D Y|";
+        constant r_head_7 : string := "| M|" & raddr_sp & "| M M M M M M M M S| M|" & rdata_sp & "|S S S M|";
+        constant r_head_8 : string := "|hh|" & raddr_fm & "|hh h h h h h h b b|hh|" & rdata_fm & "|h b b b|";
+        constant r_head_h : string := "+--+" & raddr_hl & "+------------------+--+" & rdata_hl & "+-------|";
+        constant w_head_0 : string := "|   " & waddr_sp & "      A   A     A A|   " & wdata_sp & " " & wstrb_sp & "      |        |";
+        constant w_head_1 : string := "|   " & waddr_sp & "    A W A W A   W W|   " & wdata_sp & " " & wstrb_sp & "   W W|     B B|";
+        constant w_head_2 : string := "|   " & waddr_sp & "  A W B W C W A V R|   " & wdata_sp & " " & wstrb_sp & " W V R|   B V R|";
+        constant w_head_3 : string := "|   " & waddr_sp & "  W S U L A P W A E|   " & wdata_sp & " " & wstrb_sp & " L A E|   R A E|";
+        constant w_head_4 : string := "|   " & waddr_sp & "  L I R O C R Q L A|   " & wdata_sp & " " & wstrb_sp & " A L A|   E L A|";
+        constant w_head_5 : string := "|   " & waddr_sp & "  E Z S C H O O I D|   " & wdata_sp & " " & wstrb_sp & " S I D|   S I D|";
+        constant w_head_6 : string := "|ID " & waddr_id & "  N E T K E T S D Y|ID " & wdata_id & " " & wstrb_id & " T D Y|ID P D Y|";
+        constant w_head_7 : string := "| S|" & waddr_sp & "| M M M M M M M M S| M|" & wdata_sp & "|" & wstrb_sp & "|M M S| S|S S M|";
+        constant w_head_8 : string := "|hh|" & waddr_fm & "|hh h h h h h h b b|hh|" & wdata_fm & "|" & wstrb_fm & "|b b b|hh|h b b|";
+        constant w_head_h : string := "|--+" & waddr_hl & "+------------------+--+" & wdata_hl & "+" & wstrb_hl & "+-----+--+-----|";
     begin
-        p(string'("             |   ") & raddr_sp & "      A   A     A A|   " & rdata_sp & "        ||   " & waddr_sp & "      A   A     A A|   " & wdata_sp & " " & wstrb_sp & "      |         ");
-        p(string'("             |   ") & raddr_sp & "    A R A R A   R R|   " & rdata_sp & "     R R||   " & waddr_sp & "    A W A W A   W W|   " & wdata_sp & " " & wstrb_sp & "   W W|     B B ");
-        p(string'("             |   ") & raddr_sp & "  A R B R C R A V R|   " & rdata_sp & " R R V R||   " & waddr_sp & "  A W B W C W A V R|   " & wdata_sp & " " & wstrb_sp & " W V R|   B V R ");
-        p(string'("             |   ") & raddr_sp & "  R S U L A P R A E|   " & rdata_sp & " R L A E||   " & waddr_sp & "  W S U L A P W A E|   " & wdata_sp & " " & wstrb_sp & " L A E|   R A E ");
-        p(string'("             |   ") & raddr_sp & "  L I R O C R Q L A|   " & rdata_sp & " E A L A||   " & waddr_sp & "  L I R O C R Q L A|   " & wdata_sp & " " & wstrb_sp & " A L A|   E L A "); 
-        p(string'("             |   ") & raddr_sp & "  E Z S C H O O I D|   " & rdata_sp & " S S I D||   " & waddr_sp & "  E Z S C H O O I D|   " & wdata_sp & " " & wstrb_sp & " S I D|   S I D ");
-        p(string'("     TIME    |ID ") & raddr_id & "  N E T K E T S D Y|ID " & rdata_id & " P T D Y||ID " & waddr_id & "  N E T K E T S D Y|ID " & wdata_id & " " & wstrb_id & " T D Y|ID P D Y ");
-        p(string'(" ------------+--+") & raddr_hl & "+------------------+--+" & rdata_hl & "+-------||--+" & waddr_hl & "+------------------+--+" & wdata_hl & "+" & wstrb_hl & "+-----+--+------");
-        p(string'("             | M|") & raddr_sp & "| M M M M M M M M S| M|" & rdata_sp & "|S S S M|| S|" & waddr_sp & "| M M M M M M M M S| M|" & wdata_sp & "|" & wstrb_sp & "|M M S| S|S S M ");
-        p(string'(" ------------+--|") & raddr_hl & "+------------------+--+" & rdata_hl & "+-------||--+" & waddr_hl & "+------------------+--+" & wdata_hl & "+" & wstrb_hl & "+-----+--+------");
-        p(string'("             |hh|") & raddr_fm & "|hh h h h h h h b b|hh|" & rdata_fm & "|h b b b||hh|" & waddr_fm & "|hh h h h h h h b b|hh|" & wdata_fm & "|" & wstrb_fm & "|b b b|hh|h b b ");
-        p(string'(" ------------+--|") & raddr_hl & "+------------------+--+" & rdata_hl & "+-------||--+" & waddr_hl & "+------------------+--+" & wdata_hl & "+" & wstrb_hl & "+-----+--+------");
-        MAIN_LOOP:loop
-            wait until (ACLK'event and ACLK = '1');
-            p(Now, string'("|") & HEX_TO_STRING(resize(ARID,8)) &
-                   string'("|") & HEX_TO_STRING(ARADDR ) &
-                   string'("|") & HEX_TO_STRING(ARLEN  ) &
-                   string'(" ") & HEX_TO_STRING(ARSIZE ) &
-                   string'(" ") & HEX_TO_STRING(ARBURST) &
-                   string'(" ") & HEX_TO_STRING(ARLOCK ) &
-                   string'(" ") & HEX_TO_STRING(ARCACHE) &
-                   string'(" ") & HEX_TO_STRING(ARPROT ) &
-                   string'(" ") & HEX_TO_STRING(ARQOS  ) &
-                   string'(" ") & BIN_TO_STRING(ARVALID) &
-                   string'(" ") & BIN_TO_STRING(ARREADY) &
-                   string'("|") & HEX_TO_STRING(resize(RID,8)) &
-                   string'("|") & HEX_TO_STRING(RDATA  ) &
-                   string'("|") & HEX_TO_STRING(RRESP  ) &
-                   string'(" ") & BIN_TO_STRING(RLAST  ) &
-                   string'(" ") & BIN_TO_STRING(RVALID ) &
-                   string'(" ") & BIN_TO_STRING(RREADY ) &
-                   string'("||")& HEX_TO_STRING(resize(AWID,8)) &
-                   string'("|") & HEX_TO_STRING(AWADDR ) &
-                   string'("|") & HEX_TO_STRING(AWLEN  ) &
-                   string'(" ") & HEX_TO_STRING(AWSIZE ) &
-                   string'(" ") & HEX_TO_STRING(AWBURST) &
-                   string'(" ") & HEX_TO_STRING(AWLOCK ) &
-                   string'(" ") & HEX_TO_STRING(AWCACHE) &
-                   string'(" ") & HEX_TO_STRING(AWPROT ) &
-                   string'(" ") & HEX_TO_STRING(AWQOS  ) &
-                   string'(" ") & BIN_TO_STRING(AWVALID) &
-                   string'(" ") & BIN_TO_STRING(AWREADY) &
-                   string'("|") & HEX_TO_STRING(resize(WID,8)) &
-                   string'("|") & HEX_TO_STRING(WDATA  ) &
-                   string'("|") & BIN_TO_STRING(WSTRB  ) &
-                   string'("|") & BIN_TO_STRING(WLAST  ) &
-                   string'(" ") & BIN_TO_STRING(WVALID ) &
-                   string'(" ") & BIN_TO_STRING(WREADY ) &
-                   string'("|") & HEX_TO_STRING(resize(BID,8)) &
-                   string'("|") & HEX_TO_STRING(BRESP  ) &
-                   string'(" ") & BIN_TO_STRING(BVALID ) &
-                   string'(" ") & BIN_TO_STRING(BREADY ) );
-        end loop;
+        if (READ_ENABLE = TRUE and WRITE_ENABLE = TRUE) then
+            p(s_head_0 & r_head_0 & w_head_0);
+            p(s_head_1 & r_head_1 & w_head_1);
+            p(s_head_2 & r_head_2 & w_head_2);
+            p(s_head_3 & r_head_3 & w_head_3);
+            p(s_head_4 & r_head_4 & w_head_4);
+            p(s_head_5 & r_head_5 & w_head_5);
+            p(s_head_6 & r_head_6 & w_head_6);
+            p(s_head_h & r_head_h & w_head_h);
+            p(s_head_7 & r_head_7 & w_head_7);
+            p(s_head_8 & r_head_8 & w_head_8);
+            p(s_head_h & r_head_h & w_head_h);
+            READ_WRITE_LOOP:loop
+                wait until (ACLK'event and ACLK = '1');
+                p(Now, string'("|") & HEX_TO_STRING(resize(ARID,8)) &
+                       string'("|") & HEX_TO_STRING(ARADDR ) &
+                       string'("|") & HEX_TO_STRING(ARLEN  ) &
+                       string'(" ") & HEX_TO_STRING(ARSIZE ) &
+                       string'(" ") & HEX_TO_STRING(ARBURST) &
+                       string'(" ") & HEX_TO_STRING(ARLOCK ) &
+                       string'(" ") & HEX_TO_STRING(ARCACHE) &
+                       string'(" ") & HEX_TO_STRING(ARPROT ) &
+                       string'(" ") & HEX_TO_STRING(ARQOS  ) &
+                       string'(" ") & BIN_TO_STRING(ARVALID) &
+                       string'(" ") & BIN_TO_STRING(ARREADY) &
+                       string'("|") & HEX_TO_STRING(resize(RID,8)) &
+                       string'("|") & HEX_TO_STRING(RDATA  ) &
+                       string'("|") & HEX_TO_STRING(RRESP  ) &
+                       string'(" ") & BIN_TO_STRING(RLAST  ) &
+                       string'(" ") & BIN_TO_STRING(RVALID ) &
+                       string'(" ") & BIN_TO_STRING(RREADY ) &
+                       string'("|") & 
+                       string'("|") & HEX_TO_STRING(resize(AWID,8)) &
+                       string'("|") & HEX_TO_STRING(AWADDR ) &
+                       string'("|") & HEX_TO_STRING(AWLEN  ) &
+                       string'(" ") & HEX_TO_STRING(AWSIZE ) &
+                       string'(" ") & HEX_TO_STRING(AWBURST) &
+                       string'(" ") & HEX_TO_STRING(AWLOCK ) &
+                       string'(" ") & HEX_TO_STRING(AWCACHE) &
+                       string'(" ") & HEX_TO_STRING(AWPROT ) &
+                       string'(" ") & HEX_TO_STRING(AWQOS  ) &
+                       string'(" ") & BIN_TO_STRING(AWVALID) &
+                       string'(" ") & BIN_TO_STRING(AWREADY) &
+                       string'("|") & HEX_TO_STRING(resize(WID,8)) &
+                       string'("|") & HEX_TO_STRING(WDATA  ) &
+                       string'("|") & BIN_TO_STRING(WSTRB  ) &
+                       string'("|") & BIN_TO_STRING(WLAST  ) &
+                       string'(" ") & BIN_TO_STRING(WVALID ) &
+                       string'(" ") & BIN_TO_STRING(WREADY ) &
+                       string'("|") & HEX_TO_STRING(resize(BID,8)) &
+                       string'("|") & HEX_TO_STRING(BRESP  ) &
+                       string'(" ") & BIN_TO_STRING(BVALID ) &
+                       string'(" ") & BIN_TO_STRING(BREADY ) &
+                       string'("|"));
+            end loop;
+        end if;
+        if (READ_ENABLE = TRUE and WRITE_ENABLE = FALSE) then
+            p(s_head_0 & r_head_0);
+            p(s_head_1 & r_head_1);
+            p(s_head_2 & r_head_2);
+            p(s_head_3 & r_head_3);
+            p(s_head_4 & r_head_4);
+            p(s_head_5 & r_head_5);
+            p(s_head_6 & r_head_6);
+            p(s_head_h & r_head_h);
+            p(s_head_7 & r_head_7);
+            p(s_head_8 & r_head_8);
+            p(s_head_h & r_head_h);
+            READ_ONLY_LOOP:loop
+                wait until (ACLK'event and ACLK = '1');
+                p(Now, string'("|") & HEX_TO_STRING(resize(ARID,8)) &
+                       string'("|") & HEX_TO_STRING(ARADDR ) &
+                       string'("|") & HEX_TO_STRING(ARLEN  ) &
+                       string'(" ") & HEX_TO_STRING(ARSIZE ) &
+                       string'(" ") & HEX_TO_STRING(ARBURST) &
+                       string'(" ") & HEX_TO_STRING(ARLOCK ) &
+                       string'(" ") & HEX_TO_STRING(ARCACHE) &
+                       string'(" ") & HEX_TO_STRING(ARPROT ) &
+                       string'(" ") & HEX_TO_STRING(ARQOS  ) &
+                       string'(" ") & BIN_TO_STRING(ARVALID) &
+                       string'(" ") & BIN_TO_STRING(ARREADY) &
+                       string'("|") & HEX_TO_STRING(resize(RID,8)) &
+                       string'("|") & HEX_TO_STRING(RDATA  ) &
+                       string'("|") & HEX_TO_STRING(RRESP  ) &
+                       string'(" ") & BIN_TO_STRING(RLAST  ) &
+                       string'(" ") & BIN_TO_STRING(RVALID ) &
+                       string'(" ") & BIN_TO_STRING(RREADY ) &
+                       string'("|"));
+            end loop;
+        end if;
+        if (READ_ENABLE = FALSE and WRITE_ENABLE = TRUE) then
+            p(s_head_0 & w_head_0);
+            p(s_head_1 & w_head_1);
+            p(s_head_2 & w_head_2);
+            p(s_head_3 & w_head_3);
+            p(s_head_4 & w_head_4);
+            p(s_head_5 & w_head_5);
+            p(s_head_6 & w_head_6);
+            p(s_head_h & w_head_h);
+            p(s_head_7 & w_head_7);
+            p(s_head_8 & w_head_8);
+            p(s_head_h & w_head_h);
+            WRITE_ONLY_LOOP:loop
+                wait until (ACLK'event and ACLK = '1');
+                p(Now, string'("|") & HEX_TO_STRING(resize(AWID,8)) &
+                       string'("|") & HEX_TO_STRING(AWADDR ) &
+                       string'("|") & HEX_TO_STRING(AWLEN  ) &
+                       string'(" ") & HEX_TO_STRING(AWSIZE ) &
+                       string'(" ") & HEX_TO_STRING(AWBURST) &
+                       string'(" ") & HEX_TO_STRING(AWLOCK ) &
+                       string'(" ") & HEX_TO_STRING(AWCACHE) &
+                       string'(" ") & HEX_TO_STRING(AWPROT ) &
+                       string'(" ") & HEX_TO_STRING(AWQOS  ) &
+                       string'(" ") & BIN_TO_STRING(AWVALID) &
+                       string'(" ") & BIN_TO_STRING(AWREADY) &
+                       string'("|") & HEX_TO_STRING(resize(WID,8)) &
+                       string'("|") & HEX_TO_STRING(WDATA  ) &
+                       string'("|") & BIN_TO_STRING(WSTRB  ) &
+                       string'("|") & BIN_TO_STRING(WLAST  ) &
+                       string'(" ") & BIN_TO_STRING(WVALID ) &
+                       string'(" ") & BIN_TO_STRING(WREADY ) &
+                       string'("|") & HEX_TO_STRING(resize(BID,8)) &
+                       string'("|") & HEX_TO_STRING(BRESP  ) &
+                       string'(" ") & BIN_TO_STRING(BVALID ) &
+                       string'(" ") & BIN_TO_STRING(BREADY ) &
+                       string'("|"));
+            end loop;
+        end if;
     end process;
 end MODEL;

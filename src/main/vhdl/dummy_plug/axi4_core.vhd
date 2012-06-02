@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_core.vhd
 --!     @brief   AXI4 Dummy Plug Core Package.
---!     @version 0.9.0
---!     @date    2012/6/1
+--!     @version 1.0.0
+--!     @date    2012/6/2
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -260,6 +260,7 @@ package AXI4_CORE is
     --! @brief AXI4トランザクション信号のレコード宣言.
     -------------------------------------------------------------------------------
     type      AXI4_TRANSACTION_SIGNAL_TYPE is record
+        VALID    : std_logic;
         ID       : std_logic_vector(AXI4_ID_MAX_WIDTH    -1 downto 0);
         ADDR     : std_logic_vector(AXI4_ADDR_MAX_WIDTH  -1 downto 0);
         AUSER    : std_logic_vector(AXI4_USER_MAX_WIDTH  -1 downto 0);
@@ -282,6 +283,7 @@ package AXI4_CORE is
     --! @brief AXI4トランザクション信号のNULL定数.
     -------------------------------------------------------------------------------
     constant  AXI4_TRANSACTION_SIGNAL_NULL     : AXI4_TRANSACTION_SIGNAL_TYPE := (
+        VALID    => '0'              ,
         ID       => (others => '0')  ,
         ADDR     => (others => '0')  ,
         AUSER    => (others => '0')  ,
@@ -304,6 +306,7 @@ package AXI4_CORE is
     --! @brief AXI4トランザクション信号のドントケア定数.
     -------------------------------------------------------------------------------
     constant  AXI4_TRANSACTION_SIGNAL_DONTCARE : AXI4_TRANSACTION_SIGNAL_TYPE := (
+        VALID    => '-'              ,
         ID       => (others => '-')  ,
         ADDR     => (others => '-')  ,
         AUSER    => (others => '-')  ,
@@ -577,9 +580,9 @@ package AXI4_CORE is
                               boolean   := FALSE;
             SLAVE           : --! @brief スレーブモードを指定する.
                               boolean   := FALSE;
-            READ            : --! @brief リードモードを指定する.
+            READ_ENABLE     : --! @brief リードトランザクションの可/不可を指定する.
                               boolean   := TRUE;
-            WRITE           : --! @brief ライトモードを指定する.
+            WRITE_ENABLE    : --! @brief ライトトランザクションの可/不可を指定する.
                               boolean   := TRUE;
             OUTPUT_DELAY    : --! @brief 出力信号遅延時間
                               time;
@@ -848,7 +851,7 @@ package body AXI4_CORE is
     constant  KEY_BREADY    : KEY_TYPE := "BREADY ";
 
     constant  KEY_DUSER     : KEY_TYPE := "DUSER  ";
-    constant  KEY_OKEY      : KEY_TYPE := "OKEY   ";
+    constant  KEY_OKAY      : KEY_TYPE := "OKAY   ";
     constant  KEY_EXOKAY    : KEY_TYPE := "EXOKAY ";
     constant  KEY_SLVERR    : KEY_TYPE := "SLVERR ";
     constant  KEY_DECERR    : KEY_TYPE := "DECERR ";
@@ -1343,6 +1346,127 @@ package body AXI4_CORE is
         return READ_NONE;
     end function;
     -------------------------------------------------------------------------------
+    --! @brief シナリオからトランザクションサイズの値を読み取るサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    CORE        コア変数.
+    --! @param    STREAM      シナリオのストリーム.
+    --! @param    PROC_NAME   プロシージャ名.リードエラー発生時に出力する.
+    --! @param    VAL         読み取ったトランザクションサイズの値.
+    -------------------------------------------------------------------------------
+    procedure read_transaction_size(
+        variable  CORE          : inout CORE_TYPE;
+        file      STREAM        :       TEXT;
+                  PROC_NAME     : in    string;
+                  VAL           : inout AXI4_ASIZE_TYPE
+    ) is
+        variable  size          :       integer;
+        variable  good          :       boolean;
+    begin
+        READ_INTEGER(CORE, STREAM, size, good);
+        if (good) then
+            case size is
+                when    128 => VAL := AXI4_ASIZE_128BYTE;
+                when     64 => VAL := AXI4_ASIZE_64BYTE;
+                when     32 => VAL := AXI4_ASIZE_32BYTE;
+                when     16 => VAL := AXI4_ASIZE_16BYTE;
+                when      8 => VAL := AXI4_ASIZE_8BYTE;
+                when      4 => VAL := AXI4_ASIZE_4BYTE;
+                when      2 => VAL := AXI4_ASIZE_2BYTE;
+                when      1 => VAL := AXI4_ASIZE_1BYTE;
+                when others => READ_ERROR(CORE, PROC_NAME, "KEY=SIZE illegal number=" & INTEGER_TO_STRING(size));
+            end case;
+        else                   READ_ERROR(CORE, PROC_NAME, "KEY=SIZE READ_INTEGER not good");
+        end if;
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief シナリオからトランザクションバースト長の値を読み取るサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    CORE        コア変数.
+    --! @param    STREAM      シナリオのストリーム.
+    --! @param    PROC_NAME   プロシージャ名.リードエラー発生時に出力する.
+    --! @param    VAL         読み取ったトランザクションバースト長の値.
+    -------------------------------------------------------------------------------
+    procedure read_transaction_alen(
+        variable  CORE          : inout CORE_TYPE;
+        file      STREAM        :       TEXT;
+                  PROC_NAME     : in    string;
+                  VAL           : inout AXI4_ALEN_TYPE
+    ) is
+        variable  size          :       integer;
+        variable  good          :       boolean;
+    begin
+        READ_INTEGER(CORE, STREAM, size, good);
+        if (good) then
+            VAL := std_logic_vector(to_unsigned(size-1, AXI4_ALEN_WIDTH));
+        else
+            READ_ERROR(CORE, PROC_NAME, "KEY=SIZE READ_INTEGER not good");
+        end if;
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief シナリオからトランザクション応答ステータスの値を読み取るサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    CORE        コア変数.
+    --! @param    STREAM      シナリオのストリーム.
+    --! @param    PROC_NAME   プロシージャ名.リードエラー発生時に出力する.
+    --! @param    VAL         読み取ったトランザクション応答ステータスの値.
+    -------------------------------------------------------------------------------
+    procedure read_transaction_resp(
+        variable  CORE          : inout CORE_TYPE;
+        file      STREAM        :       TEXT;
+                  PROC_NAME     : in    string;
+                  VAL           : inout AXI4_RESP_TYPE
+    ) is
+        variable  key_word      :       KEY_TYPE;
+        variable  next_event    :       EVENT_TYPE;
+    begin
+        SEEK_EVENT(CORE, STREAM, next_event);
+        if (next_event = EVENT_SCALAR) then
+            READ_EVENT(CORE, STREAM, EVENT_SCALAR);
+            COPY_KEY_WORD(CORE, key_word);
+            case key_word is
+                when KEY_OKAY    => VAL := AXI4_RESP_OKAY  ;
+                when KEY_EXOKAY  => VAL := AXI4_RESP_EXOKAY;
+                when KEY_SLVERR  => VAL := AXI4_RESP_SLVERR;
+                when KEY_DECERR  => VAL := AXI4_RESP_DECERR;
+                when others      => READ_ERROR(CORE, PROC_NAME, "KEY=RESP illegal key_word=" & key_word);
+            end case;
+        else
+            READ_ERROR(CORE, PROC_NAME, "KEY=RESP SEEK_EVENT NG");
+        end if;
+    end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief シナリオからトランザクションバーストモードの値を読み取るサブプログラム.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    CORE        コア変数.
+    --! @param    STREAM      シナリオのストリーム.
+    --! @param    PROC_NAME   プロシージャ名.リードエラー発生時に出力する.
+    --! @param    VAL         読み取ったトランザクションバーストモードの値.
+    -------------------------------------------------------------------------------
+    procedure read_transaction_burst(
+        variable  CORE          : inout CORE_TYPE;
+        file      STREAM        :       TEXT;
+                  PROC_NAME     : in    string;
+                  VAL           : inout AXI4_ABURST_TYPE
+    ) is
+        variable  key_word      :       KEY_TYPE;
+        variable  next_event    :       EVENT_TYPE;
+    begin
+        SEEK_EVENT(CORE, STREAM, next_event);
+        if (next_event = EVENT_SCALAR) then
+            READ_EVENT(CORE, STREAM, EVENT_SCALAR);
+            COPY_KEY_WORD(CORE, key_word);
+            case key_word is
+                when KEY_FIXED   => VAL := AXI4_ABURST_FIXED;
+                when KEY_INCR    => VAL := AXI4_ABURST_INCR;
+                when KEY_WRAP    => VAL := AXI4_ABURST_WRAP;
+                when KEY_RESV    => VAL := AXI4_ABURST_RESV;
+                when others      => READ_ERROR(CORE, PROC_NAME, "KEY=BURST illegal key_word=" & key_word);
+            end case;
+        else
+            READ_ERROR(CORE, PROC_NAME, "KEY=BURST SEEK_EVENT NG");
+        end if;
+    end procedure;
+    -------------------------------------------------------------------------------
     --! @brief シナリオのマップからチャネル信号構造体の値を読み取るサブプログラム.
     --!      * このサブプログラムを呼ぶときは、すでにMAP_READ_BEGINを実行済みに
     --!        しておかなければならない。
@@ -1415,9 +1539,9 @@ package body AXI4_CORE is
                     case to_read_axi4_signal(key_word, CHANNEL, READ, WRITE) is
                         when READ_ARID     => READ_VAL(SIGNALS.AR.ID  (WIDTH.ID     -1 downto 0));
                         when READ_ARADDR   => READ_VAL(SIGNALS.AR.ADDR(WIDTH.ARADDR -1 downto 0));
-                        when READ_ARLEN    => READ_VAL(SIGNALS.AR.LEN   );
-                        when READ_ARSIZE   => READ_VAL(SIGNALS.AR.SIZE  );
-                        when READ_ARBURST  => READ_VAL(SIGNALS.AR.BURST );
+                        when READ_ARLEN    => read_transaction_alen (CORE, STREAM, PROC_NAME, SIGNALS.AR.LEN  );
+                        when READ_ARSIZE   => read_transaction_size (CORE, STREAM, PROC_NAME, SIGNALS.AR.SIZE );
+                        when READ_ARBURST  => read_transaction_burst(CORE, STREAM, PROC_NAME, SIGNALS.AR.BURST);
                         when READ_ARLOCK   => READ_VAL(SIGNALS.AR.LOCK  );
                         when READ_ARCACHE  => READ_VAL(SIGNALS.AR.CACHE );
                         when READ_ARPROT   => READ_VAL(SIGNALS.AR.PROT  );
@@ -1428,9 +1552,9 @@ package body AXI4_CORE is
                         when READ_ARREADY  => READ_VAL(SIGNALS.AR.READY );
                         when READ_AWID     => READ_VAL(SIGNALS.AW.ID  (WIDTH.ID     -1 downto 0));
                         when READ_AWADDR   => READ_VAL(SIGNALS.AW.ADDR(WIDTH.ARADDR -1 downto 0));
-                        when READ_AWLEN    => READ_VAL(SIGNALS.AW.LEN   );
-                        when READ_AWSIZE   => READ_VAL(SIGNALS.AW.SIZE  );
-                        when READ_AWBURST  => READ_VAL(SIGNALS.AW.BURST );
+                        when READ_AWLEN    => read_transaction_alen (CORE, STREAM, PROC_NAME, SIGNALS.AW.LEN  );
+                        when READ_AWSIZE   => read_transaction_size (CORE, STREAM, PROC_NAME, SIGNALS.AW.SIZE );
+                        when READ_AWBURST  => read_transaction_burst(CORE, STREAM, PROC_NAME, SIGNALS.AW.BURST);
                         when READ_AWLOCK   => READ_VAL(SIGNALS.AW.LOCK  );
                         when READ_AWCACHE  => READ_VAL(SIGNALS.AW.CACHE );
                         when READ_AWPROT   => READ_VAL(SIGNALS.AW.PROT  );
@@ -1442,7 +1566,7 @@ package body AXI4_CORE is
                         when READ_RID      => READ_VAL(SIGNALS.R.ID   (WIDTH.ID     -1 downto 0));
                         when READ_RUSER    => READ_VAL(SIGNALS.R.USER (WIDTH.RUSER  -1 downto 0));
                         when READ_RDATA    => READ_VAL(SIGNALS.R.DATA (WIDTH.RDATA  -1 downto 0));
-                        when READ_RRESP    => READ_VAL(SIGNALS.R.RESP  );
+                        when READ_RRESP    => read_transaction_resp(CORE, STREAM, PROC_NAME, SIGNALS.R.RESP);
                         when READ_RLAST    => READ_VAL(SIGNALS.R.LAST  );
                         when READ_RVALID   => READ_VAL(SIGNALS.R.VALID );
                         when READ_RREADY   => READ_VAL(SIGNALS.R.READY );
@@ -1455,7 +1579,7 @@ package body AXI4_CORE is
                         when READ_WREADY   => READ_VAL(SIGNALS.W.READY );
                         when READ_BID      => READ_VAL(SIGNALS.B.ID   (WIDTH.ID     -1 downto 0));
                         when READ_BUSER    => READ_VAL(SIGNALS.B.USER (WIDTH.BUSER  -1 downto 0));
-                        when READ_BRESP    => READ_VAL(SIGNALS.B.RESP  );
+                        when READ_BRESP    => read_transaction_resp(CORE, STREAM, PROC_NAME, SIGNALS.B.RESP);
                         when READ_BVALID   => READ_VAL(SIGNALS.B.VALID );
                         when READ_BREADY   => READ_VAL(SIGNALS.B.READY );
                         when others        => exit MAP_LOOP;
@@ -1504,60 +1628,6 @@ package body AXI4_CORE is
         variable  address       :       integer;
         variable  data_bytes    :       integer;
         variable  burst_len     :       integer;
-        procedure READ_TRANSACTION_SIZE(VAL : inout AXI4_ASIZE_TYPE) is
-            variable  size : integer;
-            variable  good : boolean;
-        begin
-            READ_INTEGER(CORE, STREAM, size, good);
-            if (good) then
-                case size is
-                    when    128 => VAL := AXI4_ASIZE_128BYTE;
-                    when     64 => VAL := AXI4_ASIZE_64BYTE;
-                    when     32 => VAL := AXI4_ASIZE_32BYTE;
-                    when     16 => VAL := AXI4_ASIZE_16BYTE;
-                    when      8 => VAL := AXI4_ASIZE_8BYTE;
-                    when      4 => VAL := AXI4_ASIZE_4BYTE;
-                    when      2 => VAL := AXI4_ASIZE_2BYTE;
-                    when      1 => VAL := AXI4_ASIZE_1BYTE;
-                    when others => READ_ERROR(CORE, PROC_NAME, "KEY=SIZE illegal number=" & INTEGER_TO_STRING(size));
-                end case;
-            else                   READ_ERROR(CORE, PROC_NAME, "KEY=SIZE READ_INTEGER not good");
-            end if;
-        end procedure;
-        procedure READ_TRANSACTION_BURST(VAL : inout AXI4_ABURST_TYPE) is
-        begin
-            SEEK_EVENT(CORE, STREAM, next_event);
-            if (next_event = EVENT_SCALAR) then
-                READ_EVENT(CORE, STREAM, EVENT_SCALAR);
-                COPY_KEY_WORD(CORE, key_word);
-                case key_word is
-                    when KEY_FIXED   => VAL := AXI4_ABURST_FIXED;
-                    when KEY_INCR    => VAL := AXI4_ABURST_INCR;
-                    when KEY_WRAP    => VAL := AXI4_ABURST_WRAP;
-                    when KEY_RESV    => VAL := AXI4_ABURST_RESV;
-                    when others      => READ_ERROR(CORE, PROC_NAME, "KEY=BURST illegal key_word=" & key_word);
-                end case;
-            else
-                READ_ERROR(CORE, PROC_NAME, "KEY=BURST SEEK_EVENT NG");
-            end if;
-        end procedure;
-        procedure READ_TRANSACTION_RESP(VAL : inout AXI4_RESP_TYPE) is
-        begin
-            SEEK_EVENT(CORE, STREAM, next_event);
-            if (next_event = EVENT_SCALAR) then
-                READ_EVENT(CORE, STREAM, EVENT_SCALAR);
-                COPY_KEY_WORD(CORE, key_word);
-                case key_word is
-                    when KEY_OKEY    => VAL := AXI4_RESP_OKAY  ;
-                    when KEY_EXOKAY  => VAL := AXI4_RESP_EXOKAY;
-                    when KEY_SLVERR  => VAL := AXI4_RESP_SLVERR;
-                    when KEY_DECERR  => VAL := AXI4_RESP_DECERR;
-                    when others      => READ_ERROR(CORE, PROC_NAME, "KEY=RESP illegal key_word=" & key_word);
-                end case;
-            else
-                READ_ERROR(CORE, PROC_NAME, "KEY=RESP SEEK_EVENT NG");
-            end if;
-        end procedure;
     begin
         REPORT_DEBUG(CORE, PROC_NAME, "BEGIN");
         next_event := EVENT;
@@ -1568,20 +1638,20 @@ package body AXI4_CORE is
                     COPY_KEY_WORD(CORE, key_word);
                     REPORT_DEBUG(CORE, PROC_NAME, "KEY=" & key_word);
                     case key_word is
-                        when KEY_SIZE   => READ_TRANSACTION_SIZE (TRANS.SIZE );
-                        when KEY_RESP   => READ_TRANSACTION_RESP (TRANS.RESP );
-                        when KEY_BURST  => READ_TRANSACTION_BURST(TRANS.BURST);
-                        when KEY_LOCK   => READ_STD_LOGIC_VECTOR(CORE, STREAM, TRANS.LOCK  , len);
-                        when KEY_CACHE  => READ_STD_LOGIC_VECTOR(CORE, STREAM, TRANS.CACHE , len);
-                        when KEY_PROT   => READ_STD_LOGIC_VECTOR(CORE, STREAM, TRANS.PROT  , len);
-                        when KEY_QOS    => READ_STD_LOGIC_VECTOR(CORE, STREAM, TRANS.QOS   , len);
-                        when KEY_REGION => READ_STD_LOGIC_VECTOR(CORE, STREAM, TRANS.REGION, len);
-                        when KEY_ADDR   => READ_STD_LOGIC_VECTOR(CORE, STREAM, TRANS.ADDR (ADDR_WIDTH   -1 downto   0), len);
-                        when KEY_AUSER  => READ_STD_LOGIC_VECTOR(CORE, STREAM, TRANS.AUSER(AUSER_WIDTH  -1 downto   0), len);
-                        when KEY_DUSER  => READ_STD_LOGIC_VECTOR(CORE, STREAM, TRANS.DUSER(DUSER_WIDTH  -1 downto   0), len);
-                        when KEY_BUSER  => READ_STD_LOGIC_VECTOR(CORE, STREAM, TRANS.BUSER(BUSER_WIDTH  -1 downto   0), len);
-                        when KEY_ID     => READ_STD_LOGIC_VECTOR(CORE, STREAM, TRANS.ID   (ID_WIDTH     -1 downto   0), len);
-                        when KEY_DATA   => READ_STD_LOGIC_VECTOR(CORE, STREAM, TRANS.DATA (TRANS.DATA'high downto pos), len);
+                        when KEY_SIZE   => read_transaction_size (CORE, STREAM, PROC_NAME, TRANS.SIZE );
+                        when KEY_RESP   => read_transaction_resp (CORE, STREAM, PROC_NAME, TRANS.RESP );
+                        when KEY_BURST  => read_transaction_burst(CORE, STREAM, PROC_NAME, TRANS.BURST);
+                        when KEY_LOCK   => READ_STD_LOGIC_VECTOR (CORE, STREAM, TRANS.LOCK  , len);
+                        when KEY_CACHE  => READ_STD_LOGIC_VECTOR (CORE, STREAM, TRANS.CACHE , len);
+                        when KEY_PROT   => READ_STD_LOGIC_VECTOR (CORE, STREAM, TRANS.PROT  , len);
+                        when KEY_QOS    => READ_STD_LOGIC_VECTOR (CORE, STREAM, TRANS.QOS   , len);
+                        when KEY_REGION => READ_STD_LOGIC_VECTOR (CORE, STREAM, TRANS.REGION, len);
+                        when KEY_ADDR   => READ_STD_LOGIC_VECTOR (CORE, STREAM, TRANS.ADDR (ADDR_WIDTH   -1 downto   0), len);
+                        when KEY_AUSER  => READ_STD_LOGIC_VECTOR (CORE, STREAM, TRANS.AUSER(AUSER_WIDTH  -1 downto   0), len);
+                        when KEY_DUSER  => READ_STD_LOGIC_VECTOR (CORE, STREAM, TRANS.DUSER(DUSER_WIDTH  -1 downto   0), len);
+                        when KEY_BUSER  => READ_STD_LOGIC_VECTOR (CORE, STREAM, TRANS.BUSER(BUSER_WIDTH  -1 downto   0), len);
+                        when KEY_ID     => READ_STD_LOGIC_VECTOR (CORE, STREAM, TRANS.ID   (ID_WIDTH     -1 downto   0), len);
+                        when KEY_DATA   => READ_STD_LOGIC_VECTOR (CORE, STREAM, TRANS.DATA (TRANS.DATA'high downto pos), len);
                                            pos := pos + len;
                         when others     => exit READ_MAP_LOOP;
                     end case;

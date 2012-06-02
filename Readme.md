@@ -1,10 +1,6 @@
 *Dummy Plug*
 ============
 
-##Notice##
-
-*Dummy Plug* is at the moment(2012/5/9) but is not officially released yet.
-
 ##What's *Dummy Plug*##
 
 *Dummy Plug* is a simple bus functional model library written by VHDL Only.  
@@ -19,31 +15,31 @@ For example, when the master performs a write transaction will write the scenari
         --- # AIX DUMMU-PLUG SAMPLE SCENARIO 1    # Start Scenario. Synchronize All Dummy Plug.
         - - MASTER                                # Name of Dummy Plug.
           - SAY: >                                # SAY Operation. Print String to STDOUT
-            AIX DUMMU-PLUG SAMPLE SCENARIO 1 START
+            AIX DUMMU-PLUG SAMPLE SCENARIO 1 RUN  #
           - AW:                                   # Write Address Channel Action.
             - VALID  : 0                          # AWVALID <= 0
-              ADDR   : "32'h00000000"             # AWADDR  <= 0x00000000
-              SIZE   : "'b000"                    # AWSIZE  <= 000
-              LEN    : 0                          # AWLEN   <= 0
+              ADDR   : 0x00000000                 # AWADDR  <= 32'h00000000
+              SIZE   : 0                          # AWSIZE  <= 3'b000
+              LEN    : 1                          # AWLEN   <= 8'h00
               AID    : 0                          # AWID    <= 0
             - WAIT   : 10                         # wait for 10 clocks.
-            - ADDR   : "32'h00000010"             # AWADDR  <= 0x00000010
-              SIZE   : "'b010"                    # AWSIZE  <= 010
-              LEN    : 0                          # AWLEN   <= 0
+            - ADDR   : 0x00000010                 # AWADDR  <= 32'h00000010
+              SIZE   : 4                          # AWSIZE  <= 3'b010
+              LEN    : 1                          # AWLEN   <= 8'h00
               ID     : 7                          # AWID    <= 7
               VALID  : 1                          # AWVALID <= 1
             - WAIT   : {VALID : 1, READY : 1}     # wait until AWVALID = 1 and AWREADY = 1
             - VALID  : 0                          # AWVALID <= 0
             - WAIT   : {BVALID: 1, BREADY: 1}     # wait until BVALID = 1 and BREADY = 1
           - W:                                    # Write Data Channel Action.
-            - DATA   : 0                          # WDATA  <= 0x00000000
-              STRB   : 0                          # WSTRB  <= 0000
-              LAST   : 0                          # WLAST  <= 0
+            - DATA   : 0                          # WDATA  <= 32'h00000000
+              STRB   : 0                          # WSTRB  <= 4'b0000
+              LAST   : 0                          # WLAST  <= 'b0
               ID     : 0                          # WID    <= 0
-              VALID  : 0                          # WVALID <= 0;
+              VALID  : 0                          # WVALID <= 'b0;
             - WAIT   : {AWVALID: 1, AWREADY: 1}   # wait until AWVALID = 1 and AWREADY = 1
-            - DATA   : "32'h76543210"             # WDATA  <= 0x76543210
-              STRB   : "4'b1111"                  # WSTRB  <= 1111
+            - DATA   : "32'h76543210"             # WDATA  <= 32'h76543210
+              STRB   : "4'b1111"                  # WSTRB  <= 4'b1111
               LAST   : 1                          # WLAST  <= 1
               ID     : 7                          # WID    <= 7
               VALID  : 1                          # WVALID <= 1
@@ -54,9 +50,9 @@ For example, when the master performs a write transaction will write the scenari
             - WAIT   : {AWVALID: 1, AWREADY: 1}   # wait until AWVALID = 1 and AWREADY = 1
             - READY  : 1                          # BREADY <= 1
             - WAIT   : {VALID: 1, READY: 1}       # wait until BVALID = 1 and BREADY = 1
-            - CHECK  :                            # check BRESP and BID
-                RESP   : "2'b01"                  # 
-                ID     : 7                        #
+            - CHECK  :                            # check 
+                RESP   : EXOKAY                   #    BRESP = 'b01
+                ID     : 7                        #    BID   = 7
             - READY  : 0                          # BREADY <= 0
         - - SLAVE                                 # Name of Dummy Plug.
           - AW:                                   # Write Address Channel Action.
@@ -64,32 +60,32 @@ For example, when the master performs a write transaction will write the scenari
             - WAIT   : {VALID: 1, TIMEOUT: 10}    # wait until AWVALID = 1
             - READY  : 1                          # AWREADY <= 1
             - WAIT   : {VALID: 1, READY: 1}       # wait until AWVALID = 1 and AWREADY = 1
-            - CHECK  :                            # check AWADDR, AWLEN, AWSIZE, AWID
-                ADDR   : "32'h00000010"           # 
-                SIZE   : "'b010"                  #
-                LEN    : 0                        #
-                ID     : 7                        #
-            - READY  : 0                          # AWREADY <= 0
+            - CHECK  :                            # check 
+                ADDR   : "32'h00000010"           #   AWADDR = 0x00000010
+                SIZE   : 4                        #   AWSIZE = 3'b010
+                LEN    : 1                        #   AWLEN  = 8'h00
+                ID     : 7                        #   AWID   = 7
+            - READY  : 0                          #   AWREADY <= 0
           - W:                                    # Write Data Channel Action.
             - READY  : 0                          # WREADY <= 0
             - WAIT   : {AWVALID: 1, AWREADY: 1}   # wait until AWVALID = 1 and AWREADY = 1
             - READY  : 1                          # WREADY <= 1
             - WAIT   : {VALID: 1, READY: 1}       # wait until WVALID = 1 and WREADY = 1
-            - CHECK  :                            # check WDATA, WSTRB, WLAST, WID
-                DATA   : "32'h76543210"           # 
-                STRB   : "4'b1111"                #
-                LAST   : 1                        #
-                ID     : 7                        #
-            - READY  : 0                          # WREADY <= '0'
+            - CHECK  :                            # check
+                DATA   : "32'h76543210"           #   WDATA  = 32'h76543210
+                STRB   : "4'b1111"                #   WSTRB  = 4'b1111
+                LAST   : 1                        #   WLAST  = 1
+                ID     : 7                        #   WID    = 7
+            - READY  : 0                          # WREADY <= 0
           - B:                                    # Write Responce Channel Action.
             - VALID  : 0                          # BVALID <= 0
             - WAIT   : {WVALID: 1, WREADY: 1}     # wait until WVALID = 1 and WREADY = 1
             - VALID  : 1                          # BVALID <= 1
-              RESP   : "2'b01"                    # BRESP  <= 01
+              RESP   : EXOKAY                     # BRESP  <= 'b01
               ID     : 7                          # BID    <= 7
             - WAIT   : {VALID: 1, READY: 1}       # wait until BVALID = 1 and BREADY = 1
             - VALID  : 0                          # BVALID <= 1
-              RESP   : "2'b00"                    # BRESP  <= 00
+              RESP   : OKAY                       # BRESP  <= 'b00
         ---                                       # 
         - - Master                                # Name of Dummy Plug.
           - SAY: >                                # SAY Operation. Print String to STDOUT

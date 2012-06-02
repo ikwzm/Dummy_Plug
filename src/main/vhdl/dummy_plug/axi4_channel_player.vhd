@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_channel_player.vhd
 --!     @brief   AXI4 A/R/W/B Channel Dummy Plug Player.
---!     @version 0.9.0
---!     @date    2012/6/1
+--!     @version 1.0.0
+--!     @date    2012/6/2
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -63,9 +63,9 @@ entity  AXI4_CHANNEL_PLAYER is
                           boolean   := FALSE;
         SLAVE           : --! @brief スレーブモードを指定する.
                           boolean   := FALSE;
-        READ            : --! @brief リードモードを指定する.
+        READ_ENABLE     : --! @brief リードトランザクションの可/不可を指定する.
                           boolean   := TRUE;
-        WRITE           : --! @brief ライトモードを指定する.
+        WRITE_ENABLE    : --! @brief ライトトランザクションの可/不可を指定する.
                           boolean   := TRUE;
         OUTPUT_DELAY    : --! @brief 出力信号遅延時間
                           time;
@@ -314,8 +314,8 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
     begin 
         MATCH_AXI4_CHANNEL(
             SIGNALS     => SIGNALS      , -- In  :
-            READ        => READ         , -- In  :
-            WRITE       => WRITE        , -- In  :
+            READ        => READ_ENABLE  , -- In  :
+            WRITE       => WRITE_ENABLE , -- In  :
             MATCH       => MATCH        , -- Out :
             ARADDR      => ARADDR_I     , -- In  :
             ARLEN       => ARLEN_I      , -- In  :
@@ -527,7 +527,7 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
         variable  ar_match  :       boolean;
         variable  r_match   :       boolean;
     begin
-        if (WRITE) then
+        if (WRITE_ENABLE) then
             MATCH_AXI4_AW_CHANNEL(CORE, SIGNALS.AW, aw_match);
             MATCH_AXI4_W_CHANNEL (CORE, SIGNALS.W , w_match );
             MATCH_AXI4_B_CHANNEL (CORE, SIGNALS.B , b_match );
@@ -536,7 +536,7 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
             w_match  := TRUE;
             b_match  := TRUE;
         end if;
-        if (READ) then
+        if (READ_ENABLE) then
             MATCH_AXI4_AR_CHANNEL(CORE, SIGNALS.AR, ar_match);
             MATCH_AXI4_R_CHANNEL (CORE, SIGNALS.R , r_match );
         else
@@ -786,8 +786,8 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
                         CORE       => CORE            ,  -- I/O:
                         STREAM     => STREAM          ,  -- I/O:
                         CHANNEL    => CHANNEL         ,  -- In :
-                        READ       => READ            ,  -- In :
-                        WRITE      => WRITE           ,  -- In :
+                        READ       => READ_ENABLE     ,  -- In :
+                        WRITE      => WRITE_ENABLE    ,  -- In :
                         WIDTH      => WIDTH           ,  -- In :
                         SIGNALS    => axi_signals     ,  -- I/O:
                         EVENT      => next_event         -- I/O:
@@ -875,8 +875,8 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
                         CORE       => CORE            ,  -- I/O:
                         STREAM     => STREAM          ,  -- I/O:
                         CHANNEL    => CHANNEL         ,  -- In :
-                        READ       => READ            ,  -- In :
-                        WRITE      => WRITE           ,  -- In :
+                        READ       => READ_ENABLE     ,  -- In :
+                        WRITE      => WRITE_ENABLE    ,  -- In :
                         WIDTH      => WIDTH           ,  -- In :
                         SIGNALS    => axi_signals     ,  -- I/O:
                         EVENT      => next_event         -- I/O:
@@ -1036,9 +1036,7 @@ begin
                                  KEY_AW     |
                                  KEY_R      |
                                  KEY_W      |
-                                 KEY_B      |
-                                 KEY_READ   |
-                                 KEY_WRITE  => EXECUTE_SKIP  (core, stream);
+                                 KEY_B      => EXECUTE_SKIP  (core, stream);
                             when KEY_REPORT => EXECUTE_REPORT(core, stream);
                             when KEY_DEBUG  => EXECUTE_DEBUG (core, stream);
                             when KEY_SAY    => EXECUTE_SAY   (core, stream);
@@ -1046,6 +1044,16 @@ begin
                             when KEY_CHECK  => EXECUTE_CHECK (core, stream);
                             when KEY_OUT    => EXECUTE_OUT   (core, stream, gpo_signals, GPO);
                             when KEY_SYNC   => EXECUTE_SYNC  (core, stream, operation);
+                            when KEY_READ   => if (READ_ENABLE ) then
+                                                   EXECUTE_SKIP(core, stream);
+                                               else
+                                                   EXECUTE_UNDEFINED_MAP_KEY(core, stream, keyword);
+                                               end if;
+                            when KEY_WRITE  => if (WRITE_ENABLE) then
+                                                   EXECUTE_SKIP(core, stream);
+                                               else
+                                                   EXECUTE_UNDEFINED_MAP_KEY(core, stream, keyword);
+                                               end if;
                             when others     => EXECUTE_UNDEFINED_MAP_KEY(core, stream, keyword);
                         end case;
                     when OP_FINISH => exit;
@@ -1082,7 +1090,7 @@ begin
             -----------------------------------------------------------------------
             procedure EXECUTE_OUTPUT(SIGNALS: in AXI4_CHANNEL_SIGNAL_TYPE) is
             begin 
-                if (MASTER and WRITE and CHANNEL = AXI4_CHANNEL_AW) then
+                if (MASTER and WRITE_ENABLE and CHANNEL = AXI4_CHANNEL_AW) then
                     AWADDR_O  <= SIGNALS.AW.ADDR(AWADDR_O'range)after OUTPUT_DELAY;
                     AWVALID_O <= SIGNALS.AW.VALID               after OUTPUT_DELAY;
                     AWLEN_O   <= SIGNALS.AW.LEN                 after OUTPUT_DELAY;
@@ -1096,7 +1104,7 @@ begin
                     AWUSER_O  <= SIGNALS.AW.id(AWUSER_O'range)  after OUTPUT_DELAY;
                     AWID_O    <= SIGNALS.AW.id(AWID_O'range)    after OUTPUT_DELAY;
                 end if;
-                if (MASTER and READ  and CHANNEL = AXI4_CHANNEL_AR) then
+                if (MASTER and READ_ENABLE  and CHANNEL = AXI4_CHANNEL_AR) then
                     ARADDR_O  <= SIGNALS.AR.ADDR(ARADDR_O'range)after OUTPUT_DELAY;
                     ARVALID_O <= SIGNALS.AR.VALID               after OUTPUT_DELAY;
                     ARLEN_O   <= SIGNALS.AR.LEN                 after OUTPUT_DELAY;
@@ -1110,10 +1118,10 @@ begin
                     ARUSER_O  <= SIGNALS.AR.id(ARUSER_O'range)  after OUTPUT_DELAY;
                     ARID_O    <= SIGNALS.AR.id(ARID_O'range)    after OUTPUT_DELAY;
                 end if;
-                if (SLAVE  and WRITE and CHANNEL = AXI4_CHANNEL_AW) then
+                if (SLAVE  and WRITE_ENABLE and CHANNEL = AXI4_CHANNEL_AW) then
                     AWREADY_O <= SIGNALS.AW.READY               after OUTPUT_DELAY;
                 end if;
-                if (SLAVE  and READ  and CHANNEL = AXI4_CHANNEL_AR) then
+                if (SLAVE  and READ_ENABLE  and CHANNEL = AXI4_CHANNEL_AR) then
                     ARREADY_O <= SIGNALS.AR.READY               after OUTPUT_DELAY;
                 end if;
             end procedure;
@@ -1201,6 +1209,7 @@ begin
                 REPORT_DEBUG(core, PROC_NAME, "BEGIN");
                 tran_info       := AXI4_TRANSACTION_SIGNAL_NULL;
                 tran_info.DUSER := (others => '-');
+                tran_info.VALID := '1';
                 READ_TRANSACTION_INFO(PROC_NAME, timeout);
                 LOCAL_SYNC(core, SYNC_TRANS_REQ, SYNC_TRANS_ACK);
                 TRAN_O <= tran_info;
@@ -1218,6 +1227,8 @@ begin
                 out_signals.AR.REGION               := tran_info.REGION;
                 out_signals.AR.VALID                := '1';
                 EXECUTE_OUTPUT(out_signals);
+                wait until (ACLK'event and ACLK = '0');
+                TRAN_O.VALID <= '0';
                 WAIT_UNTIL_XFER_AR(core, PROC_NAME, timeout);
                 out_signals.AR                      := AXI4_A_CHANNEL_SIGNAL_NULL;
                 EXECUTE_OUTPUT(out_signals);
@@ -1233,6 +1244,7 @@ begin
                 REPORT_DEBUG(core, PROC_NAME, "BEGIN");
                 tran_info       := AXI4_TRANSACTION_SIGNAL_NULL;
                 tran_info.BUSER := (others => '-');
+                tran_info.VALID := '1';
                 READ_TRANSACTION_INFO(PROC_NAME, timeout);
                 LOCAL_SYNC(core, SYNC_TRANS_REQ, SYNC_TRANS_ACK);
                 TRAN_O <= tran_info;
@@ -1250,6 +1262,8 @@ begin
                 out_signals.AW.REGION               := tran_info.REGION;
                 out_signals.AW.VALID                := '1';
                 EXECUTE_OUTPUT(out_signals);
+                wait until (ACLK'event and ACLK = '0');
+                TRAN_O.VALID <= '0';
                 WAIT_UNTIL_XFER_AW(core, PROC_NAME, timeout);
                 out_signals.AW                      := AXI4_A_CHANNEL_SIGNAL_NULL;
                 EXECUTE_OUTPUT(out_signals);
@@ -1264,13 +1278,16 @@ begin
                 variable  match      : boolean;
             begin
                 REPORT_DEBUG(core, PROC_NAME, "BEGIN");
-                tran_info := AXI4_TRANSACTION_SIGNAL_DONTCARE;
+                tran_info       := AXI4_TRANSACTION_SIGNAL_DONTCARE;
+                tran_info.VALID := '1';
                 READ_TRANSACTION_INFO(PROC_NAME, timeout);
                 LOCAL_SYNC(core, SYNC_TRANS_REQ, SYNC_TRANS_ACK);
-                TRAN_O    <= tran_info;
-                ARREADY_O <= '1';
+                TRAN_O       <= tran_info;
+                ARREADY_O    <= '1';
+                wait until (ACLK'event and ACLK = '0');
+                TRAN_O.VALID <= '0';
                 WAIT_UNTIL_XFER_AR(core, PROC_NAME, timeout);
-                ARREADY_O <= '0';
+                ARREADY_O    <= '0';
                 chk_a_signals.ADDR(ARADDR_I'range) := tran_info.ADDR (ARADDR_I'range);
                 chk_a_signals.USER(ARUSER_I'range) := tran_info.AUSER(ARUSER_I'range);
                 chk_a_signals.ID  (ARID_I  'range) := tran_info.ID   (ARID_I  'range);
@@ -1297,13 +1314,16 @@ begin
                 variable  match      : boolean;
             begin
                 REPORT_DEBUG(core, PROC_NAME, "BEGIN");
-                tran_info := AXI4_TRANSACTION_SIGNAL_DONTCARE;
+                tran_info       := AXI4_TRANSACTION_SIGNAL_DONTCARE;
+                tran_info.VALID := '1';
                 READ_TRANSACTION_INFO(PROC_NAME, timeout);
                 LOCAL_SYNC(core, SYNC_TRANS_REQ, SYNC_TRANS_ACK);
-                TRAN_O    <= tran_info;
-                AWREADY_O <= '1';
+                TRAN_O       <= tran_info;
+                AWREADY_O    <= '1';
+                wait until (ACLK'event and ACLK = '0');
+                TRAN_O.VALID <= '0';
                 WAIT_UNTIL_XFER_AW(core, PROC_NAME, timeout);
-                AWREADY_O <= '0';
+                AWREADY_O    <= '0';
                 chk_a_signals.ADDR(AWADDR_I'range) := tran_info.ADDR (AWADDR_I'range);
                 chk_a_signals.USER(AWUSER_I'range) := tran_info.AUSER(AWUSER_I'range);
                 chk_a_signals.ID  (AWID_I  'range) := tran_info.ID   (AWID_I  'range);
@@ -1347,8 +1367,8 @@ begin
                         CORE       => core            ,  -- In :
                         STREAM     => stream          ,  -- I/O:
                         CHANNEL    => CHANNEL         ,  -- In :
-                        READ       => READ            ,  -- In :
-                        WRITE      => WRITE           ,  -- In :
+                        READ       => READ_ENABLE     ,  -- In :
+                        WRITE      => WRITE_ENABLE    ,  -- In :
                         WIDTH      => WIDTH           ,  -- In :
                         SIGNALS    => out_signals     ,  -- I/O:
                         EVENT      => next_event         -- Out:
@@ -1449,13 +1469,13 @@ begin
                         elsif (keyword = KEY_SYNC   ) then
                             LOCAL_SYNC(core, SYNC_LOCAL_REQ, SYNC_LOCAL_ACK);
                             EXECUTE_SKIP(core, stream);
-                        elsif (CHANNEL = AXI4_CHANNEL_AR and MASTER and READ  and keyword = KEY_READ ) then
+                        elsif (CHANNEL = AXI4_CHANNEL_AR and MASTER and READ_ENABLE  and keyword = KEY_READ ) then
                             EXECUTE_TRANSACTION_MASTER_READ_ADDR;
-                        elsif (CHANNEL = AXI4_CHANNEL_AR and SLAVE  and READ  and keyword = KEY_READ ) then
+                        elsif (CHANNEL = AXI4_CHANNEL_AR and SLAVE  and READ_ENABLE  and keyword = KEY_READ ) then
                             EXECUTE_TRANSACTION_SLAVE_READ_ADDR;
-                        elsif (CHANNEL = AXI4_CHANNEL_AW and MASTER and WRITE and keyword = KEY_WRITE) then
+                        elsif (CHANNEL = AXI4_CHANNEL_AW and MASTER and WRITE_ENABLE and keyword = KEY_WRITE) then
                             EXECUTE_TRANSACTION_MASTER_WRITE_ADDR;
-                        elsif (CHANNEL = AXI4_CHANNEL_AW and SLAVE  and WRITE and keyword = KEY_WRITE) then
+                        elsif (CHANNEL = AXI4_CHANNEL_AW and SLAVE  and WRITE_ENABLE and keyword = KEY_WRITE) then
                             EXECUTE_TRANSACTION_SLAVE_WRITE_ADDR;
                         else
                             REPORT_DEBUG(core, string'("MAIN_LOOP:OP_MAP:SKIP BEGIN"));
@@ -1516,7 +1536,7 @@ begin
                           SIGNALS  : in AXI4_CHANNEL_SIGNAL_TYPE
             ) is
             begin 
-                if (MASTER and WRITE and CHANNEL = AXI4_CHANNEL_W) then
+                if (MASTER and WRITE_ENABLE and CHANNEL = AXI4_CHANNEL_W) then
                     WDATA_O   <= SIGNALS.W.DATA(WDATA_O'range)  after OUTPUT_DELAY;
                     WLAST_O   <= SIGNALS.W.LAST                 after OUTPUT_DELAY;
                     WSTRB_O   <= SIGNALS.W.STRB(WSTRB_O'range)  after OUTPUT_DELAY;
@@ -1524,22 +1544,22 @@ begin
                     WID_O     <= SIGNALS.W.ID(WID_O'range)      after OUTPUT_DELAY;
                     WVALID_O  <= SIGNALS.W.VALID                after OUTPUT_DELAY;
                 end if;
-                if (MASTER and WRITE and CHANNEL = AXI4_CHANNEL_B) then
+                if (MASTER and WRITE_ENABLE and CHANNEL = AXI4_CHANNEL_B) then
                     BREADY_O  <= SIGNALS.B.READY                after OUTPUT_DELAY;
                 end if;
-                if (MASTER and READ  and CHANNEL = AXI4_CHANNEL_R) then
+                if (MASTER and READ_ENABLE  and CHANNEL = AXI4_CHANNEL_R) then
                     RREADY_O  <= SIGNALS.R.READY                after OUTPUT_DELAY;
                 end if;
-                if (SLAVE  and WRITE and CHANNEL = AXI4_CHANNEL_W) then
+                if (SLAVE  and WRITE_ENABLE and CHANNEL = AXI4_CHANNEL_W) then
                     WREADY_O  <= SIGNALS.W.READY                after OUTPUT_DELAY;
                 end if;
-                if (SLAVE  and WRITE and CHANNEL = AXI4_CHANNEL_B) then
+                if (SLAVE  and WRITE_ENABLE and CHANNEL = AXI4_CHANNEL_B) then
                     BRESP_O   <= SIGNALS.B.RESP                 after OUTPUT_DELAY;
                     BUSER_O   <= SIGNALS.B.USER(BUSER_O'range)  after OUTPUT_DELAY;
                     BID_O     <= SIGNALS.B.ID(BID_O'range)      after OUTPUT_DELAY;
                     BVALID_O  <= SIGNALS.B.VALID                after OUTPUT_DELAY;
                 end if;
-                if (SLAVE  and READ  and CHANNEL = AXI4_CHANNEL_R) then
+                if (SLAVE  and READ_ENABLE  and CHANNEL = AXI4_CHANNEL_R) then
                     RDATA_O   <= SIGNALS.R.DATA(RDATA_O'range)  after OUTPUT_DELAY;
                     RRESP_O   <= SIGNALS.R.RESP                 after OUTPUT_DELAY;
                     RLAST_O   <= SIGNALS.R.LAST                 after OUTPUT_DELAY;
@@ -1561,6 +1581,7 @@ begin
             ) is
             begin
                 REPORT_DEBUG(core, PROC_NAME, "GET_TRANSACTION_INFO BEGIN");
+                wait until (TRAN_I.VALID'event and TRAN_I.VALID = '1');
                 tran_info := TRAN_I;
                 TRANSACTION_TO_ADDR_AND_BYTES(tran_info, aligned_addr, number_bytes);
                 case DATA_WIDTH is
@@ -1600,6 +1621,7 @@ begin
                           DEFAULT     : in  std_logic;
                           SIGNALS     : out AXI4_R_CHANNEL_SIGNAL_TYPE
             ) is
+                constant  word_bytes  :     integer := WIDTH.RDATA/8;
             begin 
                 SIGNALS.USER  := tran_info.DUSER;
                 SIGNALS.ID    := tran_info.ID;
@@ -1611,8 +1633,8 @@ begin
                 else
                     SIGNALS.RESP := (others => DEFAULT);
                     SIGNALS.LAST := '0';
-                end if;                
-                for lane in 0 to WIDTH.RDATA/8-1 loop
+                end if;
+                for lane in 0 to word_bytes-1 loop
                     if (lower_lane <= lane and lane <= upper_lane) then
                         for bit in 0 to 7 loop
                             if (data_pos < data_bits) then
@@ -1626,8 +1648,11 @@ begin
                         SIGNALS.DATA(lane*8+7 downto lane*8) := (lane*8+7 downto lane*8 => DEFAULT);
                     end if;
                 end loop;
-                lower_lane := (upper_lane + 1) mod number_bytes;
+                lower_lane := (upper_lane + 1)  mod word_bytes;
                 upper_lane := lower_lane + number_bytes - 1;
+                if (upper_lane >= word_bytes) then
+                    upper_lane := word_bytes - 1;
+                end if;
             end procedure;
             -----------------------------------------------------------------------
             --! @brief GET_TRANSACTION_INFO で取り込んだトランザクション情報から
@@ -1644,9 +1669,9 @@ begin
                           DEFAULT     : in  std_logic;
                           SIGNALS     : out AXI4_W_CHANNEL_SIGNAL_TYPE
             ) is
+                constant  word_bytes  :     integer := WIDTH.WDATA/8;
             begin
                 SIGNALS.USER  := tran_info.DUSER;
-                SIGNALS.ID    := tran_info.ID;
                 SIGNALS.VALID := '1';
                 SIGNALS.READY := '1';
                 if (LAST) then
@@ -1654,7 +1679,7 @@ begin
                 else
                     SIGNALS.LAST := '0';
                 end if;                
-                for lane in 0 to WIDTH.RDATA/8-1 loop
+                for lane in 0 to word_bytes-1 loop
                     SIGNALS.STRB(lane) := '0';
                     if (lower_lane <= lane and lane <= upper_lane) then
                         for bit in 0 to 7 loop
@@ -1670,8 +1695,11 @@ begin
                         SIGNALS.DATA(lane*8+7 downto lane*8) := (lane*8+7 downto lane*8 => DEFAULT);
                     end if;
                 end loop;
-                lower_lane := (upper_lane + 1) mod number_bytes;
+                lower_lane := (upper_lane + 1)  mod word_bytes;
                 upper_lane := lower_lane + number_bytes - 1;
+                if (upper_lane >= word_bytes) then
+                    upper_lane := word_bytes - 1;
+                end if;
             end procedure;
             -----------------------------------------------------------------------
             --! @brief GET_TRANSACTION_INFO で取り込んだトランザクション情報から
@@ -1701,7 +1729,6 @@ begin
                 EXECUTE_SKIP(core, stream);
                 LOCAL_SYNC(core, SYNC_TRANS_REQ, SYNC_TRANS_ACK);
                 GET_TRANSACTION_INFO(PROC_NAME, WIDTH.RDATA);
-                wait until (ACLK'event and ACLK = '1');
                 for i in 1 to burst_len loop
                     RREADY_O <= '1' after OUTPUT_DELAY;
                     GENERATE_R_SIGNAL(
@@ -1725,7 +1752,6 @@ begin
                 REPORT_DEBUG(core, PROC_NAME, "BEGIN");
                 EXECUTE_SKIP(core, stream);
                 LOCAL_SYNC(core, SYNC_TRANS_REQ, SYNC_TRANS_ACK);
-                wait until (ACLK'event and ACLK = '1');
                 GET_TRANSACTION_INFO(PROC_NAME, WIDTH.RDATA);
                 for i in 1 to burst_len loop
                     GENERATE_R_SIGNAL(
@@ -1750,7 +1776,6 @@ begin
                 REPORT_DEBUG(core, PROC_NAME, "BEGIN");
                 EXECUTE_SKIP(core, stream);
                 LOCAL_SYNC(core, SYNC_TRANS_REQ, SYNC_TRANS_ACK);
-                wait until (ACLK'event and ACLK = '1');
                 GET_TRANSACTION_INFO(PROC_NAME, WIDTH.WDATA);
                 for i in 1 to burst_len loop
                     GENERATE_W_SIGNAL(
@@ -1775,7 +1800,6 @@ begin
                 REPORT_DEBUG(core, PROC_NAME, "BEGIN");
                 EXECUTE_SKIP(core, stream);
                 LOCAL_SYNC(core, SYNC_TRANS_REQ, SYNC_TRANS_ACK);
-                wait until (ACLK'event and ACLK = '1');
                 GET_TRANSACTION_INFO(PROC_NAME, WIDTH.WDATA);
                 for i in 1 to burst_len loop
                     WREADY_O <= '1' after OUTPUT_DELAY;
@@ -1785,6 +1809,7 @@ begin
                         DEFAULT   => '-',
                         SIGNALS   => chk_w_signals
                     );
+                    chk_w_signals.ID := (others => '-');
                     WAIT_UNTIL_XFER_W(core, PROC_NAME, timeout, '0');
                     MATCH_AXI4_W_CHANNEL(core, chk_w_signals, match);
                 end loop;
@@ -1800,8 +1825,9 @@ begin
                 REPORT_DEBUG(core, PROC_NAME, "BEGIN");
                 EXECUTE_SKIP(core, stream);
                 LOCAL_SYNC(core, SYNC_TRANS_REQ, SYNC_TRANS_ACK);
-                WAIT_UNTIL_XFER_AW(core, PROC_NAME, timeout);
                 GET_TRANSACTION_INFO(PROC_NAME, WIDTH.WDATA);
+                timeout := 10000;
+                WAIT_UNTIL_XFER_AW(core, PROC_NAME, timeout);
                 GENERATE_B_SIGNAL(
                     PROC_NAME => PROC_NAME, 
                     SIGNALS   => chk_b_signals
@@ -1821,8 +1847,9 @@ begin
                 REPORT_DEBUG(core, PROC_NAME, "BEGIN");
                 EXECUTE_SKIP(core, stream);
                 LOCAL_SYNC(core, SYNC_TRANS_REQ, SYNC_TRANS_ACK);
-                WAIT_UNTIL_XFER_AW(core, PROC_NAME, timeout);
                 GET_TRANSACTION_INFO(PROC_NAME, WIDTH.WDATA);
+                timeout := 10000;
+                WAIT_UNTIL_XFER_AW(core, PROC_NAME, timeout);
                 GENERATE_B_SIGNAL(
                     PROC_NAME => PROC_NAME, 
                     SIGNALS   => out_signals.B
@@ -1860,8 +1887,8 @@ begin
                         CORE       => core            ,  -- In :
                         STREAM     => stream          ,  -- I/O:
                         CHANNEL    => CHANNEL         ,  -- In :
-                        READ       => READ            ,  -- In :
-                        WRITE      => WRITE           ,  -- In :
+                        READ       => READ_ENABLE     ,  -- In :
+                        WRITE      => WRITE_ENABLE    ,  -- In :
                         WIDTH      => WIDTH           ,  -- In :
                         SIGNALS    => out_signals     ,  -- I/O:
                         EVENT      => next_event         -- Out:
@@ -1962,17 +1989,17 @@ begin
                         elsif (keyword = KEY_SYNC   ) then
                             LOCAL_SYNC(core, SYNC_LOCAL_REQ, SYNC_LOCAL_ACK);
                             EXECUTE_SKIP(core, stream);
-                        elsif (CHANNEL = AXI4_CHANNEL_R and MASTER and READ  and keyword = KEY_READ ) then
+                        elsif (CHANNEL = AXI4_CHANNEL_R and MASTER and READ_ENABLE  and keyword = KEY_READ ) then
                             EXECUTE_TRANSACTION_MASTER_READ_DATA;
-                        elsif (CHANNEL = AXI4_CHANNEL_R and SLAVE  and READ  and keyword = KEY_READ ) then
+                        elsif (CHANNEL = AXI4_CHANNEL_R and SLAVE  and READ_ENABLE  and keyword = KEY_READ ) then
                             EXECUTE_TRANSACTION_SLAVE_READ_DATA;
-                        elsif (CHANNEL = AXI4_CHANNEL_W and MASTER and WRITE and keyword = KEY_WRITE) then
+                        elsif (CHANNEL = AXI4_CHANNEL_W and MASTER and WRITE_ENABLE and keyword = KEY_WRITE) then
                             EXECUTE_TRANSACTION_MASTER_WRITE_DATA;
-                        elsif (CHANNEL = AXI4_CHANNEL_W and SLAVE  and WRITE and keyword = KEY_WRITE) then
+                        elsif (CHANNEL = AXI4_CHANNEL_W and SLAVE  and WRITE_ENABLE and keyword = KEY_WRITE) then
                             EXECUTE_TRANSACTION_SLAVE_WRITE_DATA;
-                        elsif (CHANNEL = AXI4_CHANNEL_B and MASTER and WRITE and keyword = KEY_WRITE) then
+                        elsif (CHANNEL = AXI4_CHANNEL_B and MASTER and WRITE_ENABLE and keyword = KEY_WRITE) then
                             EXECUTE_TRANSACTION_MASTER_WRITE_RESP;
-                        elsif (CHANNEL = AXI4_CHANNEL_B and SLAVE  and WRITE and keyword = KEY_WRITE) then
+                        elsif (CHANNEL = AXI4_CHANNEL_B and SLAVE  and WRITE_ENABLE and keyword = KEY_WRITE) then
                             EXECUTE_TRANSACTION_SLAVE_WRITE_RESP;
                         else
                             REPORT_DEBUG(core, string'("MAIN_LOOP:OP_MAP:SKIP BEGIN"));

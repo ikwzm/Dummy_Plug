@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_master_player.vhd
 --!     @brief   AXI4 Master Dummy Plug Player.
---!     @version 0.9.0
---!     @date    2012/6/1
+--!     @version 1.0.0
+--!     @date    2012/6/2
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -53,9 +53,9 @@ entity  AXI4_MASTER_PLAYER is
                           STRING;
         NAME            : --! @brief 固有名詞.
                           STRING;
-        READ            : --! @brief リードモードを指定する.
+        READ_ENABLE     : --! @brief リードトランザクションの可/不可を指定する.
                           boolean   := TRUE;
-        WRITE           : --! @brief ライトモードを指定する.
+        WRITE_ENABLE    : --! @brief ライトトランザクションの可/不可を指定する.
                           boolean   := TRUE;
         OUTPUT_DELAY    : --! @brief 出力信号遅延時間
                           time    := 0 ns;
@@ -240,8 +240,8 @@ begin
             CHANNEL             => AXI4_CHANNEL_M   ,
             MASTER              => FALSE            ,
             SLAVE               => FALSE            ,
-            READ                => READ             ,
-            WRITE               => WRITE            ,
+            READ_ENABLE         => READ_ENABLE      ,
+            WRITE_ENABLE        => WRITE_ENABLE     ,
             OUTPUT_DELAY        => OUTPUT_DELAY     ,
             WIDTH               => WIDTH            ,
             SYNC_WIDTH          => SYNC_WIDTH       ,
@@ -397,8 +397,8 @@ begin
             CHANNEL             => AXI4_CHANNEL_AR  ,
             MASTER              => TRUE             ,
             SLAVE               => FALSE            ,
-            READ                => READ             ,
-            WRITE               => WRITE            ,
+            READ_ENABLE         => READ_ENABLE      ,
+            WRITE_ENABLE        => WRITE_ENABLE     ,
             OUTPUT_DELAY        => OUTPUT_DELAY     ,
             WIDTH               => WIDTH            ,
             SYNC_WIDTH          => SYNC_WIDTH       ,
@@ -554,8 +554,8 @@ begin
             CHANNEL             => AXI4_CHANNEL_R   ,
             MASTER              => TRUE             ,
             SLAVE               => FALSE            ,
-            READ                => READ             ,
-            WRITE               => WRITE            ,
+            READ_ENABLE         => READ_ENABLE      ,
+            WRITE_ENABLE        => WRITE_ENABLE     ,
             OUTPUT_DELAY        => OUTPUT_DELAY     ,
             WIDTH               => WIDTH            ,
             SYNC_WIDTH          => SYNC_WIDTH       ,
@@ -711,8 +711,8 @@ begin
             CHANNEL             => AXI4_CHANNEL_AW  ,
             MASTER              => TRUE             ,
             SLAVE               => FALSE            ,
-            READ                => READ             ,
-            WRITE               => WRITE            ,
+            READ_ENABLE         => READ_ENABLE      ,
+            WRITE_ENABLE        => WRITE_ENABLE     ,
             OUTPUT_DELAY        => OUTPUT_DELAY     ,
             WIDTH               => WIDTH            ,
             SYNC_WIDTH          => SYNC_WIDTH       ,
@@ -868,8 +868,8 @@ begin
             CHANNEL             => AXI4_CHANNEL_W   ,
             MASTER              => TRUE             ,
             SLAVE               => FALSE            ,
-            READ                => READ             ,
-            WRITE               => WRITE            ,
+            READ_ENABLE         => READ_ENABLE      ,
+            WRITE_ENABLE        => WRITE_ENABLE     ,
             OUTPUT_DELAY        => OUTPUT_DELAY     ,
             WIDTH               => WIDTH            ,
             SYNC_WIDTH          => SYNC_WIDTH       ,
@@ -1025,8 +1025,8 @@ begin
             CHANNEL             => AXI4_CHANNEL_B   ,
             MASTER              => TRUE             ,
             SLAVE               => FALSE            ,
-            READ                => READ             ,
-            WRITE               => WRITE            ,
+            READ_ENABLE         => READ_ENABLE      ,
+            WRITE_ENABLE        => WRITE_ENABLE     ,
             OUTPUT_DELAY        => OUTPUT_DELAY     ,
             WIDTH               => WIDTH            ,
             SYNC_WIDTH          => SYNC_WIDTH       ,
