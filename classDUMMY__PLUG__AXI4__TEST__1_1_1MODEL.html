@@ -182,7 +182,10 @@ Instantiations</h2></td></tr>
 <tr class="memitem:ad53aeb78abc83a52ab8982f5c82a3d5b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#ad53aeb78abc83a52ab8982f5c82a3d5b">S</a>&#160;</td><td class="memItemRight" valign="bottom">  <b>AXI4_SLAVE_PLAYER</b>  <em><a class="el" href="classAXI4__SLAVE__PLAYER.html">&lt;Entity AXI4_SLAVE_PLAYER&gt;</a></em></td></tr>
 <tr class="memitem:a69e98c81ebeef3bbe21eb9a1ee6bf1ac"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#a69e98c81ebeef3bbe21eb9a1ee6bf1ac">PRINT</a>&#160;</td><td class="memItemRight" valign="bottom">  <b>AXI4_SIGNAL_PRINTER</b>  <em><a class="el" href="classAXI4__SIGNAL__PRINTER.html">&lt;Entity AXI4_SIGNAL_PRINTER&gt;</a></em></td></tr>
 </table>
-<hr/><h2>Member Function Documentation</h2>
+<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
+<div class="textblock">
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00067">67</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+</div><hr/><h2>Member Function Documentation</h2>
 <a class="anchor" id="abb10532f24975e6cbac39a115779dba0"></a>
 <div class="memitem">
 <div class="memproto">
@@ -204,6 +207,15 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00474">474</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+<div class="fragment"><div class="line"></div>
+<div class="line">    process begin</div>
+<div class="line">        <a class="code" href="classAXI4__MASTER__PLAYER.html#adb6f4019064004fd2bb2925207776c34">ACLK</a> &lt;= <span class="charliteral">&#39;1&#39;</span>;</div>
+<div class="line">        wait <span class="keywordflow">for</span> <a class="code" href="classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#a676b8c20bcc1d9a7c055fe7f0a0ec885">PERIOD</a> / 2;</div>
+<div class="line">        <a class="code" href="classAXI4__MASTER__PLAYER.html#adb6f4019064004fd2bb2925207776c34">ACLK</a> &lt;= <span class="charliteral">&#39;0&#39;</span>;</div>
+<div class="line">        wait <span class="keywordflow">for</span> <a class="code" href="classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#a676b8c20bcc1d9a7c055fe7f0a0ec885">PERIOD</a> / 2;</div>
+    end process;</div>
+</div><!-- fragment -->
 </div>
 </div>
 <a class="anchor" id="a25509c702200dacbdc8c803d07160e9d"></a>
@@ -224,6 +236,39 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00484">484</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+<div class="fragment"><b>00484 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">process</span><span class="vhdlchar"> </span></b>
+<b>00485 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">variable</span><span class="vhdlchar"> </span><span class="vhdlchar">L</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="vhdlchar">LINE</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span></b>
+<b>00486 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">constant</span><span class="vhdlchar"> </span><span class="vhdlchar">T</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><span class="comment">STRING</span><span class="vhdlchar">(</span> <span class="vhdldigit">1</span> <span class="vhdlchar"> </span><span class="vhdlkeyword">to</span><span class="vhdlchar"> </span> <span class="vhdldigit">7</span> <span class="vhdlchar">)</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot;  ***  &quot;</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span></b>
+<b>00487 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">variable</span><span class="vhdlchar"> </span><span class="vhdlchar">rep</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><b><a class="el" href="classCORE.html#a0dcb918f98dddcf569edc91b94339c1b">REPORT_STATUS_TYPE</a></b> <span class="vhdlchar">;</span><span class="vhdlchar"> </span></b>
+<b>00488 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">variable</span><span class="vhdlchar"> </span><span class="vhdlchar">rv</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar"> </span><b><a class="el" href="classCORE.html#a1757253b2e32837272ee3031d14fd02b">REPORT_STATUS_VECTOR</a></b> <span class="vhdlchar">(</span> <span class="vhdldigit">1</span> <span class="vhdlchar"> </span><span class="vhdlkeyword">to</span><span class="vhdlchar"> </span> <span class="vhdldigit">2</span> <span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span></b>
+<b>00489 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">begin</span><span class="vhdlchar"> </span></b>
+<b>00490 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">wait</span><span class="vhdlchar"> </span><span class="vhdlkeyword">until</span><span class="vhdlchar"> </span><span class="vhdlchar">(</span><b><a class="el" href="classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#a243b2671e596e09a4d42815c5f6dc2be">N_FINISH</a></b> <span class="vhdlchar">'</span><span class="vhdlchar">event</span><span class="vhdlchar"> </span><span class="vhdlkeyword">and</span><span class="vhdlchar"> </span><b><a class="el" href="classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#a243b2671e596e09a4d42815c5f6dc2be">N_FINISH</a></b> <span class="vhdlchar"> </span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="vhdlchar">'</span> <span class="vhdldigit">1</span> <span class="vhdlchar">'</span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span></b>
+<b>00491 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">wait</span><span class="vhdlchar"> </span><span class="vhdlkeyword">for</span><span class="vhdlchar"> </span><b><a class="el" href="classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#a180907b215d0d7786458303e59a78398">DELAY</a></b> <span class="vhdlchar">;</span><span class="vhdlchar"> </span></b>
+<b>00492 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">WRITE</span><span class="vhdlchar">(</span><span class="vhdlchar">L</span><span class="vhdlchar">,</span><span class="vhdlchar">T</span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">WRITELINE</span><span class="vhdlchar">(</span><span class="vhdlchar">OUTPUT</span><span class="vhdlchar">,</span><span class="vhdlchar">L</span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span></b>
+<b>00493 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">WRITE</span><span class="vhdlchar">(</span><span class="vhdlchar">L</span><span class="vhdlchar">,</span><span class="vhdlchar">T</span><span class="vhdlchar"> </span><span class="vhdlchar">&amp;</span><span class="vhdlchar"> </span><span class="keyword">&quot;ERROR REPORT &quot;</span><span class="vhdlchar"> </span><span class="vhdlchar">&amp;</span><span class="vhdlchar"> </span><b><a class="el" href="classDUMMY__PLUG__AXI4__TEST__1.html#a645427b266db278c9e656a332614b881">NAME</a></b> <span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">WRITELINE</span><span class="vhdlchar">(</span><span class="vhdlchar">OUTPUT</span><span class="vhdlchar">,</span><span class="vhdlchar">L</span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span></b>
+<b>00494 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">WRITE</span><span class="vhdlchar">(</span><span class="vhdlchar">L</span><span class="vhdlchar">,</span><span class="vhdlchar">T</span><span class="vhdlchar"> </span><span class="vhdlchar">&amp;</span><span class="vhdlchar"> </span><span class="keyword">&quot;[ MASTER ]&quot;</span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">WRITELINE</span><span class="vhdlchar">(</span><span class="vhdlchar">OUTPUT</span><span class="vhdlchar">,</span><span class="vhdlchar">L</span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span></b>
+<b>00495 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">WRITE</span><span class="vhdlchar">(</span><span class="vhdlchar">L</span><span class="vhdlchar">,</span><span class="vhdlchar">T</span><span class="vhdlchar"> </span><span class="vhdlchar">&amp;</span><span class="vhdlchar"> </span><span class="keyword">&quot;  Error    : &quot;</span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar">WRITE</span><span class="vhdlchar">(</span><span class="vhdlchar">L</span><span class="vhdlchar">,</span><b><a class="el" href="classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#a4ea4d1534aa72280b84c413b78b2d412">M_REPORT</a></b> <span class="vhdlchar">.</span><span class="vhdlchar">error_count</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar">WRITELINE</span><span class="vhdlchar">(</span><span class="vhdlchar">OUTPUT</span><span class="vhdlchar">,</span><span class="vhdlchar">L</span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span></b>
+<b>00496 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">WRITE</span><span class="vhdlchar">(</span><span class="vhdlchar">L</span><span class="vhdlchar">,</span><span class="vhdlchar">T</span><span class="vhdlchar"> </span><span class="vhdlchar">&amp;</span><span class="vhdlchar"> </span><span class="keyword">&quot;  Mismatch : &quot;</span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar">WRITE</span><span class="vhdlchar">(</span><span class="vhdlchar">L</span><span class="vhdlchar">,</span><b><a class="el" href="classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#a4ea4d1534aa72280b84c413b78b2d412">M_REPORT</a></b> <span class="vhdlchar">.</span><span class="vhdlchar">mismatch_count</span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar">WRITELINE</span><span class="vhdlchar">(</span><span class="vhdlchar">OUTPUT</span><span class="vhdlchar">,</span><span class="vhdlchar">L</span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span></b>
+<b>00497 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">WRITE</span><span class="vhdlchar">(</span><span class="vhdlchar">L</span><span class="vhdlchar">,</span><span class="vhdlchar">T</span><span class="vhdlchar"> </span><span class="vhdlchar">&amp;</span><span class="vhdlchar"> </span><span class="keyword">&quot;  Warning  : &quot;</span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar">WRITE</span><span class="vhdlchar">(</span><span class="vhdlchar">L</span><span class="vhdlchar">,</span><b><a class="el" href="classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#a4ea4d1534aa72280b84c413b78b2d412">M_REPORT</a></b> <span class="vhdlchar">.</span><span class="vhdlchar">warning_count</span><span class="vhdlchar"> </span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar">WRITELINE</span><span class="vhdlchar">(</span><span class="vhdlchar">OUTPUT</span><span class="vhdlchar">,</span><span class="vhdlchar">L</span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span></b>
+<b>00498 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">WRITE</span><span class="vhdlchar">(</span><span class="vhdlchar">L</span><span class="vhdlchar">,</span><span class="vhdlchar">T</span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">WRITELINE</span><span class="vhdlchar">(</span><span class="vhdlchar">OUTPUT</span><span class="vhdlchar">,</span><span class="vhdlchar">L</span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span></b>
+<b>00499 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">WRITE</span><span class="vhdlchar">(</span><span class="vhdlchar">L</span><span class="vhdlchar">,</span><span class="vhdlchar">T</span><span class="vhdlchar"> </span><span class="vhdlchar">&amp;</span><span class="vhdlchar"> </span><span class="keyword">&quot;[ SLAVE ]&quot;</span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">WRITELINE</span><span class="vhdlchar">(</span><span class="vhdlchar">OUTPUT</span><span class="vhdlchar">,</span><span class="vhdlchar">L</span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span></b>
+<b>00500 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">WRITE</span><span class="vhdlchar">(</span><span class="vhdlchar">L</span><span class="vhdlchar">,</span><span class="vhdlchar">T</span><span class="vhdlchar"> </span><span class="vhdlchar">&amp;</span><span class="vhdlchar"> </span><span class="keyword">&quot;  Error    : &quot;</span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar">WRITE</span><span class="vhdlchar">(</span><span class="vhdlchar">L</span><span class="vhdlchar">,</span><b><a class="el" href="classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#a320339fda1028523ff2f03c0d08ee892">S_REPORT</a></b> <span class="vhdlchar">.</span><span class="vhdlchar">error_count</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar">WRITELINE</span><span class="vhdlchar">(</span><span class="vhdlchar">OUTPUT</span><span class="vhdlchar">,</span><span class="vhdlchar">L</span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span></b>
+<b>00501 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">WRITE</span><span class="vhdlchar">(</span><span class="vhdlchar">L</span><span class="vhdlchar">,</span><span class="vhdlchar">T</span><span class="vhdlchar"> </span><span class="vhdlchar">&amp;</span><span class="vhdlchar"> </span><span class="keyword">&quot;  Mismatch : &quot;</span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar">WRITE</span><span class="vhdlchar">(</span><span class="vhdlchar">L</span><span class="vhdlchar">,</span><b><a class="el" href="classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#a320339fda1028523ff2f03c0d08ee892">S_REPORT</a></b> <span class="vhdlchar">.</span><span class="vhdlchar">mismatch_count</span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar">WRITELINE</span><span class="vhdlchar">(</span><span class="vhdlchar">OUTPUT</span><span class="vhdlchar">,</span><span class="vhdlchar">L</span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span></b>
+<b>00502 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">WRITE</span><span class="vhdlchar">(</span><span class="vhdlchar">L</span><span class="vhdlchar">,</span><span class="vhdlchar">T</span><span class="vhdlchar"> </span><span class="vhdlchar">&amp;</span><span class="vhdlchar"> </span><span class="keyword">&quot;  Warning  : &quot;</span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar">WRITE</span><span class="vhdlchar">(</span><span class="vhdlchar">L</span><span class="vhdlchar">,</span><b><a class="el" href="classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#a320339fda1028523ff2f03c0d08ee892">S_REPORT</a></b> <span class="vhdlchar">.</span><span class="vhdlchar">warning_count</span><span class="vhdlchar"> </span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar">WRITELINE</span><span class="vhdlchar">(</span><span class="vhdlchar">OUTPUT</span><span class="vhdlchar">,</span><span class="vhdlchar">L</span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span></b>
+<b>00503 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">WRITE</span><span class="vhdlchar">(</span><span class="vhdlchar">L</span><span class="vhdlchar">,</span><span class="vhdlchar">T</span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">WRITELINE</span><span class="vhdlchar">(</span><span class="vhdlchar">OUTPUT</span><span class="vhdlchar">,</span><span class="vhdlchar">L</span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span></b>
+<b>00504 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">rv</span><span class="vhdlchar">(</span> <span class="vhdldigit">1</span> <span class="vhdlchar">)</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><b><a class="el" href="classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#a4ea4d1534aa72280b84c413b78b2d412">M_REPORT</a></b> <span class="vhdlchar">;</span><span class="vhdlchar"> </span></b>
+<b>00505 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">rv</span><span class="vhdlchar">(</span> <span class="vhdldigit">2</span> <span class="vhdlchar">)</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><b><a class="el" href="classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#a320339fda1028523ff2f03c0d08ee892">S_REPORT</a></b> <span class="vhdlchar">;</span><span class="vhdlchar"> </span></b>
+<b>00506 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">rep</span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><b><a class="el" href="classCORE.html#aa8e753253ee278b0d1e17fec4c6e5d63">MARGE_REPORT_STATUS</a></b> <span class="vhdlchar">(</span><span class="vhdlchar">rv</span><span class="vhdlchar">)</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span></b>
+<b>00507 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">assert</span><span class="vhdlchar"> </span><span class="vhdlchar">(</span><span class="vhdlchar">rep</span><span class="vhdlchar">.</span><span class="vhdlchar">error_count</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><b><a class="el" href="classDUMMY__PLUG__AXI4__TEST__1.html#afc9ceb07845bd0ce2f314f9174fcadeb">EXP_REPORT</a></b> <span class="vhdlchar">.</span><span class="vhdlchar">error_count</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">)</span><span class="vhdlchar"> </span><span class="vhdlkeyword">and</span><span class="vhdlchar"> </span></b>
+<b>00508 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">(</span><span class="vhdlchar">rep</span><span class="vhdlchar">.</span><span class="vhdlchar">mismatch_count</span><span class="vhdlchar"> </span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><b><a class="el" href="classDUMMY__PLUG__AXI4__TEST__1.html#afc9ceb07845bd0ce2f314f9174fcadeb">EXP_REPORT</a></b> <span class="vhdlchar">.</span><span class="vhdlchar">mismatch_count</span><span class="vhdlchar">)</span><span class="vhdlchar"> </span><span class="vhdlkeyword">and</span><span class="vhdlchar"> </span></b>
+<b>00509 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">(</span><span class="vhdlchar">rep</span><span class="vhdlchar">.</span><span class="vhdlchar">warning_count</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><b><a class="el" href="classDUMMY__PLUG__AXI4__TEST__1.html#afc9ceb07845bd0ce2f314f9174fcadeb">EXP_REPORT</a></b> <span class="vhdlchar">.</span><span class="vhdlchar">warning_count</span><span class="vhdlchar"> </span><span class="vhdlchar">)</span><span class="vhdlchar"> </span><span class="vhdlkeyword">and</span><span class="vhdlchar"> </span></b>
+<b>00510 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">(</span><span class="vhdlchar">rep</span><span class="vhdlchar">.</span><span class="vhdlchar">failure_count</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><b><a class="el" href="classDUMMY__PLUG__AXI4__TEST__1.html#afc9ceb07845bd0ce2f314f9174fcadeb">EXP_REPORT</a></b> <span class="vhdlchar">.</span><span class="vhdlchar">failure_count</span><span class="vhdlchar"> </span><span class="vhdlchar">)</span><span class="vhdlchar"> </span></b>
+<b>00511 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">report</span><span class="vhdlchar"> </span><span class="keyword">&quot;REPORT Mismatch !!&quot;</span><span class="vhdlchar"> </span><span class="vhdlkeyword">severity</span><span class="vhdlchar"> </span><span class="vhdlchar">FAILURE</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span></b>
+<b>00512 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">assert</span><span class="vhdlchar"> </span><span class="vhdlchar">FALSE</span><span class="vhdlchar"> </span><span class="vhdlkeyword">report</span><span class="vhdlchar"> </span><span class="keyword">&quot;Simulation complete.&quot;</span><span class="vhdlchar"> </span><span class="vhdlkeyword">severity</span><span class="vhdlchar"> </span><span class="vhdlchar">FAILURE</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span></b>
+<b>00513 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">wait</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span></b>
+<b>00514 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">end</span><span class="vhdlchar"> </span><span class="vhdlkeyword">process</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span></b>
+</div><!-- fragment -->
 </div>
 </div>
 <hr/><h2>Member Data Documentation</h2>
@@ -245,6 +290,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00090">90</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="acfec49be728a0aba94b07b35e9c45360"></a>
@@ -264,6 +311,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00096">96</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -285,6 +334,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00100">100</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="aeab9b8e3338ba80affff5af25eca346a"></a>
@@ -304,6 +355,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00102">102</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -325,6 +378,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00091">91</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a9d2aa82ec66d2b1d2fa41691d0cde098"></a>
@@ -344,6 +399,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00107">107</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -365,6 +422,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00098">98</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a2320e261f5cde12ada716294f0cbbaf0"></a>
@@ -384,6 +443,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00101">101</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -405,6 +466,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00103">103</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a9417e0e06f7c56c44a24f091c5b05265"></a>
@@ -424,6 +487,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00104">104</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -445,6 +510,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00109">109</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a9a84eb4e11442885779413693711a4eb"></a>
@@ -464,6 +531,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00105">105</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -485,6 +554,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00099">99</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="aaad0f9420ee211f70256359f03c4d5c5"></a>
@@ -504,6 +575,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00106">106</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -525,6 +598,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00108">108</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a3beeab855d79e602809b04b14be8b255"></a>
@@ -544,6 +619,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00097">97</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -565,6 +642,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00123">123</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="af38a1593228078f21559e59a7aa02590"></a>
@@ -584,6 +663,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00126">126</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -605,6 +686,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00128">128</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a0803dc1f7f262a5cea3524ddd657cba2"></a>
@@ -624,6 +707,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00133">133</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -645,6 +730,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00124">124</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a0df6b81bd751ae8367fa23889fd9b1b7"></a>
@@ -664,6 +751,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00127">127</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -685,6 +774,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00129">129</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a39c55fa6a5672a27b068b83c25d69016"></a>
@@ -704,6 +795,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00130">130</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -725,6 +818,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00135">135</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a4e5d2cab2e83e632efa087fb33e0b732"></a>
@@ -744,6 +839,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00131">131</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -765,6 +862,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00125">125</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a5daad85b4f1b764bf599351b33d21ce3"></a>
@@ -784,6 +883,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00132">132</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -805,6 +906,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00134">134</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a41178e8ff76a79511eefe423cf34ccb8"></a>
@@ -824,6 +927,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00151">151</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -845,6 +950,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00153">153</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="ab69cf984d6894e5e3fb6bd8e33ecdab4"></a>
@@ -864,6 +971,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00149">149</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -885,6 +994,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00150">150</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="ada9f41b0b09444e0fd6adae709bcc455"></a>
@@ -904,6 +1015,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00152">152</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -925,6 +1038,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00072">72</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a479fa14bf975e00b401e189b143bcd99"></a>
@@ -944,6 +1059,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00086">86</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -965,6 +1082,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00085">85</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="aad05f78187c942f9dd521605fa81f1ba"></a>
@@ -984,6 +1103,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00198">198</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -1005,6 +1126,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00172">172</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a7dbc9c8e5919787f333c1f5b1bea6b5a"></a>
@@ -1024,6 +1147,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00161">161</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -1045,6 +1170,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00162">162</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a4ea4d1534aa72280b84c413b78b2d412"></a>
@@ -1064,6 +1191,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00169">169</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -1085,6 +1214,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00179">179</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a243b2671e596e09a4d42815c5f6dc2be"></a>
@@ -1104,6 +1235,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00171">171</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -1125,6 +1258,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00168">168</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a676b8c20bcc1d9a7c055fe7f0a0ec885"></a>
@@ -1144,6 +1279,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00071">71</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -1165,6 +1302,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00396">396</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a57049a17b5e74f073f938795729f4025"></a>
@@ -1184,6 +1323,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00115">115</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -1205,6 +1346,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00092">92</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a18fceb8e941d315121f3fba80b61c43f"></a>
@@ -1224,6 +1367,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00118">118</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -1245,6 +1390,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00114">114</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a5e96626347b47317ecd6018959ccf9df"></a>
@@ -1264,6 +1411,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00119">119</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -1285,6 +1434,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00116">116</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="aed980535ca380dfb195b0822984dc46d"></a>
@@ -1304,6 +1455,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00117">117</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -1325,6 +1478,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00113">113</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="ad53aeb78abc83a52ab8982f5c82a3d5b"></a>
@@ -1344,6 +1499,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00297">297</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -1365,6 +1522,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00173">173</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a656959132d5474605eb8ed793483e382"></a>
@@ -1384,6 +1543,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00163">163</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -1405,6 +1566,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00164">164</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a320339fda1028523ff2f03c0d08ee892"></a>
@@ -1424,6 +1587,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00170">170</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -1445,6 +1610,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00157">157</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a226c9fb936cdd9c04687112a75d2bbce"></a>
@@ -1464,6 +1631,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00084">84</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -1485,6 +1654,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00140">140</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="ae1cb2fb37fc1655d69524e8f0c7e014c"></a>
@@ -1504,6 +1675,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00143">143</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -1525,6 +1698,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00073">73</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a6de57b4e365f82f73251ba2ddc9f1cdb"></a>
@@ -1544,6 +1719,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00139">139</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -1565,6 +1742,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00145">145</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="af4008e6097a2a4bd2e68e30971c77ba0"></a>
@@ -1584,6 +1763,8 @@ Instantiations</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00141">141</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
 
 </div>
 </div>
@@ -1605,6 +1786,8 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00142">142</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="aa72c7b89c339569299863d9ccd2895d8"></a>
@@ -1625,15 +1808,17 @@ Instantiations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00144">144</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>src/test/vhdl/dummy_plug/<a class="el" href="axi4__test__1_8vhd.html">axi4_test_1.vhd</a></li>
+<li>src/test/vhdl/dummy_plug/<a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Jun 2 2012 17:23:39 for Dummy Plug by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Jun 5 2012 21:09:36 for Dummy Plug by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.1
 </small></address>
