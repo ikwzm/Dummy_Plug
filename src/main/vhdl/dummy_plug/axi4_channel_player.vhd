@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_channel_player.vhd
 --!     @brief   AXI4 A/R/W/B Channel Dummy Plug Player.
---!     @version 1.0.0
---!     @date    2012/6/2
+--!     @version 1.0.1
+--!     @date    2012/6/5
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -305,7 +305,7 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
     --! @brief 全チャネルの期待値と信号の値を比較するサブプログラム.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --! @param    SIGNALS     信号の期待値.
-    --! @return               比較した結果。マッチすれば TRUE、しなければ FALSE.
+    --! @param    MATCH       比較した結果。マッチすれば TRUE、しなければ FALSE.
     -------------------------------------------------------------------------------
     procedure  MATCH_AXI4_CHANNEL(
                   SIGNALS   : in    AXI4_CHANNEL_SIGNAL_TYPE;
