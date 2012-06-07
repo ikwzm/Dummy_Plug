@@ -106,7 +106,7 @@ Functions</h2></td></tr>
  <tr class="memitem:ac219637c2a11b282fa4f2d3c9769e16c"><td class="memItemLeft" align="right" valign="top"><b><b><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#ac219637c2a11b282fa4f2d3c9769e16c">is_space</a><b> ( </b><b><span class="vhdlchar">CHAR: </span><span class="stringliteral">in </span><b><span class="comment">character</span><span class="vhdlchar"> </span></b></b><b> )</b></td></tr>
 <tr class="memdesc:ac219637c2a11b282fa4f2d3c9769e16c"><td class="mdescLeft">&#160;</td><td class="mdescRight">文字が空白かどうかを判定する関数  <a href="#ac219637c2a11b282fa4f2d3c9769e16c"></a><br/></td></tr>
 <tr class="memitem:a00b23375d5b3629f7bdae9042bba7e99"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#a00b23375d5b3629f7bdae9042bba7e99">NEW_READER</a><b> ( </b><b><span class="vhdlchar">NAME: </span><span class="stringliteral">in </span><b><span class="comment">string</span><span class="vhdlchar"> </span></b></b><b> , <span class="vhdlchar">STREAM_NAME: </span><span class="stringliteral">in </span><b><span class="comment">string</span><span class="vhdlchar"> </span></b></b><b> )</b></td></tr>
-<tr class="memdesc:a00b23375d5b3629f7bdae9042bba7e99"><td class="mdescLeft">&#160;</td><td class="mdescRight">リーダーの状態を保持する構造体の初期化用定数を生成する関数.  <a href="#a00b23375d5b3629f7bdae9042bba7e99"></a><br/></td></tr>
+<tr class="memdesc:a00b23375d5b3629f7bdae9042bba7e99"><td class="mdescLeft">&#160;</td><td class="mdescRight">テキストラインから指定したトークンを読み飛ばすサブプログラム.  <a href="#a00b23375d5b3629f7bdae9042bba7e99"></a><br/></td></tr>
 <tr class="memitem:a32ce669b9f5beb1ad9c9fc5b2ef55733"><td class="memItemLeft" align="right" valign="top"><b><b><span class="comment">string</span><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#a32ce669b9f5beb1ad9c9fc5b2ef55733">EVENT_TO_STRING</a><b> ( </b><b><span class="vhdlchar">EVENT: </span><span class="stringliteral">in </span><span class="vhdlchar">EVENT_TYPE</span></b><b> )</b></td></tr>
 <tr class="memdesc:a32ce669b9f5beb1ad9c9fc5b2ef55733"><td class="mdescLeft">&#160;</td><td class="mdescRight">イベントを文字列に変換する関数.  <a href="#a32ce669b9f5beb1ad9c9fc5b2ef55733"></a><br/></td></tr>
 <tr class="memitem:a5faa3a6a6a5e3cd246903e05a9f871c8"><td class="memItemLeft" align="right" valign="top"><b><b><span class="comment">string</span><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#a5faa3a6a6a5e3cd246903e05a9f871c8">struct_state_to_string</a><b> ( </b><br/>
@@ -315,7 +315,7 @@ Procedures</h2></td></tr>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">TAG_LEN: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">END_LINE: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:a3d15353c19517e36ad7d622ab05dd8fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">テキストラインの *指定されたポイントから* スキャンを開始し、 TAGを見つけてタグの文字列の位置と長さを返す. その文字数(クォート文字含む)を返す.  <a href="#a3d15353c19517e36ad7d622ab05dd8fd"></a><br/></td></tr>
+<tr class="memdesc:a3d15353c19517e36ad7d622ab05dd8fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">テキストラインの *現在のポイントから* スキャンを開始し、 指定されたインジケーターを探す.  <a href="#a3d15353c19517e36ad7d622ab05dd8fd"></a><br/></td></tr>
 <tr class="memitem:a94ca86724fd6f455e08f1365e3b54ae1"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#a94ca86724fd6f455e08f1365e3b54ae1">scan_tag_prop</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">FOUND: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
@@ -324,7 +324,7 @@ Procedures</h2></td></tr>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">TAG_LEN: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">END_LINE: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:a94ca86724fd6f455e08f1365e3b54ae1"><td class="mdescLeft">&#160;</td><td class="mdescRight">テキストラインの *現在のポイントから* スキャンを開始し、 TAGを見つけてタグの文字列の位置と長さを返す. その文字数(クォート文字含む)を返す.  <a href="#a94ca86724fd6f455e08f1365e3b54ae1"></a><br/></td></tr>
+<tr class="memdesc:a94ca86724fd6f455e08f1365e3b54ae1"><td class="mdescLeft">&#160;</td><td class="mdescRight">テキストラインの *指定されたポイントから* スキャンを開始し、 TAGを見つけてタグの文字列の位置と長さを返す. その文字数(クォート文字含む)を返す.  <a href="#a94ca86724fd6f455e08f1365e3b54ae1"></a><br/></td></tr>
 <tr class="memitem:ad98ebe96d94500905caf7aa9bfaa06ca"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#ad98ebe96d94500905caf7aa9bfaa06ca">scan_plain_one_line</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">START_POS: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
@@ -332,14 +332,14 @@ Procedures</h2></td></tr>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">FOUND_LEN: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">END_LINE: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:ad98ebe96d94500905caf7aa9bfaa06ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">テキストラインの *指定されたポイントの次のポイント* スキャンを開始し、 プレーンスカラー(plain scalar)を探す.  <a href="#ad98ebe96d94500905caf7aa9bfaa06ca"></a><br/></td></tr>
+<tr class="memdesc:ad98ebe96d94500905caf7aa9bfaa06ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">テキストラインの *現在のポイントから* スキャンを開始し、 TAGを見つけてタグの文字列の位置と長さを返す. その文字数(クォート文字含む)を返す.  <a href="#ad98ebe96d94500905caf7aa9bfaa06ca"></a><br/></td></tr>
 <tr class="memitem:a3d03a5bc1e2ee21e3e9691232312df72"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#a3d03a5bc1e2ee21e3e9691232312df72">scan_plain_one_line</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">FOUND: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">FOUND_LEN: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">END_LINE: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:a3d03a5bc1e2ee21e3e9691232312df72"><td class="mdescLeft">&#160;</td><td class="mdescRight">テキストラインの *現在のポイントの次のポイント* スキャンを開始し、 プレーンスカラー(plain scalar)を探す.  <a href="#a3d03a5bc1e2ee21e3e9691232312df72"></a><br/></td></tr>
+<tr class="memdesc:a3d03a5bc1e2ee21e3e9691232312df72"><td class="mdescLeft">&#160;</td><td class="mdescRight">テキストラインの *指定されたポイントの次のポイント* スキャンを開始し、 プレーンスカラー(plain scalar)を探す.  <a href="#a3d03a5bc1e2ee21e3e9691232312df72"></a><br/></td></tr>
 <tr class="memitem:ae36b55e85b9a948e500a3e6530d85de1"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#ae36b55e85b9a948e500a3e6530d85de1">scan_plain_scalar</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">START_POS: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
@@ -347,14 +347,14 @@ Procedures</h2></td></tr>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">FOUND_LEN: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">END_LINE: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:ae36b55e85b9a948e500a3e6530d85de1"><td class="mdescLeft">&#160;</td><td class="mdescRight">テキストラインの *指定されたポイントから* スキャンを開始し、  <a href="#ae36b55e85b9a948e500a3e6530d85de1"></a><br/></td></tr>
+<tr class="memdesc:ae36b55e85b9a948e500a3e6530d85de1"><td class="mdescLeft">&#160;</td><td class="mdescRight">テキストラインの *現在のポイントの次のポイント* スキャンを開始し、 プレーンスカラー(plain scalar)を探す.  <a href="#ae36b55e85b9a948e500a3e6530d85de1"></a><br/></td></tr>
 <tr class="memitem:a8d58b3d9db44e4f4a66db2f5a8854702"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#a8d58b3d9db44e4f4a66db2f5a8854702">scan_plain_scalar</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">FOUND: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">FOUND_LEN: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">END_LINE: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:a8d58b3d9db44e4f4a66db2f5a8854702"><td class="mdescLeft">&#160;</td><td class="mdescRight">テキストラインの *現在の地点から* スキャンを開始し、スカラーを探す.  <a href="#a8d58b3d9db44e4f4a66db2f5a8854702"></a><br/></td></tr>
+<tr class="memdesc:a8d58b3d9db44e4f4a66db2f5a8854702"><td class="mdescLeft">&#160;</td><td class="mdescRight">テキストラインの *指定されたポイントから* スキャンを開始し、  <a href="#a8d58b3d9db44e4f4a66db2f5a8854702"></a><br/></td></tr>
 <tr class="memitem:a8db9d25a0af7d6dfdc0359590f328cfe"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#a8db9d25a0af7d6dfdc0359590f328cfe">read_plain_scalar</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">STR: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">string</span><span class="vhdlchar"> </span></b></b><br/>
@@ -362,7 +362,7 @@ Procedures</h2></td></tr>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">READ_LEN: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">END_LINE: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:a8db9d25a0af7d6dfdc0359590f328cfe"><td class="mdescLeft">&#160;</td><td class="mdescRight">テキストラインからプレーンスカラー(plain scalar)を読んでバッファに 格納するサブプログラム  <a href="#a8db9d25a0af7d6dfdc0359590f328cfe"></a><br/></td></tr>
+<tr class="memdesc:a8db9d25a0af7d6dfdc0359590f328cfe"><td class="mdescLeft">&#160;</td><td class="mdescRight">テキストラインの *現在の地点から* スキャンを開始し、スカラーを探す.  <a href="#a8db9d25a0af7d6dfdc0359590f328cfe"></a><br/></td></tr>
 <tr class="memitem:a051a1613cba0edad90c43caba06e88b4"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#a051a1613cba0edad90c43caba06e88b4">read_quoted_string</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">STR: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">string</span><span class="vhdlchar"> </span></b></b><br/>
@@ -370,14 +370,14 @@ Procedures</h2></td></tr>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">READ_LEN: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">END_LINE: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:a051a1613cba0edad90c43caba06e88b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからクォートされた文字列を取り出すサブプログラム.  <a href="#a051a1613cba0edad90c43caba06e88b4"></a><br/></td></tr>
+<tr class="memdesc:a051a1613cba0edad90c43caba06e88b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">テキストラインからプレーンスカラー(plain scalar)を読んでバッファに 格納するサブプログラム  <a href="#a051a1613cba0edad90c43caba06e88b4"></a><br/></td></tr>
 <tr class="memitem:ae7b6669eedb496d1a69ebdd2622399d4"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#ae7b6669eedb496d1a69ebdd2622399d4">scan_token</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">TOKEN: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><b><a class="el" href="class__READER.html#a63a0f90bad87fe9dbaa148fbe0b4af1c">TOKEN_TYPE</a></b> <span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">TOKEN_POS: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">TOKEN_LEN: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:ae7b6669eedb496d1a69ebdd2622399d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">テキストラインの現在のポインタが示しているトークンを得るサブプログラム.  <a href="#ae7b6669eedb496d1a69ebdd2622399d4"></a><br/></td></tr>
+<tr class="memdesc:ae7b6669eedb496d1a69ebdd2622399d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからクォートされた文字列を取り出すサブプログラム.  <a href="#ae7b6669eedb496d1a69ebdd2622399d4"></a><br/></td></tr>
 <tr class="memitem:ad80a40214cd7d87dd6ab63900fac6bd4"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#ad80a40214cd7d87dd6ab63900fac6bd4">skip_token</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlkeyword">file </span><span class="vhdlchar">STREAM: </span><span class="stringliteral"></span> <b><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span></b></b><br/>
@@ -385,7 +385,7 @@ Procedures</h2></td></tr>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">POS: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">LEN: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:ad80a40214cd7d87dd6ab63900fac6bd4"><td class="mdescLeft">&#160;</td><td class="mdescRight">テキストラインから指定したトークンを読み飛ばすサブプログラム.  <a href="#ad80a40214cd7d87dd6ab63900fac6bd4"></a><br/></td></tr>
+<tr class="memdesc:ad80a40214cd7d87dd6ab63900fac6bd4"><td class="mdescLeft">&#160;</td><td class="mdescRight">テキストラインの現在のポインタが示しているトークンを得るサブプログラム.  <a href="#ad80a40214cd7d87dd6ab63900fac6bd4"></a><br/></td></tr>
 <tr class="memitem:a891a110e3389688dd52c3d6f10d5af9e"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#a891a110e3389688dd52c3d6f10d5af9e">scan_flow_collection</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">START_POS: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
@@ -394,15 +394,15 @@ Procedures</h2></td></tr>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">FOUND_LEN: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">END_LINE: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:a891a110e3389688dd52c3d6f10d5af9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">テキストラインの *指定されたポイントから* スキャンを開始し、 行内に完結したフローコレクション('['...']' or '{'...'}')があるかを探す.  <a href="#a891a110e3389688dd52c3d6f10d5af9e"></a><br/></td></tr>
+<tr class="memdesc:a891a110e3389688dd52c3d6f10d5af9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">リーダーの状態を保持する構造体の初期化用定数を生成する関数.  <a href="#a891a110e3389688dd52c3d6f10d5af9e"></a><br/></td></tr>
 <tr class="memitem:a4fb47cb899d2d7028e7450400f2a53aa"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#a4fb47cb899d2d7028e7450400f2a53aa">scan_block_map_implicit_key</a>( <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><b>,<span class="vhdlchar"> </span><span class="vhdlchar">FOUND: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b> )</td></tr>
-<tr class="memdesc:a4fb47cb899d2d7028e7450400f2a53aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">テキストラインの *現在のポイントから* スキャンを開始し、 行内に暗黙のマップキーがあるか調べる.  <a href="#a4fb47cb899d2d7028e7450400f2a53aa"></a><br/></td></tr>
+<tr class="memdesc:a4fb47cb899d2d7028e7450400f2a53aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">テキストラインの *指定されたポイントから* スキャンを開始し、 行内に完結したフローコレクション('['...']' or '{'...'}')があるかを探す.  <a href="#a4fb47cb899d2d7028e7450400f2a53aa"></a><br/></td></tr>
 <tr class="memitem:ae2cb5ca8ac4498331fe12f19a454e29d"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#ae2cb5ca8ac4498331fe12f19a454e29d">SEEK_EVENT</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlkeyword">file </span><span class="vhdlchar">STREAM: </span><span class="stringliteral"></span> <b><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">NEXT_EVENT: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="vhdlchar">EVENT_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:ae2cb5ca8ac4498331fe12f19a454e29d"><td class="mdescLeft">&#160;</td><td class="mdescRight">次に読み取ることのできるイベントをスキャンするサブプログラム.  <a href="#ae2cb5ca8ac4498331fe12f19a454e29d"></a><br/></td></tr>
+<tr class="memdesc:ae2cb5ca8ac4498331fe12f19a454e29d"><td class="mdescLeft">&#160;</td><td class="mdescRight">テキストラインの *現在のポイントから* スキャンを開始し、 行内に暗黙のマップキーがあるか調べる.  <a href="#ae2cb5ca8ac4498331fe12f19a454e29d"></a><br/></td></tr>
 <tr class="memitem:a0a381ef5ee817910e977bcd693ec2a64"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#a0a381ef5ee817910e977bcd693ec2a64">read_doc_begin</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlkeyword">file </span><span class="vhdlchar">STREAM: </span><span class="stringliteral"></span> <b><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span></b></b><br/>
@@ -411,7 +411,7 @@ Procedures</h2></td></tr>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">LEN: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">GOOD: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:a0a381ef5ee817910e977bcd693ec2a64"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_DOC_BEGINを取り出すサブプログラム.  <a href="#a0a381ef5ee817910e977bcd693ec2a64"></a><br/></td></tr>
+<tr class="memdesc:a0a381ef5ee817910e977bcd693ec2a64"><td class="mdescLeft">&#160;</td><td class="mdescRight">次に読み取ることのできるイベントをスキャンするサブプログラム.  <a href="#a0a381ef5ee817910e977bcd693ec2a64"></a><br/></td></tr>
 <tr class="memitem:aab897df10018d4cf93f085081048390b"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#aab897df10018d4cf93f085081048390b">read_doc_end</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlkeyword">file </span><span class="vhdlchar">STREAM: </span><span class="stringliteral"></span> <b><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span></b></b><br/>
@@ -420,7 +420,7 @@ Procedures</h2></td></tr>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">LEN: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">GOOD: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:aab897df10018d4cf93f085081048390b"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_DOC_ENDを取り出すサブプログラム.  <a href="#aab897df10018d4cf93f085081048390b"></a><br/></td></tr>
+<tr class="memdesc:aab897df10018d4cf93f085081048390b"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_DOC_BEGINを取り出すサブプログラム.  <a href="#aab897df10018d4cf93f085081048390b"></a><br/></td></tr>
 <tr class="memitem:a2535b7554dd3f67f101bc9ee3b6c900f"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#a2535b7554dd3f67f101bc9ee3b6c900f">read_seq_begin</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlkeyword">file </span><span class="vhdlchar">STREAM: </span><span class="stringliteral"></span> <b><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span></b></b><br/>
@@ -429,7 +429,7 @@ Procedures</h2></td></tr>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">LEN: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">GOOD: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:a2535b7554dd3f67f101bc9ee3b6c900f"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_SEQ_BEGINを取り出すサブプログラム.  <a href="#a2535b7554dd3f67f101bc9ee3b6c900f"></a><br/></td></tr>
+<tr class="memdesc:a2535b7554dd3f67f101bc9ee3b6c900f"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_DOC_ENDを取り出すサブプログラム.  <a href="#a2535b7554dd3f67f101bc9ee3b6c900f"></a><br/></td></tr>
 <tr class="memitem:a703af9980ede6cc117f431563c07a8ea"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#a703af9980ede6cc117f431563c07a8ea">read_seq_end</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlkeyword">file </span><span class="vhdlchar">STREAM: </span><span class="stringliteral"></span> <b><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span></b></b><br/>
@@ -438,7 +438,7 @@ Procedures</h2></td></tr>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">LEN: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">GOOD: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:a703af9980ede6cc117f431563c07a8ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">コンテキストからEVENT_SEQ_ENDを取り出すサブプログラム.  <a href="#a703af9980ede6cc117f431563c07a8ea"></a><br/></td></tr>
+<tr class="memdesc:a703af9980ede6cc117f431563c07a8ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_SEQ_BEGINを取り出すサブプログラム.  <a href="#a703af9980ede6cc117f431563c07a8ea"></a><br/></td></tr>
 <tr class="memitem:a3f7b8f7ebfad092e77493817effd8668"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#a3f7b8f7ebfad092e77493817effd8668">read_seq_next</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlkeyword">file </span><span class="vhdlchar">STREAM: </span><span class="stringliteral"></span> <b><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span></b></b><br/>
@@ -447,7 +447,7 @@ Procedures</h2></td></tr>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">LEN: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">GOOD: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:a3f7b8f7ebfad092e77493817effd8668"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_SEQ_NEXTを取り出すサブプログラム.  <a href="#a3f7b8f7ebfad092e77493817effd8668"></a><br/></td></tr>
+<tr class="memdesc:a3f7b8f7ebfad092e77493817effd8668"><td class="mdescLeft">&#160;</td><td class="mdescRight">コンテキストからEVENT_SEQ_ENDを取り出すサブプログラム.  <a href="#a3f7b8f7ebfad092e77493817effd8668"></a><br/></td></tr>
 <tr class="memitem:a672b1922be92816fbfbaa42aec545983"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#a672b1922be92816fbfbaa42aec545983">read_map_begin</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlkeyword">file </span><span class="vhdlchar">STREAM: </span><span class="stringliteral"></span> <b><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span></b></b><br/>
@@ -456,7 +456,7 @@ Procedures</h2></td></tr>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">LEN: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">GOOD: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:a672b1922be92816fbfbaa42aec545983"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_MAP_BEGINを取り出すサブプログラム.  <a href="#a672b1922be92816fbfbaa42aec545983"></a><br/></td></tr>
+<tr class="memdesc:a672b1922be92816fbfbaa42aec545983"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_SEQ_NEXTを取り出すサブプログラム.  <a href="#a672b1922be92816fbfbaa42aec545983"></a><br/></td></tr>
 <tr class="memitem:aa9052d2541ddec2eb3c34b6824cb125f"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#aa9052d2541ddec2eb3c34b6824cb125f">read_map_sep</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlkeyword">file </span><span class="vhdlchar">STREAM: </span><span class="stringliteral"></span> <b><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span></b></b><br/>
@@ -465,7 +465,7 @@ Procedures</h2></td></tr>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">LEN: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">GOOD: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:aa9052d2541ddec2eb3c34b6824cb125f"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_MAP_SEPを取り出すサブプログラム.  <a href="#aa9052d2541ddec2eb3c34b6824cb125f"></a><br/></td></tr>
+<tr class="memdesc:aa9052d2541ddec2eb3c34b6824cb125f"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_MAP_BEGINを取り出すサブプログラム.  <a href="#aa9052d2541ddec2eb3c34b6824cb125f"></a><br/></td></tr>
 <tr class="memitem:a146c50e2eec23bbe76c38b3686b72f83"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#a146c50e2eec23bbe76c38b3686b72f83">read_map_end</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlkeyword">file </span><span class="vhdlchar">STREAM: </span><span class="stringliteral"></span> <b><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span></b></b><br/>
@@ -474,7 +474,7 @@ Procedures</h2></td></tr>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">LEN: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">GOOD: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:a146c50e2eec23bbe76c38b3686b72f83"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_MAP_ENDを取り出すサブプログラム.  <a href="#a146c50e2eec23bbe76c38b3686b72f83"></a><br/></td></tr>
+<tr class="memdesc:a146c50e2eec23bbe76c38b3686b72f83"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_MAP_SEPを取り出すサブプログラム.  <a href="#a146c50e2eec23bbe76c38b3686b72f83"></a><br/></td></tr>
 <tr class="memitem:ace054b02246f2118b47738c07ffe05c6"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#ace054b02246f2118b47738c07ffe05c6">read_map_next</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlkeyword">file </span><span class="vhdlchar">STREAM: </span><span class="stringliteral"></span> <b><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span></b></b><br/>
@@ -483,7 +483,7 @@ Procedures</h2></td></tr>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">LEN: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">GOOD: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:ace054b02246f2118b47738c07ffe05c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_MAP_NEXTを取り出すサブプログラム.  <a href="#ace054b02246f2118b47738c07ffe05c6"></a><br/></td></tr>
+<tr class="memdesc:ace054b02246f2118b47738c07ffe05c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_MAP_ENDを取り出すサブプログラム.  <a href="#ace054b02246f2118b47738c07ffe05c6"></a><br/></td></tr>
 <tr class="memitem:aab8bcc290915cedce9db49be1eff5ca7"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#aab8bcc290915cedce9db49be1eff5ca7">read_tag_prop</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlkeyword">file </span><span class="vhdlchar">STREAM: </span><span class="stringliteral"></span> <b><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span></b></b><br/>
@@ -492,7 +492,7 @@ Procedures</h2></td></tr>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">READ_LEN: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">GOOD: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:aab8bcc290915cedce9db49be1eff5ca7"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_TAG_PROPを取り出す.  <a href="#aab8bcc290915cedce9db49be1eff5ca7"></a><br/></td></tr>
+<tr class="memdesc:aab8bcc290915cedce9db49be1eff5ca7"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_MAP_NEXTを取り出すサブプログラム.  <a href="#aab8bcc290915cedce9db49be1eff5ca7"></a><br/></td></tr>
 <tr class="memitem:aaeb39c5dcccfab0ffbe75b8fe4c17e6d"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#aaeb39c5dcccfab0ffbe75b8fe4c17e6d">read_anchor</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlkeyword">file </span><span class="vhdlchar">STREAM: </span><span class="stringliteral"></span> <b><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span></b></b><br/>
@@ -501,7 +501,7 @@ Procedures</h2></td></tr>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">READ_LEN: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">GOOD: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:aaeb39c5dcccfab0ffbe75b8fe4c17e6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_ANCHORを取り出す.  <a href="#aaeb39c5dcccfab0ffbe75b8fe4c17e6d"></a><br/></td></tr>
+<tr class="memdesc:aaeb39c5dcccfab0ffbe75b8fe4c17e6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_TAG_PROPを取り出す.  <a href="#aaeb39c5dcccfab0ffbe75b8fe4c17e6d"></a><br/></td></tr>
 <tr class="memitem:a313bcd2cf26f34b590d77efa7ce31839"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#a313bcd2cf26f34b590d77efa7ce31839">read_alias</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlkeyword">file </span><span class="vhdlchar">STREAM: </span><span class="stringliteral"></span> <b><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span></b></b><br/>
@@ -510,7 +510,7 @@ Procedures</h2></td></tr>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">READ_LEN: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">GOOD: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:a313bcd2cf26f34b590d77efa7ce31839"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_ALIASを取り出す.  <a href="#a313bcd2cf26f34b590d77efa7ce31839"></a><br/></td></tr>
+<tr class="memdesc:a313bcd2cf26f34b590d77efa7ce31839"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_ANCHORを取り出す.  <a href="#a313bcd2cf26f34b590d77efa7ce31839"></a><br/></td></tr>
 <tr class="memitem:a0494ab36d9c5dfad9943f9feb73957e7"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#a0494ab36d9c5dfad9943f9feb73957e7">read_literal_string</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlkeyword">file </span><span class="vhdlchar">STREAM: </span><span class="stringliteral"></span> <b><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span></b></b><br/>
@@ -520,7 +520,7 @@ Procedures</h2></td></tr>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">READ_LEN: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">GOOD: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:a0494ab36d9c5dfad9943f9feb73957e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからliteralの文字列を取り出す  <a href="#a0494ab36d9c5dfad9943f9feb73957e7"></a><br/></td></tr>
+<tr class="memdesc:a0494ab36d9c5dfad9943f9feb73957e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_ALIASを取り出す.  <a href="#a0494ab36d9c5dfad9943f9feb73957e7"></a><br/></td></tr>
 <tr class="memitem:ac022cc7db02f7df36b387b03ffb9a062"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#ac022cc7db02f7df36b387b03ffb9a062">read_scalar</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlkeyword">file </span><span class="vhdlchar">STREAM: </span><span class="stringliteral"></span> <b><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span></b></b><br/>
@@ -529,7 +529,7 @@ Procedures</h2></td></tr>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">READ_LEN: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">GOOD: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:ac022cc7db02f7df36b387b03ffb9a062"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_SCALARを文字列(STRING)として読み出すサブプログラム.  <a href="#ac022cc7db02f7df36b387b03ffb9a062"></a><br/></td></tr>
+<tr class="memdesc:ac022cc7db02f7df36b387b03ffb9a062"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからliteralの文字列を取り出す  <a href="#ac022cc7db02f7df36b387b03ffb9a062"></a><br/></td></tr>
 <tr class="memitem:abc4de8b8923012d9a16215f4325fa003"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#abc4de8b8923012d9a16215f4325fa003">READ_STRING</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlkeyword">file </span><span class="vhdlchar">STREAM: </span><span class="stringliteral"></span> <b><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span></b></b><br/>
@@ -538,21 +538,21 @@ Procedures</h2></td></tr>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">READ_LEN: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">GOOD: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:abc4de8b8923012d9a16215f4325fa003"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_SCALAR,EVENT_TAG_PROP,EVENT_ANCHOR,EVENT_ALIASを 文字列として取り出すサブプログラム.  <a href="#abc4de8b8923012d9a16215f4325fa003"></a><br/></td></tr>
+<tr class="memdesc:abc4de8b8923012d9a16215f4325fa003"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_SCALARを文字列(STRING)として読み出すサブプログラム.  <a href="#abc4de8b8923012d9a16215f4325fa003"></a><br/></td></tr>
 <tr class="memitem:a967a9493613d7407f21c571b8a771ef2"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#a967a9493613d7407f21c571b8a771ef2">READ_INTEGER</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlkeyword">file </span><span class="vhdlchar">STREAM: </span><span class="stringliteral"></span> <b><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">VALUE: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">GOOD: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:a967a9493613d7407f21c571b8a771ef2"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_SCALARを整数(INTEGER)として取り出すサブプログラム.  <a href="#a967a9493613d7407f21c571b8a771ef2"></a><br/></td></tr>
+<tr class="memdesc:a967a9493613d7407f21c571b8a771ef2"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_SCALAR,EVENT_TAG_PROP,EVENT_ANCHOR,EVENT_ALIASを 文字列として取り出すサブプログラム.  <a href="#a967a9493613d7407f21c571b8a771ef2"></a><br/></td></tr>
 <tr class="memitem:a1dd8c60452005269fe711b3c73bddc4f"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#a1dd8c60452005269fe711b3c73bddc4f">READ_BOOLEAN</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlkeyword">file </span><span class="vhdlchar">STREAM: </span><span class="stringliteral"></span> <b><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">VALUE: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">GOOD: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:a1dd8c60452005269fe711b3c73bddc4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_SCALARを真偽値数(BOOLEAN)として取り出すサブプログラム.  <a href="#a1dd8c60452005269fe711b3c73bddc4f"></a><br/></td></tr>
+<tr class="memdesc:a1dd8c60452005269fe711b3c73bddc4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_SCALARを整数(INTEGER)として取り出すサブプログラム.  <a href="#a1dd8c60452005269fe711b3c73bddc4f"></a><br/></td></tr>
 <tr class="memitem:aad291535f339068b49c1b49a896800ef"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#aad291535f339068b49c1b49a896800ef">READ_EVENT</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlkeyword">file </span><span class="vhdlchar">STREAM: </span><span class="stringliteral"></span> <b><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span></b></b><br/>
@@ -562,14 +562,14 @@ Procedures</h2></td></tr>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">READ_LEN: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">GOOD: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:aad291535f339068b49c1b49a896800ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームから指定されたイベントを読み出すサブプログラム.  <a href="#aad291535f339068b49c1b49a896800ef"></a><br/></td></tr>
+<tr class="memdesc:aad291535f339068b49c1b49a896800ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENT_SCALARを真偽値数(BOOLEAN)として取り出すサブプログラム.  <a href="#aad291535f339068b49c1b49a896800ef"></a><br/></td></tr>
 <tr class="memitem:ab798ce589d8cb1a545a90cb518e1d531"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#ab798ce589d8cb1a545a90cb518e1d531">READ_EVENT</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlkeyword">file </span><span class="vhdlchar">STREAM: </span><span class="stringliteral"></span> <b><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">EVENT: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">in</span><span class="vhdlchar"> </span><span class="vhdlchar">EVENT_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">GOOD: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:ab798ce589d8cb1a545a90cb518e1d531"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームから指定されたイベントを読み出すサブプログラム. ただしスカラー、文字列などは読み捨てる.  <a href="#ab798ce589d8cb1a545a90cb518e1d531"></a><br/></td></tr>
+<tr class="memdesc:ab798ce589d8cb1a545a90cb518e1d531"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームから指定されたイベントを読み出すサブプログラム.  <a href="#ab798ce589d8cb1a545a90cb518e1d531"></a><br/></td></tr>
 <tr class="memitem:a9326bf5d69ecdc19bc64ba9018936d9b"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#a9326bf5d69ecdc19bc64ba9018936d9b">SKIP_EVENT</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlkeyword">file </span><span class="vhdlchar">STREAM: </span><span class="stringliteral"></span> <b><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span></b></b><br/>
@@ -578,7 +578,7 @@ Procedures</h2></td></tr>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">STR_LEN: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">integer</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlchar"> </span><span class="vhdlchar">GOOD: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">out</span><span class="vhdlchar"> </span><span class="comment">boolean</span><span class="vhdlchar"> </span></b></b><br/>
    )</td></tr>
-<tr class="memdesc:a9326bf5d69ecdc19bc64ba9018936d9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENTを読み飛ばすサブプログラム. EVENTがMAP_BEGINやSEQ_BEGINの場合は、対応するMAP_ENDまたはSEQ_ENDまで 読み飛ばすことに注意.  <a href="#a9326bf5d69ecdc19bc64ba9018936d9b"></a><br/></td></tr>
+<tr class="memdesc:a9326bf5d69ecdc19bc64ba9018936d9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームから指定されたイベントを読み出すサブプログラム. ただしスカラー、文字列などは読み捨てる.  <a href="#a9326bf5d69ecdc19bc64ba9018936d9b"></a><br/></td></tr>
 <tr class="memitem:a81a5b36278f26e7df8ae3acf6ca9f9aa"><td class="memItemLeft" align="right" valign="top"><b><b><span class="vhdlchar"> </span></b></b>&#160;</td><td class="memItemRight" valign="bottom"> <a class="el" href="class__READER.html#a81a5b36278f26e7df8ae3acf6ca9f9aa">SKIP_EVENT</a>( <br/>
 <b><span class="vhdlkeyword">variable </span><span class="vhdlchar">SELF: </span><span class="stringliteral"></span> <b><span class="vhdlkeyword">inout</span><span class="vhdlchar"> </span><span class="vhdlchar">READER_TYPE</span><span class="vhdlchar"> </span></b></b><br/>
   <b><span class="vhdlkeyword">file </span><span class="vhdlchar">STREAM: </span><span class="stringliteral"></span> <b><span class="vhdlchar">TEXT</span><span class="vhdlchar"> </span></b></b><br/>
@@ -634,8 +634,9 @@ Constants</h2></td></tr>
 <tr class="memitem:a803feabe6f194114c27672dcf4c1e285"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__READER.html#a803feabe6f194114c27672dcf4c1e285">MAPKEY_FOUND</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="class__READER.html#ae0745161e03a62d2b33de6e224668bc1">MAPKEY_MODE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span> <span class="vhdldigit">1</span> <span class="vhdlchar"> </span></b></td></tr>
 <tr class="memitem:af1b5bfef736402243991fa397114e7bd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__READER.html#af1b5bfef736402243991fa397114e7bd">MAPKEY_READ</a> &#160;</td><td class="memItemRight" valign="bottom"><b><b><a class="el" href="class__READER.html#ae0745161e03a62d2b33de6e224668bc1">MAPKEY_MODE</a></b> <span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span> <span class="vhdldigit">2</span> <span class="vhdlchar"> </span></b></td></tr>
 <tr class="memitem:a7d2cf2cf54eccc1af0dc800ff679d397"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__READER.html#a7d2cf2cf54eccc1af0dc800ff679d397">STRING_EVENT_DIRECTIVE</a> &#160;</td><td class="memItemRight" valign="bottom"><b><span class="comment">string</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; EVENT_DIRECTIVE &quot;</span><span class="vhdlchar"> </span></b></td></tr>
-<tr class="memdesc:a7d2cf2cf54eccc1af0dc800ff679d397"><td class="mdescLeft">&#160;</td><td class="mdescRight">イベントに対応した文字列.  <a href="#a7d2cf2cf54eccc1af0dc800ff679d397"></a><br/></td></tr>
+<tr class="memdesc:a7d2cf2cf54eccc1af0dc800ff679d397"><td class="mdescLeft">&#160;</td><td class="mdescRight">ストリームからEVENTを読み飛ばすサブプログラム. EVENTがMAP_BEGINやSEQ_BEGINの場合は、対応するMAP_ENDまたはSEQ_ENDまで 読み飛ばすことに注意.  <a href="#a7d2cf2cf54eccc1af0dc800ff679d397"></a><br/></td></tr>
 <tr class="memitem:a2cb3896dd10602fcbba44c0135899b52"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__READER.html#a2cb3896dd10602fcbba44c0135899b52">STRING_EVENT_DOC_BEGIN</a> &#160;</td><td class="memItemRight" valign="bottom"><b><span class="comment">string</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; EVENT_DOC_BEGIN &quot;</span><span class="vhdlchar"> </span></b></td></tr>
+<tr class="memdesc:a2cb3896dd10602fcbba44c0135899b52"><td class="mdescLeft">&#160;</td><td class="mdescRight">イベントに対応した文字列.  <a href="#a2cb3896dd10602fcbba44c0135899b52"></a><br/></td></tr>
 <tr class="memitem:a499107f9788ff0560409a7102a1f3d8b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__READER.html#a499107f9788ff0560409a7102a1f3d8b">STRING_EVENT_DOC_END</a> &#160;</td><td class="memItemRight" valign="bottom"><b><span class="comment">string</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; EVENT_DOC_END &quot;</span><span class="vhdlchar"> </span></b></td></tr>
 <tr class="memitem:a786d55db05ece312f17157f39466fd46"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__READER.html#a786d55db05ece312f17157f39466fd46">STRING_EVENT_STREAM_END</a> &#160;</td><td class="memItemRight" valign="bottom"><b><span class="comment">string</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; EVENT_STREAM_END &quot;</span><span class="vhdlchar"> </span></b></td></tr>
 <tr class="memitem:ad9b89ec13590f1e35cf1a9d337a81401"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class__READER.html#ad9b89ec13590f1e35cf1a9d337a81401">STRING_EVENT_SEQ_BEGIN</a> &#160;</td><td class="memItemRight" valign="bottom"><b><span class="comment">string</span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar">:</span><span class="vhdlchar">=</span><span class="vhdlchar"> </span><span class="keyword">&quot; EVENT_SEQ_BEGIN &quot;</span><span class="vhdlchar"> </span></b></td></tr>
@@ -1401,16 +1402,18 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>リーダーの状態を保持する構造体の初期化用定数を生成する関数. </p>
+<p>テキストラインから指定したトークンを読み飛ばすサブプログラム. </p>
 <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
-    <tr><td class="paramname">NAME</td><td>リーダーの識別名. </td></tr>
-    <tr><td class="paramname">STREAM_NAME</td><td>シナリオファイルの名前を指定する. </td></tr>
+    <tr><td class="paramname">SELF</td><td>リーダー変数. </td></tr>
+    <tr><td class="paramname">STREAM</td><td>入力ストリーム. </td></tr>
+    <tr><td class="paramname">TOKEN</td><td>読み飛ばすトークン. </td></tr>
+    <tr><td class="paramname">POS</td><td>トークンのポイント. </td></tr>
+    <tr><td class="paramname">LEN</td><td>トークンの文字数. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns:</dt><dd>生成した定数. </dd></dl>
 
 <p>Definition at line <a class="el" href="reader_8vhd_source.html#l01803">1803</a> of file <a class="el" href="reader_8vhd_source.html">reader.vhd</a>.</p>
 
@@ -1530,7 +1533,7 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>ストリームからEVENT_ALIASを取り出す. </p>
+<p>ストリームからEVENT_ANCHORを取り出す. </p>
 <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
@@ -1603,7 +1606,7 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>ストリームからEVENT_ANCHORを取り出す. </p>
+<p>ストリームからEVENT_TAG_PROPを取り出す. </p>
 <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
@@ -1664,13 +1667,13 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>ストリームからEVENT_SCALARを真偽値数(BOOLEAN)として取り出すサブプログラム. </p>
+<p>ストリームからEVENT_SCALARを整数(INTEGER)として取り出すサブプログラム. </p>
 <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
     <tr><td class="paramname">SELF</td><td>リーダー変数. </td></tr>
     <tr><td class="paramname">STREAM</td><td>入力ストリーム. </td></tr>
-    <tr><td class="paramname">VALUE</td><td>読み取った真偽値. </td></tr>
+    <tr><td class="paramname">VALUE</td><td>読み取った整数値. </td></tr>
     <tr><td class="paramname">GOOD</td><td>読み取りに成功したことを示す. </td></tr>
   </table>
   </dd>
@@ -1735,16 +1738,13 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>ストリームからEVENT_DOC_BEGINを取り出すサブプログラム. </p>
+<p>次に読み取ることのできるイベントをスキャンするサブプログラム. </p>
 <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
     <tr><td class="paramname">SELF</td><td>リーダー変数. </td></tr>
     <tr><td class="paramname">STREAM</td><td>入力ストリーム. </td></tr>
-    <tr><td class="paramname">STATE</td><td>現在の構造の状態. </td></tr>
-    <tr><td class="paramname">INDENT</td><td>現在のインデントの状態. </td></tr>
-    <tr><td class="paramname">LEN</td><td>読み出した文字数. </td></tr>
-    <tr><td class="paramname">GOOD</td><td>読み取りに成功したことを示す. </td></tr>
+    <tr><td class="paramname">NEXT_EVENT</td><td>見つかったイベント. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1808,7 +1808,7 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>ストリームからEVENT_DOC_ENDを取り出すサブプログラム. </p>
+<p>ストリームからEVENT_DOC_BEGINを取り出すサブプログラム. </p>
 <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
@@ -1887,17 +1887,14 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>ストリームから指定されたイベントを読み出すサブプログラム. </p>
+<p>ストリームからEVENT_SCALARを真偽値数(BOOLEAN)として取り出すサブプログラム. </p>
 <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
     <tr><td class="paramname">SELF</td><td>リーダー変数. </td></tr>
     <tr><td class="paramname">STREAM</td><td>入力ストリーム. </td></tr>
-    <tr><td class="paramname">EVENT</td><td>読み取るイベント. </td></tr>
-    <tr><td class="paramname">STR</td><td>格納された文字列. </td></tr>
-    <tr><td class="paramname">STR_LEN</td><td>格納した文字列の文字数. </td></tr>
-    <tr><td class="paramname">READ_LEN</td><td>ストリームから読み取った文字数. </td></tr>
-    <tr><td class="paramname">GOOD</td><td>正常に読み取れかどうかを示す. </td></tr>
+    <tr><td class="paramname">VALUE</td><td>読み取った真偽値. </td></tr>
+    <tr><td class="paramname">GOOD</td><td>読み取りに成功したことを示す. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1949,13 +1946,16 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>ストリームから指定されたイベントを読み出すサブプログラム. ただしスカラー、文字列などは読み捨てる. </p>
+<p>ストリームから指定されたイベントを読み出すサブプログラム. </p>
 <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
     <tr><td class="paramname">SELF</td><td>リーダー変数. </td></tr>
     <tr><td class="paramname">STREAM</td><td>入力ストリーム. </td></tr>
     <tr><td class="paramname">EVENT</td><td>読み取るイベント. </td></tr>
+    <tr><td class="paramname">STR</td><td>格納された文字列. </td></tr>
+    <tr><td class="paramname">STR_LEN</td><td>格納した文字列の文字数. </td></tr>
+    <tr><td class="paramname">READ_LEN</td><td>ストリームから読み取った文字数. </td></tr>
     <tr><td class="paramname">GOOD</td><td>正常に読み取れかどうかを示す. </td></tr>
   </table>
   </dd>
@@ -2008,13 +2008,15 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>ストリームからEVENT_SCALARを整数(INTEGER)として取り出すサブプログラム. </p>
+<p>ストリームからEVENT_SCALAR,EVENT_TAG_PROP,EVENT_ANCHOR,EVENT_ALIASを 文字列として取り出すサブプログラム. </p>
 <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
     <tr><td class="paramname">SELF</td><td>リーダー変数. </td></tr>
     <tr><td class="paramname">STREAM</td><td>入力ストリーム. </td></tr>
-    <tr><td class="paramname">VALUE</td><td>読み取った整数値. </td></tr>
+    <tr><td class="paramname">STR</td><td>読み取ったタグを格納するバッファ. </td></tr>
+    <tr><td class="paramname">STR_LEN</td><td>バッファに格納した文字数. </td></tr>
+    <tr><td class="paramname">READ_LEN</td><td>読み取った文字数. </td></tr>
     <tr><td class="paramname">GOOD</td><td>読み取りに成功したことを示す. </td></tr>
   </table>
   </dd>
@@ -2085,13 +2087,12 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>ストリームからliteralの文字列を取り出す </p>
+<p>ストリームからEVENT_ALIASを取り出す. </p>
 <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
     <tr><td class="paramname">SELF</td><td>リーダー変数. </td></tr>
     <tr><td class="paramname">STREAM</td><td>入力ストリーム. </td></tr>
-    <tr><td class="paramname">TOKEN</td><td>リテラルのタイプ </td></tr>
     <tr><td class="paramname">STR</td><td>読み取ったタグを格納するバッファ. </td></tr>
     <tr><td class="paramname">STR_LEN</td><td>バッファに格納した文字数. </td></tr>
     <tr><td class="paramname">READ_LEN</td><td>読み取った文字数. </td></tr>
@@ -2159,7 +2160,7 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>ストリームからEVENT_MAP_BEGINを取り出すサブプログラム. </p>
+<p>ストリームからEVENT_SEQ_NEXTを取り出すサブプログラム. </p>
 <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
@@ -2232,7 +2233,7 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>ストリームからEVENT_MAP_ENDを取り出すサブプログラム. </p>
+<p>ストリームからEVENT_MAP_SEPを取り出すサブプログラム. </p>
 <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
@@ -2305,7 +2306,7 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>ストリームからEVENT_MAP_NEXTを取り出すサブプログラム. </p>
+<p>ストリームからEVENT_MAP_ENDを取り出すサブプログラム. </p>
 <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
@@ -2378,7 +2379,7 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>ストリームからEVENT_MAP_SEPを取り出すサブプログラム. </p>
+<p>ストリームからEVENT_MAP_BEGINを取り出すサブプログラム. </p>
 <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
@@ -2445,18 +2446,21 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>テキストラインからプレーンスカラー(plain scalar)を読んでバッファに 格納するサブプログラム </p>
+<p>テキストラインの *現在の地点から* スキャンを開始し、スカラーを探す. </p>
 <hr/>
+<ul>
+<li>テキストラインをスキャンするだけで、ポインタを更新したり、新たに ストリームからテキストラインを読み込む等のコンテキストの変更は行わない. <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
     <tr><td class="paramname">SELF</td><td>リーダー変数. </td></tr>
-    <tr><td class="paramname">STR</td><td>見つかったワードを格納するバッファ. </td></tr>
-    <tr><td class="paramname">STR_LEN</td><td>格納したワードの文字数. </td></tr>
-    <tr><td class="paramname">READ_LEN</td><td>見つかったワードの文字数. </td></tr>
+    <tr><td class="paramname">FOUND</td><td>見つかったことを示す. </td></tr>
+    <tr><td class="paramname">FOUND_LEN</td><td>見つかった空白の数. </td></tr>
     <tr><td class="paramname">END_LINE</td><td>ポインタが行末を越えたことを示す. </td></tr>
   </table>
   </dd>
 </dl>
+</li>
+</ul>
 
 <p>Definition at line <a class="el" href="reader_8vhd_source.html#l01536">1536</a> of file <a class="el" href="reader_8vhd_source.html">reader.vhd</a>.</p>
 
@@ -2511,7 +2515,7 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>ストリームからクォートされた文字列を取り出すサブプログラム. </p>
+<p>テキストラインからプレーンスカラー(plain scalar)を読んでバッファに 格納するサブプログラム </p>
 <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
@@ -2583,12 +2587,13 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>ストリームからEVENT_SCALARを文字列(STRING)として読み出すサブプログラム. </p>
+<p>ストリームからliteralの文字列を取り出す </p>
 <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
     <tr><td class="paramname">SELF</td><td>リーダー変数. </td></tr>
     <tr><td class="paramname">STREAM</td><td>入力ストリーム. </td></tr>
+    <tr><td class="paramname">TOKEN</td><td>リテラルのタイプ </td></tr>
     <tr><td class="paramname">STR</td><td>読み取ったタグを格納するバッファ. </td></tr>
     <tr><td class="paramname">STR_LEN</td><td>バッファに格納した文字数. </td></tr>
     <tr><td class="paramname">READ_LEN</td><td>読み取った文字数. </td></tr>
@@ -2656,7 +2661,7 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>ストリームからEVENT_SEQ_BEGINを取り出すサブプログラム. </p>
+<p>ストリームからEVENT_DOC_ENDを取り出すサブプログラム. </p>
 <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
@@ -2729,7 +2734,7 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>コンテキストからEVENT_SEQ_ENDを取り出すサブプログラム. </p>
+<p>ストリームからEVENT_SEQ_BEGINを取り出すサブプログラム. </p>
 <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
@@ -2802,7 +2807,7 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>ストリームからEVENT_SEQ_NEXTを取り出すサブプログラム. </p>
+<p>コンテキストからEVENT_SEQ_ENDを取り出すサブプログラム. </p>
 <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
@@ -2875,7 +2880,7 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>ストリームからEVENT_SCALAR,EVENT_TAG_PROP,EVENT_ANCHOR,EVENT_ALIASを 文字列として取り出すサブプログラム. </p>
+<p>ストリームからEVENT_SCALARを文字列(STRING)として読み出すサブプログラム. </p>
 <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
@@ -2948,15 +2953,15 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>ストリームからEVENT_TAG_PROPを取り出す. </p>
+<p>ストリームからEVENT_MAP_NEXTを取り出すサブプログラム. </p>
 <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
     <tr><td class="paramname">SELF</td><td>リーダー変数. </td></tr>
     <tr><td class="paramname">STREAM</td><td>入力ストリーム. </td></tr>
-    <tr><td class="paramname">STR</td><td>読み取ったタグを格納するバッファ. </td></tr>
-    <tr><td class="paramname">STR_LEN</td><td>バッファに格納した文字数. </td></tr>
-    <tr><td class="paramname">READ_LEN</td><td>読み取った文字数. </td></tr>
+    <tr><td class="paramname">STATE</td><td>現在の構造の状態. </td></tr>
+    <tr><td class="paramname">INDENT</td><td>現在のインデントの状態. </td></tr>
+    <tr><td class="paramname">LEN</td><td>読み出した文字数. </td></tr>
     <tr><td class="paramname">GOOD</td><td>読み取りに成功したことを示す. </td></tr>
   </table>
   </dd>
@@ -3153,14 +3158,19 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>テキストラインの *現在のポイントから* スキャンを開始し、 行内に暗黙のマップキーがあるか調べる. </p>
+<p>テキストラインの *指定されたポイントから* スキャンを開始し、 行内に完結したフローコレクション('['...']' or '{'...'}')があるかを探す. </p>
 <hr/>
 <ul>
+<li>このサブプログラムは、行内に暗黙のマップキーがあるかどうかを調べる ために使われる.</li>
 <li>テキストラインをスキャンするだけで、ポインタを更新したり、新たに ストリームからテキストラインを読み込む等のコンテキストの変更は行わない. <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
     <tr><td class="paramname">SELF</td><td>リーダー変数. </td></tr>
-    <tr><td class="paramname">FOUND</td><td>暗黙のマップキーが見つかったことを示す. </td></tr>
+    <tr><td class="paramname">START_POS</td><td>スキャンを開始するポイント. </td></tr>
+    <tr><td class="paramname">END_CHAR</td><td>閉じ括弧を指定する. </td></tr>
+    <tr><td class="paramname">FOUND</td><td>見つかったことを示す. </td></tr>
+    <tr><td class="paramname">FOUND_LEN</td><td>見つかった空白の数. </td></tr>
+    <tr><td class="paramname">END_LINE</td><td>ポインタが行末を越えたことを示す. </td></tr>
   </table>
   </dd>
 </dl>
@@ -3611,24 +3621,16 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>テキストラインの *指定されたポイントから* スキャンを開始し、 行内に完結したフローコレクション('['...']' or '{'...'}')があるかを探す. </p>
+<p>リーダーの状態を保持する構造体の初期化用定数を生成する関数. </p>
 <hr/>
-<ul>
-<li>このサブプログラムは、行内に暗黙のマップキーがあるかどうかを調べる ために使われる.</li>
-<li>テキストラインをスキャンするだけで、ポインタを更新したり、新たに ストリームからテキストラインを読み込む等のコンテキストの変更は行わない. <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
-    <tr><td class="paramname">SELF</td><td>リーダー変数. </td></tr>
-    <tr><td class="paramname">START_POS</td><td>スキャンを開始するポイント. </td></tr>
-    <tr><td class="paramname">END_CHAR</td><td>閉じ括弧を指定する. </td></tr>
-    <tr><td class="paramname">FOUND</td><td>見つかったことを示す. </td></tr>
-    <tr><td class="paramname">FOUND_LEN</td><td>見つかった空白の数. </td></tr>
-    <tr><td class="paramname">END_LINE</td><td>ポインタが行末を越えたことを示す. </td></tr>
+    <tr><td class="paramname">NAME</td><td>リーダーの識別名. </td></tr>
+    <tr><td class="paramname">STREAM_NAME</td><td>シナリオファイルの名前を指定する. </td></tr>
   </table>
   </dd>
 </dl>
-</li>
-</ul>
+<dl class="section return"><dt>Returns:</dt><dd>生成した定数. </dd></dl>
 
 <p>Definition at line <a class="el" href="reader_8vhd_source.html#l01833">1833</a> of file <a class="el" href="reader_8vhd_source.html">reader.vhd</a>.</p>
 
@@ -3832,17 +3834,17 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>テキストラインの *指定されたポイントの次のポイント* スキャンを開始し、 プレーンスカラー(plain scalar)を探す. </p>
+<p>テキストラインの *現在のポイントから* スキャンを開始し、 TAGを見つけてタグの文字列の位置と長さを返す. その文字数(クォート文字含む)を返す. </p>
 <hr/>
 <ul>
-<li>最初のポイントのキャラクタは既にスキャン済みでスカラーであることが 確認されている事が前提.</li>
 <li>テキストラインをスキャンするだけで、ポインタを更新したり、新たに ストリームからテキストラインを読み込む等のコンテキストの変更は行わない. <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
     <tr><td class="paramname">SELF</td><td>リーダー変数. </td></tr>
-    <tr><td class="paramname">START_POS</td><td>スキャンを開始するポイント. </td></tr>
     <tr><td class="paramname">FOUND</td><td>見つかったことを示す. </td></tr>
     <tr><td class="paramname">FOUND_LEN</td><td>見つかった空白の数. </td></tr>
+    <tr><td class="paramname">TAG_POS</td><td>タグ文字列の開始位置. </td></tr>
+    <tr><td class="paramname">TAG_LEN</td><td>タグ文字列の文字数. </td></tr>
     <tr><td class="paramname">END_LINE</td><td>ポインタが行末を越えたことを示す. </td></tr>
   </table>
   </dd>
@@ -3897,7 +3899,7 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>テキストラインの *現在のポイントの次のポイント* スキャンを開始し、 プレーンスカラー(plain scalar)を探す. </p>
+<p>テキストラインの *指定されたポイントの次のポイント* スキャンを開始し、 プレーンスカラー(plain scalar)を探す. </p>
 <hr/>
 <ul>
 <li>最初のポイントのキャラクタは既にスキャン済みでスカラーであることが 確認されている事が前提.</li>
@@ -3905,6 +3907,7 @@ Subtypes</h2></td></tr>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
     <tr><td class="paramname">SELF</td><td>リーダー変数. </td></tr>
+    <tr><td class="paramname">START_POS</td><td>スキャンを開始するポイント. </td></tr>
     <tr><td class="paramname">FOUND</td><td>見つかったことを示す. </td></tr>
     <tr><td class="paramname">FOUND_LEN</td><td>見つかった空白の数. </td></tr>
     <tr><td class="paramname">END_LINE</td><td>ポインタが行末を越えたことを示す. </td></tr>
@@ -3967,15 +3970,14 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>テキストラインの *指定されたポイントから* スキャンを開始し、 </p>
+<p>テキストラインの *現在のポイントの次のポイント* スキャンを開始し、 プレーンスカラー(plain scalar)を探す. </p>
 <hr/>
- プレーンスカラー(plain scalar)を探す.</p>
 <ul>
+<li>最初のポイントのキャラクタは既にスキャン済みでスカラーであることが 確認されている事が前提.</li>
 <li>テキストラインをスキャンするだけで、ポインタを更新したり、新たに ストリームからテキストラインを読み込む等のコンテキストの変更は行わない. <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
     <tr><td class="paramname">SELF</td><td>リーダー変数. </td></tr>
-    <tr><td class="paramname">START_POS</td><td>スキャンを開始するポイント. </td></tr>
     <tr><td class="paramname">FOUND</td><td>見つかったことを示す. </td></tr>
     <tr><td class="paramname">FOUND_LEN</td><td>見つかった空白の数. </td></tr>
     <tr><td class="paramname">END_LINE</td><td>ポインタが行末を越えたことを示す. </td></tr>
@@ -4032,13 +4034,15 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>テキストラインの *現在の地点から* スキャンを開始し、スカラーを探す. </p>
+<p>テキストラインの *指定されたポイントから* スキャンを開始し、 </p>
 <hr/>
+ プレーンスカラー(plain scalar)を探す.</p>
 <ul>
 <li>テキストラインをスキャンするだけで、ポインタを更新したり、新たに ストリームからテキストラインを読み込む等のコンテキストの変更は行わない. <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
     <tr><td class="paramname">SELF</td><td>リーダー変数. </td></tr>
+    <tr><td class="paramname">START_POS</td><td>スキャンを開始するポイント. </td></tr>
     <tr><td class="paramname">FOUND</td><td>見つかったことを示す. </td></tr>
     <tr><td class="paramname">FOUND_LEN</td><td>見つかった空白の数. </td></tr>
     <tr><td class="paramname">END_LINE</td><td>ポインタが行末を越えたことを示す. </td></tr>
@@ -4323,23 +4327,11 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>テキストラインの *指定されたポイントから* スキャンを開始し、 TAGを見つけてタグの文字列の位置と長さを返す. その文字数(クォート文字含む)を返す. </p>
+<p>テキストラインの *現在のポイントから* スキャンを開始し、 指定されたインジケーターを探す. </p>
 <hr/>
 <ul>
-<li>テキストラインをスキャンするだけで、ポインタを更新したり、新たに ストリームからテキストラインを読み込む等のコンテキストの変更は行わない. <hr/>
- <dl class="params"><dt>Parameters:</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">SELF</td><td>リーダー変数. </td></tr>
-    <tr><td class="paramname">START_POS</td><td>スキャンを開始するポイント. </td></tr>
-    <tr><td class="paramname">FOUND</td><td>見つかったことを示す. </td></tr>
-    <tr><td class="paramname">FOUND_LEN</td><td>見つかった空白の数. </td></tr>
-    <tr><td class="paramname">TAG_POS</td><td>タグ文字列の開始位置. </td></tr>
-    <tr><td class="paramname">TAG_LEN</td><td>タグ文字列の文字数. </td></tr>
-    <tr><td class="paramname">END_LINE</td><td>ポインタが行末を越えたことを示す. </td></tr>
-  </table>
-  </dd>
-</dl>
-</li>
+<li>インジケーターの後に空白または行末があることに注意.</li>
+<li>テキストラインをスキャンするだけで、ポインタを更新したり、新たに ストリームからテキストラインを読み込む等のコンテキストの変更は行わない. </li>
 </ul>
 
 <p>Definition at line <a class="el" href="reader_8vhd_source.html#l01232">1232</a> of file <a class="el" href="reader_8vhd_source.html">reader.vhd</a>.</p>
@@ -4401,13 +4393,14 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>テキストラインの *現在のポイントから* スキャンを開始し、 TAGを見つけてタグの文字列の位置と長さを返す. その文字数(クォート文字含む)を返す. </p>
+<p>テキストラインの *指定されたポイントから* スキャンを開始し、 TAGを見つけてタグの文字列の位置と長さを返す. その文字数(クォート文字含む)を返す. </p>
 <hr/>
 <ul>
 <li>テキストラインをスキャンするだけで、ポインタを更新したり、新たに ストリームからテキストラインを読み込む等のコンテキストの変更は行わない. <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
     <tr><td class="paramname">SELF</td><td>リーダー変数. </td></tr>
+    <tr><td class="paramname">START_POS</td><td>スキャンを開始するポイント. </td></tr>
     <tr><td class="paramname">FOUND</td><td>見つかったことを示す. </td></tr>
     <tr><td class="paramname">FOUND_LEN</td><td>見つかった空白の数. </td></tr>
     <tr><td class="paramname">TAG_POS</td><td>タグ文字列の開始位置. </td></tr>
@@ -4466,21 +4459,18 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>テキストラインの現在のポインタが示しているトークンを得るサブプログラム. </p>
+<p>ストリームからクォートされた文字列を取り出すサブプログラム. </p>
 <hr/>
-<ul>
-<li>テキストラインをスキャンするだけで、ポインタを更新したり、新たに ストリームからテキストラインを読み込む等のコンテキストの変更は行わない. <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
     <tr><td class="paramname">SELF</td><td>リーダー変数. </td></tr>
-    <tr><td class="paramname">TOKEN</td><td>見つかったトークンのタイプ. </td></tr>
-    <tr><td class="paramname">TOKEN_POS</td><td>見つかったトークンの位置. </td></tr>
-    <tr><td class="paramname">TOKEN_LEN</td><td>見つかったトークンの文字数. </td></tr>
+    <tr><td class="paramname">STR</td><td>見つかったワードを格納するバッファ. </td></tr>
+    <tr><td class="paramname">STR_LEN</td><td>格納したワードの文字数. </td></tr>
+    <tr><td class="paramname">READ_LEN</td><td>見つかったワードの文字数. </td></tr>
+    <tr><td class="paramname">END_LINE</td><td>ポインタが行末を越えたことを示す. </td></tr>
   </table>
   </dd>
 </dl>
-</li>
-</ul>
 
 <p>Definition at line <a class="el" href="reader_8vhd_source.html#l01624">1624</a> of file <a class="el" href="reader_8vhd_source.html">reader.vhd</a>.</p>
 
@@ -4523,16 +4513,19 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>次に読み取ることのできるイベントをスキャンするサブプログラム. </p>
+<p>テキストラインの *現在のポイントから* スキャンを開始し、 行内に暗黙のマップキーがあるか調べる. </p>
 <hr/>
+<ul>
+<li>テキストラインをスキャンするだけで、ポインタを更新したり、新たに ストリームからテキストラインを読み込む等のコンテキストの変更は行わない. <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
     <tr><td class="paramname">SELF</td><td>リーダー変数. </td></tr>
-    <tr><td class="paramname">STREAM</td><td>入力ストリーム. </td></tr>
-    <tr><td class="paramname">NEXT_EVENT</td><td>見つかったイベント. </td></tr>
+    <tr><td class="paramname">FOUND</td><td>暗黙のマップキーが見つかったことを示す. </td></tr>
   </table>
   </dd>
 </dl>
+</li>
+</ul>
 
 <p>Definition at line <a class="el" href="reader_8vhd_source.html#l01949">1949</a> of file <a class="el" href="reader_8vhd_source.html">reader.vhd</a>.</p>
 
@@ -4794,15 +4787,13 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>ストリームからEVENTを読み飛ばすサブプログラム. EVENTがMAP_BEGINやSEQ_BEGINの場合は、対応するMAP_ENDまたはSEQ_ENDまで 読み飛ばすことに注意. </p>
+<p>ストリームから指定されたイベントを読み出すサブプログラム. ただしスカラー、文字列などは読み捨てる. </p>
 <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
     <tr><td class="paramname">SELF</td><td>リーダー変数. </td></tr>
     <tr><td class="paramname">STREAM</td><td>入力ストリーム. </td></tr>
     <tr><td class="paramname">EVENT</td><td>読み取るイベント. </td></tr>
-    <tr><td class="paramname">STR_BUF</td><td>文字列読み飛ばし用のバッファ. </td></tr>
-    <tr><td class="paramname">STR_LEN</td><td>バッファに格納した文字数. </td></tr>
     <tr><td class="paramname">GOOD</td><td>正常に読み取れかどうかを示す. </td></tr>
   </table>
   </dd>
@@ -4862,6 +4853,8 @@ Subtypes</h2></td></tr>
     <tr><td class="paramname">SELF</td><td>リーダー変数. </td></tr>
     <tr><td class="paramname">STREAM</td><td>入力ストリーム. </td></tr>
     <tr><td class="paramname">EVENT</td><td>読み取るイベント. </td></tr>
+    <tr><td class="paramname">STR_BUF</td><td>文字列読み飛ばし用のバッファ. </td></tr>
+    <tr><td class="paramname">STR_LEN</td><td>バッファに格納した文字数. </td></tr>
     <tr><td class="paramname">GOOD</td><td>正常に読み取れかどうかを示す. </td></tr>
   </table>
   </dd>
@@ -5041,18 +5034,21 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>テキストラインから指定したトークンを読み飛ばすサブプログラム. </p>
+<p>テキストラインの現在のポインタが示しているトークンを得るサブプログラム. </p>
 <hr/>
+<ul>
+<li>テキストラインをスキャンするだけで、ポインタを更新したり、新たに ストリームからテキストラインを読み込む等のコンテキストの変更は行わない. <hr/>
  <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
     <tr><td class="paramname">SELF</td><td>リーダー変数. </td></tr>
-    <tr><td class="paramname">STREAM</td><td>入力ストリーム. </td></tr>
-    <tr><td class="paramname">TOKEN</td><td>読み飛ばすトークン. </td></tr>
-    <tr><td class="paramname">POS</td><td>トークンのポイント. </td></tr>
-    <tr><td class="paramname">LEN</td><td>トークンの文字数. </td></tr>
+    <tr><td class="paramname">TOKEN</td><td>見つかったトークンのタイプ. </td></tr>
+    <tr><td class="paramname">TOKEN_POS</td><td>見つかったトークンの位置. </td></tr>
+    <tr><td class="paramname">TOKEN_LEN</td><td>見つかったトークンの文字数. </td></tr>
   </table>
   </dd>
 </dl>
+</li>
+</ul>
 
 <p>Definition at line <a class="el" href="reader_8vhd_source.html#l01786">1786</a> of file <a class="el" href="reader_8vhd_source.html">reader.vhd</a>.</p>
 
@@ -5893,7 +5889,17 @@ Subtypes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>イベントに対応した文字列. </p>
+<p>ストリームからEVENTを読み飛ばすサブプログラム. EVENTがMAP_BEGINやSEQ_BEGINの場合は、対応するMAP_ENDまたはSEQ_ENDまで 読み飛ばすことに注意. </p>
+<hr/>
+ <dl class="params"><dt>Parameters:</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">SELF</td><td>リーダー変数. </td></tr>
+    <tr><td class="paramname">STREAM</td><td>入力ストリーム. </td></tr>
+    <tr><td class="paramname">EVENT</td><td>読み取るイベント. </td></tr>
+    <tr><td class="paramname">GOOD</td><td>正常に読み取れかどうかを示す. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>Definition at line <a class="el" href="reader_8vhd_source.html#l03302">3302</a> of file <a class="el" href="reader_8vhd_source.html">reader.vhd</a>.</p>
 
@@ -5916,6 +5922,8 @@ Subtypes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>イベントに対応した文字列. </p>
 
 <p>Definition at line <a class="el" href="reader_8vhd_source.html#l03303">3303</a> of file <a class="el" href="reader_8vhd_source.html">reader.vhd</a>.</p>
 
@@ -6259,7 +6267,7 @@ Subtypes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jun 8 2012 00:07:52 for Dummy Plug by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 8 2012 00:10:15 for Dummy Plug by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.1
 </small></address>
