@@ -24,7 +24,7 @@ $(TEST_BENCH) : $(addsuffix .o,$(TEST_BENCH))
 	-$(GHDL) -r $(GHDLFLAGS) --work=work $@
 
 
-DUMMY_PLUG_CORE_SRC_PATH = $(SRC_MAIN_VHDL_PATH)/dummy_plug
+DUMMY_PLUG_CORE_SRC_PATH = $(SRC_MAIN_VHDL_PATH)/dummy_plug/core
 DUMMY_PLUG_CORE_PACKAGE  = util.o reader.o sync.o vocal.o core.o
 DUMMY_PLUG_CORE          = $(DUMMY_PLUG_CORE_PACKAGE) marchal.o
 
@@ -49,7 +49,7 @@ core.o                     : $(DUMMY_PLUG_CORE_SRC_PATH)/core.vhd
 marchal.o                  : $(DUMMY_PLUG_CORE_SRC_PATH)/marchal.vhd
 	 $(GHDL) -a $(GHDLFLAGS) --work=$(WORK) $<
 
-DUMMY_PLUG_AXI4_SRC_PATH = $(DUMMY_PLUG_CORE_SRC_PATH)
+DUMMY_PLUG_AXI4_SRC_PATH = $(SRC_MAIN_VHDL_PATH)/dummy_plug/axi4
 DUMMY_PLUG_AXI4_PACKAGE  = axi4_types.o axi4_models.o
 DUMMY_PLUG_AXI4          = $(DUMMY_PLUG_CORE)         \
                            $(DUMMY_PLUG_AXI4_PACKAGE) \
@@ -87,26 +87,21 @@ axi4_signal_printer.o      : $(DUMMY_PLUG_AXI4_SRC_PATH)/axi4_signal_printer.vhd
 	 $(GHDL) -a $(GHDLFLAGS) --work=$(WORK) $<
 
 
-dummy_plug_reader_test_1.o : $(SRC_TEST_VHDL_PATH)/dummy_plug/reader_test_1.vhd $(DUMMY_PLUG_CORE)
+dummy_plug_reader_test_1.o : $(SRC_TEST_VHDL_PATH)/dummy_plug/core/reader_test_1.vhd $(DUMMY_PLUG_CORE)
 	 $(GHDL) -a $(GHDLFLAGS) --work=work $<
 
-dummy_plug_axi4_test_1.o   : $(SRC_TEST_VHDL_PATH)/dummy_plug/axi4_test_1.vhd   $(DUMMY_PLUG_AXI4)
+dummy_plug_axi4_test_1.o   : $(SRC_TEST_VHDL_PATH)/dummy_plug/axi4/axi4_test_1.vhd   $(DUMMY_PLUG_AXI4)
 	 $(GHDL) -a $(GHDLFLAGS) --work=work $<
 
-dummy_plug_axi4_test_1_1.o : $(SRC_TEST_VHDL_PATH)/dummy_plug/axi4_test_1_1.vhd dummy_plug_axi4_test_1.o $(DUMMY_PLUG_AXI4)
+dummy_plug_axi4_test_1_1.o : $(SRC_TEST_VHDL_PATH)/dummy_plug/axi4/axi4_test_1_1.vhd dummy_plug_axi4_test_1.o $(DUMMY_PLUG_AXI4)
 	 $(GHDL) -a $(GHDLFLAGS) --work=work $<
 
-dummy_plug_axi4_test_1_2.o : $(SRC_TEST_VHDL_PATH)/dummy_plug/axi4_test_1_2.vhd dummy_plug_axi4_test_1.o $(DUMMY_PLUG_AXI4)
+dummy_plug_axi4_test_1_2.o : $(SRC_TEST_VHDL_PATH)/dummy_plug/axi4/axi4_test_1_2.vhd dummy_plug_axi4_test_1.o $(DUMMY_PLUG_AXI4)
 	 $(GHDL) -a $(GHDLFLAGS) --work=work $<
 
-dummy_plug_axi4_test_1_3.o : $(SRC_TEST_VHDL_PATH)/dummy_plug/axi4_test_1_3.vhd dummy_plug_axi4_test_1.o $(DUMMY_PLUG_AXI4)
+dummy_plug_axi4_test_1_3.o : $(SRC_TEST_VHDL_PATH)/dummy_plug/axi4/axi4_test_1_3.vhd dummy_plug_axi4_test_1.o $(DUMMY_PLUG_AXI4)
 	 $(GHDL) -a $(GHDLFLAGS) --work=work $<
 
-dummy_plug_axi4_test_1_4.o : $(SRC_TEST_VHDL_PATH)/dummy_plug/axi4_test_1_4.vhd dummy_plug_axi4_test_1.o $(DUMMY_PLUG_AXI4)
+dummy_plug_axi4_test_1_4.o : $(SRC_TEST_VHDL_PATH)/dummy_plug/axi4/axi4_test_1_4.vhd dummy_plug_axi4_test_1.o $(DUMMY_PLUG_AXI4)
 	 $(GHDL) -a $(GHDLFLAGS) --work=work $<
 
-axi_master_bfm.o           : $(SRC_TEST_VHDL_PATH)/dummy_plug/axi_master_bfm.vhd
-	 $(GHDL) -a $(GHDLFLAGS) --work=work $<
-
-dummy_plug_axi4_test_2.o   : $(SRC_TEST_VHDL_PATH)/dummy_plug/axi4_test_2.vhd   axi_master_bfm.o $(DUMMY_PLUG_AXI4)
-	 $(GHDL) -a $(GHDLFLAGS) --work=work $<

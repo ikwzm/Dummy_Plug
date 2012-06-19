@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    aix4_test_1_2.vhd
 --!     @brief   TEST BENCH No.1.2 for DUMMY_PLUG.AXI4_MODELS
---!     @version 0.9.1
---!     @date    2012/6/1
+--!     @version 1.1.0
+--!     @date    2012/6/19
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -42,7 +42,7 @@ entity  DUMMY_PLUG_AXI4_TEST_1_2 is
 end     DUMMY_PLUG_AXI4_TEST_1_2;
 architecture MODEL of DUMMY_PLUG_AXI4_TEST_1_2 is
     constant NAME            : STRING  := "AXI4_TEST_1_2";
-    constant SCENARIO_FILE   : STRING  := "../../src/test/resouces/axi4_test_1_2.snr";
+    constant SCENARIO_FILE   : STRING  := "../../src/test/resouces/axi4/axi4_test_1_2.snr";
     constant EXP_REPORT      : REPORT_STATUS_TYPE := (
         valid          => TRUE,
         error_count    =>  0,
