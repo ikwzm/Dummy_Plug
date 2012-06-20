@@ -1,55 +1,57 @@
 -----------------------------------------------------------------------------------
---!     @file    axi4_models.vhd
---!     @brief   AXI4 Dummy Plug Component Package.
---!     @version 1.0.0
---!     @date    2012/6/2
---!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
+--!     @file    axi4_models.vhd                                                 --
+--!     @brief   AXI4 Dummy Plug Component Package                               --
+--!     @version 1.0.1                                                           --
+--!     @date    2012/6/20                                                       --
+--!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>                     --
 -----------------------------------------------------------------------------------
---
---      Copyright (C) 2012 Ichiro Kawazome
---      All rights reserved.
---
---      Redistribution and use in source and binary forms, with or without
---      modification, are permitted provided that the following conditions
---      are met:
---
---        1. Redistributions of source code must retain the above copyright
---           notice, this list of conditions and the following disclaimer.
---
---        2. Redistributions in binary form must reproduce the above copyright
---           notice, this list of conditions and the following disclaimer in
---           the documentation and/or other materials provided with the
---           distribution.
---
---      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
---      "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
---      LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
---      A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT
---      OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
---      SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
---      LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
---      DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
---      THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
---      (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
---      OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
---
+-----------------------------------------------------------------------------------
+--                                                                               --
+--      Copyright (C) 2012 Ichiro Kawazome                                       --
+--      All rights reserved.                                                     --
+--                                                                               --
+--      Redistribution and use in source and binary forms, with or without       --
+--      modification, are permitted provided that the following conditions       --
+--      are met:                                                                 --
+--                                                                               --
+--        1. Redistributions of source code must retain the above copyright      --
+--           notice, this list of conditions and the following disclaimer.       --
+--                                                                               --
+--        2. Redistributions in binary form must reproduce the above copyright   --
+--           notice, this list of conditions and the following disclaimer in     --
+--           the documentation and/or other materials provided with the          --
+--           distribution.                                                       --
+--                                                                               --
+--      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS      --
+--      "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT        --
+--      LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR    --
+--      A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT    --
+--      OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,    --
+--      SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT         --
+--      LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,    --
+--      DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY    --
+--      THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT      --
+--      (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE    --
+--      OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.     --
+-----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
+-- ライブラリの使用を宣言する                                       --
 -----------------------------------------------------------------------------------
 library ieee;
 use     ieee.std_logic_1164.all;
 library DUMMY_PLUG;
 use     DUMMY_PLUG.AXI4_TYPES.all;
 use     DUMMY_PLUG.CORE.REPORT_STATUS_TYPE;
-use     DUMMY_PLUG.SYNC.SYNC_SIG_VECTOR;
 use     DUMMY_PLUG.SYNC.SYNC_PLUG_NUM_TYPE;
+use     DUMMY_PLUG.SYNC.SYNC_SIG_VECTOR;
 -----------------------------------------------------------------------------------
---! @brief AXI4 Dummy Plug の各種モデルのコンポーネント宣言をまとめたパッケージ.
+--  パッケージ宣言                                                        --
 -----------------------------------------------------------------------------------
 package AXI4_MODELS is
-
 -----------------------------------------------------------------------------------
---! @brief   AXI4 Master Dummy Plug Player.
+--  AXI4_MASTER_PLAYER                                                           --
 -----------------------------------------------------------------------------------
-component AXI4_MASTER_PLAYER is
+component AXI4_MASTER_PLAYER
     -------------------------------------------------------------------------------
     -- ジェネリック変数.
     -------------------------------------------------------------------------------
@@ -104,7 +106,7 @@ component AXI4_MASTER_PLAYER is
         ARVALID         : inout std_logic;
         ARREADY         : in    std_logic;
         --------------------------------------------------------------------------
-        -- リードチャネルシグナル.
+        -- リードデータチャネルシグナル.
         --------------------------------------------------------------------------
         RLAST           : in    std_logic;
         RDATA           : in    std_logic_vector(WIDTH.RDATA  -1 downto 0);
@@ -130,7 +132,7 @@ component AXI4_MASTER_PLAYER is
         AWVALID         : inout std_logic;
         AWREADY         : in    std_logic;
         --------------------------------------------------------------------------
-        -- ライトチャネルシグナル.
+        -- ライトデータチャネルシグナル.
         --------------------------------------------------------------------------
         WLAST           : inout std_logic;
         WDATA           : inout std_logic_vector(WIDTH.WDATA  -1 downto 0);
@@ -152,21 +154,27 @@ component AXI4_MASTER_PLAYER is
         --------------------------------------------------------------------------
         SYNC            : inout SYNC_SIG_VECTOR (SYNC_WIDTH   -1 downto 0);
         --------------------------------------------------------------------------
-        -- GPIO
+        -- General Purpose Input 信号
         --------------------------------------------------------------------------
         GPI             : in    std_logic_vector(GPI_WIDTH    -1 downto 0) := (others => '0');
+        --------------------------------------------------------------------------
+        -- General Purpose Output 信号
+        --------------------------------------------------------------------------
         GPO             : out   std_logic_vector(GPO_WIDTH    -1 downto 0);
         --------------------------------------------------------------------------
-        -- 各種状態出力.
+        -- レポートステータス出力.
         --------------------------------------------------------------------------
         REPORT_STATUS   : out   REPORT_STATUS_TYPE;
+        --------------------------------------------------------------------------
+        -- シミュレーション終了通知信号.
+        --------------------------------------------------------------------------
         FINISH          : out   std_logic
     );
 end component;
 -----------------------------------------------------------------------------------
---! @brief   AXI4 Slave Dummy Plug Player.
+--  AXI4_SLAVE_PLAYER                                                            --
 -----------------------------------------------------------------------------------
-component AXI4_SLAVE_PLAYER is
+component AXI4_SLAVE_PLAYER
     -------------------------------------------------------------------------------
     -- ジェネリック変数.
     -------------------------------------------------------------------------------
@@ -221,14 +229,14 @@ component AXI4_SLAVE_PLAYER is
         ARVALID         : in    std_logic;
         ARREADY         : inout std_logic;
         --------------------------------------------------------------------------
-        -- リードチャネルシグナル.
+        -- リードデータチャネルシグナル.
         --------------------------------------------------------------------------
-        RVALID          : inout std_logic;
         RLAST           : inout std_logic;
         RDATA           : inout std_logic_vector(WIDTH.RDATA  -1 downto 0);
         RRESP           : inout AXI4_RESP_TYPE;
         RUSER           : inout std_logic_vector(WIDTH.RUSER  -1 downto 0);
         RID             : inout std_logic_vector(WIDTH.ID     -1 downto 0);
+        RVALID          : inout std_logic;
         RREADY          : in    std_logic;
         --------------------------------------------------------------------------
         -- ライトアドレスチャネルシグナル.
@@ -247,50 +255,56 @@ component AXI4_SLAVE_PLAYER is
         AWVALID         : in    std_logic;
         AWREADY         : inout std_logic;
         --------------------------------------------------------------------------
-        -- ライトチャネルシグナル.
+        -- ライトデータチャネルシグナル.
         --------------------------------------------------------------------------
-        WVALID          : in    std_logic;
         WLAST           : in    std_logic;
         WDATA           : in    std_logic_vector(WIDTH.WDATA  -1 downto 0);
         WSTRB           : in    std_logic_vector(WIDTH.WDATA/8-1 downto 0);
         WUSER           : in    std_logic_vector(WIDTH.WUSER  -1 downto 0);
         WID             : in    std_logic_vector(WIDTH.ID     -1 downto 0);
+        WVALID          : in    std_logic;
         WREADY          : inout std_logic;
         --------------------------------------------------------------------------
         -- ライト応答チャネルシグナル.
         --------------------------------------------------------------------------
-        BVALID          : inout std_logic;
-        BUSER           : inout std_logic_vector(WIDTH.BUSER  -1 downto 0);
         BRESP           : inout AXI4_RESP_TYPE;
+        BUSER           : inout std_logic_vector(WIDTH.BUSER  -1 downto 0);
         BID             : inout std_logic_vector(WIDTH.ID     -1 downto 0);
+        BVALID          : inout std_logic;
         BREADY          : in    std_logic;
         --------------------------------------------------------------------------
         -- シンクロ用信号
         --------------------------------------------------------------------------
         SYNC            : inout SYNC_SIG_VECTOR (SYNC_WIDTH   -1 downto 0);
         --------------------------------------------------------------------------
-        -- GPIO
+        -- General Purpose Input 信号
         --------------------------------------------------------------------------
         GPI             : in    std_logic_vector(GPI_WIDTH    -1 downto 0) := (others => '0');
+        --------------------------------------------------------------------------
+        -- General Purpose Output 信号
+        --------------------------------------------------------------------------
         GPO             : out   std_logic_vector(GPO_WIDTH    -1 downto 0);
         --------------------------------------------------------------------------
-        -- 各種状態出力.
+        -- レポートステータス出力.
         --------------------------------------------------------------------------
         REPORT_STATUS   : out   REPORT_STATUS_TYPE;
+        --------------------------------------------------------------------------
+        -- シミュレーション終了通知信号.
+        --------------------------------------------------------------------------
         FINISH          : out   std_logic
     );
 end component;
 -----------------------------------------------------------------------------------
---! @brief   AXI4_SIGNAL_PRINTER :
+--  AXI4_SIGNAL_PRINTER                                                          --
 -----------------------------------------------------------------------------------
-component AXI4_SIGNAL_PRINTER is
+component AXI4_SIGNAL_PRINTER
     -------------------------------------------------------------------------------
     -- ジェネリック変数.
     -------------------------------------------------------------------------------
     generic (
         NAME            : --! @brief 固有名詞.
                           STRING;
-        TAG             : --! @brief
+        TAG             : --! @brief タグ.
                           STRING;
         READ_ENABLE     : --! @brief リードチャネルを出力するか否かを指定する.
                           boolean   := TRUE;
@@ -380,4 +394,7 @@ component AXI4_SIGNAL_PRINTER is
         BREADY          : in    std_logic
     );
 end component;
-end package;
+end AXI4_MODELS;
+-----------------------------------------------------------------------------------
+-- パッケージ宣言の終了                                                --
+-----------------------------------------------------------------------------------
