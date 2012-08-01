@@ -2,12 +2,12 @@
 --!     @file    axi4_models.vhd                                                 --
 --!     @brief   AXI4 Dummy Plug Component Package                               --
 --!     @version 1.0.1                                                           --
---!     @date    2012/6/20                                                       --
+--!     @date    2012/08/01                                                      --
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>                     --
 -----------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------
 --                                                                               --
---      Copyright (C) 2012 Ichiro Kawazome                                       --
+--      Copyright (C) 2012 Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>           --
 --      All rights reserved.                                                     --
 --                                                                               --
 --      Redistribution and use in source and binary forms, with or without       --
@@ -33,9 +33,7 @@
 --      THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT      --
 --      (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE    --
 --      OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.     --
------------------------------------------------------------------------------------
------------------------------------------------------------------------------------
--- ライブラリの使用を宣言する                                       --
+--                                                                               --
 -----------------------------------------------------------------------------------
 library ieee;
 use     ieee.std_logic_1164.all;
@@ -45,11 +43,11 @@ use     DUMMY_PLUG.CORE.REPORT_STATUS_TYPE;
 use     DUMMY_PLUG.SYNC.SYNC_PLUG_NUM_TYPE;
 use     DUMMY_PLUG.SYNC.SYNC_SIG_VECTOR;
 -----------------------------------------------------------------------------------
---  パッケージ宣言                                                        --
+--! @brief AXI4 Dummy Plug Component Package                                     --
 -----------------------------------------------------------------------------------
 package AXI4_MODELS is
 -----------------------------------------------------------------------------------
---  AXI4_MASTER_PLAYER                                                           --
+--! @brief AXI4_MASTER_PLAYER                                                    --
 -----------------------------------------------------------------------------------
 component AXI4_MASTER_PLAYER
     -------------------------------------------------------------------------------
@@ -172,7 +170,7 @@ component AXI4_MASTER_PLAYER
     );
 end component;
 -----------------------------------------------------------------------------------
---  AXI4_SLAVE_PLAYER                                                            --
+--! @brief AXI4_SLAVE_PLAYER                                                     --
 -----------------------------------------------------------------------------------
 component AXI4_SLAVE_PLAYER
     -------------------------------------------------------------------------------
@@ -295,7 +293,7 @@ component AXI4_SLAVE_PLAYER
     );
 end component;
 -----------------------------------------------------------------------------------
---  AXI4_SIGNAL_PRINTER                                                          --
+--! @brief AXI4_SIGNAL_PRINTER                                                   --
 -----------------------------------------------------------------------------------
 component AXI4_SIGNAL_PRINTER
     -------------------------------------------------------------------------------
@@ -395,6 +393,3 @@ component AXI4_SIGNAL_PRINTER
     );
 end component;
 end AXI4_MODELS;
------------------------------------------------------------------------------------
--- パッケージ宣言の終了                                                --
------------------------------------------------------------------------------------
