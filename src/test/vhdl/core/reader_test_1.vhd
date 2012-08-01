@@ -49,7 +49,7 @@ architecture MODEL of DUMMY_PLUG_READER_TEST_1 is
 begin
     process
         constant  NAME      : STRING  := "DUMMY_PLUG_READER_TEST_1";
-        constant  TEST_FILE : STRING  := "../../src/test/resouces/core/reader_test_1.snr";
+        constant  TEST_FILE : STRING  := "../../../src/test/resouces/core/reader_test_1.snr";
         variable  text_line : LINE;
         variable  debug     : boolean := FALSE;
         file      stream    : TEXT;
