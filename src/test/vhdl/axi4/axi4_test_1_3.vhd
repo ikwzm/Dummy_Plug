@@ -42,7 +42,7 @@ entity  DUMMY_PLUG_AXI4_TEST_1_3 is
 end     DUMMY_PLUG_AXI4_TEST_1_3;
 architecture MODEL of DUMMY_PLUG_AXI4_TEST_1_3 is
     constant NAME            : STRING  := "AXI4_TEST_1_3";
-    constant SCENARIO_FILE   : STRING  := "../../src/test/resouces/axi4/axi4_test_1_3.snr";
+    constant SCENARIO_FILE   : STRING  := "../../../src/test/resouces/axi4/axi4_test_1_3.snr";
     constant EXP_REPORT      : REPORT_STATUS_TYPE := (
         valid          => TRUE,
         error_count    =>  0,
