@@ -16,5 +16,6 @@ var searchData=
   ['master',['MASTER',['../classAXI4__CHANNEL__PLAYER.html#a6c2886294a52df095cf1c31791623b63',1,'AXI4_CHANNEL_PLAYER']]],
   ['matrix_5fa',['MATRIX_A',['../class__MT19937AR.html#a4b092b6c5769fb6117ec892ffc472221',1,'_MT19937AR']]],
   ['mexp',['MEXP',['../class__TINYMT32.html#aa379c7eadd78e4d602f18770357dd74f',1,'_TINYMT32']]],
-  ['min_5floop',['MIN_LOOP',['../class__TINYMT32.html#a31fb8add3701cca081945ff5d2b22c2f',1,'_TINYMT32']]]
+  ['min_5floop',['MIN_LOOP',['../class__TINYMT32.html#a31fb8add3701cca081945ff5d2b22c2f',1,'_TINYMT32']]],
+  ['mt19937ar',['MT19937AR',['../classMT19937AR__TEST__BENCH.html#a9725c646afac15a79ac54ab01c252db9',1,'MT19937AR_TEST_BENCH']]]
 ];
