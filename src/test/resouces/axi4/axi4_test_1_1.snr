@@ -183,7 +183,7 @@
       WLAST   : 0                         # WLAST   <= 0
       WID     : 0                         # WID     <= 0
       WVALID  : 0                         # WVALID  <= 0;
-    - WAIT    : {AWVALID: 1, AWREADY: 1}  # AWVALID = 1 and AWREADY = 1まで待つ.
+    - WAIT    : {AWVALID: 1}              # AWVALID = 1 まで待つ.
     - WDATA   : "32'h76543210"            # WDATA   <= 0x76543210
       WSTRB   : "4'b1111"                 # WSTRB   <= 1111
       WLAST   : 1                         # WLAST   <= 1
@@ -207,7 +207,8 @@
 - SLAVE:                                  # スレーブ用ダミープラグの名前. 
   - AW:                                   # アドレスチャネルの挙動.
     - AWREADY : 0                         # AWREADY <= 0
-    - WAIT    : {AWVALID: 1, TIMEOUT: 10, ON: on} # AWVALID = 1 まで待つ.ただし10クロック以内.
+    - WAIT    : {AWVALID: 1, WVALID:  1, 
+                 TIMEOUT: 12, ON: on}     # AWVALID = 1 and WVALID = 1 まで待つ.ただし12クロック以内.
     - AWREADY : 1                         # AWREADY <= 1
     - WAIT    : {AWVALID: 1, AWREADY: 1}  # AWVALID = 1 and AWREADY = 1 まで待つ.
     - CHECK   :                           # AWADDR, AWSIZE, AWID が
@@ -400,7 +401,7 @@
       WLAST   : 0                         # WLAST   <= 0
       WID     : 0                         # WID     <= 0
       WVALID  : 0                         # WVALID  <= 0;
-    - WAIT    : {AWVALID: 1, AWREADY: 1}  # AWVALID = 1 and AWREADY = 1まで待つ.
+    - WAIT    : {AWVALID: 1}              # AWVALID = 1 まで待つ.
     - WDATA   : "32'h76543210"            # WDATA   <= 0x76543210
       WSTRB   : "4'b1111"                 # WSTRB   <= 1111
       WLAST   : 1                         # WLAST   <= 1
