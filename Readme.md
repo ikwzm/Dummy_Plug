@@ -37,7 +37,7 @@ For example, when the master performs a write transaction will write the scenari
               LAST   : 0                          # WLAST  <= 'b0
               ID     : 0                          # WID    <= 0
               VALID  : 0                          # WVALID <= 'b0;
-            - WAIT   : {AWVALID: 1, AWREADY: 1}   # wait until AWVALID = 1 and AWREADY = 1
+            - WAIT   : {AWVALID: 1, ON: on}       # wait until AWVALID = 1 
             - DATA   : "32'h76543210"             # WDATA  <= 32'h76543210
               STRB   : "4'b1111"                  # WSTRB  <= 4'b1111
               LAST   : 1                          # WLAST  <= 1

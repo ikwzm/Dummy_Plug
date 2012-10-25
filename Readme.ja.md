@@ -36,7 +36,7 @@ AXI4のマスターモデルとスレーブモデルに対応しています.
               LAST   : 0                          # WLAST  <= 0
               ID     : 0                          # WID    <= 0
               VALID  : 0                          # WVALID <= 0;
-            - WAIT   : {AWVALID: 1, AWREADY: 1}   # AWVALID = 1 and AWREADY = 1まで待つ.
+            - WAIT   : {AWVALID: 1, ON: on}       # AWVALID = 1 まで待つ.
             - DATA   : "32'h76543210"             # WDATA  <= 32'h76543210
               STRB   : "4'b1111"                  # WSTRB  <= 4'b1111
               LAST   : 1                          # WLAST  <= 1
