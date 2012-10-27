@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_types.vhd
 --!     @brief   AXI4 Channel Signal Type Package.
---!     @version 1.0.0
---!     @date    2012/6/2
+--!     @version 1.2.0
+--!     @date    2012/10/27
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -178,5 +178,18 @@ package AXI4_TYPES is
               RDATA                : integer range 8 to AXI4_DATA_MAX_WIDTH;
               RUSER                : integer range 1 to AXI4_USER_MAX_WIDTH;
               BUSER                : integer range 1 to AXI4_USER_MAX_WIDTH;
+    end record;
+    -------------------------------------------------------------------------------
+    --! @brief AXI4-Stream TDEST の最大ビット幅
+    -------------------------------------------------------------------------------
+    constant  AXI4_DEST_MAX_WIDTH  : integer := 32;
+    -------------------------------------------------------------------------------
+    --! @brief AXI4-Stream の可変長信号のビット幅を指定するレコードタイプ.
+    -------------------------------------------------------------------------------
+    type      AXI4_STREAM_SIGNAL_WIDTH_TYPE is record
+              ID                   : integer range 1 to AXI4_ID_MAX_WIDTH;
+              USER                 : integer range 1 to AXI4_USER_MAX_WIDTH;
+              DEST                 : integer range 1 to AXI4_DEST_MAX_WIDTH;
+              DATA                 : integer range 8 to AXI4_DATA_MAX_WIDTH;
     end record;
 end package;
