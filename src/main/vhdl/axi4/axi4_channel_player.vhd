@@ -933,7 +933,7 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
     constant  KEY_CHECK     : KEY_TYPE := "CHECK  ";
     constant  KEY_OUT       : KEY_TYPE := "OUT    ";
     constant  KEY_DEBUG     : KEY_TYPE := "DEBUG  ";
-    constant  KEY_REPORT    : KEY_TYPE := "REPOR  ";
+    constant  KEY_REPORT    : KEY_TYPE := "REPORT ";
 
     constant  KEY_READ      : KEY_TYPE := "READ   ";
     constant  KEY_WRITE     : KEY_TYPE := "WRITE  ";
