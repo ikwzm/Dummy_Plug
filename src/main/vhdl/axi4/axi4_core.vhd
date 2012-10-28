@@ -43,6 +43,8 @@ use     DUMMY_PLUG.CORE.CORE_TYPE;
 use     DUMMY_PLUG.CORE.REPORT_STATUS_TYPE;
 use     DUMMY_PLUG.SYNC.SYNC_REQ_VECTOR;
 use     DUMMY_PLUG.SYNC.SYNC_ACK_VECTOR;
+use     DUMMY_PLUG.SYNC.SYNC_SIG_VECTOR;
+use     DUMMY_PLUG.SYNC.SYNC_PLUG_NUM_TYPE;
 use     DUMMY_PLUG.READER.EVENT_TYPE;
 -----------------------------------------------------------------------------------
 --! @brief AXI4 Dummy Plug のコアパッケージ.
@@ -544,6 +546,91 @@ package AXI4_CORE is
             -- 各種状態信号.
             -----------------------------------------------------------------------
             REPORT_STATUS   : out   REPORT_STATUS_TYPE;
+            FINISH          : out   std_logic
+        );
+    end component;
+    -------------------------------------------------------------------------------
+    --! @brief   AXI4_STREAM_PLAYER :
+    -------------------------------------------------------------------------------
+    component AXI4_STREAM_PLAYER
+        ---------------------------------------------------------------------------
+        -- ジェネリック変数.
+        ---------------------------------------------------------------------------
+        generic (
+            SCENARIO_FILE   : --! @brief シナリオファイルの名前.
+                              STRING;
+            NAME            : --! @brief 固有名詞.
+                              STRING;
+            FULL_NAME       : --! @brief メッセージ出力用の固有名詞.
+                              STRING;
+            MASTER          : --! @brief マスターモードを指定する.
+                              boolean   := FALSE;
+            SLAVE           : --! @brief スレーブモードを指定する.
+                              boolean   := FALSE;
+            OUTPUT_DELAY    : --! @brief 出力信号遅延時間
+                              time;
+            WIDTH           : --! @brief AXI4 IS WIDTH :
+                              AXI4_STREAM_SIGNAL_WIDTH_TYPE;
+            SYNC_WIDTH      : --! @brief シンクロ用信号の本数.
+                              integer :=  1;
+            GPI_WIDTH       : --! @brief GPI(General Purpose Input)信号のビット幅.
+                              integer := 8;
+            GPO_WIDTH       : --! @brief GPO(General Purpose Output)信号のビット幅.
+                              integer := 8;
+            FINISH_ABORT    : --! @brief FINISH コマンド実行時にシミュレーションを
+                              --!        アボートするかどうかを指定するフラグ.
+                              boolean := true
+        );
+        ---------------------------------------------------------------------------
+        -- 入出力ポートの定義.
+        ---------------------------------------------------------------------------
+        port(
+            -----------------------------------------------------------------------
+            -- グローバルシグナル.
+            -----------------------------------------------------------------------
+            ACLK            : in    std_logic;
+            ARESETn         : in    std_logic;
+            -----------------------------------------------------------------------
+            -- AXI4-Streamシグナル.
+            -----------------------------------------------------------------------
+            TDATA_I         : in    std_logic_vector(WIDTH.DATA  -1 downto 0);
+            TDATA_O         : out   std_logic_vector(WIDTH.DATA  -1 downto 0);
+            TSTRB_I         : in    std_logic_vector(WIDTH.DATA/8-1 downto 0);
+            TSTRB_O         : out   std_logic_vector(WIDTH.DATA/8-1 downto 0);
+            TKEEP_I         : in    std_logic_vector(WIDTH.DATA/8-1 downto 0);
+            TKEEP_O         : out   std_logic_vector(WIDTH.DATA/8-1 downto 0);
+            TUSER_I         : in    std_logic_vector(WIDTH.USER  -1 downto 0);
+            TUSER_O         : out   std_logic_vector(WIDTH.USER  -1 downto 0);
+            TDEST_I         : in    std_logic_vector(WIDTH.DEST  -1 downto 0);
+            TDEST_O         : out   std_logic_vector(WIDTH.DEST  -1 downto 0);
+            TID_I           : in    std_logic_vector(WIDTH.ID    -1 downto 0);
+            TID_O           : out   std_logic_vector(WIDTH.ID    -1 downto 0);
+            TLAST_I         : in    std_logic;
+            TLAST_O         : out   std_logic;
+            TVALID_I        : in    std_logic;
+            TVALID_O        : out   std_logic;
+            TREADY_I        : in    std_logic;
+            TREADY_O        : out   std_logic;
+            -----------------------------------------------------------------------
+            -- シンクロ用信号.
+            -----------------------------------------------------------------------
+            SYNC_REQ        : out   SYNC_REQ_VECTOR (SYNC_WIDTH   -1 downto 0);
+            SYNC_ACK        : in    SYNC_ACK_VECTOR (SYNC_WIDTH   -1 downto 0);
+            -----------------------------------------------------------------------
+            -- General Purpose Input 信号
+            -----------------------------------------------------------------------
+            GPI             : in    std_logic_vector(GPI_WIDTH-1 downto 0) := (others => '0');
+            -----------------------------------------------------------------------
+            -- General Purpose Output 信号
+            -----------------------------------------------------------------------
+            GPO             : out   std_logic_vector(GPO_WIDTH-1 downto 0);
+            -----------------------------------------------------------------------
+            -- レポートステータス出力.
+            -----------------------------------------------------------------------
+            REPORT_STATUS   : out   REPORT_STATUS_TYPE;
+            -----------------------------------------------------------------------
+            -- シミュレーション終了通知信号.
+            -----------------------------------------------------------------------
             FINISH          : out   std_logic
         );
     end component;
