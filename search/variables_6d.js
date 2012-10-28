@@ -1,10 +1,10 @@
 var searchData=
 [
   ['m',['M',['../class__MT19937AR.html#a8d7807d055318f4a5f079d66a922db47',1,'_MT19937AR']]],
-  ['m_5ffinish',['M_FINISH',['../classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#abba3acee20c5dfd26a77bba5a478106f',1,'DUMMY_PLUG_AXI4_TEST_1::MODEL']]],
-  ['m_5fgpi',['M_GPI',['../classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#a7dbc9c8e5919787f333c1f5b1bea6b5a',1,'DUMMY_PLUG_AXI4_TEST_1::MODEL']]],
-  ['m_5fgpo',['M_GPO',['../classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#ae126c69ab5e0b43fa5c0bb365df92614',1,'DUMMY_PLUG_AXI4_TEST_1::MODEL']]],
-  ['m_5freport',['M_REPORT',['../classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#a4ea4d1534aa72280b84c413b78b2d412',1,'DUMMY_PLUG_AXI4_TEST_1::MODEL']]],
+  ['m_5ffinish',['M_FINISH',['../classDUMMY__PLUG__AXI4__STREAM__TEST__1_1_1MODEL.html#abba3acee20c5dfd26a77bba5a478106f',1,'DUMMY_PLUG_AXI4_STREAM_TEST_1.MODEL.M_FINISH()'],['../classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#abba3acee20c5dfd26a77bba5a478106f',1,'DUMMY_PLUG_AXI4_TEST_1.MODEL.M_FINISH()']]],
+  ['m_5fgpi',['M_GPI',['../classDUMMY__PLUG__AXI4__STREAM__TEST__1_1_1MODEL.html#a7dbc9c8e5919787f333c1f5b1bea6b5a',1,'DUMMY_PLUG_AXI4_STREAM_TEST_1.MODEL.M_GPI()'],['../classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#a7dbc9c8e5919787f333c1f5b1bea6b5a',1,'DUMMY_PLUG_AXI4_TEST_1.MODEL.M_GPI()']]],
+  ['m_5fgpo',['M_GPO',['../classDUMMY__PLUG__AXI4__STREAM__TEST__1_1_1MODEL.html#ae126c69ab5e0b43fa5c0bb365df92614',1,'DUMMY_PLUG_AXI4_STREAM_TEST_1.MODEL.M_GPO()'],['../classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#ae126c69ab5e0b43fa5c0bb365df92614',1,'DUMMY_PLUG_AXI4_TEST_1.MODEL.M_GPO()']]],
+  ['m_5freport',['M_REPORT',['../classDUMMY__PLUG__AXI4__STREAM__TEST__1_1_1MODEL.html#a4ea4d1534aa72280b84c413b78b2d412',1,'DUMMY_PLUG_AXI4_STREAM_TEST_1.MODEL.M_REPORT()'],['../classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#a4ea4d1534aa72280b84c413b78b2d412',1,'DUMMY_PLUG_AXI4_TEST_1.MODEL.M_REPORT()']]],
   ['mapkey_5ffound',['MAPKEY_FOUND',['../class__READER.html#a803feabe6f194114c27672dcf4c1e285',1,'_READER']]],
   ['mapkey_5fmax_5fsize',['MAPKEY_MAX_SIZE',['../class__READER.html#aa2901206a821c42a9862b4a11c118c7c',1,'_READER']]],
   ['mapkey_5fmode',['MAPKEY_MODE',['../class__READER.html#ae0745161e03a62d2b33de6e224668bc1',1,'_READER']]],
@@ -13,7 +13,7 @@ var searchData=
   ['mapkey_5fread',['MAPKEY_READ',['../class__READER.html#af1b5bfef736402243991fa397114e7bd',1,'_READER']]],
   ['marchal',['MARCHAL',['../classCORE.html#adc942d0240d2538b1dd2bec17a4edfc4',1,'CORE']]],
   ['mask',['MASK',['../class__TINYMT32.html#a467fe20d5d1487c7a389eb4d8fafae2b',1,'_TINYMT32']]],
-  ['master',['MASTER',['../classAXI4__CHANNEL__PLAYER.html#a6c2886294a52df095cf1c31791623b63',1,'AXI4_CHANNEL_PLAYER']]],
+  ['master',['MASTER',['../classAXI4__CHANNEL__PLAYER.html#a6c2886294a52df095cf1c31791623b63',1,'AXI4_CHANNEL_PLAYER.MASTER()'],['../classAXI4__STREAM__PLAYER.html#a6c2886294a52df095cf1c31791623b63',1,'AXI4_STREAM_PLAYER.MASTER()']]],
   ['matrix_5fa',['MATRIX_A',['../class__MT19937AR.html#a4b092b6c5769fb6117ec892ffc472221',1,'_MT19937AR']]],
   ['mexp',['MEXP',['../class__TINYMT32.html#aa379c7eadd78e4d602f18770357dd74f',1,'_TINYMT32']]],
   ['min_5floop',['MIN_LOOP',['../class__TINYMT32.html#a31fb8add3701cca081945ff5d2b22c2f',1,'_TINYMT32']]],

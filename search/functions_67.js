@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['gen_5finit_5fsignals',['GEN_INIT_SIGNALS',['../classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a8b1db27020d35a86c539d87c57cc2c11',1,'AXI4_CHANNEL_PLAYER::MODEL']]],
-  ['generate_5fb_5fsignal',['GENERATE_B_SIGNAL',['../classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a33cc464aac4a3acaa97e9a3e966f18e8',1,'AXI4_CHANNEL_PLAYER::MODEL']]],
-  ['generate_5fkey_5fchannel',['GENERATE_KEY_CHANNEL',['../classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a3bdfea8f1398b0b2ccb7cc72dca7256b',1,'AXI4_CHANNEL_PLAYER::MODEL']]],
-  ['generate_5fr_5fsignal',['GENERATE_R_SIGNAL',['../classAXI4__CHANNEL__PLAYER_1_1MODEL.html#afd752c585ce2ddcf072fab38c872f241',1,'AXI4_CHANNEL_PLAYER::MODEL']]],
+  ['gen_5finit_5fsignals',['GEN_INIT_signals',['../classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a5642a1dd3e55114f8e8880dc8501cbd8',1,'AXI4_CHANNEL_PLAYER::MODEL']]],
+  ['generate_5fb_5fchannel_5fsignals',['generate_b_channel_signals',['../classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a191711c4bf541667659e0bc9a1955ed7',1,'AXI4_CHANNEL_PLAYER::MODEL']]],
+  ['generate_5fkey_5fchannel',['GENERATE_KEY_CHANNEL',['../classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a3733439b3909ed5f87247e7fad06b114',1,'AXI4_CHANNEL_PLAYER::MODEL']]],
+  ['generate_5fr_5fchannel_5fsignals',['generate_r_channel_signals',['../classAXI4__CHANNEL__PLAYER_1_1MODEL.html#aa4c71d9553d84ab7727ede4b6230841b',1,'AXI4_CHANNEL_PLAYER::MODEL']]],
   ['generate_5frandom_5fint31',['GENERATE_RANDOM_INT31',['../classMT19937AR.html#ae6004a816e769f055d345018b62c853b',1,'MT19937AR.GENERATE_RANDOM_INT31()'],['../class__MT19937AR.html#ae6004a816e769f055d345018b62c853b',1,'_MT19937AR.GENERATE_RANDOM_INT31()'],['../classTINYMT32.html#ae6004a816e769f055d345018b62c853b',1,'TINYMT32.GENERATE_RANDOM_INT31()'],['../class__TINYMT32.html#ae6004a816e769f055d345018b62c853b',1,'_TINYMT32.GENERATE_RANDOM_INT31()']]],
   ['generate_5frandom_5fnumber',['GENERATE_RANDOM_NUMBER',['../classTINYMT32.html#a8186f9e0d55a512501ceedf5f2fe5cdc',1,'TINYMT32.GENERATE_RANDOM_NUMBER()'],['../class__TINYMT32.html#a8186f9e0d55a512501ceedf5f2fe5cdc',1,'_TINYMT32.GENERATE_RANDOM_NUMBER()']]],
   ['generate_5frandom_5freal1',['GENERATE_RANDOM_REAL1',['../classMT19937AR.html#a1d358ffb10b35370b3304b55d4e9c75c',1,'MT19937AR.GENERATE_RANDOM_REAL1()'],['../class__MT19937AR.html#a1d358ffb10b35370b3304b55d4e9c75c',1,'_MT19937AR.GENERATE_RANDOM_REAL1()'],['../classTINYMT32.html#a1d358ffb10b35370b3304b55d4e9c75c',1,'TINYMT32.GENERATE_RANDOM_REAL1()'],['../class__TINYMT32.html#a1d358ffb10b35370b3304b55d4e9c75c',1,'_TINYMT32.GENERATE_RANDOM_REAL1()']]],
@@ -11,9 +11,9 @@ var searchData=
   ['generate_5frandom_5freal3',['GENERATE_RANDOM_REAL3',['../classMT19937AR.html#af4b803d34c4db9829bc43f66a0a439e9',1,'MT19937AR.GENERATE_RANDOM_REAL3()'],['../class__MT19937AR.html#af4b803d34c4db9829bc43f66a0a439e9',1,'_MT19937AR.GENERATE_RANDOM_REAL3()'],['../classTINYMT32.html#af4b803d34c4db9829bc43f66a0a439e9',1,'TINYMT32.GENERATE_RANDOM_REAL3()'],['../class__TINYMT32.html#af4b803d34c4db9829bc43f66a0a439e9',1,'_TINYMT32.GENERATE_RANDOM_REAL3()']]],
   ['generate_5frandom_5fstd_5flogic_5fvector',['GENERATE_RANDOM_STD_LOGIC_VECTOR',['../classMT19937AR.html#a54adf6d01183020602510d6c4f15a213',1,'MT19937AR.GENERATE_RANDOM_STD_LOGIC_VECTOR()'],['../class__MT19937AR.html#a54adf6d01183020602510d6c4f15a213',1,'_MT19937AR.GENERATE_RANDOM_STD_LOGIC_VECTOR()'],['../classTINYMT32.html#a54adf6d01183020602510d6c4f15a213',1,'TINYMT32.GENERATE_RANDOM_STD_LOGIC_VECTOR()'],['../class__TINYMT32.html#a54adf6d01183020602510d6c4f15a213',1,'_TINYMT32.GENERATE_RANDOM_STD_LOGIC_VECTOR()']]],
   ['generate_5ftemper',['GENERATE_TEMPER',['../classTINYMT32.html#a2628ee91ca3b75eb10df709cfc4ae538',1,'TINYMT32.GENERATE_TEMPER()'],['../class__TINYMT32.html#a2628ee91ca3b75eb10df709cfc4ae538',1,'_TINYMT32.GENERATE_TEMPER()']]],
-  ['generate_5fw_5fsignal',['GENERATE_W_SIGNAL',['../classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ab70963303cfe19ab46091c631c8a6b28',1,'AXI4_CHANNEL_PLAYER::MODEL']]],
+  ['generate_5fw_5fchannel_5fsignals',['generate_w_channel_signals',['../classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a008e77c4cf51bea4be143fdc9d96c4ac',1,'AXI4_CHANNEL_PLAYER::MODEL']]],
   ['generate_5fword',['generate_word',['../class__MT19937AR.html#a23c39b7fa2fbcffcad261f4302ee07d0',1,'_MT19937AR']]],
   ['get_5fmap_5fkey_5fmode',['get_map_key_mode',['../class__READER.html#a940588b2faa254c9236c697cf4cf104c',1,'_READER']]],
   ['get_5fstruct_5fstate',['get_struct_state',['../class__READER.html#ac73f149a5541248773c956c52e63d6bd',1,'_READER.get_struct_stateSELF, CURR_STATE, CURR_INDENT, CURR_MAPKEY,'],['../class__READER.html#a22d1a67a6bb8634decfecb217c5fe04b',1,'_READER.get_struct_stateSELF, CURR_STATE, CURR_INDENT,'],['../class__READER.html#a911ba6bb23926563eb028d439340c15b',1,'_READER.get_struct_stateSELF, CURR_STATE,']]],
-  ['get_5ftransaction_5finfo',['GET_TRANSACTION_INFO',['../classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a9909b1fa5e0776df25563f9c5436d8d7',1,'AXI4_CHANNEL_PLAYER::MODEL']]]
+  ['get_5ftransaction_5finfo',['get_transaction_info',['../classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a040f03097d5465d5a1ab26dfc5fbc81a',1,'AXI4_CHANNEL_PLAYER::MODEL']]]
 ];
