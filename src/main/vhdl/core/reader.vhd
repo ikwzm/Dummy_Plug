@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    reader.vhd
 --!     @brief   Package for Dummy Plug Scenario Reader.
---!     @version 1.0.1
---!     @date    2012/6/5
+--!     @version 1.0.2
+--!     @date    2012/11/2
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -1105,7 +1105,7 @@ package body  READER is
         elsif (SELF.text_line(START_POS) /= INDICATOR) then
             FOUND     := FALSE;
             FOUND_LEN := 0;
-            END_LINE  := TRUE;
+            END_LINE  := FALSE;
         elsif (START_POS+1 > SELF.text_end) then
             FOUND     := TRUE;
             FOUND_LEN := 1;
@@ -1117,7 +1117,7 @@ package body  READER is
         else
             FOUND     := FALSE;
             FOUND_LEN := 0;
-            END_LINE  := TRUE;
+            END_LINE  := FALSE;
         end if;
     end procedure;
     -------------------------------------------------------------------------------
@@ -1248,14 +1248,6 @@ package body  READER is
             TAG_POS   := START_POS;
             TAG_LEN   := 0;
             END_LINE  := TRUE;
-            return;
-        end if;
-        if    (START_POS+1 > SELF.text_end) then
-            FOUND     := FALSE;
-            FOUND_LEN := 0;
-            TAG_POS   := START_POS;
-            TAG_LEN   := 0;
-            END_LINE  := FALSE;
             return;
         end if;
         if (START_POS+1 > SELF.text_end) or
@@ -1747,7 +1739,7 @@ package body  READER is
                     return;
                 end if;
             -----------------------------------------------------------------------
-            -- インジケーターの場合...
+            -- それ以外のインジケーター候補の場合...
             -----------------------------------------------------------------------
             when ','    => TOKEN_LEN := 1; TOKEN := TOKEN_FLOW_ENTRY;
             when '['    => TOKEN_LEN := 1; TOKEN := TOKEN_FLOW_SEQ_BEGIN;
