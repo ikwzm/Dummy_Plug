@@ -1,7 +1,7 @@
 -----------------------------------------------------------------------------------
 --!     @file    reader.vhd
 --!     @brief   Package for Dummy Plug Scenario Reader.
---!     @version 1.0.2
+--!     @version 1.0.3
 --!     @date    2012/11/2
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
@@ -695,13 +695,13 @@ package body  READER is
         end if;
     end procedure;
     -------------------------------------------------------------------------------
-    --! @brief テキストラインの *指定されたポイントの* 文字を得るサブプログラム.
+    --! @brief テキストラインの *指定された位置の* 文字を得るサブプログラム.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --!      * テキストラインをスキャンするだけで、ポインタを更新したり、新たに
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --! @param    SELF        リーダー変数.
-    --! @param    POS         スキャンするポイント.
+    --! @param    POS         スキャンする位置.
     --! @param    CHAR        ポインタが示している文字を出力.
     --! @param    GOOD        ポインタがまだ行内にあることを示す.
     -------------------------------------------------------------------------------
@@ -723,7 +723,7 @@ package body  READER is
         end if;
     end procedure;
     -------------------------------------------------------------------------------
-    --! @brief テキストラインの *現在のポイントの* 文字を得るサブプログラム.
+    --! @brief テキストラインの *現在の位置の* 文字を得るサブプログラム.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --!      * テキストラインをスキャンするだけで、ポインタを更新したり、新たに
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
@@ -741,15 +741,15 @@ package body  READER is
         scan_char(SELF, SELF.text_pos, CHAR, GOOD);
     end procedure;
     -------------------------------------------------------------------------------
-    --! @brief テキストラインの *指定されたポイントから* スキャンを開始し、
+    --! @brief テキストラインの *指定された位置から* スキャンを開始し、
     --!        空白以外のキャラクタをみつけたら、そのキャラと空白文字の数を返す.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --!      * テキストラインをスキャンするだけで、ポインタを更新したり、新たに
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --! @param    SELF        リーダー変数.
-    --! @param    START_POS   スキャンを開始するポイント.
-    --! @param    CHAR        見つかった空白以外のキャラクタ.
+    --! @param    START_POS   スキャンを開始する位置.
+    --! @param    FOUND_CHAR  見つかった空白以外のキャラクタ.
     --! @param    FOUND       見つかったことを示す.
     --! @param    FOUND_LEN   見つかった空白の数.
     --! @param    END_LINE    ポインタが行末を越えたことを示す.
@@ -757,7 +757,7 @@ package body  READER is
     procedure scan_space(
         variable  SELF          : inout READER_TYPE;
                   START_POS     : in    integer;    
-                  CHAR          : out   character;  
+                  FOUND_CHAR    : out   character;  
                   FOUND         : out   boolean;    
                   FOUND_LEN     : out   integer;    
                   END_LINE      : out   boolean     
@@ -769,35 +769,35 @@ package body  READER is
         if (SELF.end_of_file  =  TRUE) or
            (SELF.text_line    =  null) or
            (START_POS > SELF.text_end) then
-                CHAR      := nul;
-                FOUND     := FALSE;
-                FOUND_LEN := 0;
-                END_LINE  := TRUE;
+                FOUND_CHAR := nul;
+                FOUND      := FALSE;
+                FOUND_LEN  := 0;
+                END_LINE   := TRUE;
                 return;
         end if;
         pos  := START_POS;
         len  := 0;
         scan_space_loop:  loop
             if (pos > SELF.text_end) then
-                CHAR      := nul;
-                FOUND     := FALSE;
-                FOUND_LEN := 0;
-                END_LINE  := TRUE;
+                FOUND_CHAR := nul;
+                FOUND      := FALSE;
+                FOUND_LEN  := 0;
+                END_LINE   := TRUE;
                 return;
             end if;
             curr_char := SELF.text_line(pos);
             if (curr_char = '#') then
-                CHAR      := ' ';
-                FOUND     := TRUE;
-                FOUND_LEN := SELF.text_end-START_POS+1;
-                END_LINE  := FALSE;
+                FOUND_CHAR := ' ';
+                FOUND      := TRUE;
+                FOUND_LEN  := SELF.text_end-START_POS+1;
+                END_LINE   := FALSE;
                 return;
             end if;
             if (is_space(curr_char) = FALSE) then
-                CHAR      := curr_char;
-                FOUND     := (pos > START_POS);
-                FOUND_LEN := len;
-                END_LINE  := FALSE;
+                FOUND_CHAR := curr_char;
+                FOUND      := (pos > START_POS);
+                FOUND_LEN  := len;
+                END_LINE   := FALSE;
                 return;
             end if;
             pos := pos + 1;
@@ -813,14 +813,14 @@ package body  READER is
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --! @param    SELF        リーダー変数.
     --! @param    STREAM      入力ストリーム.
-    --! @param    CHAR        見つかった空白以外の文字.
+    --! @param    FOUND_CHAR  見つかった空白以外の文字.
     --! @param    FOUND       空白以外の文字が見つかったことを示す.
     --! @param    END_STREAM  ストリームが最期に達したことを示す.
     -------------------------------------------------------------------------------
     procedure skip_space(
         variable  SELF          : inout READER_TYPE;
         file      STREAM        :       TEXT;       
-                  CHAR          : out   character;  
+                  FOUND_CHAR    : out   character;  
                   FOUND         : out   boolean;    
                   END_STREAM    : out   boolean     
     ) is
@@ -837,7 +837,7 @@ package body  READER is
                 exit when (curr_char = '#');
                 if (is_space(curr_char) = FALSE) then
                     SELF.text_pos := pos;
-                    CHAR          := curr_char;
+                    FOUND_CHAR    := curr_char;
                     FOUND         := TRUE;
                     END_STREAM    := FALSE;
                     return;
@@ -845,7 +845,7 @@ package body  READER is
             end loop;
             SELF.text_pos := SELF.text_end+1;
         end loop;
-        CHAR       := nul;
+        FOUND_CHAR := nul;
         FOUND      := FALSE;
         END_STREAM := TRUE;
     end skip_space;
@@ -868,7 +868,7 @@ package body  READER is
         skip_space(SELF, STREAM, char, found, stream_end);
     end skip_space;
     -------------------------------------------------------------------------------
-    --! @brief テキストラインの *指定されたポイントから* スキャンを開始し、
+    --! @brief テキストラインの *指定された位置から* スキャンを開始し、
     --!        '...' または "..." のようなクォートされた文字列をみつけたら
     --!        その文字数(クォート文字含む)を返す.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -876,7 +876,7 @@ package body  READER is
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --! @param    SELF        リーダー変数.
-    --! @param    START_POS   スキャンを開始するポイント.
+    --! @param    START_POS   スキャンを開始する位置.
     --! @param    FOUND       見つかったことを示す.
     --! @param    FOUND_LEN   見つかった空白の数.
     --! @param    END_LINE    ポインタが行末を越えたことを示す.
@@ -925,7 +925,7 @@ package body  READER is
         END_LINE  := FALSE;
     end procedure;
     -------------------------------------------------------------------------------
-    --! @brief テキストラインの *現在のポイントから* スキャンを開始し、
+    --! @brief テキストラインの *現在の位置から* スキャンを開始し、
     --!        '...' または "..." のようなクォートされた文字列をみつけたら
     --!        その文字数(クォート文字含む)を返す.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -947,14 +947,14 @@ package body  READER is
         scan_quoted_string(SELF, SELF.text_pos, FOUND, FOUND_LEN, END_LINE);
     end procedure;
     -------------------------------------------------------------------------------
-    --! @brief テキストラインの *指定されたポイントから* スキャンを開始し、
+    --! @brief テキストラインの *指定された位置から* スキャンを開始し、
     --!        ドキュメント開始を示すキーワード "---" 探す.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --!      * テキストラインをスキャンするだけで、ポインタを更新したり、新たに
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --! @param    SELF        リーダー変数.
-    --! @param    START_POS   スキャンを開始するポイント.
+    --! @param    START_POS   スキャンを開始する位置.
     --! @param    FOUND       見つかったことを示す.
     --! @param    FOUND_LEN   見つかった空白の数.
     --! @param    END_LINE    ポインタが行末を越えたことを示す.
@@ -989,7 +989,7 @@ package body  READER is
         end if;
     end procedure;
     -------------------------------------------------------------------------------
-    --! @brief テキストラインの *現在のポイントから* スキャンを開始し、
+    --! @brief テキストラインの *現在の位置から* スキャンを開始し、
     --!        ドキュメント開始を示すキーワード "---" 探す.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --!      * テキストラインをスキャンするだけで、ポインタを更新したり、新たに
@@ -1010,14 +1010,14 @@ package body  READER is
         scan_doc_begin(SELF, SELF.text_pos, FOUND, FOUND_LEN, END_LINE);
     end procedure;
     -------------------------------------------------------------------------------
-    --! @brief テキストラインの *指定されたポイントから* スキャンを開始し、
+    --! @brief テキストラインの *指定された位置から* スキャンを開始し、
     --!        ドキュメント開始を示すキーワード "..." 探す.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --!      * テキストラインをスキャンするだけで、ポインタを更新したり、新たに
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --! @param    SELF        リーダー変数.
-    --! @param    START_POS   スキャンを開始するポイント.
+    --! @param    START_POS   スキャンを開始する位置.
     --! @param    FOUND       見つかったことを示す.
     --! @param    FOUND_LEN   見つかった空白の数.
     --! @param    END_LINE    ポインタが行末を越えたことを示す.
@@ -1073,7 +1073,7 @@ package body  READER is
         scan_doc_end(SELF, SELF.text_pos, FOUND, FOUND_LEN, END_LINE);
     end procedure;
     -------------------------------------------------------------------------------
-    --! @brief テキストラインの *指定されたポイントから* スキャンを開始し、
+    --! @brief テキストラインの *指定された位置から* スキャンを開始し、
     --!        指定されたインジケーターを探す.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --!      * インジケーターの後に空白または行末があることに注意.
@@ -1081,7 +1081,7 @@ package body  READER is
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --! @param    SELF        リーダー変数.
-    --! @param    START_POS   スキャンを開始するポイント.
+    --! @param    START_POS   スキャンを開始する位置.
     --! @param    INDICATOR   探すインジケーター.
     --! @param    FOUND       見つかったことを示す.
     --! @param    FOUND_LEN   見つかった空白の数.
@@ -1121,7 +1121,7 @@ package body  READER is
         end if;
     end procedure;
     -------------------------------------------------------------------------------
-    --! @brief テキストラインの *現在のポイントから* スキャンを開始し、
+    --! @brief テキストラインの *現在の位置から* スキャンを開始し、
     --!        指定されたインジケーターを探す.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --!      * インジケーターの後に空白または行末があることに注意.
@@ -1145,7 +1145,7 @@ package body  READER is
         scan_indicator(SELF, SELF.text_pos, INDICATOR, FOUND, FOUND_LEN, END_LINE);
     end procedure;
     -------------------------------------------------------------------------------
-    --! @brief テキストラインの *指定されたポイントから* スキャンを開始し、
+    --! @brief テキストラインの *指定された位置から* スキャンを開始し、
     --!        指定されたインジケーターを探す.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --!      * インジケーターの後に空白または行末があることに注意.
@@ -1153,10 +1153,10 @@ package body  READER is
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --! @param    SELF        リーダー変数.
-    --! @param    START_POS   スキャンを開始するポイント.
+    --! @param    START_POS   スキャンを開始する位置.
     --! @param    INDICATOR   探すインジケーター.
     --! @param    FOUND       見つかったことを示す.
-    --! @param    FOUND_POS   見つかったインジケータの文字数.
+    --! @param    FOUND_POS   見つかったインジケータの位置.
     --! @param    FOUND_LEN   見つかった空白の数.
     --! @param    END_LINE    ポインタが行末を越えたことを示す.
     -------------------------------------------------------------------------------
@@ -1170,17 +1170,17 @@ package body  READER is
                   END_LINE      : out   boolean 
     ) is
         variable  pos           :       integer;
-        variable  found_char    :       boolean;
+        variable  char_found    :       boolean;
         variable  space_len     :       integer;
         variable  sep_len       :       integer;
-        variable  char          :       character;
+        variable  found_char    :       character;
         variable  end_of_line   :       boolean;
     begin
         pos := START_POS;
-        scan_space    (SELF, pos, char, found_char, space_len, end_of_line);
+        scan_space    (SELF, pos, found_char, char_found, space_len, end_of_line);
         pos := pos + space_len;
-        scan_indicator(SELF, pos, ':' , found_char, sep_len  , end_of_line);
-        if (found_char = FALSE) then
+        scan_indicator(SELF, pos, INDICATOR , char_found, sep_len  , end_of_line);
+        if (char_found = FALSE) then
             FOUND     := FALSE;
             FOUND_POS := START_POS;
             FOUND_LEN := 0;
@@ -1193,7 +1193,7 @@ package body  READER is
         end if;
     end procedure;
     -------------------------------------------------------------------------------
-    -- @brief テキストラインの *現在のポイントから* スキャンを開始し、
+    -- @brief テキストラインの *現在の位置から* スキャンを開始し、
     --        指定されたインジケーターを探す.
     -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --      * インジケーターの後に空白または行末があることに注意.
@@ -1214,7 +1214,7 @@ package body  READER is
     --     find_indicator(SELF, SELF.text_pos, INDICATOR, FOUND, FOUND_POS, FOUND_LEN, END_LINE);
     -- end procedure;
     -------------------------------------------------------------------------------
-    --! @brief テキストラインの *指定されたポイントから* スキャンを開始し、
+    --! @brief テキストラインの *指定された位置から* スキャンを開始し、
     --!        TAGを見つけてタグの文字列の位置と長さを返す.
     --!        その文字数(クォート文字含む)を返す.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1222,7 +1222,7 @@ package body  READER is
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --! @param    SELF        リーダー変数.
-    --! @param    START_POS   スキャンを開始するポイント.
+    --! @param    START_POS   スキャンを開始する位置.
     --! @param    FOUND       見つかったことを示す.
     --! @param    FOUND_LEN   見つかった空白の数.
     --! @param    TAG_POS     タグ文字列の開始位置.
@@ -1303,7 +1303,7 @@ package body  READER is
         END_LINE  := FALSE;
     end procedure;
     -------------------------------------------------------------------------------
-    --! @brief テキストラインの *現在のポイントから* スキャンを開始し、
+    --! @brief テキストラインの *現在の位置から* スキャンを開始し、
     --!        TAGを見つけてタグの文字列の位置と長さを返す.
     --!        その文字数(クォート文字含む)を返す.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1329,16 +1329,16 @@ package body  READER is
         scan_tag_prop(SELF, SELF.text_pos, FOUND, FOUND_LEN, TAG_POS, TAG_LEN, END_LINE);
     end procedure;
     -------------------------------------------------------------------------------
-    --! @brief テキストラインの *指定されたポイントの次のポイント* スキャンを開始し、
+    --! @brief テキストラインの *指定された位置の次の位置* スキャンを開始し、
     --!        プレーンスカラー(plain scalar)を探す.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    --!      * 最初のポイントのキャラクタは既にスキャン済みでスカラーであることが
+    --!      * 最初の位置のキャラクタは既にスキャン済みでスカラーであることが
     --!        確認されている事が前提.
     --!      * テキストラインをスキャンするだけで、ポインタを更新したり、新たに
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --! @param    SELF        リーダー変数.
-    --! @param    START_POS   スキャンを開始するポイント.
+    --! @param    START_POS   スキャンを開始する位置.
     --! @param    FOUND       見つかったことを示す.
     --! @param    FOUND_LEN   見つかった空白の数.
     --! @param    END_LINE    ポインタが行末を越えたことを示す.
@@ -1406,10 +1406,10 @@ package body  READER is
         FOUND_LEN := len;
     end procedure;
     -------------------------------------------------------------------------------
-    --! @brief テキストラインの *現在のポイントの次のポイント* スキャンを開始し、
+    --! @brief テキストラインの *現在の位置の次の位置* スキャンを開始し、
     --!        プレーンスカラー(plain scalar)を探す.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    --!      * 最初のポイントのキャラクタは既にスキャン済みでスカラーであることが
+    --!      * 最初の位置のキャラクタは既にスキャン済みでスカラーであることが
     --!        確認されている事が前提.
     --!      * テキストラインをスキャンするだけで、ポインタを更新したり、新たに
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
@@ -1429,14 +1429,14 @@ package body  READER is
         scan_plain_one_line(SELF, SELF.text_pos, FOUND, FOUND_LEN, END_LINE);
     end procedure;
     -------------------------------------------------------------------------------
-    --! @brief テキストラインの *指定されたポイントから* スキャンを開始し、
+    --! @brief テキストラインの *指定された位置から* スキャンを開始し、
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --!        プレーンスカラー(plain scalar)を探す.
     --!      * テキストラインをスキャンするだけで、ポインタを更新したり、新たに
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --! @param    SELF        リーダー変数.
-    --! @param    START_POS   スキャンを開始するポイント.
+    --! @param    START_POS   スキャンを開始する位置.
     --! @param    FOUND       見つかったことを示す.
     --! @param    FOUND_LEN   見つかった空白の数.
     --! @param    END_LINE    ポインタが行末を越えたことを示す.
@@ -1772,7 +1772,7 @@ package body  READER is
     --! @param    SELF        リーダー変数.
     --! @param    STREAM      入力ストリーム.
     --! @param    TOKEN       読み飛ばすトークン.
-    --! @param    POS         トークンのポイント.
+    --! @param    POS         トークンの位置.
     --! @param    LEN         トークンの文字数.
     -------------------------------------------------------------------------------
     procedure skip_token(
@@ -1807,7 +1807,7 @@ package body  READER is
         return self;
     end function;
     -------------------------------------------------------------------------------
-    --! @brief テキストラインの *指定されたポイントから* スキャンを開始し、
+    --! @brief テキストラインの *指定された位置から* スキャンを開始し、
     --!        行内に完結したフローコレクション('['...']' or '{'...'}')があるかを探す.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --!      * このサブプログラムは、行内に暗黙のマップキーがあるかどうかを調べる
@@ -1816,7 +1816,7 @@ package body  READER is
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --! @param    SELF        リーダー変数.
-    --! @param    START_POS   スキャンを開始するポイント.
+    --! @param    START_POS   スキャンを開始する位置.
     --! @param    END_CHAR    閉じ括弧を指定する.
     --! @param    FOUND       見つかったことを示す.
     --! @param    FOUND_LEN   見つかった空白の数.
@@ -1880,7 +1880,7 @@ package body  READER is
         END_LINE  := TRUE;
     end procedure;
     -------------------------------------------------------------------------------
-    --! @brief テキストラインの *現在のポイントから* スキャンを開始し、
+    --! @brief テキストラインの *現在の位置から* スキャンを開始し、
     --!        行内に暗黙のマップキーがあるか調べる.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --!      * テキストラインをスキャンするだけで、ポインタを更新したり、新たに
@@ -2167,24 +2167,23 @@ package body  READER is
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --! @param    SELF        リーダー変数.
     --! @param    STREAM      入力ストリーム.
-    --! @param    STATE       現在の構造の状態.
-    --! @param    INDENT      現在のインデントの状態.
     --! @param    LEN         読み出した文字数.
     --! @param    GOOD        読み取りに成功したことを示す.
     -------------------------------------------------------------------------------
     procedure read_doc_begin(
         variable  SELF          : inout READER_TYPE;
         file      STREAM        :       TEXT;
-                  STATE         : in    STATE_TYPE;
-                  INDENT        : in    INDENT_TYPE;
                   LEN           : out   integer;
                   GOOD          : out   boolean 
     ) is
+        variable  curr_state    :       STATE_TYPE;
+        variable  curr_indent   :       INDENT_TYPE;
         variable  token         :       TOKEN_TYPE;
         variable  token_pos     :       integer;
         variable  token_len     :       integer;
     begin
-        case STATE is
+        get_struct_state(SELF, curr_state, curr_indent);
+        case curr_state is
             when STATE_NONE  =>
                 scan_token(SELF, token, token_pos, token_len);
                 if (token = TOKEN_DOCUMENT_BEGIN) then
@@ -2203,25 +2202,24 @@ package body  READER is
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --! @param    SELF        リーダー変数.
     --! @param    STREAM      入力ストリーム.
-    --! @param    STATE       現在の構造の状態.
-    --! @param    INDENT      現在のインデントの状態.
     --! @param    LEN         読み出した文字数.
     --! @param    GOOD        読み取りに成功したことを示す.
     -------------------------------------------------------------------------------
     procedure read_doc_end(
         variable  SELF          : inout READER_TYPE;
         file      STREAM        :       TEXT;
-                  STATE         : in    STATE_TYPE;
-                  INDENT        : in    INDENT_TYPE;
                   LEN           : out   integer;
                   GOOD          : out   boolean
     ) is
+        variable  curr_state    :       STATE_TYPE;
+        variable  curr_indent   :       INDENT_TYPE;
         variable  token         :       TOKEN_TYPE; 
         variable  token_pos     :       integer;
         variable  token_len     :       integer;
         variable  stack_good    :       boolean;
     begin
-        case STATE is
+        get_struct_state(SELF, curr_state, curr_indent);
+        case curr_state is
             when STATE_DOCUMENT  =>
                 scan_token(SELF, token, token_pos, token_len);
                 if (token = TOKEN_DOCUMENT_END) then
@@ -2248,26 +2246,25 @@ package body  READER is
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --! @param    SELF        リーダー変数.
     --! @param    STREAM      入力ストリーム.
-    --! @param    STATE       現在の構造の状態.
-    --! @param    INDENT      現在のインデントの状態.
     --! @param    LEN         読み出した文字数.
     --! @param    GOOD        読み取りに成功したことを示す.
     -------------------------------------------------------------------------------
     procedure read_seq_begin(
         variable  SELF          : inout READER_TYPE;
         file      STREAM        :       TEXT;
-                  STATE         : in    STATE_TYPE;
-                  INDENT        : in    INDENT_TYPE;
                   LEN           : out   integer;
                   GOOD          : out   boolean
     ) is
         variable  token         :       TOKEN_TYPE;
         variable  token_pos     :       integer;
         variable  token_len     :       integer;
+        variable  curr_state    :       STATE_TYPE;
         variable  next_state    :       STATE_TYPE;
+        variable  next_indent   :       INDENT_TYPE;
         variable  new_indent    :       INDENT_TYPE;
     begin
-        case STATE is
+        get_struct_state(SELF, curr_state, next_indent);
+        case curr_state is
             when STATE_DOCUMENT               => next_state := STATE_DOCUMENT;
             when STATE_FLOW_SEQ_VAL           => next_state := STATE_FLOW_SEQ_END ;
             when STATE_FLOW_MAP_KEY           => next_state := STATE_FLOW_MAP_SEP ;
@@ -2287,9 +2284,9 @@ package body  READER is
                 skip_token(SELF, STREAM, token, token_pos, token_len);
                 set_struct_state(SELF, next_state);
                 call_struct_state(
-                    SELF    => SELF,
+                    SELF       => SELF,
                     RET_STATE  => next_state,
-                    RET_INDENT => INDENT,
+                    RET_INDENT => next_indent,
                     NEW_STATE  => STATE_BLOCK_SEQ_VAL,
                     NEW_INDENT => new_indent,
                     GOOD       => GOOD
@@ -2301,7 +2298,7 @@ package body  READER is
                 call_struct_state(
                     SELF    => SELF,
                     RET_STATE  => next_state,
-                    RET_INDENT => INDENT,
+                    RET_INDENT => next_indent,
                     NEW_STATE  => STATE_FLOW_SEQ_VAL,
                     NEW_INDENT => new_indent,
                     GOOD       => GOOD
@@ -2317,24 +2314,23 @@ package body  READER is
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --! @param    SELF        リーダー変数.
     --! @param    STREAM      入力ストリーム.
-    --! @param    STATE       現在の構造の状態.
-    --! @param    INDENT      現在のインデントの状態.
     --! @param    LEN         読み出した文字数.
     --! @param    GOOD        読み取りに成功したことを示す.
     -------------------------------------------------------------------------------
     procedure read_seq_end(
         variable  SELF          : inout READER_TYPE;
         file      STREAM        :       TEXT;
-                  STATE         : in    STATE_TYPE;
-                  INDENT        : in    INDENT_TYPE;
                   LEN           : out   integer;
                   GOOD          : out   boolean
     ) is
+        variable  curr_state    :       STATE_TYPE;
+        variable  curr_indent   :       INDENT_TYPE;
         variable  token         :       TOKEN_TYPE;
         variable  token_pos     :       integer;
         variable  token_len     :       integer;
     begin
-        case STATE is
+        get_struct_state(SELF, curr_state, curr_indent);
+        case curr_state is
             when STATE_BLOCK_SEQ_END =>
                 LEN := 0;
                 return_struct_state(SELF, GOOD);
@@ -2358,30 +2354,29 @@ package body  READER is
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --! @param    SELF        リーダー変数.
     --! @param    STREAM      入力ストリーム.
-    --! @param    STATE       現在の構造の状態.
-    --! @param    INDENT      現在のインデントの状態.
     --! @param    LEN         読み出した文字数.
     --! @param    GOOD        読み取りに成功したことを示す.
     -------------------------------------------------------------------------------
     procedure read_seq_next(
         variable  SELF          : inout READER_TYPE;
         file      STREAM        :       TEXT;
-                  STATE         : in    STATE_TYPE;
-                  INDENT        : in    INDENT_TYPE;
                   LEN           : out   integer;
                   GOOD          : out   boolean 
     ) is
+        variable  curr_state    :       STATE_TYPE;
+        variable  curr_indent   :       INDENT_TYPE;
         variable  token         :       TOKEN_TYPE;
         variable  token_pos     :       integer;
         variable  token_len     :       integer;
         variable  stack_good    :       boolean;
     begin
-        case STATE is
+        get_struct_state(SELF, curr_state, curr_indent);
+        case curr_state is
             when STATE_BLOCK_SEQ_END => 
                 scan_token(SELF, token, token_pos, token_len);
                 if (token = TOKEN_SEQ_ENTRY) then
-                    set_struct_state(SELF, STATE_BLOCK_SEQ_VAL);
                     skip_token(SELF, STREAM, token, token_pos, token_len);
+                    set_struct_state(SELF, STATE_BLOCK_SEQ_VAL);
                     LEN  := token_len;
                     GOOD := TRUE;
                 else
@@ -2391,8 +2386,8 @@ package body  READER is
             when STATE_FLOW_SEQ_END  =>
                 scan_token(SELF, token, token_pos, token_len);
                 if (token = TOKEN_FLOW_ENTRY) then
-                    set_struct_state(SELF, STATE_FLOW_SEQ_VAL);
                     skip_token(SELF, STREAM, token, token_pos, token_len);
+                    set_struct_state(SELF, STATE_FLOW_SEQ_VAL);
                     LEN  := token_len;
                     GOOD := TRUE;
                 else
@@ -2409,27 +2404,26 @@ package body  READER is
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --! @param    SELF        リーダー変数.
     --! @param    STREAM      入力ストリーム.
-    --! @param    STATE       現在の構造の状態.
-    --! @param    INDENT      現在のインデントの状態.
     --! @param    LEN         読み出した文字数.
     --! @param    GOOD        読み取りに成功したことを示す.
     -------------------------------------------------------------------------------
     procedure read_map_begin(
         variable  SELF          : inout READER_TYPE;
         file      STREAM        :       TEXT;
-                  STATE         : in    STATE_TYPE;
-                  INDENT        : in    INDENT_TYPE;
                   LEN           : out   integer;
                   GOOD          : out   boolean
     ) is
         variable  token         :       TOKEN_TYPE;
         variable  token_pos     :       integer;
         variable  token_len     :       integer;
-        variable  ret_state     :       STATE_TYPE;
-        variable  new_indent    :       INDENT_TYPE;
         variable  found         :       boolean;
+        variable  curr_state    :       STATE_TYPE;
+        variable  ret_state     :       STATE_TYPE;
+        variable  ret_indent    :       INDENT_TYPE;
+        variable  new_indent    :       INDENT_TYPE;
     begin
-        case STATE is
+        get_struct_state(SELF, curr_state, ret_indent);
+        case curr_state is
             when STATE_DOCUMENT               => ret_state := STATE_DOCUMENT;
             when STATE_FLOW_SEQ_VAL           => ret_state := STATE_FLOW_SEQ_END ;
             when STATE_FLOW_MAP_KEY           => ret_state := STATE_FLOW_MAP_SEP ;
@@ -2454,7 +2448,7 @@ package body  READER is
                 call_struct_state(
                     SELF       => SELF,
                     RET_STATE  => ret_state,
-                    RET_INDENT => INDENT,
+                    RET_INDENT => ret_indent,
                     RET_MAPKEY => MAPKEY_NULL,
                     NEW_STATE  => STATE_BLOCK_MAP_IMPLICIT_KEY,
                     NEW_INDENT => new_indent,
@@ -2465,9 +2459,9 @@ package body  READER is
             when TOKEN_MAP_EXPLICIT_KEY =>
                 skip_token(SELF, STREAM, token, token_pos, token_len);
                 call_struct_state(
-                    SELF    => SELF,
+                    SELF       => SELF,
                     RET_STATE  => ret_state,
-                    RET_INDENT => INDENT,
+                    RET_INDENT => ret_indent,
                     NEW_STATE  => STATE_BLOCK_MAP_EXPLICIT_KEY,
                     NEW_INDENT => new_indent,
                     GOOD       => GOOD
@@ -2477,9 +2471,9 @@ package body  READER is
                 scan_block_map_implicit_key(SELF, found);
                 if (found = TRUE) then
                     call_struct_state(
-                        SELF    => SELF,
+                        SELF       => SELF,
                         RET_STATE  => ret_state,
-                        RET_INDENT => INDENT,
+                        RET_INDENT => ret_indent,
                         RET_MAPKEY => MAPKEY_NULL,
                         NEW_STATE  => STATE_BLOCK_MAP_IMPLICIT_KEY,
                         NEW_INDENT => new_indent,
@@ -2490,9 +2484,9 @@ package body  READER is
                 else
                     skip_token(SELF, STREAM, token, token_pos, token_len);
                     call_struct_state(
-                        SELF    => SELF,
+                        SELF       => SELF,
                         RET_STATE  => ret_state,
-                        RET_INDENT => INDENT,
+                        RET_INDENT => ret_indent,
                         NEW_STATE  => STATE_FLOW_MAP_KEY,
                         NEW_INDENT => new_indent,
                         GOOD       => GOOD
@@ -2509,29 +2503,28 @@ package body  READER is
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --! @param    SELF        リーダー変数.
     --! @param    STREAM      入力ストリーム.
-    --! @param    STATE       現在の構造の状態.
-    --! @param    INDENT      現在のインデントの状態.
     --! @param    LEN         読み出した文字数.
     --! @param    GOOD        読み取りに成功したことを示す.
     -------------------------------------------------------------------------------
     procedure read_map_sep(
         variable  SELF          : inout READER_TYPE;
         file      STREAM        :       TEXT;
-                  STATE         : in    STATE_TYPE;
-                  INDENT        : in    INDENT_TYPE;
                   LEN           : out   integer;
                   GOOD          : out   boolean
     ) is
+        variable  curr_state    :       STATE_TYPE;
+        variable  curr_indent   :       INDENT_TYPE;
         variable  token         :       TOKEN_TYPE;
         variable  token_pos     :       integer;
         variable  token_len     :       integer;
     begin
-        case STATE is
+        get_struct_state(SELF, curr_state, curr_indent);
+        case curr_state is
             when STATE_BLOCK_MAP_IMPLICIT_SEP =>
                 scan_token(SELF, token, token_pos, token_len);
                 if (token = TOKEN_MAP_SEPARATOR) then
                     skip_token(SELF, STREAM, token, token_pos, token_len);
-                    set_struct_state(SELF, STATE_BLOCK_MAP_IMPLICIT_VAL, INDENT, MAPKEY_NULL);
+                    set_struct_state(SELF, STATE_BLOCK_MAP_IMPLICIT_VAL, curr_indent, MAPKEY_NULL);
                     LEN  := token_len;
                     GOOD := TRUE;
                 else
@@ -2542,7 +2535,7 @@ package body  READER is
                 scan_token(SELF, token, token_pos, token_len);
                 if (token = TOKEN_MAP_SEPARATOR) then
                     skip_token(SELF, STREAM, token, token_pos, token_len);
-                    set_struct_state(SELF, STATE_BLOCK_MAP_EXPLICIT_VAL, INDENT, MAPKEY_NULL);
+                    set_struct_state(SELF, STATE_BLOCK_MAP_EXPLICIT_VAL, curr_indent, MAPKEY_NULL);
                     LEN  := token_len;
                     GOOD := TRUE;
                 else
@@ -2553,7 +2546,7 @@ package body  READER is
                 scan_token(SELF, token, token_pos, token_len);
                 if (token = TOKEN_MAP_SEPARATOR) then
                     skip_token(SELF, STREAM, token, token_pos, token_len);
-                    set_struct_state(SELF, STATE_FLOW_MAP_VAL, INDENT, MAPKEY_NULL);
+                    set_struct_state(SELF, STATE_FLOW_MAP_VAL          , curr_indent, MAPKEY_NULL);
                     LEN  := token_len;
                     GOOD := TRUE;
                 else
@@ -2570,24 +2563,23 @@ package body  READER is
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --! @param    SELF        リーダー変数.
     --! @param    STREAM      入力ストリーム.
-    --! @param    STATE       現在の構造の状態.
-    --! @param    INDENT      現在のインデントの状態.
     --! @param    LEN         読み出した文字数.
     --! @param    GOOD        読み取りに成功したことを示す.
     -------------------------------------------------------------------------------
     procedure read_map_end(
         variable  SELF          : inout READER_TYPE;
         file      STREAM        :       TEXT;
-                  STATE         : in    STATE_TYPE;
-                  INDENT        : in    INDENT_TYPE;
                   LEN           : out   integer;
                   GOOD          : out   boolean 
     ) is
+        variable  curr_state    :       STATE_TYPE;
+        variable  curr_indent   :       INDENT_TYPE;
         variable  token         :       TOKEN_TYPE;
         variable  token_pos     :       integer;
         variable  token_len     :       integer;
     begin
-        case STATE is
+        get_struct_state(SELF, curr_state, curr_indent);
+        case curr_state is
             when STATE_BLOCK_MAP_IMPLICIT_END =>
                 LEN := 0;
                 return_struct_state(SELF, GOOD);
@@ -2614,24 +2606,23 @@ package body  READER is
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --! @param    SELF        リーダー変数.
     --! @param    STREAM      入力ストリーム.
-    --! @param    STATE       現在の構造の状態.
-    --! @param    INDENT      現在のインデントの状態.
     --! @param    LEN         読み出した文字数.
     --! @param    GOOD        読み取りに成功したことを示す.
     -------------------------------------------------------------------------------
     procedure read_map_next(
         variable  SELF          : inout READER_TYPE;
         file      STREAM        :       TEXT;
-                  STATE         : in    STATE_TYPE;
-                  INDENT        : in    INDENT_TYPE;
                   LEN           : out   integer;
                   GOOD          : out   boolean 
     ) is
+        variable  curr_state    :       STATE_TYPE;
+        variable  curr_indent   :       INDENT_TYPE;
         variable  token         :       TOKEN_TYPE;
         variable  token_pos     :       integer;
         variable  token_len     :       integer;
     begin
-        case STATE is
+        get_struct_state(SELF, curr_state, curr_indent);
+        case curr_state is
             when STATE_BLOCK_MAP_IMPLICIT_END |
                  STATE_BLOCK_MAP_EXPLICIT_END =>
                 scan_token(SELF, token, token_pos, token_len);
@@ -2793,9 +2784,9 @@ package body  READER is
         SEEK_EVENT(SELF, STREAM, next_event);
         get_struct_state(SELF, curr_state, curr_indent);
         case next_event is
-            when  EVENT_SEQ_NEXT => read_seq_next(SELF, STREAM, curr_state, curr_indent, token_len, GOOD);
-            when  EVENT_MAP_NEXT => read_map_next(SELF, STREAM, curr_state, curr_indent, token_len, GOOD);
-            when  EVENT_MAP_SEP  => read_map_sep (SELF, STREAM, curr_state, curr_indent, token_len, GOOD);
+            when  EVENT_SEQ_NEXT => read_seq_next(SELF, STREAM, token_len, GOOD);
+            when  EVENT_MAP_NEXT => read_map_next(SELF, STREAM, token_len, GOOD);
+            when  EVENT_MAP_SEP  => read_map_sep (SELF, STREAM, token_len, GOOD);
             when  others         => GOOD := TRUE;
         end case;
     end procedure;
@@ -2938,34 +2929,33 @@ package body  READER is
         scan_token(SELF, token, token_pos, token_len);
         case token is
             when TOKEN_SCALAR  =>
-                set_struct_state(SELF, next_state);
                 read_plain_scalar (SELF, STR, STR_LEN, READ_LEN, line_end);
+                set_struct_state(SELF, next_state);
                 GOOD := TRUE;
             when TOKEN_SINGLE_QUOTE =>
-                set_struct_state(SELF, next_state);
                 read_quoted_string(SELF, STR, STR_LEN, READ_LEN, line_end);
+                set_struct_state(SELF, next_state);
                 GOOD := TRUE;
             when TOKEN_DOUBLE_QUOTE =>
-                set_struct_state(SELF, next_state);
                 read_quoted_string(SELF, STR, STR_LEN, READ_LEN, line_end);
+                set_struct_state(SELF, next_state);
                 GOOD := TRUE;
             when TOKEN_LITERAL =>
-                set_struct_state(SELF, next_state);
                 read_literal_string(SELF, STREAM, token, STR, STR_LEN, READ_LEN, GOOD);
+                set_struct_state(SELF, next_state);
             when TOKEN_FOLDED =>
-                set_struct_state(SELF, next_state);
                 read_literal_string(SELF, STREAM, token, STR, STR_LEN, READ_LEN, GOOD);
+                set_struct_state(SELF, next_state);
             when others =>
                 STR_LEN  := 0;
                 READ_LEN := 0;
                 GOOD     := FALSE;
         end case;
-        get_struct_state(SELF, curr_state, curr_indent);
         SEEK_EVENT(SELF, STREAM, next_event);
         case next_event is
-            when  EVENT_SEQ_NEXT => read_seq_next(SELF, STREAM, curr_state, curr_indent, token_len, GOOD);
-            when  EVENT_MAP_NEXT => read_map_next(SELF, STREAM, curr_state, curr_indent, token_len, GOOD);
-            when  EVENT_MAP_SEP  => read_map_sep (SELF, STREAM, curr_state, curr_indent, token_len, GOOD);
+            when  EVENT_SEQ_NEXT => read_seq_next(SELF, STREAM, token_len, GOOD);
+            when  EVENT_MAP_NEXT => read_map_next(SELF, STREAM, token_len, GOOD);
+            when  EVENT_MAP_SEP  => read_map_sep (SELF, STREAM, token_len, GOOD);
             when  others         => null;
         end case;
     end procedure;
@@ -3075,8 +3065,6 @@ package body  READER is
                   READ_LEN      : out   integer;
                   GOOD          : out   boolean
     ) is
-        variable  state         :       STATE_TYPE;
-        variable  indent        :       INDENT_TYPE;
         variable  next_event    :       EVENT_TYPE;
         variable  dummy_len     :       integer;
     begin
@@ -3085,7 +3073,6 @@ package body  READER is
             assert (FALSE) report "READ_EVENT INTERNAL ERROR"
             severity FAILURE;
         end if;
-        get_struct_state(SELF, state, indent);
         SEEK_EVENT(SELF, STREAM, next_event);
         if (EVENT /= next_event) then
             GOOD := FALSE;
@@ -3093,30 +3080,29 @@ package body  READER is
         end if;
         STR_LEN  := 0;
         case EVENT is
-            when EVENT_DOC_BEGIN  => read_doc_begin(SELF, STREAM, state, indent , READ_LEN, GOOD);
-            when EVENT_DOC_END    => read_doc_end  (SELF, STREAM, state, indent , READ_LEN, GOOD);
-            when EVENT_SEQ_BEGIN  => read_seq_begin(SELF, STREAM, state, indent , READ_LEN, GOOD);
-            when EVENT_SEQ_NEXT   => read_seq_next (SELF, STREAM, state, indent , READ_LEN, GOOD);
-            when EVENT_SEQ_END    => read_seq_end  (SELF, STREAM, state, indent , READ_LEN, GOOD);
-            when EVENT_MAP_BEGIN  => read_map_begin(SELF, STREAM, state, indent , READ_LEN, GOOD);
-            when EVENT_MAP_SEP    => read_map_sep  (SELF, STREAM, state, indent , READ_LEN, GOOD);
-            when EVENT_MAP_NEXT   => read_map_next (SELF, STREAM, state, indent , READ_LEN, GOOD);
-            when EVENT_MAP_END    => read_map_end  (SELF, STREAM, state, indent , READ_LEN, GOOD);
-            when EVENT_SCALAR     => read_scalar   (SELF, STREAM, STR  , STR_LEN, READ_LEN, GOOD);
-            when EVENT_TAG_PROP   => read_tag_prop (SELF, STREAM, STR  , STR_LEN, READ_LEN, GOOD);
-            when EVENT_ANCHOR     => read_anchor   (SELF, STREAM, STR  , STR_LEN, READ_LEN, GOOD);
-            when EVENT_ALIAS      => read_alias    (SELF, STREAM, STR  , STR_LEN, READ_LEN, GOOD);
+            when EVENT_DOC_BEGIN  => read_doc_begin(SELF, STREAM, READ_LEN, GOOD);
+            when EVENT_DOC_END    => read_doc_end  (SELF, STREAM, READ_LEN, GOOD);
+            when EVENT_SEQ_BEGIN  => read_seq_begin(SELF, STREAM, READ_LEN, GOOD);
+            when EVENT_SEQ_NEXT   => read_seq_next (SELF, STREAM, READ_LEN, GOOD);
+            when EVENT_SEQ_END    => read_seq_end  (SELF, STREAM, READ_LEN, GOOD);
+            when EVENT_MAP_BEGIN  => read_map_begin(SELF, STREAM, READ_LEN, GOOD);
+            when EVENT_MAP_SEP    => read_map_sep  (SELF, STREAM, READ_LEN, GOOD);
+            when EVENT_MAP_NEXT   => read_map_next (SELF, STREAM, READ_LEN, GOOD);
+            when EVENT_MAP_END    => read_map_end  (SELF, STREAM, READ_LEN, GOOD);
+            when EVENT_SCALAR     => read_scalar   (SELF, STREAM, STR, STR_LEN, READ_LEN, GOOD);
+            when EVENT_TAG_PROP   => read_tag_prop (SELF, STREAM, STR, STR_LEN, READ_LEN, GOOD);
+            when EVENT_ANCHOR     => read_anchor   (SELF, STREAM, STR, STR_LEN, READ_LEN, GOOD);
+            when EVENT_ALIAS      => read_alias    (SELF, STREAM, STR, STR_LEN, READ_LEN, GOOD);
             when EVENT_DIRECTIVE  => read_text_line(SELF, STREAM);
                                      READ_LEN := 0; GOOD := TRUE;
             when EVENT_STREAM_END => READ_LEN := 0; GOOD := TRUE;
             when others           => READ_LEN := 0; GOOD := FALSE;
         end case;
-        get_struct_state(SELF, state, indent);
         SEEK_EVENT(SELF, STREAM, next_event);
         case next_event is
-            when EVENT_SEQ_NEXT => read_seq_next(SELF, STREAM, state, indent, dummy_len, GOOD);
-            when EVENT_MAP_NEXT => read_map_next(SELF, STREAM, state, indent, dummy_len, GOOD);
-            when EVENT_MAP_SEP  => read_map_sep (SELF, STREAM, state, indent, dummy_len, GOOD);
+            when EVENT_SEQ_NEXT => read_seq_next(SELF, STREAM, dummy_len, GOOD);
+            when EVENT_MAP_NEXT => read_map_next(SELF, STREAM, dummy_len, GOOD);
+            when EVENT_MAP_SEP  => read_map_sep (SELF, STREAM, dummy_len, GOOD);
             when others         => 
         end case;
     end procedure;
@@ -3161,8 +3147,6 @@ package body  READER is
                   STR_LEN       : out   integer;
                   GOOD          : out   boolean
     ) is
-        variable  state         :       STATE_TYPE;
-        variable  indent        :       INDENT_TYPE;
         variable  end_event     :       EVENT_TYPE;
         variable  next_event    :       EVENT_TYPE;
         variable  skip_done     :       boolean;
@@ -3170,7 +3154,6 @@ package body  READER is
         variable  read_len      :       integer;
         variable  dummy_len     :       integer;
     begin
-        get_struct_state(SELF, state, indent);
         SEEK_EVENT(SELF, STREAM, next_event);
         if (EVENT /= next_event) then
             GOOD := FALSE;
@@ -3178,31 +3161,31 @@ package body  READER is
         end if;
         STR_LEN  := 0;
         case EVENT is
-            when EVENT_DOC_BEGIN  => read_doc_begin(SELF, STREAM, state, indent, read_len, read_good);
+            when EVENT_DOC_BEGIN  => read_doc_begin(SELF, STREAM, read_len, read_good);
                                      end_event := EVENT_DOC_END;
                                      skip_done := FALSE;
-            when EVENT_DOC_END    => read_doc_end  (SELF, STREAM, state, indent, read_len, read_good);
+            when EVENT_DOC_END    => read_doc_end  (SELF, STREAM, read_len, read_good);
                                      end_event := EVENT_STREAM_END;
                                      skip_done := TRUE;
-            when EVENT_SEQ_BEGIN  => read_seq_begin(SELF, STREAM, state, indent, read_len, read_good);
+            when EVENT_SEQ_BEGIN  => read_seq_begin(SELF, STREAM, read_len, read_good);
                                      end_event := EVENT_SEQ_END;
                                      skip_done := FALSE;
-            when EVENT_SEQ_NEXT   => read_seq_next (SELF, STREAM, state, indent, read_len, read_good);
+            when EVENT_SEQ_NEXT   => read_seq_next (SELF, STREAM, read_len, read_good);
                                      end_event := EVENT_SEQ_END;
                                      skip_done := FALSE;
-            when EVENT_SEQ_END    => read_seq_end  (SELF, STREAM, state, indent, read_len, read_good);
+            when EVENT_SEQ_END    => read_seq_end  (SELF, STREAM, read_len, read_good);
                                      end_event := EVENT_SEQ_END;
                                      skip_done := TRUE;
-            when EVENT_MAP_BEGIN  => read_map_begin(SELF, STREAM, state, indent, read_len, read_good);
+            when EVENT_MAP_BEGIN  => read_map_begin(SELF, STREAM, read_len, read_good);
                                      end_event := EVENT_MAP_END;
                                      skip_done := FALSE;
-            when EVENT_MAP_SEP    => read_map_sep  (SELF, STREAM, state, indent, read_len, read_good);
+            when EVENT_MAP_SEP    => read_map_sep  (SELF, STREAM, read_len, read_good);
                                      end_event := EVENT_MAP_END;
                                      skip_done := FALSE;
-            when EVENT_MAP_NEXT   => read_map_next (SELF, STREAM, state, indent, read_len, read_good);
+            when EVENT_MAP_NEXT   => read_map_next (SELF, STREAM, read_len, read_good);
                                      end_event := EVENT_MAP_END;
                                      skip_done := FALSE;
-            when EVENT_MAP_END    => read_map_end  (SELF, STREAM, state, indent, read_len, read_good);
+            when EVENT_MAP_END    => read_map_end  (SELF, STREAM, read_len, read_good);
                                      end_event := EVENT_MAP_END;
                                      skip_done := TRUE;
             when EVENT_DIRECTIVE  => read_text_line(SELF, STREAM);
@@ -3231,7 +3214,6 @@ package body  READER is
         end if;
         while (skip_done = FALSE) loop
             -- DEBUG_DUMP(SELF, string'("SKIP_EVENT LOOP"));
-            get_struct_state(SELF, state, indent);
             SEEK_EVENT(SELF, STREAM, next_event);
             if (next_event = end_event) then
                 READ_EVENT(SELF, STREAM, next_event, read_good);
@@ -3256,12 +3238,11 @@ package body  READER is
             GOOD := FALSE;
             return;
         end if;
-        get_struct_state(SELF, state, indent);
         SEEK_EVENT(SELF, STREAM, next_event);
         case next_event is
-            when EVENT_SEQ_NEXT => read_seq_next(SELF, STREAM, state, indent, dummy_len, read_good);
-            when EVENT_MAP_NEXT => read_map_next(SELF, STREAM, state, indent, dummy_len, read_good);
-            when EVENT_MAP_SEP  => read_map_sep (SELF, STREAM, state, indent, dummy_len, read_good);
+            when EVENT_SEQ_NEXT => read_seq_next(SELF, STREAM, dummy_len, read_good);
+            when EVENT_MAP_NEXT => read_map_next(SELF, STREAM, dummy_len, read_good);
+            when EVENT_MAP_SEP  => read_map_sep (SELF, STREAM, dummy_len, read_good);
             when EVENT_ERROR    => read_good := FALSE;
             when others         => 
         end case;
