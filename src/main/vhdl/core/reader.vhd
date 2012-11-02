@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    reader.vhd
 --!     @brief   Package for Dummy Plug Scenario Reader.
---!     @version 1.0.3
---!     @date    2012/11/2
+--!     @version 1.1.0
+--!     @date    2012/11/3
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -1095,6 +1095,7 @@ package body  READER is
                   FOUND_LEN     : out   integer;
                   END_LINE      : out   boolean 
     ) is
+        variable  curr_state    :       STATE_TYPE;
     begin
         if    (SELF.end_of_file  =  TRUE) or
               (SELF.text_line    =  null) or
@@ -1114,6 +1115,17 @@ package body  READER is
             FOUND     := TRUE;
             FOUND_LEN := 2;
             END_LINE  := FALSE;
+        elsif (INDICATOR = ':') then
+            get_struct_state(SELF, curr_state);
+            if (curr_state = STATE_FLOW_MAP_KEY or curr_state = STATE_FLOW_MAP_SEP) then
+                FOUND     := TRUE;
+                FOUND_LEN := 1;
+                END_LINE  := FALSE;
+            else
+                FOUND     := FALSE;
+                FOUND_LEN := 0;
+                END_LINE  := FALSE;
+            end if;
         else
             FOUND     := FALSE;
             FOUND_LEN := 0;
@@ -2177,12 +2189,11 @@ package body  READER is
                   GOOD          : out   boolean 
     ) is
         variable  curr_state    :       STATE_TYPE;
-        variable  curr_indent   :       INDENT_TYPE;
         variable  token         :       TOKEN_TYPE;
         variable  token_pos     :       integer;
         variable  token_len     :       integer;
     begin
-        get_struct_state(SELF, curr_state, curr_indent);
+        get_struct_state(SELF, curr_state);
         case curr_state is
             when STATE_NONE  =>
                 scan_token(SELF, token, token_pos, token_len);
@@ -2212,13 +2223,12 @@ package body  READER is
                   GOOD          : out   boolean
     ) is
         variable  curr_state    :       STATE_TYPE;
-        variable  curr_indent   :       INDENT_TYPE;
         variable  token         :       TOKEN_TYPE; 
         variable  token_pos     :       integer;
         variable  token_len     :       integer;
         variable  stack_good    :       boolean;
     begin
-        get_struct_state(SELF, curr_state, curr_indent);
+        get_struct_state(SELF, curr_state);
         case curr_state is
             when STATE_DOCUMENT  =>
                 scan_token(SELF, token, token_pos, token_len);
@@ -2324,12 +2334,11 @@ package body  READER is
                   GOOD          : out   boolean
     ) is
         variable  curr_state    :       STATE_TYPE;
-        variable  curr_indent   :       INDENT_TYPE;
         variable  token         :       TOKEN_TYPE;
         variable  token_pos     :       integer;
         variable  token_len     :       integer;
     begin
-        get_struct_state(SELF, curr_state, curr_indent);
+        get_struct_state(SELF, curr_state);
         case curr_state is
             when STATE_BLOCK_SEQ_END =>
                 LEN := 0;
@@ -2364,13 +2373,12 @@ package body  READER is
                   GOOD          : out   boolean 
     ) is
         variable  curr_state    :       STATE_TYPE;
-        variable  curr_indent   :       INDENT_TYPE;
         variable  token         :       TOKEN_TYPE;
         variable  token_pos     :       integer;
         variable  token_len     :       integer;
         variable  stack_good    :       boolean;
     begin
-        get_struct_state(SELF, curr_state, curr_indent);
+        get_struct_state(SELF, curr_state);
         case curr_state is
             when STATE_BLOCK_SEQ_END => 
                 scan_token(SELF, token, token_pos, token_len);
@@ -2573,12 +2581,11 @@ package body  READER is
                   GOOD          : out   boolean 
     ) is
         variable  curr_state    :       STATE_TYPE;
-        variable  curr_indent   :       INDENT_TYPE;
         variable  token         :       TOKEN_TYPE;
         variable  token_pos     :       integer;
         variable  token_len     :       integer;
     begin
-        get_struct_state(SELF, curr_state, curr_indent);
+        get_struct_state(SELF, curr_state);
         case curr_state is
             when STATE_BLOCK_MAP_IMPLICIT_END =>
                 LEN := 0;
@@ -2616,12 +2623,11 @@ package body  READER is
                   GOOD          : out   boolean 
     ) is
         variable  curr_state    :       STATE_TYPE;
-        variable  curr_indent   :       INDENT_TYPE;
         variable  token         :       TOKEN_TYPE;
         variable  token_pos     :       integer;
         variable  token_len     :       integer;
     begin
-        get_struct_state(SELF, curr_state, curr_indent);
+        get_struct_state(SELF, curr_state);
         case curr_state is
             when STATE_BLOCK_MAP_IMPLICIT_END |
                  STATE_BLOCK_MAP_EXPLICIT_END =>
@@ -2752,7 +2758,6 @@ package body  READER is
         variable  token_len     :       integer;
         variable  line_end      :       boolean;
         variable  curr_state    :       STATE_TYPE;
-        variable  curr_indent   :       INDENT_TYPE;
         variable  next_state    :       STATE_TYPE;
         variable  next_event    :       EVENT_TYPE;
     begin
@@ -2763,7 +2768,7 @@ package body  READER is
             GOOD     := FALSE;
             return;
         end if;
-        get_struct_state(SELF, curr_state, curr_indent);
+        get_struct_state(SELF, curr_state);
         case curr_state is
             when STATE_FLOW_SEQ_VAL           => next_state := STATE_FLOW_SEQ_END ;
             when STATE_FLOW_MAP_KEY           => next_state := STATE_FLOW_MAP_SEP ;
@@ -2782,7 +2787,6 @@ package body  READER is
         skip_token(SELF, STREAM, token, token_pos, token_len);
         read_plain_scalar(SELF, STR, STR_LEN, READ_LEN, line_end);
         SEEK_EVENT(SELF, STREAM, next_event);
-        get_struct_state(SELF, curr_state, curr_indent);
         case next_event is
             when  EVENT_SEQ_NEXT => read_seq_next(SELF, STREAM, token_len, GOOD);
             when  EVENT_MAP_NEXT => read_map_next(SELF, STREAM, token_len, GOOD);
@@ -2906,12 +2910,11 @@ package body  READER is
         variable  token_pos     :       integer;
         variable  token_len     :       integer;
         variable  curr_state    :       STATE_TYPE;
-        variable  curr_indent   :       INDENT_TYPE;
         variable  line_end      :       boolean;
         variable  next_state    :       STATE_TYPE;
         variable  next_event    :       EVENT_TYPE;
     begin
-        get_struct_state(SELF, curr_state, curr_indent);
+        get_struct_state(SELF, curr_state);
         case curr_state is
             when STATE_FLOW_SEQ_VAL           => next_state := STATE_FLOW_SEQ_END ;
             when STATE_FLOW_MAP_KEY           => next_state := STATE_FLOW_MAP_SEP ;

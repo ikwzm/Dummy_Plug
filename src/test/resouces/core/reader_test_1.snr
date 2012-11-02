@@ -108,4 +108,7 @@ e : 1   # out of document
 --- # reader_test_1 9
   - WAIT: {VALID: 0, READY: 0}
   - WAIT: {VALID: 1, READY: 0}
+--- # reader_test_1 10
+  - JSON: {VALID:0,READY:0}
+  - JSON: {"DATA":0x12,"STRB":1}
 --- # reader_test_1 end

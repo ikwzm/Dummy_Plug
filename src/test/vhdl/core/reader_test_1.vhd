@@ -2,7 +2,7 @@
 --!     @file    reader_test_1.vhd
 --!     @brief   TEST BENCH No.1 for DUMMY_PLUG.READER
 --!     @version 1.1.0
---!     @date    2012/6/19
+--!     @date    2012/11/3
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -586,7 +586,7 @@ begin
         event(READER.EVENT_SEQ_END                   );
         event(READER.EVENT_DOC_END                   );
         --------------------------------------------------------------------------
-        -- reader_test_1 8
+        -- reader_test_1 9
         --------------------------------------------------------------------------
         event(READER.EVENT_DOC_BEGIN                 );
         event(READER.EVENT_SEQ_BEGIN                 );
@@ -603,6 +603,31 @@ begin
         event(READER.EVENT_SCALAR   ,"WAIT"          );
         READER.SEEK_EVENT(r, stream, get_event);
         SKIP_EVENT(r, stream, get_event, good);
+        event(READER.EVENT_MAP_END                   );
+        event(READER.EVENT_SEQ_END                   );
+        event(READER.EVENT_DOC_END                   );
+        --------------------------------------------------------------------------
+        -- reader_test_1 10
+        --------------------------------------------------------------------------
+        event(READER.EVENT_DOC_BEGIN                 );
+        event(READER.EVENT_SEQ_BEGIN                 );
+        event(READER.EVENT_MAP_BEGIN                 );
+        event(READER.EVENT_SCALAR   ,"JSON"          );
+        event(READER.EVENT_MAP_BEGIN                 );
+        event(READER.EVENT_SCALAR   ,"VALID"         );
+        event(READER.EVENT_SCALAR   ,0               );
+        event(READER.EVENT_SCALAR   ,"READY"         );
+        event(READER.EVENT_SCALAR   ,0               );
+        event(READER.EVENT_MAP_END                   );
+        event(READER.EVENT_MAP_END                   );
+        event(READER.EVENT_MAP_BEGIN                 );
+        event(READER.EVENT_SCALAR   ,"JSON"          );
+        event(READER.EVENT_MAP_BEGIN                 );
+        event(READER.EVENT_SCALAR   ,"DATA"          );
+        event(READER.EVENT_SCALAR   ,18              );
+        event(READER.EVENT_SCALAR   ,"STRB"          );
+        event(READER.EVENT_SCALAR   ,1               );
+        event(READER.EVENT_MAP_END                   );
         event(READER.EVENT_MAP_END                   );
         event(READER.EVENT_SEQ_END                   );
         event(READER.EVENT_DOC_END                   );
