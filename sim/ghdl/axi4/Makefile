@@ -52,77 +52,83 @@ marchal.o                  : $(DUMMY_PLUG_CORE_SRC_PATH)/marchal.vhd
 
 DUMMY_PLUG_AXI4_SRC_PATH = $(SRC_MAIN_VHDL_PATH)/axi4
 DUMMY_PLUG_AXI4_PACKAGE  = axi4_types.o axi4_models.o 
-DUMMY_PLUG_AXI4          = $(DUMMY_PLUG_CORE)          \
-                           $(DUMMY_PLUG_AXI4_PACKAGE)  \
-                           axi4_master_player.o        \
-                           axi4_slave_player.o         \
-                           axi4_stream_master_player.o \
-                           axi4_stream_slave_player.o  \
-                           axi4_signal_printer.o       \
+DUMMY_PLUG_AXI4          = $(DUMMY_PLUG_CORE)           \
+                           $(DUMMY_PLUG_AXI4_PACKAGE)   \
+                           axi4_master_player.o         \
+                           axi4_slave_player.o          \
+                           axi4_stream_master_player.o  \
+                           axi4_stream_slave_player.o   \
+                           axi4_signal_printer.o        \
+                           axi4_stream_signal_printer.o \
                            $(END_LIST)
 
-axi4_core.o                : axi4_types.o $(DUMMY_PLUG_CORE_PACKAGE)
-axi4_models.o              : axi4_types.o $(DUMMY_PLUG_CORE_PACKAGE)
-axi4_signal_printer.o      : axi4_types.o $(DUMMY_PLUG_CORE_PACKAGE)
-axi4_channel_player.o      : axi4_types.o axi4_core.o 
-axi4_master_player.o       : axi4_types.o axi4_core.o axi4_channel_player.o
-axi4_slave_player.o        : axi4_types.o axi4_core.o axi4_channel_player.o
-axi4_stream_player.o       : axi4_types.o axi4_core.o
-axi4_stream_master_player.o: axi4_types.o axi4_core.o axi4_stream_player.o
-axi4_stream_slave_player.o : axi4_types.o axi4_core.o axi4_stream_player.o
+axi4_core.o                    : axi4_types.o $(DUMMY_PLUG_CORE_PACKAGE)
+axi4_models.o                  : axi4_types.o $(DUMMY_PLUG_CORE_PACKAGE)
+axi4_signal_printer.o          : axi4_types.o $(DUMMY_PLUG_CORE_PACKAGE)
+axi4_stream_signal_printer.o   : axi4_types.o $(DUMMY_PLUG_CORE_PACKAGE)
+axi4_channel_player.o          : axi4_types.o axi4_core.o 
+axi4_master_player.o           : axi4_types.o axi4_core.o axi4_channel_player.o
+axi4_slave_player.o            : axi4_types.o axi4_core.o axi4_channel_player.o
+axi4_stream_player.o           : axi4_types.o axi4_core.o
+axi4_stream_master_player.o    : axi4_types.o axi4_core.o axi4_stream_player.o
+axi4_stream_slave_player.o     : axi4_types.o axi4_core.o axi4_stream_player.o
+                            
 
-axi4_types.o               : $(DUMMY_PLUG_AXI4_SRC_PATH)/axi4_types.vhd
+axi4_types.o                       : $(DUMMY_PLUG_AXI4_SRC_PATH)/axi4_types.vhd
 	 $(GHDL) -a $(GHDLFLAGS) --work=$(WORK) $<
 
-axi4_core.o                : $(DUMMY_PLUG_AXI4_SRC_PATH)/axi4_core.vhd   
+axi4_core.o                        : $(DUMMY_PLUG_AXI4_SRC_PATH)/axi4_core.vhd   
 	 $(GHDL) -a $(GHDLFLAGS) --work=$(WORK) $<
 
-axi4_models.o              : $(DUMMY_PLUG_AXI4_SRC_PATH)/axi4_models.vhd
+axi4_models.o                      : $(DUMMY_PLUG_AXI4_SRC_PATH)/axi4_models.vhd
 	 $(GHDL) -a $(GHDLFLAGS) --work=$(WORK) $<
 
-axi4_channel_player.o      : $(DUMMY_PLUG_AXI4_SRC_PATH)/axi4_channel_player.vhd 
+axi4_channel_player.o              : $(DUMMY_PLUG_AXI4_SRC_PATH)/axi4_channel_player.vhd 
 	 $(GHDL) -a $(GHDLFLAGS) --work=$(WORK) $<
 
-axi4_master_player.o       : $(DUMMY_PLUG_AXI4_SRC_PATH)/axi4_master_player.vhd 
+axi4_master_player.o               : $(DUMMY_PLUG_AXI4_SRC_PATH)/axi4_master_player.vhd 
 	 $(GHDL) -a $(GHDLFLAGS) --work=$(WORK) $<
 
-axi4_slave_player.o        : $(DUMMY_PLUG_AXI4_SRC_PATH)/axi4_slave_player.vhd  
+axi4_slave_player.o                : $(DUMMY_PLUG_AXI4_SRC_PATH)/axi4_slave_player.vhd  
 	 $(GHDL) -a $(GHDLFLAGS) --work=$(WORK) $<
 
-axi4_stream_player.o       : $(DUMMY_PLUG_AXI4_SRC_PATH)/axi4_stream_player.vhd 
+axi4_stream_player.o               : $(DUMMY_PLUG_AXI4_SRC_PATH)/axi4_stream_player.vhd 
 	 $(GHDL) -a $(GHDLFLAGS) --work=$(WORK) $<
 
-axi4_stream_master_player.o: $(DUMMY_PLUG_AXI4_SRC_PATH)/axi4_stream_master_player.vhd 
+axi4_stream_master_player.o        : $(DUMMY_PLUG_AXI4_SRC_PATH)/axi4_stream_master_player.vhd 
 	 $(GHDL) -a $(GHDLFLAGS) --work=$(WORK) $<
 
-axi4_stream_slave_player.o : $(DUMMY_PLUG_AXI4_SRC_PATH)/axi4_stream_slave_player.vhd 
+axi4_stream_slave_player.o         : $(DUMMY_PLUG_AXI4_SRC_PATH)/axi4_stream_slave_player.vhd 
 	 $(GHDL) -a $(GHDLFLAGS) --work=$(WORK) $<
 
-axi4_signal_printer.o      : $(DUMMY_PLUG_AXI4_SRC_PATH)/axi4_signal_printer.vhd  
+axi4_signal_printer.o              : $(DUMMY_PLUG_AXI4_SRC_PATH)/axi4_signal_printer.vhd  
+	 $(GHDL) -a $(GHDLFLAGS) --work=$(WORK) $<
+
+axi4_stream_signal_printer.o       : $(DUMMY_PLUG_AXI4_SRC_PATH)/axi4_stream_signal_printer.vhd  
 	 $(GHDL) -a $(GHDLFLAGS) --work=$(WORK) $<
 
 
-dummy_plug_reader_test_1.o : $(SRC_TEST_VHDL_PATH)/core/reader_test_1.vhd $(DUMMY_PLUG_CORE)
+dummy_plug_reader_test_1.o         : $(SRC_TEST_VHDL_PATH)/core/reader_test_1.vhd $(DUMMY_PLUG_CORE)
 	 $(GHDL) -a $(GHDLFLAGS) --work=work $<
 
-dummy_plug_axi4_test_1.o   : $(SRC_TEST_VHDL_PATH)/axi4/axi4_test_1.vhd   $(DUMMY_PLUG_AXI4)
+dummy_plug_axi4_test_1.o           : $(SRC_TEST_VHDL_PATH)/axi4/axi4_test_1.vhd   $(DUMMY_PLUG_AXI4)
 	 $(GHDL) -a $(GHDLFLAGS) --work=work $<
 
-dummy_plug_axi4_test_1_1.o : $(SRC_TEST_VHDL_PATH)/axi4/axi4_test_1_1.vhd dummy_plug_axi4_test_1.o $(DUMMY_PLUG_AXI4)
+dummy_plug_axi4_test_1_1.o         : $(SRC_TEST_VHDL_PATH)/axi4/axi4_test_1_1.vhd dummy_plug_axi4_test_1.o $(DUMMY_PLUG_AXI4)
 	 $(GHDL) -a $(GHDLFLAGS) --work=work $<
 
-dummy_plug_axi4_test_1_2.o : $(SRC_TEST_VHDL_PATH)/axi4/axi4_test_1_2.vhd dummy_plug_axi4_test_1.o $(DUMMY_PLUG_AXI4)
+dummy_plug_axi4_test_1_2.o         : $(SRC_TEST_VHDL_PATH)/axi4/axi4_test_1_2.vhd dummy_plug_axi4_test_1.o $(DUMMY_PLUG_AXI4)
 	 $(GHDL) -a $(GHDLFLAGS) --work=work $<
 
-dummy_plug_axi4_test_1_3.o : $(SRC_TEST_VHDL_PATH)/axi4/axi4_test_1_3.vhd dummy_plug_axi4_test_1.o $(DUMMY_PLUG_AXI4)
+dummy_plug_axi4_test_1_3.o         : $(SRC_TEST_VHDL_PATH)/axi4/axi4_test_1_3.vhd dummy_plug_axi4_test_1.o $(DUMMY_PLUG_AXI4)
 	 $(GHDL) -a $(GHDLFLAGS) --work=work $<
 
-dummy_plug_axi4_test_1_4.o : $(SRC_TEST_VHDL_PATH)/axi4/axi4_test_1_4.vhd dummy_plug_axi4_test_1.o $(DUMMY_PLUG_AXI4)
+dummy_plug_axi4_test_1_4.o         : $(SRC_TEST_VHDL_PATH)/axi4/axi4_test_1_4.vhd dummy_plug_axi4_test_1.o $(DUMMY_PLUG_AXI4)
 	 $(GHDL) -a $(GHDLFLAGS) --work=work $<
 
-dummy_plug_axi4_stream_test_1.o   : $(SRC_TEST_VHDL_PATH)/axi4/axi4_stream_test_1.vhd   $(DUMMY_PLUG_AXI4)
+dummy_plug_axi4_stream_test_1.o    : $(SRC_TEST_VHDL_PATH)/axi4/axi4_stream_test_1.vhd   $(DUMMY_PLUG_AXI4)
 	 $(GHDL) -a $(GHDLFLAGS) --work=work $<
 
-dummy_plug_axi4_stream_test_1_1.o : $(SRC_TEST_VHDL_PATH)/axi4/axi4_stream_test_1_1.vhd dummy_plug_axi4_stream_test_1.o $(DUMMY_PLUG_AXI4)
+dummy_plug_axi4_stream_test_1_1.o  : $(SRC_TEST_VHDL_PATH)/axi4/axi4_stream_test_1_1.vhd dummy_plug_axi4_stream_test_1.o $(DUMMY_PLUG_AXI4)
 	 $(GHDL) -a $(GHDLFLAGS) --work=work $<
 

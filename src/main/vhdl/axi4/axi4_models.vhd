@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_models.vhd                                                 --
 --!     @brief   AXI4 Dummy Plug Component Package                               --
---!     @version 1.2.0                                                           --
---!     @date    2012/10/28                                                      --
+--!     @version 1.2.1                                                           --
+--!     @date    2012/11/09                                                      --
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>                     --
 -----------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------
@@ -532,6 +532,54 @@ component AXI4_SIGNAL_PRINTER
         BID             : in    std_logic_vector(WIDTH.ID     -1 downto 0);
         BVALID          : in    std_logic;
         BREADY          : in    std_logic
+    );
+end component;
+-----------------------------------------------------------------------------------
+--! @brief AXI4_STREAM_SIGNAL_PRINTER                                            --
+-----------------------------------------------------------------------------------
+component AXI4_STREAM_SIGNAL_PRINTER
+    -------------------------------------------------------------------------------
+    -- ジェネリック変数.
+    -------------------------------------------------------------------------------
+    generic (
+        NAME            : --! @brief 固有名詞.
+                          STRING;
+        TAG             : --! @brief タグ.
+                          STRING;
+        TAG_WIDTH       : --! @brief タグを出力する際の文字幅.
+                          --!      * TAG_WIDTH>0 =>  TAG_WIDTH幅の右詰.
+                          --!      * TAG_WIDTH<0 => -TAG_WIDTH幅の左詰.
+                          --!      * TAG_WIDTH=0 => 出力しない.
+                          integer := 13;
+        TIME_WIDTH      : --! @brief 時間を出力する際の文字幅.
+                          --!      * TIME_WIDTH>0 =>  TAG_WIDTH幅の右詰.
+                          --!      * TIME_WIDTH<0 => -TAG_WIDTH幅の左詰.
+                          --!      * TIEM_WIDTH=0 => 出力しない.
+                          integer := 13;
+        WIDTH           : --! @brief AXI4 チャネルの可変長信号のビット幅.
+                          AXI4_STREAM_SIGNAL_WIDTH_TYPE
+    );
+    -------------------------------------------------------------------------------
+    -- 入出力ポートの定義.
+    -------------------------------------------------------------------------------
+    port(
+        --------------------------------------------------------------------------
+        -- グローバルシグナル.
+        --------------------------------------------------------------------------
+        ACLK            : in    std_logic;
+        ARESETn         : in    std_logic;
+        ---------------------------------------------------------------------------
+        -- AXI4-Streamシグナル.
+        ---------------------------------------------------------------------------
+        TDATA           : in    std_logic_vector(WIDTH.DATA  -1 downto 0);
+        TSTRB           : in    std_logic_vector(WIDTH.DATA/8-1 downto 0);
+        TKEEP           : in    std_logic_vector(WIDTH.DATA/8-1 downto 0);
+        TUSER           : in    std_logic_vector(WIDTH.USER  -1 downto 0);
+        TDEST           : in    std_logic_vector(WIDTH.DEST  -1 downto 0);
+        TID             : in    std_logic_vector(WIDTH.ID    -1 downto 0);
+        TLAST           : in    std_logic;
+        TVALID          : in    std_logic;
+        TREADY          : in    std_logic
     );
 end component;
 end AXI4_MODELS;

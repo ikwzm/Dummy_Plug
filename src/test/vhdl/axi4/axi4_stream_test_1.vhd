@@ -42,6 +42,7 @@ library DUMMY_PLUG;
 use     DUMMY_PLUG.AXI4_TYPES.all;
 use     DUMMY_PLUG.AXI4_MODELS.AXI4_STREAM_MASTER_PLAYER;
 use     DUMMY_PLUG.AXI4_MODELS.AXI4_STREAM_SLAVE_PLAYER;
+use     DUMMY_PLUG.AXI4_MODELS.AXI4_STREAM_SIGNAL_PRINTER;
 use     DUMMY_PLUG.SYNC.all;
 use     DUMMY_PLUG.CORE.MARCHAL;
 use     DUMMY_PLUG.CORE.REPORT_STATUS_TYPE;
@@ -230,6 +231,34 @@ begin
             FINISH          => S_FINISH          -- Out :
     );
 
+    ------------------------------------------------------------------------------
+    -- AXI4_STREAM_SIGNAL_PRINTER
+    ------------------------------------------------------------------------------
+    P: AXI4_STREAM_SIGNAL_PRINTER
+        generic map (
+            NAME            => NAME,
+            TAG             => NAME,
+            TAG_WIDTH       => 0,
+            TIME_WIDTH      => 13,
+            WIDTH           => WIDTH
+        ) 
+        -------------------------------------------------------------------------------
+        -- 入出力ポートの定義.
+        -------------------------------------------------------------------------------
+        port map (
+            ACLK            => ACLK            , -- In :
+            ARESETn         => ARESETn         , -- In :
+            TDATA           => TDATA           , -- In :
+            TSTRB           => TSTRB           , -- In :
+            TKEEP           => TKEEP           , -- In :
+            TUSER           => TUSER           , -- In :
+            TDEST           => TDEST           , -- In :
+            TID             => TID             , -- In :
+            TLAST           => TLAST           , -- In :
+            TVALID          => TVALID          , -- In :
+            TREADY          => TREADY            -- In :
+    );    
+        
     process begin
         ACLK <= '1';
         wait for PERIOD / 2;
