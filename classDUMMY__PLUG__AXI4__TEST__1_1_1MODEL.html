@@ -100,8 +100,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="Processes"></a>
 Processes</h2></td></tr>
- <tr class="memitem:a24b36b69f28bc8191a42e67d08d8ce70"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#a24b36b69f28bc8191a42e67d08d8ce70">PROCESS_9</a>&#160;</td><td class="memItemRight" valign="bottom"><b> (  )</b></td></tr>
-<tr class="memitem:a9d315f65e7f6beda8489017ee9fcead9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#a9d315f65e7f6beda8489017ee9fcead9">PROCESS_10</a>&#160;</td><td class="memItemRight" valign="bottom"><b> (  )</b></td></tr>
+ <tr class="memitem:a9d315f65e7f6beda8489017ee9fcead9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#a9d315f65e7f6beda8489017ee9fcead9">PROCESS_10</a>&#160;</td><td class="memItemRight" valign="bottom"><b> (  )</b></td></tr>
+<tr class="memitem:a707be6e34b8a29fc9740f600e9c6f99d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#a707be6e34b8a29fc9740f600e9c6f99d">PROCESS_11</a>&#160;</td><td class="memItemRight" valign="bottom"><b> (  )</b></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="Constants"></a>
 Constants</h2></td></tr>
@@ -194,7 +194,39 @@ Instantiations</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"> <b><span class="vhdlchar"> </span></b> PROCESS_10 ( ) </td>
+          <td class="memname">PROCESS_10 </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00474">474</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
+<div class="fragment"><div class="line"></div>
+<div class="line">    process begin</div>
+<div class="line">        <a class="code" href="classAXI4__MASTER__PLAYER.html#adb6f4019064004fd2bb2925207776c34">ACLK</a> &lt;= <span class="charliteral">&#39;1&#39;</span>;</div>
+<div class="line">        wait <span class="keywordflow">for</span> <a class="code" href="classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#a676b8c20bcc1d9a7c055fe7f0a0ec885">PERIOD</a> / 2;</div>
+<div class="line">        <a class="code" href="classAXI4__MASTER__PLAYER.html#adb6f4019064004fd2bb2925207776c34">ACLK</a> &lt;= <span class="charliteral">&#39;0&#39;</span>;</div>
+<div class="line">        wait <span class="keywordflow">for</span> <a class="code" href="classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#a676b8c20bcc1d9a7c055fe7f0a0ec885">PERIOD</a> / 2;</div>
+    end process;</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a707be6e34b8a29fc9740f600e9c6f99d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> <b><span class="vhdlchar"> </span></b> PROCESS_11 ( ) </td>
         </tr>
       </table>
   </td>
@@ -236,38 +268,6 @@ Instantiations</h2></td></tr>
 <b>00512 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">assert</span><span class="vhdlchar"> </span><span class="vhdlchar">FALSE</span><span class="vhdlchar"> </span><span class="vhdlkeyword">report</span><span class="vhdlchar"> </span><span class="keyword">&quot;Simulation complete.&quot;</span><span class="vhdlchar"> </span><span class="vhdlkeyword">severity</span><span class="vhdlchar"> </span><span class="vhdlchar">FAILURE</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span></b>
 <b>00513 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">wait</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span></b>
 <b>00514 </b>&#160;</td><td class="memItemRight" valign="bottom"><b><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlchar"> </span><span class="vhdlkeyword">end</span><span class="vhdlchar"> </span><span class="vhdlkeyword">process</span><span class="vhdlchar">;</span><span class="vhdlchar"> </span></b>
-</div><!-- fragment -->
-</div>
-</div>
-<a class="anchor" id="a24b36b69f28bc8191a42e67d08d8ce70"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">PROCESS_9 </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">get</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="axi4__test__1_8vhd_source.html#l00474">474</a> of file <a class="el" href="axi4__test__1_8vhd_source.html">axi4_test_1.vhd</a>.</p>
-<div class="fragment"><div class="line"></div>
-<div class="line">    process begin</div>
-<div class="line">        <a class="code" href="classAXI4__MASTER__PLAYER.html#adb6f4019064004fd2bb2925207776c34">ACLK</a> &lt;= <span class="charliteral">&#39;1&#39;</span>;</div>
-<div class="line">        wait <span class="keywordflow">for</span> <a class="code" href="classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#a676b8c20bcc1d9a7c055fe7f0a0ec885">PERIOD</a> / 2;</div>
-<div class="line">        <a class="code" href="classAXI4__MASTER__PLAYER.html#adb6f4019064004fd2bb2925207776c34">ACLK</a> &lt;= <span class="charliteral">&#39;0&#39;</span>;</div>
-<div class="line">        wait <span class="keywordflow">for</span> <a class="code" href="classDUMMY__PLUG__AXI4__TEST__1_1_1MODEL.html#a676b8c20bcc1d9a7c055fe7f0a0ec885">PERIOD</a> / 2;</div>
-    end process;</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1818,7 +1818,7 @@ Instantiations</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Oct 28 2012 19:10:10 for Dummy Plug by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Nov 9 2012 22:57:06 for Dummy Plug by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.1
 </small></address>
