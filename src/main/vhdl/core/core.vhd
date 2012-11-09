@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    core.vhd
 --!     @brief   Core Package for Dummy Plug.
---!     @version 1.0.0
---!     @date    2012/5/31
+--!     @version 1.1.0
+--!     @date    2012/11/9
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -1246,6 +1246,11 @@ package body CORE is
                         when EVENT_MAP_END =>
                             READ_EVENT(SELF, STREAM, next_event);
                             SELF.curr_state := SELF.prev_state;
+                        when EVENT_SCALAR  => 
+                            READ_EVENT(SELF, STREAM, next_event);
+                            COPY_KEY_WORD(SELF, OP_WORD);
+                            OPERATION       := OP_MAP;
+                            exit;
                         when others =>
                             READ_ERROR(SELF, PROC_NAME,
                                        "need EVENT_MAP_END but " &
