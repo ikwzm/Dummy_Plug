@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_stream_slave player.vhd
 --!     @brief   AXI4-Stream Slave Dummy Plug Player.
---!     @version 1.2.0
---!     @date    2012/10/27
+--!     @version 1.2.1
+--!     @date    2012/11/9
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -122,7 +122,7 @@ use     DUMMY_PLUG.AXI4_TYPES.all;
 use     DUMMY_PLUG.AXI4_CORE.all;
 use     DUMMY_PLUG.SYNC.all;
 -----------------------------------------------------------------------------------
---! @brief   AXI4-Stream Master Dummy Plug Player.
+--! @brief   AXI4-Stream Slave Dummy Plug Player.
 -----------------------------------------------------------------------------------
 architecture MODEL of AXI4_STREAM_SLAVE_PLAYER is
     -------------------------------------------------------------------------------

@@ -72,7 +72,7 @@ axi4_slave_player.o            : axi4_types.o axi4_core.o axi4_channel_player.o
 axi4_stream_player.o           : axi4_types.o axi4_core.o
 axi4_stream_master_player.o    : axi4_types.o axi4_core.o axi4_stream_player.o
 axi4_stream_slave_player.o     : axi4_types.o axi4_core.o axi4_stream_player.o
-                            
+
 
 axi4_types.o                       : $(DUMMY_PLUG_AXI4_SRC_PATH)/axi4_types.vhd
 	 $(GHDL) -a $(GHDLFLAGS) --work=$(WORK) $<
