@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_stream_player.vhd
 --!     @brief   AXI4-Stream Dummy Plug Player.
---!     @version 1.2.1
---!     @date    2012/11/9
+--!     @version 1.2.2
+--!     @date    2012/11/10
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -146,6 +146,29 @@ use     DUMMY_PLUG.READER.all;
 -----------------------------------------------------------------------------------
 architecture MODEL of AXI4_STREAM_PLAYER is
     -------------------------------------------------------------------------------
+    --! @brief AXI4-Stream Xferのレコード宣言.
+    -------------------------------------------------------------------------------
+    type      AXI4_STREAM_XFER_DATA_TYPE is record
+        id       : std_logic_vector(AXI4_ID_MAX_WIDTH    -1 downto 0);
+        dest     : std_logic_vector(AXI4_DEST_MAX_WIDTH  -1 downto 0);
+        user     : std_logic_vector(AXI4_USER_MAX_WIDTH  -1 downto 0);
+        data     : std_logic_vector(AXI4_XFER_MAX_BYTES*8-1 downto 0);
+        strb     : std_logic_vector(AXI4_XFER_MAX_BYTES  -1 downto 0);
+        keep     : std_logic_vector(AXI4_XFER_MAX_BYTES  -1 downto 0);
+        bytes    : integer;
+        last     : std_logic;
+    end record;
+    constant  AXI4_STREAM_XFER_DATA_NULL : AXI4_STREAM_XFER_DATA_TYPE := (
+        id       => (others => '0'),
+        dest     => (others => '0'),
+        user     => (others => '0'),
+        data     => (others => '0'),
+        strb     => (others => '0'),
+        keep     => (others => '0'),
+        bytes    =>  0,
+        last     => '0'
+    );
+    -------------------------------------------------------------------------------
     --! @brief 入力信号のどれかに変化があるまで待つサブプログラム.
     -------------------------------------------------------------------------------
     procedure  wait_on_signals is
@@ -268,6 +291,7 @@ architecture MODEL of AXI4_STREAM_PLAYER is
     constant  KEY_OUT       : KEYWORD_TYPE := "OUT   ";
     constant  KEY_DEBUG     : KEYWORD_TYPE := "DEBUG ";
     constant  KEY_REPORT    : KEYWORD_TYPE := "REPORT";
+    constant  KEY_XFER      : KEYWORD_TYPE := "XFER  ";
     constant  KEY_TDATA     : KEYWORD_TYPE := "TDATA ";
     constant  KEY_TSTRB     : KEYWORD_TYPE := "TSTRB ";
     constant  KEY_TKEEP     : KEYWORD_TYPE := "TKEEP ";
@@ -299,7 +323,9 @@ begin
         variable  keyword       : KEYWORD_TYPE;
         variable  operation     : OPERATION_TYPE;
         variable  out_signals   : AXI4_STREAM_SIGNAL_TYPE;
+        variable  chk_signals   : AXI4_STREAM_SIGNAL_TYPE;
         variable  gpo_signals   : std_logic_vector(GPO'range);
+        variable  gpi_signals   : std_logic_vector(GPI'range);
         ---------------------------------------------------------------------------
         --! @brief std_logic_vectorの値を読むサブプログラム.
         --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -377,12 +403,10 @@ begin
         --!      * このサブプログラムを呼ぶときは、すでにMAP_READ_BEGINを実行済みに
         --!        しておかなければならない。
         --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-        --! @param    WIDTH       チャネル信号のビット幅を指定する.
         --! @param    signals     読み取った値が入るレコード変数. inoutであることに注意.
-        --! @param    EVENT       次のイベント. inoutであることに注意.
+        --! @param    event       次のイベント. inoutであることに注意.
         ---------------------------------------------------------------------------
         procedure map_read_axi4_stream_signals(
-                      width         : in    AXI4_STREAM_SIGNAL_WIDTH_TYPE;
                       signals       : inout AXI4_STREAM_SIGNAL_TYPE;
                       event         : inout EVENT_TYPE
         ) is
@@ -398,27 +422,27 @@ begin
                         COPY_KEY_WORD(core, key_word);
                         case key_word is
                             when KEY_TDATA  | KEY_DATA  =>
-                                read_value(proc_name, signals.DATA(width.DATA  -1 downto 0));
+                                read_value(proc_name, signals.DATA(WIDTH.DATA  -1 downto 0));
                             when KEY_TKEEP  | KEY_KEEP  =>
-                                read_value(proc_name, signals.KEEP(width.DATA/8-1 downto 0));
+                                read_value(proc_name, signals.KEEP(WIDTH.DATA/8-1 downto 0));
                             when KEY_TSTRB  | KEY_STRB  =>
-                                read_value(proc_name, signals.STRB(width.DATA/8-1 downto 0));
+                                read_value(proc_name, signals.STRB(WIDTH.DATA/8-1 downto 0));
                             when KEY_TUSER  | KEY_USER  =>
-                                read_value(proc_name, signals.USER(width.USER  -1 downto 0));
+                                read_value(proc_name, signals.USER(WIDTH.USER  -1 downto 0));
                             when KEY_TDEST  | KEY_DEST  =>
-                                read_value(proc_name, signals.DEST(width.DEST  -1 downto 0));
+                                read_value(proc_name, signals.DEST(WIDTH.DEST  -1 downto 0));
                             when KEY_TID    | KEY_ID    =>
-                                read_value(proc_name, signals.ID  (width.ID    -1 downto 0));
+                                read_value(proc_name, signals.ID  (WIDTH.ID    -1 downto 0));
                             when KEY_TLAST  | KEY_LAST  =>
-                                read_value(proc_name, signals.LAST  );
+                                read_value(proc_name, signals.LAST );
                             when KEY_TVALID | KEY_VALID =>
-                                read_value(proc_name, signals.VALID );
+                                read_value(proc_name, signals.VALID);
                             when KEY_TREADY | KEY_READY =>
-                                read_value(proc_name, signals.READY );
-                            when others        => exit MAP_LOOP;
+                                read_value(proc_name, signals.READY);
+                            when others => exit MAP_LOOP;
                         end case;
-                    when EVENT_MAP_END =>         exit MAP_LOOP;
-                    when others        =>         exit MAP_LOOP;
+                    when EVENT_MAP_END  => exit MAP_LOOP;
+                    when others         => exit MAP_LOOP;
                 end case;
                 SEEK_EVENT(core, stream, next_event);
                 if (next_event = EVENT_SCALAR) then
@@ -436,15 +460,13 @@ begin
             variable  next_event     : EVENT_TYPE;
             variable  keyword        : KEYWORD_TYPE;
             variable  match          : boolean;
-            variable  axi_signals    : AXI4_STREAM_SIGNAL_TYPE;
-            variable  gpi_signals    : std_logic_vector(GPI'range);
         begin
             REPORT_DEBUG(core, proc_name, "BEGIN");
             SEEK_EVENT(core, stream, next_event);
             case next_event is
                 when EVENT_MAP_BEGIN =>
                     READ_EVENT(core, stream, EVENT_MAP_BEGIN);
-                    axi_signals := AXI4_STREAM_SIGNAL_DONTCARE;
+                    chk_signals := AXI4_STREAM_SIGNAL_DONTCARE;
                     gpi_signals := (others => '-');
                     MAP_READ_LOOP: loop
                         MAP_READ_PREPARE_FOR_NEXT(
@@ -453,8 +475,7 @@ begin
                             EVENT      => next_event         -- I/O:
                         );
                         map_read_axi4_stream_signals(
-                            width      => WIDTH           ,  -- In :
-                            signals    => axi_signals     ,  -- I/O:
+                            signals    => chk_signals     ,  -- I/O:
                             event      => next_event         -- I/O:
                         );
                         MAP_READ_STD_LOGIC_VECTOR(
@@ -475,7 +496,7 @@ begin
                                            EVENT_TO_STRING(next_event));
                         end case;
                     end loop;
-                    match_axi4_stream_signals(core, axi_signals, match);
+                    match_axi4_stream_signals(core, chk_signals, match);
                     MATCH_GPI(core, gpi_signals, GPI, match);
                 when others =>
                     READ_ERROR(core, proc_name, "SEEK_EVENT NG");
@@ -495,8 +516,6 @@ begin
             variable  wait_on        : boolean;
             variable  axi_match      : boolean;
             variable  gpi_match      : boolean;
-            variable  axi_signals    : AXI4_STREAM_SIGNAL_TYPE;
-            variable  gpi_signals    : std_logic_vector(GPI'range);
         begin
             REPORT_DEBUG(core, proc_name, "BEGIN");
             timeout   := DEFAULT_WAIT_TIMEOUT;
@@ -521,7 +540,7 @@ begin
                     wait_count := 0;
                 when EVENT_MAP_BEGIN =>
                     READ_EVENT(core, stream, EVENT_MAP_BEGIN);
-                    axi_signals := AXI4_STREAM_SIGNAL_DONTCARE;
+                    chk_signals := AXI4_STREAM_SIGNAL_DONTCARE;
                     gpi_signals := (others => '-');
                     MAP_READ_LOOP: loop
                         REPORT_DEBUG(core, proc_name, "MAP_READ_LOOP");
@@ -531,8 +550,7 @@ begin
                             EVENT      => next_event         -- I/O:
                         );
                         map_read_axi4_stream_signals(
-                            width      => WIDTH           ,  -- In :
-                            signals    => axi_signals     ,  -- I/O:
+                            signals    => chk_signals     ,  -- I/O:
                             event      => next_event         -- I/O:
                         );
                         MAP_READ_STD_LOGIC_VECTOR(
@@ -571,7 +589,7 @@ begin
                         SIG_LOOP:loop
                             REPORT_DEBUG(core, proc_name, "SIG_LOOP");
                             wait_on_signals;
-                            match_axi4_stream_signals(axi_signals, axi_match);
+                            match_axi4_stream_signals(chk_signals, axi_match);
                             gpi_match := MATCH_STD_LOGIC(gpi_signals, GPI);
                             exit when(axi_match and gpi_match);
                             if (ACLK'event and ACLK = '1') then
@@ -586,7 +604,7 @@ begin
                         CLK_LOOP:loop
                             REPORT_DEBUG(core, proc_name, "CLK_LOOP");
                             wait until (ACLK'event and ACLK = '1');
-                            match_axi4_stream_signals(axi_signals, axi_match);
+                            match_axi4_stream_signals(chk_signals, axi_match);
                             gpi_match := MATCH_STD_LOGIC(gpi_signals, GPI);
                             exit when(axi_match and gpi_match);
                             if (timeout > 0) then
@@ -595,6 +613,305 @@ begin
                                 EXECUTE_ABORT(core, proc_name, "Time Out!");
                             end if;
                         end loop;
+                    end if;
+                when others =>
+                    READ_ERROR(core, proc_name, "SEEK_EVENT NG");
+            end case;
+            REPORT_DEBUG(core, proc_name, "END");
+        end procedure;
+        ---------------------------------------------------------------------------
+        --! @brief execute_xfer 用の変数.
+        --!        procedure内のローカル変数ではなくprocess内の変数にしているのは、
+        --!        procedureだと、実行する度に変数の領域を確保する必要があるため。
+        ---------------------------------------------------------------------------
+        variable  xfer_data     : AXI4_STREAM_XFER_DATA_TYPE;
+        ---------------------------------------------------------------------------
+        --! @brief xfer_data.DATA の値を読み取るサブプログラム.
+        --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        --! @param    proc_name   プロシージャ名.リードエラー発生時に出力する.
+        ---------------------------------------------------------------------------
+        procedure read_xfer_byte_data(
+                      pos           : inout integer
+        ) is
+            constant  proc_name     :       string := "read_xfer_byte_data";
+            variable  read_len      :       integer;
+            variable  value_size    :       integer;
+            variable  bytes         :       integer;
+        begin 
+            REPORT_DEBUG(core, proc_name, "BEGIN");
+            if (core.str_len = 4 and core.str_buf(1 to 4) = "NULL") or
+               (core.str_len = 3 and core.str_buf(1 to 3) = "NIL" ) then
+                if (SLAVE) then
+                    xfer_data.data(8*pos+7 downto 8*pos) := "--------";
+                    xfer_data.strb(pos) := '0';
+                    xfer_data.keep(pos) := '0';
+                else
+                    xfer_data.data(8*pos+7 downto 8*pos) := "00000000";
+                    xfer_data.strb(pos) := '0';
+                    xfer_data.keep(pos) := '0';
+                end if;
+                pos := pos + 1;
+            elsif (core.str_len = 3 and core.str_buf(1 to 3) = "PAD" ) then
+                if (SLAVE) then
+                    xfer_data.data(8*pos+7 downto 8*pos) := "--------";
+                    xfer_data.strb(pos) := '0';
+                    xfer_data.keep(pos) := '1';
+                else
+                    xfer_data.data(8*pos+7 downto 8*pos) := "00000000";
+                    xfer_data.strb(pos) := '0';
+                    xfer_data.keep(pos) := '1';
+                end if;
+                pos := pos + 1;
+            else
+                STRING_TO_STD_LOGIC_VECTOR(
+                    STR     => core.str_buf(1 to core.str_len),
+                    VAL     => xfer_data.data(AXI4_XFER_MAX_BYTES*8-1 downto 8*pos),
+                    STR_LEN => read_len,
+                    VAL_LEN => value_size
+                );
+                bytes := (value_size+7)/8;
+                xfer_data.strb(bytes+pos-1 downto pos) := (bytes+pos-1 downto pos => '1');
+                xfer_data.keep(bytes+pos-1 downto pos) := (bytes+pos-1 downto pos => '1');
+                pos := pos + bytes;
+            end if;
+            REPORT_DEBUG(core, proc_name, "END");
+        end procedure;
+        ---------------------------------------------------------------------------
+        --! @brief xfer_data.DATA の値を読み取るサブプログラム.
+        ---------------------------------------------------------------------------
+        procedure read_xfer_data is
+            constant  proc_name     : string := "read_xfer_data";
+            variable  next_event    : EVENT_TYPE;
+            variable  seq_level     : integer;
+            variable  data_pos      : integer;
+        begin
+            REPORT_DEBUG(core, proc_name, "BEGIN");
+            SEEK_EVENT(core, stream, next_event);
+            if (next_event = EVENT_SCALAR) then
+                READ_EVENT(core, stream, EVENT_SCALAR);
+                data_pos := 0;
+                read_xfer_byte_data(data_pos);
+                xfer_data.BYTES := data_pos;
+            elsif (next_event = EVENT_SEQ_BEGIN) then
+                READ_EVENT(core, stream, EVENT_SEQ_BEGIN);
+                data_pos  := 0;
+                seq_level := 1;
+                SEQ_LOOP: loop
+                    SEEK_EVENT(core, stream, next_event);
+                    case next_event is
+                        when EVENT_SEQ_BEGIN =>
+                            READ_EVENT(core, stream, next_event);
+                            seq_level := seq_level + 1;
+                        when EVENT_SEQ_END   =>
+                            if (seq_level > 0) then
+                                READ_EVENT(core, stream, next_event);
+                                seq_level := seq_level - 1;
+                            end if;
+                            exit when (seq_level = 0);
+                        when EVENT_SCALAR    =>
+                            READ_EVENT(core, stream, next_event);
+                            read_xfer_byte_data(data_pos);
+                        when EVENT_ERROR     =>
+                            READ_ERROR(core, proc_name, "SEEK_EVENT NG");
+                        when others          =>
+                            READ_ERROR(core, proc_name, "SEEK_EVENT NG");
+                    end case;
+                end loop;
+                xfer_data.BYTES := data_pos;
+            end if;
+            REPORT_DEBUG(core, proc_name, "END");
+        end procedure;
+        ---------------------------------------------------------------------------
+        --! @brief シナリオのマップから xfer_data の値を読み取るサブプログラム.
+        --!      * このサブプログラムを呼ぶときは、すでにMAP_READ_BEGINを実行済みに
+        --!        しておかなければならない。
+        --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        --! @param    event       次のイベント. inoutであることに注意.
+        ---------------------------------------------------------------------------
+        procedure map_read_axi4_xfer_data(
+                      event         : inout EVENT_TYPE
+        ) is
+            constant  proc_name     :       string := "MAP_READ_AXI4_XFER_DATA";
+            variable  next_event    :       EVENT_TYPE;
+            variable  key_word      :       KEYWORD_TYPE;
+        begin
+            REPORT_DEBUG(core, proc_name, "BEGIN");
+            next_event := event;
+            MAP_LOOP: loop
+                case next_event is
+                    when EVENT_SCALAR  =>
+                        COPY_KEY_WORD(core, key_word);
+                        case key_word is
+                            when KEY_DATA =>
+                                read_xfer_data;
+                            when KEY_USER =>
+                                read_value(proc_name, xfer_data.USER);
+                            when KEY_DEST =>
+                                read_value(proc_name, xfer_data.DEST);
+                            when KEY_ID   =>
+                                read_value(proc_name, xfer_data.ID  );
+                            when KEY_LAST =>
+                                read_value(proc_name, xfer_data.LAST);
+                            when others   => exit MAP_LOOP;
+                        end case;
+                    when EVENT_MAP_END    => exit MAP_LOOP;
+                    when others           => exit MAP_LOOP;
+                end case;
+                SEEK_EVENT(core, stream, next_event);
+                if (next_event = EVENT_SCALAR) then
+                    READ_EVENT(core, stream, EVENT_SCALAR);
+                end if;
+            end loop;
+            event := next_event;
+            REPORT_DEBUG(core, proc_name, "END");
+        end procedure;
+        ---------------------------------------------------------------------------
+        --! @brief xfer_data の値を１ワード毎の AXI4-Stream 信号を取り出す.
+        --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        --! @param    signals     読み取った値が入る変数. 
+        --! @param    pos         xfer_dataの位置. inout で変更される事に注意.
+        ---------------------------------------------------------------------------
+        procedure xfer_data_to_signals(
+                      signals        : out   AXI4_STREAM_SIGNAL_TYPE;
+                      pos            : inout integer
+        ) is
+        begin 
+            signals.ID   := xfer_data.id;
+            signals.USER := xfer_data.user;
+            signals.DEST := xfer_data.dest;
+            for i in 0 to WIDTH.DATA/8-1 loop
+                if (pos < xfer_data.bytes) then
+                    signals.DATA(8*i+7 downto 8*i) := xfer_data.data(8*pos+7 downto 8*pos);
+                    signals.STRB(i) := xfer_data.strb(pos);
+                    signals.KEEP(i) := xfer_data.keep(pos);
+                    pos := pos + 1;
+                elsif (SLAVE) then
+                    signals.DATA(8*i+7 downto 8*i) := "--------";
+                    signals.STRB(i) := '0';
+                    signals.KEEP(i) := '-';
+                else
+                    signals.DATA(8*i+7 downto 8*i) := "00000000";
+                    signals.STRB(i) := '0';
+                    signals.KEEP(i) := '0';
+                end if;
+            end loop;
+            if (xfer_data.LAST = '1' and pos >= xfer_data.bytes) then
+                signals.LAST := '1';
+            else
+                signals.LAST := '0';
+            end if;
+        end procedure;
+        ---------------------------------------------------------------------------
+        --! @brief  XFERオペレーション(マスター用). 
+        ---------------------------------------------------------------------------
+        procedure execute_xfer_master(
+                      timeout        : inout integer
+        ) is
+            constant  proc_name      :       string := "EXECUTE_XFER_MASTER";
+            variable  pos            :       integer;
+        begin
+            pos := 0;
+            while(pos < xfer_data.bytes) loop
+                xfer_data_to_signals(out_signals, pos);
+                TDATA_O  <= out_signals.data(TDATA_O'range) after OUTPUT_DELAY;
+                TSTRB_O  <= out_signals.strb(TSTRB_O'range) after OUTPUT_DELAY;
+                TKEEP_O  <= out_signals.keep(TKEEP_O'range) after OUTPUT_DELAY;
+                TID_O    <= out_signals.id  (TID_O  'range) after OUTPUT_DELAY;
+                TDEST_O  <= out_signals.dest(TDEST_O'range) after OUTPUT_DELAY;
+                TUSER_O  <= out_signals.user(TUSER_O'range) after OUTPUT_DELAY;
+                TLAST_O  <= out_signals.last                after OUTPUT_DELAY;
+                TVALID_O <= '1' after OUTPUT_DELAY;
+                MASTER_CHECK_LOOP: loop
+                    wait until (ACLK'event and ACLK = '1');
+                    exit when(TREADY_I = '1');
+                    if (timeout > 0) then
+                        timeout := timeout - 1;
+                    else
+                        EXECUTE_ABORT(core, proc_name, "Time Out!");
+                    end if;
+                end loop;
+                TVALID_O <= '0' after OUTPUT_DELAY;
+            end loop;
+        end procedure;
+        ---------------------------------------------------------------------------
+        --! @brief  XFERオペレーション(スレーブ用). 
+        ---------------------------------------------------------------------------
+        procedure execute_xfer_slave(
+                      timeout        : inout integer
+        ) is
+            constant  proc_name      :       string := "EXECUTE_XFER_SLAVE";
+            variable  pos            :       integer;
+            variable  match          :       boolean;
+        begin
+            pos := 0;
+            chk_signals := AXI4_STREAM_SIGNAL_DONTCARE;
+            while(pos < xfer_data.bytes) loop
+                TREADY_O <= '1' after OUTPUT_DELAY;
+                SLAVE_CHECK_LOOP: loop
+                    wait until (ACLK'event and ACLK = '1');
+                    exit when(TVALID_I = '1');
+                    if (timeout > 0) then
+                        timeout := timeout - 1;
+                    else
+                        EXECUTE_ABORT(core, proc_name, "Time Out!");
+                    end if;
+                end loop;
+                TREADY_O <= '0' after OUTPUT_DELAY;
+                xfer_data_to_signals(chk_signals, pos);
+                match_axi4_stream_signals(core, chk_signals, match);
+            end loop;
+        end procedure;
+        ---------------------------------------------------------------------------
+        --! @brief  XFERオペレーション. 
+        ---------------------------------------------------------------------------
+        procedure execute_xfer is
+            constant  proc_name      : string := "EXECUTE_XFER";
+            variable  next_event     : EVENT_TYPE;
+            variable  keyword        : KEYWORD_TYPE;
+            variable  timeout        : integer;
+            variable  pos            : integer;
+        begin
+            REPORT_DEBUG(core, proc_name, "BEGIN");
+            timeout := DEFAULT_WAIT_TIMEOUT;
+            xfer_data.bytes :=  0 ;
+            xfer_data.last  := '0';
+            SEEK_EVENT(core, stream, next_event);
+            case next_event is
+                when EVENT_MAP_BEGIN =>
+                    READ_EVENT(core, stream, EVENT_MAP_BEGIN);
+                    MAP_READ_LOOP: loop
+                        REPORT_DEBUG(core, proc_name, "MAP_READ_LOOP");
+                        MAP_READ_PREPARE_FOR_NEXT(
+                            SELF       => core            ,  -- I/O:
+                            STREAM     => stream          ,  -- I/O:
+                            EVENT      => next_event         -- I/O:
+                        );
+                        map_read_axi4_xfer_data(
+                            event      => next_event         -- I/O:
+                        );
+                        MAP_READ_INTEGER(
+                            SELF       => core            ,  -- I/O:
+                            STREAM     => stream          ,  -- I/O:
+                            KEY        => "TIMEOUT"       ,  -- In :
+                            VAL        => timeout         ,  -- I/O:
+                            EVENT      => next_event         -- I/O:
+                        );
+                        case next_event is
+                            when EVENT_SCALAR  =>
+                                COPY_KEY_WORD(core, keyword);
+                                EXECUTE_UNDEFINED_MAP_KEY(core, stream, keyword);
+                            when EVENT_MAP_END =>
+                                exit MAP_READ_LOOP;
+                            when others        =>
+                                READ_ERROR(core, proc_name, "need EVENT_MAP_END but " &
+                                           EVENT_TO_STRING(next_event));
+                        end case;
+                    end loop;
+                    if (MASTER) then
+                        execute_xfer_master(timeout);
+                    end if;
+                    if (SLAVE) then
+                        execute_xfer_slave (timeout);
                     end if;
                 when others =>
                     READ_ERROR(core, proc_name, "SEEK_EVENT NG");
@@ -690,6 +1007,7 @@ begin
         begin
             if (MASTER) then
                 read_value(proc_name, out_signals.ID(WIDTH.ID-1 downto 0));
+                xfer_data.id(WIDTH.ID-1 downto 0) := out_signals.ID(WIDTH.ID-1 downto 0);
                 TID_O    <= out_signals.ID  (TID_O  'range) after OUTPUT_DELAY;
             else
                 skip_value(proc_name);
@@ -703,6 +1021,7 @@ begin
         begin
             if (MASTER) then
                 read_value(proc_name, out_signals.USER(WIDTH.USER-1 downto 0));
+                xfer_data.user(WIDTH.USER-1 downto 0) := out_signals.user(WIDTH.USER-1 downto 0);
                 TUSER_O  <= out_signals.USER(TUSER_O'range) after OUTPUT_DELAY;
             else
                 skip_value(proc_name);
@@ -716,6 +1035,7 @@ begin
         begin
             if (MASTER) then
                 read_value(proc_name, out_signals.DEST(WIDTH.DEST-1 downto 0));
+                xfer_data.dest(WIDTH.DEST-1 downto 0) := out_signals.dest(WIDTH.DEST-1 downto 0);
                 TDEST_O  <= out_signals.DEST(TDEST_O'range) after OUTPUT_DELAY;
             else
                 skip_value(proc_name);
@@ -775,7 +1095,11 @@ begin
         ---------------------------------------------------------------------------
         -- 変数の初期化.
         ---------------------------------------------------------------------------
+        out_signals := AXI4_STREAM_SIGNAL_NULL;
+        chk_signals := AXI4_STREAM_SIGNAL_DONTCARE;
         gpo_signals := (others => 'Z');
+        gpi_signals := (others => '-');
+        xfer_data   := AXI4_STREAM_XFER_DATA_NULL;
         core.debug  := 0;
         ---------------------------------------------------------------------------
         -- 信号の初期化
@@ -783,6 +1107,18 @@ begin
         SYNC_REQ       <= (0 =>10, others => 0);
         FINISH         <= '0';
         REPORT_STATUS  <= core.report_status;
+        if (MASTER) then
+            TDATA_O  <= (others => '0');
+            TSTRB_O  <= (others => '1');
+            TKEEP_O  <= (others => '1');
+            TID_O    <= (others => '0');
+            TUSER_O  <= (others => '0');
+            TDEST_O  <= (others => '0');
+            TVALID_O <= '0';
+        end if;
+        if (SLAVE) then
+            TREADY_O <= '0';
+        end if;
         ---------------------------------------------------------------------------
         -- リセット解除待ち
         ---------------------------------------------------------------------------
@@ -822,6 +1158,7 @@ begin
                         when KEY_SYNC   => execute_sync  (operation);
                         when KEY_WAIT   => execute_wait;
                         when KEY_CHECK  => execute_check;
+                        when KEY_XFER   => execute_xfer;
                         when others     => EXECUTE_UNDEFINED_MAP_KEY(core, stream, keyword);
                     end case;
                 when OP_FINISH    => exit;

@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_stream_master player.vhd
 --!     @brief   AXI4-Stream Master Dummy Plug Player.
---!     @version 1.2.1
---!     @date    2012/11/9
+--!     @version 1.2.2
+--!     @date    2012/11/10
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
