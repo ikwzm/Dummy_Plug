@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_stream_player.vhd
 --!     @brief   AXI4-Stream Dummy Plug Player.
---!     @version 1.2.2
---!     @date    2012/11/10
+--!     @version 1.2.3
+--!     @date    2012/11/11
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -1114,6 +1114,7 @@ begin
             TID_O    <= (others => '0');
             TUSER_O  <= (others => '0');
             TDEST_O  <= (others => '0');
+            TLAST_O  <= '0';
             TVALID_O <= '0';
         end if;
         if (SLAVE) then
