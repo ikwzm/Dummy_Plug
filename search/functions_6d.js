@@ -2,8 +2,9 @@ var searchData=
 [
   ['main',['MAIN',['../classMARCHAL_1_1MODEL.html#ac1a6694e960a318275c010997d8bbc66',1,'MARCHAL::MODEL']]],
   ['map_5fread_5faxi4_5fchannel',['map_read_axi4_channel',['../classAXI4__CHANNEL__PLAYER_1_1MODEL.html#a8d19ccfb07eee3d8a848b430beedabce',1,'AXI4_CHANNEL_PLAYER::MODEL']]],
-  ['map_5fread_5faxi4_5fstream_5fsignals',['map_read_axi4_stream_signals',['../classAXI4__STREAM__PLAYER_1_1MODEL.html#a390d32bc4da8563c4d80c8e9022174de',1,'AXI4_STREAM_PLAYER::MODEL']]],
+  ['map_5fread_5faxi4_5fstream_5fsignals',['map_read_axi4_stream_signals',['../classAXI4__STREAM__PLAYER_1_1MODEL.html#a43120c672036fa2ea239559b38677c0e',1,'AXI4_STREAM_PLAYER::MODEL']]],
   ['map_5fread_5faxi4_5ftransaction',['map_read_axi4_transaction',['../classAXI4__CHANNEL__PLAYER_1_1MODEL.html#ac8dfb3bb1d3ad6d5abf35e59ba413b47',1,'AXI4_CHANNEL_PLAYER::MODEL']]],
+  ['map_5fread_5faxi4_5fxfer_5fdata',['map_read_axi4_xfer_data',['../classAXI4__STREAM__PLAYER_1_1MODEL.html#a7dc4771a9eb79ea69a4dbf596dfca995',1,'AXI4_STREAM_PLAYER::MODEL']]],
   ['map_5fread_5fboolean',['MAP_READ_BOOLEAN',['../classCORE.html#aa7ceacea13909abd6d3189ade12ffd54',1,'CORE.MAP_READ_BOOLEAN()'],['../class__CORE.html#aa7ceacea13909abd6d3189ade12ffd54',1,'_CORE.MAP_READ_BOOLEAN()']]],
   ['map_5fread_5finteger',['MAP_READ_INTEGER',['../classCORE.html#ab86ca810abb545eb66878fa5429b2be5',1,'CORE.MAP_READ_INTEGER()'],['../class__CORE.html#ab86ca810abb545eb66878fa5429b2be5',1,'_CORE.MAP_READ_INTEGER()']]],
   ['map_5fread_5fprepare_5ffor_5fnext',['MAP_READ_PREPARE_FOR_NEXT',['../classCORE.html#a76d3300e1ec11df7aaa0def1acfe5b00',1,'CORE.MAP_READ_PREPARE_FOR_NEXT()'],['../class__CORE.html#a76d3300e1ec11df7aaa0def1acfe5b00',1,'_CORE.MAP_READ_PREPARE_FOR_NEXT()']]],

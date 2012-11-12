@@ -183,6 +183,8 @@ var searchData=
   ['axi4_5fstream_5fsignal_5ftype',['AXI4_STREAM_SIGNAL_TYPE',['../classAXI4__CORE.html#a8f86901d14515a1929fbffff9b8e7447',1,'AXI4_CORE']]],
   ['axi4_5fstream_5fsignal_5fwidth_5ftype',['AXI4_STREAM_SIGNAL_WIDTH_TYPE',['../classAXI4__TYPES.html#aebb6f94fb470092a85390860e7cdd781',1,'AXI4_TYPES']]],
   ['axi4_5fstream_5fslave_5fplayer',['AXI4_STREAM_SLAVE_PLAYER',['../classAXI4__MODELS.html#a89a355b01b72c71a5da56cd1763affaf',1,'AXI4_MODELS']]],
+  ['axi4_5fstream_5fxfer_5fdata_5fnull',['AXI4_STREAM_XFER_DATA_NULL',['../classAXI4__STREAM__PLAYER_1_1MODEL.html#a28cb0400f07660b9b1bd6129ed4bd977',1,'AXI4_STREAM_PLAYER::MODEL']]],
+  ['axi4_5fstream_5fxfer_5fdata_5ftype',['AXI4_STREAM_XFER_DATA_TYPE',['../classAXI4__STREAM__PLAYER_1_1MODEL.html#ae00cde9b609fc045395777c56b92c7c7',1,'AXI4_STREAM_PLAYER::MODEL']]],
   ['axi4_5ftransaction_5fsignal_5fdontcare',['AXI4_TRANSACTION_SIGNAL_DONTCARE',['../classAXI4__CORE.html#a8c5dd63d3f535f174463b7f858d8fd5b',1,'AXI4_CORE']]],
   ['axi4_5ftransaction_5fsignal_5fnull',['AXI4_TRANSACTION_SIGNAL_NULL',['../classAXI4__CORE.html#aa042ddf1d41ea21c59bc789293ba86e1',1,'AXI4_CORE']]],
   ['axi4_5ftransaction_5fsignal_5ftype',['AXI4_TRANSACTION_SIGNAL_TYPE',['../classAXI4__CORE.html#a514d639ad4b46482e60f608fb22de122',1,'AXI4_CORE']]],

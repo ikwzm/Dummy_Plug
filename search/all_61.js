@@ -198,6 +198,8 @@ var searchData=
   ['axi4_5fstream_5fslave_5fplayer_2evhd',['axi4_stream_slave_player.vhd',['../axi4__stream__slave__player_8vhd.html',1,'']]],
   ['axi4_5fstream_5ftest_5f1_2evhd',['axi4_stream_test_1.vhd',['../axi4__stream__test__1_8vhd.html',1,'']]],
   ['axi4_5fstream_5ftest_5f1_5f1_2evhd',['axi4_stream_test_1_1.vhd',['../axi4__stream__test__1__1_8vhd.html',1,'']]],
+  ['axi4_5fstream_5fxfer_5fdata_5fnull',['AXI4_STREAM_XFER_DATA_NULL',['../classAXI4__STREAM__PLAYER_1_1MODEL.html#a28cb0400f07660b9b1bd6129ed4bd977',1,'AXI4_STREAM_PLAYER::MODEL']]],
+  ['axi4_5fstream_5fxfer_5fdata_5ftype',['AXI4_STREAM_XFER_DATA_TYPE',['../classAXI4__STREAM__PLAYER_1_1MODEL.html#ae00cde9b609fc045395777c56b92c7c7',1,'AXI4_STREAM_PLAYER::MODEL']]],
   ['axi4_5ftest_5f1_2evhd',['axi4_test_1.vhd',['../axi4__test__1_8vhd.html',1,'']]],
   ['axi4_5ftest_5f1_5f1_2evhd',['axi4_test_1_1.vhd',['../axi4__test__1__1_8vhd.html',1,'']]],
   ['axi4_5ftest_5f1_5f2_2evhd',['axi4_test_1_2.vhd',['../axi4__test__1__2_8vhd.html',1,'']]],
