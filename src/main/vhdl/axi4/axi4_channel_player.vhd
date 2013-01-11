@@ -2350,6 +2350,25 @@ begin
                 end case;
             end procedure;
             -----------------------------------------------------------------------
+            --! @brief デフォルトの ASIZE を計算するサブプログラム.
+            -----------------------------------------------------------------------
+            function  default_asize(WIDTH:integer) return AXI4_ASIZE_TYPE is
+            begin
+                case WIDTH is
+                    when      8 => return AXI4_ASIZE_1BYTE;
+                    when     16 => return AXI4_ASIZE_2BYTE;
+                    when     32 => return AXI4_ASIZE_4BYTE;
+                    when     64 => return AXI4_ASIZE_8BYTE;
+                    when    128 => return AXI4_ASIZE_16BYTE;
+                    when    256 => return AXI4_ASIZE_32BYTE;
+                    when    512 => return AXI4_ASIZE_64BYTE;
+                    when   1024 => return AXI4_ASIZE_128BYTE;
+                    when others => return (others => '0');
+                end case;
+            end function;
+            constant  AXI4_ARSIZE_DEFAULT : AXI4_ASIZE_TYPE := default_asize(WIDTH.RDATA);
+            constant  AXI4_AWSIZE_DEFAULT : AXI4_ASIZE_TYPE := default_asize(WIDTH.WDATA);
+            -----------------------------------------------------------------------
             --! @brief マスターリードランザクション(アドレスチャネル)実行サブプログラム.
             -----------------------------------------------------------------------
             procedure execute_transaction_master_read_addr is
@@ -2358,6 +2377,8 @@ begin
             begin
                 REPORT_DEBUG(core, proc_name, "BEGIN");
                 tran_info       := AXI4_TRANSACTION_SIGNAL_NULL;
+                tran_info.SIZE  := AXI4_ARSIZE_DEFAULT;
+                tran_info.BURST := AXI4_ABURST_INCR;
                 tran_info.DUSER := (others => '-');
                 tran_info.VALID := '1';
                 read_transaction_info(proc_name, timeout);
@@ -2393,6 +2414,8 @@ begin
             begin
                 REPORT_DEBUG(core, proc_name, "BEGIN");
                 tran_info       := AXI4_TRANSACTION_SIGNAL_NULL;
+                tran_info.SIZE  := AXI4_AWSIZE_DEFAULT;
+                tran_info.BURST := AXI4_ABURST_INCR;
                 tran_info.BUSER := (others => '-');
                 tran_info.VALID := '1';
                 read_transaction_info(proc_name, timeout);
@@ -2429,6 +2452,8 @@ begin
             begin
                 REPORT_DEBUG(core, proc_name, "BEGIN");
                 tran_info       := AXI4_TRANSACTION_SIGNAL_DONTCARE;
+                tran_info.SIZE  := AXI4_ARSIZE_DEFAULT;
+                tran_info.BURST := AXI4_ABURST_INCR;
                 tran_info.VALID := '1';
                 read_transaction_info(proc_name, timeout);
                 local_sync(core, SYNC_TRANS_REQ, SYNC_TRANS_ACK);
@@ -2465,6 +2490,8 @@ begin
             begin
                 REPORT_DEBUG(core, proc_name, "BEGIN");
                 tran_info       := AXI4_TRANSACTION_SIGNAL_DONTCARE;
+                tran_info.SIZE  := AXI4_AWSIZE_DEFAULT;
+                tran_info.BURST := AXI4_ABURST_INCR;
                 tran_info.VALID := '1';
                 read_transaction_info(proc_name, timeout);
                 local_sync(core, SYNC_TRANS_REQ, SYNC_TRANS_ACK);
