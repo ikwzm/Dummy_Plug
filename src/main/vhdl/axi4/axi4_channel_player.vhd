@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_channel_player.vhd
 --!     @brief   AXI4 A/R/W/B Channel Dummy Plug Player.
---!     @version 1.3.0
---!     @date    2012/11/12
+--!     @version 1.3.1
+--!     @date    2013/1/11
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012 Ichiro Kawazome
+--      Copyright (C) 2012,2013 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -2903,6 +2903,7 @@ begin
                 EXECUTE_SKIP(core, stream);
                 local_sync(core, SYNC_TRANS_REQ, SYNC_TRANS_ACK);
                 get_transaction_info(proc_name, WIDTH.RDATA);
+                wait_until_xfer_ar(core, proc_name, timeout);
                 for i in 1 to burst_len loop
                     generate_r_channel_signals(
                         proc_name => proc_name, 

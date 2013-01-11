@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_slave_player.vhd
 --!     @brief   AXI4 Slave Dummy Plug Player.
---!     @version 1.3.0
---!     @date    2012/11/12
+--!     @version 1.3.1
+--!     @date    2013/1/11
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012 Ichiro Kawazome
+--      Copyright (C) 2012,2013 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
