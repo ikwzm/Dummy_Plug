@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_channel_player.vhd
 --!     @brief   AXI4 A/R/W/B Channel Dummy Plug Player.
---!     @version 1.4.0
---!     @date    2013/2/12
+--!     @version 1.4.1
+--!     @date    2013/4/16
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -2492,6 +2492,7 @@ begin
                 tran_info       := AXI4_TRANSACTION_SIGNAL_DONTCARE;
                 tran_info.SIZE  := AXI4_AWSIZE_DEFAULT;
                 tran_info.BURST := AXI4_ABURST_INCR;
+                tran_info.BUSER := (others => '0');
                 tran_info.VALID := '1';
                 read_transaction_info(proc_name, timeout);
                 local_sync(core, SYNC_TRANS_REQ, SYNC_TRANS_ACK);

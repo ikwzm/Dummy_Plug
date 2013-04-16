@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    core.vhd
 --!     @brief   Core Package for Dummy Plug.
---!     @version 1.4.0
---!     @date    2013/2/12
+--!     @version 1.4.1
+--!     @date    2013/4/16
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -1870,7 +1870,7 @@ package body CORE is
                     end if;
                 when EVENT_SCALAR     =>
                     READ_EVENT(SELF, STREAM, next_event);
-                    if (pos < VAL'high) then
+                    if (pos <= VAL'high) then
                         STRING_TO_STD_LOGIC_VECTOR(
                             STR     => SELF.str_buf(1 to SELF.str_len),
                             VAL     => VAL(VAL'high downto pos),
