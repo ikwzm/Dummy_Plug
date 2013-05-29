@@ -282,7 +282,7 @@ begin
                 wait until (ACLK'event and ACLK = '1');
                 p(Now, string'("|") & HEX_TO_STRING(resize(ARID,8)) &
                        string'("|") & HEX_TO_STRING(ARADDR ) &
-                       string'("|") & HEX_TO_STRING(resize(ARLEN,AXI4_ALOCK_MAX_WIDTH)) &
+                       string'("|") & HEX_TO_STRING(resize(ARLEN,AXI4_ALEN_MAX_WIDTH)) &
                        string'(" ") & HEX_TO_STRING(ARSIZE ) &
                        string'(" ") & HEX_TO_STRING(ARBURST) &
                        string'(" ") & HEX_TO_STRING(ARLOCK ) &
@@ -300,7 +300,7 @@ begin
                        string'("|") & 
                        string'("|") & HEX_TO_STRING(resize(AWID,8)) &
                        string'("|") & HEX_TO_STRING(AWADDR ) &
-                       string'("|") & HEX_TO_STRING(resize(AWLEN,AXI4_ALOCK_MAX_WIDTH)) &
+                       string'("|") & HEX_TO_STRING(resize(AWLEN,AXI4_ALEN_MAX_WIDTH)) &
                        string'(" ") & HEX_TO_STRING(AWSIZE ) &
                        string'(" ") & HEX_TO_STRING(AWBURST) &
                        string'(" ") & HEX_TO_STRING(AWLOCK ) &
@@ -338,7 +338,7 @@ begin
                 wait until (ACLK'event and ACLK = '1');
                 p(Now, string'("|") & HEX_TO_STRING(resize(ARID,8)) &
                        string'("|") & HEX_TO_STRING(ARADDR ) &
-                       string'("|") & HEX_TO_STRING(resize(ARLEN,AXI4_ALOCK_MAX_WIDTH)) &
+                       string'("|") & HEX_TO_STRING(resize(ARLEN,AXI4_ALEN_MAX_WIDTH)) &
                        string'(" ") & HEX_TO_STRING(ARSIZE ) &
                        string'(" ") & HEX_TO_STRING(ARBURST) &
                        string'(" ") & HEX_TO_STRING(ARLOCK ) &
@@ -372,7 +372,7 @@ begin
                 wait until (ACLK'event and ACLK = '1');
                 p(Now, string'("|") & HEX_TO_STRING(resize(AWID,8)) &
                        string'("|") & HEX_TO_STRING(AWADDR ) &
-                       string'("|") & HEX_TO_STRING(resize(AWLEN,AXI4_ALOCK_MAX_WIDTH)) &
+                       string'("|") & HEX_TO_STRING(resize(AWLEN,AXI4_ALEN_MAX_WIDTH)) &
                        string'(" ") & HEX_TO_STRING(AWSIZE ) &
                        string'(" ") & HEX_TO_STRING(AWBURST) &
                        string'(" ") & HEX_TO_STRING(AWLOCK ) &
