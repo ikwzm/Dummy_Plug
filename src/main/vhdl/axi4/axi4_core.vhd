@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_core.vhd
 --!     @brief   AXI4 Dummy Plug Core Package.
---!     @version 1.4.0
---!     @date    2013/2/12
+--!     @version 1.5.0
+--!     @date    2013/5/29
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -75,10 +75,10 @@ package AXI4_CORE is
     type      AXI4_A_CHANNEL_SIGNAL_TYPE is record
         ADDR     : std_logic_vector(AXI4_ADDR_MAX_WIDTH -1 downto 0);
         WRITE    : std_logic;
-        LEN      : AXI4_ALEN_TYPE;
+        LEN      : std_logic_vector(AXI4_ALEN_MAX_WIDTH -1 downto 0);
         SIZE     : AXI4_ASIZE_TYPE;
         BURST    : AXI4_ABURST_TYPE;
-        LOCK     : AXI4_ALOCK_TYPE;
+        LOCK     : std_logic_vector(AXI4_ALOCK_MAX_WIDTH-1 downto 0);
         CACHE    : AXI4_ACACHE_TYPE;
         PROT     : AXI4_APROT_TYPE;
         QOS      : AXI4_AQOS_TYPE;
@@ -271,10 +271,10 @@ package AXI4_CORE is
         DATA     : std_logic_vector(AXI4_XFER_MAX_BYTES*8-1 downto 0);
         DATA_LEN : integer;
         WRITE    : std_logic;
-        LEN      : AXI4_ALEN_TYPE;
+        LEN      : std_logic_vector(AXI4_ALEN_MAX_WIDTH  -1 downto 0);
         SIZE     : AXI4_ASIZE_TYPE;
         BURST    : AXI4_ABURST_TYPE;
-        LOCK     : AXI4_ALOCK_TYPE;
+        LOCK     : std_logic_vector(AXI4_ALOCK_MAX_WIDTH -1 downto 0);
         CACHE    : AXI4_ACACHE_TYPE;
         PROT     : AXI4_APROT_TYPE;
         QOS      : AXI4_AQOS_TYPE;
@@ -423,14 +423,14 @@ package AXI4_CORE is
             ----------------------------------------------------------------------
             ARADDR_I        : in    std_logic_vector(WIDTH.ARADDR -1 downto 0);
             ARADDR_O        : out   std_logic_vector(WIDTH.ARADDR -1 downto 0);
-            ARLEN_I         : in    AXI4_ALEN_TYPE;
-            ARLEN_O         : out   AXI4_ALEN_TYPE;
+            ARLEN_I         : in    std_logic_vector(WIDTH.ALEN   -1 downto 0);
+            ARLEN_O         : out   std_logic_vector(WIDTH.ALEN   -1 downto 0);
             ARSIZE_I        : in    AXI4_ASIZE_TYPE;
             ARSIZE_O        : out   AXI4_ASIZE_TYPE;
             ARBURST_I       : in    AXI4_ABURST_TYPE;
             ARBURST_O       : out   AXI4_ABURST_TYPE;
-            ARLOCK_I        : in    AXI4_ALOCK_TYPE;
-            ARLOCK_O        : out   AXI4_ALOCK_TYPE;
+            ARLOCK_I        : in    std_logic_vector(WIDTH.ALOCK  -1 downto 0);
+            ARLOCK_O        : out   std_logic_vector(WIDTH.ALOCK  -1 downto 0);
             ARCACHE_I       : in    AXI4_ACACHE_TYPE;
             ARCACHE_O       : out   AXI4_ACACHE_TYPE;
             ARPROT_I        : in    AXI4_APROT_TYPE;
@@ -469,14 +469,14 @@ package AXI4_CORE is
             ----------------------------------------------------------------------
             AWADDR_I        : in    std_logic_vector(WIDTH.AWADDR -1 downto 0);
             AWADDR_O        : out   std_logic_vector(WIDTH.AWADDR -1 downto 0);
-            AWLEN_I         : in    AXI4_ALEN_TYPE;
-            AWLEN_O         : out   AXI4_ALEN_TYPE;
+            AWLEN_I         : in    std_logic_vector(WIDTH.ALEN   -1 downto 0);
+            AWLEN_O         : out   std_logic_vector(WIDTH.ALEN   -1 downto 0);
             AWSIZE_I        : in    AXI4_ASIZE_TYPE;
             AWSIZE_O        : out   AXI4_ASIZE_TYPE;
             AWBURST_I       : in    AXI4_ABURST_TYPE;
             AWBURST_O       : out   AXI4_ABURST_TYPE;
-            AWLOCK_I        : in    AXI4_ALOCK_TYPE;
-            AWLOCK_O        : out   AXI4_ALOCK_TYPE;
+            AWLOCK_I        : in    std_logic_vector(WIDTH.ALOCK  -1 downto 0);
+            AWLOCK_O        : out   std_logic_vector(WIDTH.ALOCK  -1 downto 0);
             AWCACHE_I       : in    AXI4_ACACHE_TYPE;
             AWCACHE_O       : out   AXI4_ACACHE_TYPE;
             AWPROT_I        : in    AXI4_APROT_TYPE;
