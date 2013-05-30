@@ -160,7 +160,7 @@
       AWSIZE  : 1                         # AWSIZE  <= 'b000
       AWLEN   : 1                         # AWLEN   <= 'b00000000
       AWBURST : FIXED                     # AWBURST <= 'b00
-      AWLOCK  : 0                         # AWLOCK  <= 'b00
+      AWLOCK  : 0                         # AWLOCK  <= 'b0
       AWPROT  : 0                         # AWPROT  <= 'b000
       AWQOS   : 0                         # AWQOS   <= 'b0000
       AWID    : 0                         # AWID    <= 0
@@ -169,7 +169,7 @@
       AWSIZE  : 4                         # AWSIZE  <= 'b010
       AWLEN   : 2                         # AWLEN   <= 'b001
       AWBURST : INCR                      # AWBURST <= 'b01
-      AWLOCK  : 2                         # AWLOCK  <= 'b10
+      AWLOCK  : 1                         # AWLOCK  <= 'b1
       AWPROT  : 3                         # AWPROT  <= 'b011
       AWQOS   : 3                         # AWQOS   <= 'b0011
       AWID    : 7                         # AWID    <= 7
@@ -217,7 +217,7 @@
         AWID    : 7                       #
         AWLEN   : 2                       # 
         AWBURST : INCR                    # 
-        AWLOCK  : 2                       # 
+        AWLOCK  : 1                       # 
         AWPROT  : 3                       # 
         AWQOS   : 3                       # 
     - AWREADY : 0                         # AWREADY <= 0
@@ -268,7 +268,7 @@
       ARSIZE  : 1                         # ARSIZE  <= 'b000
       ARLEN   : 1                         # ARLEN   <= 'b00000000
       ARBURST : FIXED                     # ARBURST <= 'b00
-      ARLOCK  : 0                         # ARLOCK  <= 'b00
+      ARLOCK  : 0                         # ARLOCK  <= 'b0
       ARPROT  : 0                         # ARPROT  <= 'b000
       ARQOS   : 0                         # ARQOS   <= 'b0000
       ARID    : 0                         # ARID    <= 0
@@ -277,7 +277,7 @@
       ARSIZE  : 4                         # ARSIZE  <= 'b010
       ARLEN   : 2                         # ARLEN   <= 'b00000001
       ARBURST : INCR                      # ARBURST <= 'b01
-      ARLOCK  : 3                         # ARLOCK  <= 'b11
+      ARLOCK  : 1                         # ARLOCK  <= 'b1
       ARPROT  : 2                         # ARPROT  <= 'b010
       ARQOS   : 1                         # ARQOS   <= 'b0001
       ARID    : 7                         # ARID    <= 7
@@ -311,7 +311,7 @@
         ARSIZE  : 4                       #
         ARLEN   : 2                       # 
         ARBURST : INCR                    # 
-        ARLOCK  : 3                       # 
+        ARLOCK  : 1                       # 
         ARPROT  : 2                       # 
         ARQOS   : 1                       # 
         ARID    : 7                       #
@@ -378,7 +378,7 @@
       AWSIZE  : 1                         # AWSIZE  <= 'b000
       AWLEN   : 1                         # AWLEN   <= 'b00000000
       AWBURST : FIXED                     # AWBURST <= 'b00
-      AWLOCK  : 0                         # AWLOCK  <= 'b00
+      AWLOCK  : 0                         # AWLOCK  <= 'b0
       AWPROT  : 0                         # AWPROT  <= 'b000
       AWQOS   : 0                         # AWQOS   <= 'b0000
       AWID    : 0                         # AWID    <= 0
@@ -387,7 +387,7 @@
       AWSIZE  : 4                         # AWSIZE  <= 'b010
       AWLEN   : 2                         # AWLEN   <= 'b00000001
       AWBURST : INCR                      # AWBURST <= 'b01
-      AWLOCK  : 2                         # AWLOCK  <= 2
+      AWLOCK  : 1                         # AWLOCK  <= 1
       AWPROT  : 3                         # AWPROT  <= 3
       AWQOS   : 3                         # AWQOS   <= 3
       AWID    : 7                         # AWID    <= 7
@@ -430,7 +430,7 @@
       ARSIZE  : 1                         # ARSIZE  <= 'b000
       ARLEN   : 1                         # ARLEN   <= 'b00000000
       ARBURST : FIXED                     # ARBURST <= 'b00
-      ARLOCK  : 0                         # ARLOCK  <= 'b00
+      ARLOCK  : 0                         # ARLOCK  <= 'b0
       ARPROT  : 0                         # ARPROT  <= 'b000
       ARQOS   : 0                         # ARQOS   <= 'b0000
       ARID    : 0                         # ARID    <= 0
@@ -440,7 +440,7 @@
       ARID    : 7                         # ARID    <= 7
       ARLEN   : 2                         # ARLEN   <= 'b00000001
       ARBURST : INCR                      # ARBURST <= 'b01
-      ARLOCK  : 3                         # ARLOCK  <= 'b11
+      ARLOCK  : 1                         # ARLOCK  <= 'b1
       ARPROT  : 2                         # ARPROT  <= 'b010
       ARQOS   : 1                         # ARQOS   <= 'b0001
       ARID    : 7                         # ARID    <= 7
@@ -487,7 +487,7 @@
         AWID    : 5                       #
         AWLEN   : 3                       # 
         AWBURST : FIXED                   # 
-        AWLOCK  : 1                       # 
+        AWLOCK  : 0                       # 
         AWPROT  : 1                       # 
         AWQOS   : 1                       # 
     - AWREADY : 0                         # AWREADY <= 0
@@ -525,13 +525,13 @@
     - WAIT    : {ARVALID: 1, TIMEOUT: 10} # ARVALID = 1 まで待つ.ただし10クロック以内.
     - ARREADY : 1                         # ARREADY <= 1
     - WAIT    : {ARVALID: 1, ARREADY: 1}  # ARVALID = 1 and ARREADY = 1 まで待つ.
-    - SAY     : "Expected mismatch ! ARADDR, ARSIZE, ARLEN, ARBURST, ARLOCK,ARPORT,ARQOS, ARID!"
+    - SAY     : "Expected mismatch ! ARADDR, ARSIZE, ARLEN, ARBURST, ARLOCK, ARPORT,ARQOS, ARID!"
     - CHECK   :                           # AWADDR, AWSIZE, AWID が
         ARADDR  : "32'h00432100"          # 指定した値になっていないことを調べる.
         ARSIZE  : 2                       #
         ARLEN   : 3                       # 
         ARBURST : FIXED                   # 
-        ARLOCK  : 1                       # 
+        ARLOCK  : 0                       # 
         ARPROT  : 1                       # 
         ARQOS   : 2                       # 
         ARID    : 1                       #

@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_slave_player.vhd
 --!     @brief   AXI4 Slave Dummy Plug Player.
---!     @version 1.4.0
---!     @date    2013/2/12
+--!     @version 1.5.0
+--!     @date    2013/5/29
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -86,10 +86,10 @@ entity  AXI4_SLAVE_PLAYER is
         -- リードアドレスチャネルシグナル.
         --------------------------------------------------------------------------
         ARADDR          : in    std_logic_vector(WIDTH.ARADDR -1 downto 0);
-        ARLEN           : in    AXI4_ALEN_TYPE;
+        ARLEN           : in    std_logic_vector(WIDTH.ALEN   -1 downto 0);
         ARSIZE          : in    AXI4_ASIZE_TYPE;
         ARBURST         : in    AXI4_ABURST_TYPE;
-        ARLOCK          : in    AXI4_ALOCK_TYPE;
+        ARLOCK          : in    std_logic_vector(WIDTH.ALOCK  -1 downto 0);
         ARCACHE         : in    AXI4_ACACHE_TYPE;
         ARPROT          : in    AXI4_APROT_TYPE;
         ARQOS           : in    AXI4_AQOS_TYPE;
@@ -112,10 +112,10 @@ entity  AXI4_SLAVE_PLAYER is
         -- ライトアドレスチャネルシグナル.
         --------------------------------------------------------------------------
         AWADDR          : in    std_logic_vector(WIDTH.AWADDR -1 downto 0);
-        AWLEN           : in    AXI4_ALEN_TYPE;
+        AWLEN           : in    std_logic_vector(WIDTH.ALEN   -1 downto 0);
         AWSIZE          : in    AXI4_ASIZE_TYPE;
         AWBURST         : in    AXI4_ABURST_TYPE;
-        AWLOCK          : in    AXI4_ALOCK_TYPE;
+        AWLOCK          : in    std_logic_vector(WIDTH.ALOCK  -1 downto 0);
         AWCACHE         : in    AXI4_ACACHE_TYPE;
         AWPROT          : in    AXI4_APROT_TYPE;
         AWQOS           : in    AXI4_AQOS_TYPE;

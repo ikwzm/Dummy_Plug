@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    sync.vhd
 --!     @brief   Package for Synchronize some dummy-plugs.
---!     @version 1.4.0
---!     @date    2013/2/12
+--!     @version 1.5.0
+--!     @date    2013/5/31
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
