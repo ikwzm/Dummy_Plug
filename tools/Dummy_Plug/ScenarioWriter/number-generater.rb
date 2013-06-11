@@ -40,167 +40,137 @@
 #---------------------------------------------------------------------------------
 module Dummy_Plug
   module ScenarioWriter
-    module NumberGenerater
-      class Base
+    #-----------------------------------------------------------------------------
+    # 値を生成するクラスの基底クラス
+    #-----------------------------------------------------------------------------
+    class NumberGenerater
+      attr_reader :curr_life, :limit_life, :finite, :done
+      def initialize(limit_life = 0)
+        @limit_life = limit_life
+        @finite     = (@limit_life > 0)
+        @curr_life  = 0
+        @done       = (@finite == true and @curr_life >= @limit_life)
       end
-      #---------------------------------------------------------------------------
-      # 常に同じ値を生成するクラス
-      #---------------------------------------------------------------------------
-      class Constant < Base
-        attr_reader :num, :done
-        def initialize(num)
-          @num  = num
-          @done = false
-        end
-        def next
-          return @num
-        end
-        def reset
-        end
+      def next
+        @curr_life += 1 if @curr_life < @limit_life
+        @done       = (@finite == true and @curr_life >= @limit_life)
       end
-      #---------------------------------------------------------------------------
-      # 一度だけ値を生成するクラス
-      #---------------------------------------------------------------------------
-      class Once < Base
-        attr_reader :num, :done
-        def initialize(num)
-          @num  = num
-          @done = false
-        end
-        def next
-          if @done == false
-            @done = true
-            return @num
-          else
-            return nil
-          end
-        end
-        def reset
-          @done = false
-        end
+      def reset
+        @curr_life  = 0
+        @done       = (@finite == true and @curr_life >= @limit_life)
       end
-      #---------------------------------------------------------------------------
-      # 指定された配列から順番に値を生成するクラス
-      #---------------------------------------------------------------------------
-      class Queue < Base
-        attr_reader :nums, :index, :done
-        def initialize(nums)
-          @nums  = Array.new(nums)
-          @index = 0
-          @done  = (@index >= @nums.size)
-        end
-        def next
-          if @done == false
-            num = @nums[@index]
-            @index = @index + 1
-          else
-            num = nil
-          end
-          @done  = (@index >= @nums.size)
-          return num
-        end
-        def reset
-          @index = 0
-          @done  = (@index >= @nums.size)
-        end
+    end
+    #-----------------------------------------------------------------------------
+    # 常に同じ値を生成するクラス
+    #-----------------------------------------------------------------------------
+    class ConstantNumberGenerater < NumberGenerater
+      attr_reader :number
+      def initialize(number, limit_life = 0)
+        @number     = number
+        super(limit_life)
       end
-      #---------------------------------------------------------------------------
-      # 指定された配列から順番に値を生成するクラス
-      #---------------------------------------------------------------------------
-      class Ring < Base
-        attr_reader :nums, :index, :done
-        def initialize(nums)
-          @nums  = Array.new(nums)
-          @index = 0
-          @done  = false
-        end
-        def next
-          if @index < @nums.size
-            num = @nums[@index]
-            @index = @index + 1
-          else
-            num = @nums[0]
-            @index = 1
-          end
-          return num
-        end
-        def reset
-          @index = 0
-        end
+      def next
+        return nil if @done == true
+        num = @number
+        super
+        return @number
       end
-      #---------------------------------------------------------------------------
-      # 指定された配列からランダムに値を生成するクラス
-      #---------------------------------------------------------------------------
-      class Random < Base
-        attr_reader :nums, :done
-        def initialize(nums)
-          @nums  = Array.new(nums)
-          @done  = false
-        end
-        def next
-          return @nums[rand(@nums.size)]
-        end
-        def reset
-        end
+    end
+    #-----------------------------------------------------------------------------
+    # 指定された配列から順番に値を生成するクラス
+    #-----------------------------------------------------------------------------
+    class SequentialNumberGenerater < NumberGenerater
+      attr_reader :seq, :curr_index
+      def initialize(seq, limit_life = 0)
+        @seq        = Array.new(seq)
+        @curr_index = 0
+        super(limit_life)
       end
-      #---------------------------------------------------------------------------
-      # 値を生成するクラスを複合したクラス
-      #---------------------------------------------------------------------------
-      class Composite < Base
-        attr_reader :args, :index, :done
-        def initialize(args)
-          index = 1
-          @args = Array.new()
-          args.each {|arg|
-            p arg.class
-            case arg.class.to_s
-            when "Dummy_Plug::ScenarioWriter::NumberGenerater::Constant"  then
-              @args.push(arg)
-            when "Dummy_Plug::ScenarioWriter::NumberGenerater::Once"      then
-              @args.push(arg)
-            when "Dummy_Plug::ScenarioWriter::NumberGenerater::Queue"     then
-              @args.push(arg)
-            when "Dummy_Plug::ScenarioWriter::NumberGenerater::Ring"      then
-              @args.push(arg)
-            when "Dummy_Plug::ScenarioWriter::NumberGenerater::Random"    then
-              @args.push(arg)
-            when "Dummy_Plug::ScenarioWriter::NumberGenerater::Composite" then
-              @args.push(arg)
-            when "Array" then
-              if index < args.size
-                @args.push(Dummy_Plug::ScenarioWriter::NumberGenerater::Queue.new(arg))
-              else
-                @args.push(Dummy_Plug::ScenarioWriter::NumberGenerater::Ring.new(arg))
-              end
-            when "Fixnum" then
-              if index < args.size
-                @args.push(Dummy_Plug::ScenarioWriter::NumberGenerater::Once.new(arg))
-              else
-                @args.push(Dummy_Plug::ScenarioWriter::NumberGenerater::Constant.new(arg))
-              end
+      def next
+        return nil if @done == true
+        num = @seq[@curr_index]
+        @curr_index = (@curr_index < @seq.size-1) ? @curr_index+1 : 0
+        super
+        return num
+      end
+      def reset
+        @curr_index = 0
+        super
+      end
+    end
+    #-----------------------------------------------------------------------------
+    # 指定された配列からランダムに値を生成するクラス
+    #-----------------------------------------------------------------------------
+    class RandomNumberGenerater < NumberGenerater
+      attr_reader :seq
+      def initialize(seq, limit_life = 0)
+        @seq = Array.new(seq)
+        super(limit_life)
+      end
+      def next
+        return nil if @done == true
+        num = @seq[rand(@seq.size)]
+        super
+        return num
+      end
+    end
+    #-----------------------------------------------------------------------------
+    # 値を生成するクラスを複合したクラス
+    #-----------------------------------------------------------------------------
+    class GenericNumberGenerater < NumberGenerater
+      attr_reader :seq, :curr_index
+      def initialize(args, limit_life = 0)
+        count = 1
+        @seq = Array.new()
+        if args.class.name == "Range" then
+          args = args.to_a
+        end
+        args.each {|arg|
+        ## p arg.class
+          case arg.class.name
+          when "Dummy_Plug::ScenarioWriter::ConstantNumberGenerater"   then
+            @seq.push(arg)
+          when "Dummy_Plug::ScenarioWriter::SequentialNumberGenerater" then
+            @seq.push(arg)
+          when "Dummy_Plug::ScenarioWriter::RandomNumberGenerater"     then
+            @seq.push(arg)
+          when "Range" then
+            vec = arg.to_a
+            if count < args.size
+              @seq.push(SequentialNumberGenerater.new(vec,vec.size))
+            else
+              @seq.push(SequentialNumberGenerater.new(vec,0))
             end
-            index = index + 1
-          }
-          @index = 0
-          @done  = (@index >= @args.size)
-        end
-        def next
-          if @done == false
-            num = @args[@index].next
-            if @args[@index].done
-              @index = @index + 1
+          when "Array" then
+            if count < args.size
+              @seq.push(SequentialNumberGenerater.new(arg,arg.size))
+            else
+              @seq.push(SequentialNumberGenerater.new(arg,0))
             end
-            @done = (@index >= @args.size)
-          else
-            num = nil
+          when "Fixnum" then
+            if count < args.size
+              @seq.push(ConstantNumberGenerater.new(arg, 1))
+            else
+              @seq.push(ConstantNumberGenerater.new(arg, 0))
+            end
           end
-          return num
-        end
-        def reset
-          @args.each {|nums| nums.reset}
-          @index = 0
-          @done  = (@index >= @args.size)
-        end
+          count = count + 1
+        }
+        @curr_index = 0
+        super(limit_life)
+      end
+      def next
+        return nil if @done == true
+        num = @seq[@curr_index].next
+        @curr_index += 1 if @seq[@curr_index].done
+        super
+        @done = (@done == true or @curr_index >= @seq.size)
+        return num
+      end
+      def reset
+        @seq.each {|gen| gen.reset}
+        @curr_index = 0
+        super
       end
     end
   end
