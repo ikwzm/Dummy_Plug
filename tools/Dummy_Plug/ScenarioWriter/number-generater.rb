@@ -134,6 +134,8 @@ module Dummy_Plug
             @seq.push(arg)
           when "Dummy_Plug::ScenarioWriter::RandomNumberGenerater"     then
             @seq.push(arg)
+          when "Dummy_Plug::ScenarioWriter::GenericNumberGenerater"    then
+            @seq.push(arg)
           when "Range" then
             vec = arg.to_a
             if count < args.size
