@@ -2,8 +2,8 @@
 # -*- coding: euc-jp -*-
 #---------------------------------------------------------------------------------
 #
-#       Version     :   0.0.1
-#       Created     :   2013/6/11
+#       Version     :   1.5.1
+#       Created     :   2013/7/17
 #       File name   :   axi4.rb
 #       Author      :   Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 #       Description :   AXI4用シナリオ生成モジュール
@@ -43,6 +43,84 @@ module Dummy_Plug
   module ScenarioWriter
     module AXI4
       #---------------------------------------------------------------------------
+      # AXI4::Sequence
+      #---------------------------------------------------------------------------
+      class Sequence
+        attr_accessor :addr_start_event, :addr_delay_cycle
+        attr_accessor :data_start_event, :data_xfer_pattern
+        attr_accessor :resp_start_event, :resp_delay_cycle
+
+        ADDR_START_EVENTS = [:NO_WAIT, :ADDR_VALID]
+        DATA_START_EVENTS = [:NO_WAIT, :ADDR_VALID, :ADDR_XFER]
+        RESP_START_EVENTS = [:NO_WAIT, :ADDR_VALID, :ADDR_XFER, :FIRST_DATA_XFER, :LAST_DATA_XFER]
+        def set_start_event(evnet_types, event) 
+          if evnet_types.include?(event) then
+            return event
+          else
+            raise
+          end
+        end
+        def set_addr_start_event(event)
+          return set_start_event(ADDR_START_EVENTS,event)
+        end
+        def set_data_start_event(event)
+          return set_start_event(DATA_START_EVENTS,event)
+        end
+        def set_resp_start_event(event)
+          return set_start_event(RESP_START_EVENTS,event)
+        end
+        #-------------------------------------------------------------------------
+        # initialize
+        #-------------------------------------------------------------------------
+        def initialize(args)
+          @addr_start_event     = set_addr_start_event(:NO_WAIT   )
+          @data_start_event     = set_data_start_event(:ADDR_VALID)
+          @resp_start_event     = set_resp_start_event(:ADDR_XFER )
+          @addr_delay_cycle     = 0
+          @data_xfer_pattern    = Dummy_Plug::ScenarioWriter::ConstantNumberGenerater.new(0)
+          @resp_delay_cycle     = 0
+          setup(args)
+        end
+        #-------------------------------------------------------------------------
+        # 指定された辞書に基づいて内部変数を設定するメソッド.
+        #-------------------------------------------------------------------------
+        def setup(args)
+          if args.key?(:AddrStartEvent) then
+            @addr_start_event  = set_addr_start_event(args[:AddrStartEvent])
+          end
+          if args.key?(:DataStartEvent) then
+            @data_start_event  = set_data_start_event(args[:DataStartEvent])
+          end
+          if args.key?(:ResponseStartEvent) then
+            @resp_start_event  = set_resp_start_event(args[:ResponseStartEvent])
+          end
+          if args.key?(:AddrDelayCycle) then
+            @addr_delay_cycle  = args[:AddrDelayCycle]
+          end
+          if args.key?(:DataXferPattern) then
+            @data_xfer_pattern = args[:DataXferPattern]
+          end
+          if args.key?(:ResponseDeleyCycle) then
+            @resp_delay_cycle  = args[:ResponseDeleyCycle]
+          end
+        end
+        #-------------------------------------------------------------------------
+        # 自分自身のコピーを生成して返すメソッド.
+        #-------------------------------------------------------------------------
+        def clone(args = Hash.new())
+          sequence = self.dup
+          sequence.setup(args)
+          return sequence
+        end
+        #-------------------------------------------------------------------------
+        # データアクセスパターンをリセットして最初からパターンを生成しなおす.
+        #-------------------------------------------------------------------------
+        def reset
+          @data_xfer_pattern.reset
+        end
+      end
+
+      #---------------------------------------------------------------------------
       # AXI4::Transaction
       #---------------------------------------------------------------------------
       class Transaction
@@ -52,19 +130,28 @@ module Dummy_Plug
         attr_reader   :id, :lock, :cache, :qos, :region, :addr_user
         attr_reader   :data, :data_user, :byte_data, :data_pos
         attr_reader   :response, :resp_user
-        attr_accessor :addr_wait, :data_wait, :resp_wait
         #-------------------------------------------------------------------------
         # initialize
         #-------------------------------------------------------------------------
         def initialize(args)
-          @write        = nil
-          @address      = nil
-          @data         = nil
-          @burst_length = nil
-          @burst_type   = nil
-          @data_size    = nil
-          @data_pos     = 0
-          @data_offset  = 0
+          @max_transaction_size = 4096
+          @write                = nil
+          @id                   = nil
+          @lock                 = nil
+          @cache                = nil
+          @qos                  = nil
+          @region               = nil
+          @address              = nil
+          @data_size            = nil
+          @burst_length         = nil
+          @burst_type           = nil
+          @addr_user            = nil
+          @data                 = nil
+          @data_user            = nil
+          @response             = nil
+          @resp_user            = nil
+          @data_pos             = 0
+          @data_offset          = 0
           setup(args)
         end
         #-------------------------------------------------------------------------
@@ -72,8 +159,8 @@ module Dummy_Plug
         #-------------------------------------------------------------------------
         def setup(args)
           @name                 = args[:Name              ] if args.key?(:Name              )
-          @write                = ((args.key?(:Write) and args[:Write] == 1) or
-                                   (args.key?(:Read ) and args[:Read ] == 0))
+          @write                = (args[:Write] == true )   if args.key?(:Write             )
+          @write                = (args[:Read ] == false)   if args.key?(:Read              )
           @max_transaction_size = args[:MaxTransactionSize] if args.key?(:MaxTransactionSize)
           @id                   = args[:ID                ] if args.key?(:ID                )
           @lock                 = args[:Lock              ] if args.key?(:Lock              )
@@ -89,9 +176,6 @@ module Dummy_Plug
           @data_user            = args[:DataUser          ] if args.key?(:DataUser          )
           @response             = args[:Response          ] if args.key?(:Response          )
           @resp_user            = args[:ResponseUser      ] if args.key?(:ResponseUser      )
-          @addr_wait            = args[:AddrWait          ] if args.key?(:AddrWait          )
-          @data_wait            = args[:DataWait          ] if args.key?(:DataWait          )
-          @resp_wait            = args[:ResponseWait      ] if args.key?(:ResponseWait      )
 
           if @data then
             @byte_data    = generate_byte_data_array(@data)
@@ -108,11 +192,23 @@ module Dummy_Plug
         end
         #-------------------------------------------------------------------------
         # バイトデータ配列からバースト長を計算するメソッド.
+        # AXI4の仕様では ARLEN/AWLEN に指定する値はバースト長-1だが、
+        # Dummy_PlugのAXI4モデルは バースト長(-1しない値)を指定する
         #-------------------------------------------------------------------------
         def calc_burst_length(byte_data_array)
-          data_width = 2**@data_size
-          address_lo = @address % data_width
-          return (((byte_data_array.size+address_lo+(data_width-1))/data_width)-1).truncate
+          byte_size  = byte_data_array.size.to_f
+          data_width = (2**@data_size).to_f
+          address_lo = (@address % data_width).to_f
+          return ((byte_size+address_lo)/data_width).ceil
+        end
+        #-------------------------------------------------------------------------
+        # トランザクション時の推定転送バイト数を計算するメソッド.
+        # AXI4 では バースト長(@burst_length)とアドレス(@address)の下位ビットで
+        # 転送バイト数を推定するしかないため、正味の転送バイト数(byte_data.size)と
+        # 食い違うことがある. このメソッドでは転送バイトの推定値を計算する.
+        #-------------------------------------------------------------------------
+        def estimate_request_size
+          return (2**@data_size)*@burst_length - (@address % (2**@data_size))
         end
         #-------------------------------------------------------------------------
         # ワードデータを含む配列をバイトデータの配列に変換するメソッド.
@@ -155,7 +251,7 @@ module Dummy_Plug
         #-------------------------------------------------------------------------
         # データチャネル信号の設定値を Dummy_Plug 形式で出力するメソッド.
         #-------------------------------------------------------------------------
-        def generate_data_channel_signals(tag, width, write, nil_data)
+        def generate_data_channel_signals(tag, width, nil_data)
           tab = " " * tag.length
           if @data_pos == 0 then
             @data_offset = @address     % width
@@ -179,7 +275,7 @@ module Dummy_Plug
                      sprintf("%02X",d)
                    end
           }.join('') + "\n"
-          if write then
+          if @write then
             str += tab + sprintf("STRB  : %d'b", width) + word_data.reverse.collect{ |d| 
                      if d == nil then 
                        "0"
@@ -189,8 +285,10 @@ module Dummy_Plug
             }.join('') + "\n"
           else
             str += tab + "RESP  : " + @response + "\n"
+            str += tab + "ID    : " + @id.to_s + "\n" if (@id != nil)
           end
           str += tab + "LAST  : " + ((last_word) ? "1" : "0") + "\n"
+          str += tab + "USER  : " + @data_user + "\n" if (@data_user != nil)
           return str
         end
       end
@@ -219,7 +317,11 @@ module Dummy_Plug
         #-------------------------------------------------------------------------
         # 
         #-------------------------------------------------------------------------
-        attr_reader :name, :width, :read_transaction, :write_transaction
+        attr_reader   :name, :width, :read_transaction, :write_transaction, :default_sequence
+        #-------------------------------------------------------------------------
+        # 
+        #-------------------------------------------------------------------------
+        attr_accessor :default_sequence
         #-------------------------------------------------------------------------
         # 
         #-------------------------------------------------------------------------
@@ -231,14 +333,19 @@ module Dummy_Plug
             :ID                 => params.key?(:ID           ) ? params[:ID           ] : 0   ,
             :DataSize           => calc_data_size(@width.data)                                ,
             :BurstType          => "INCR"                                                     ,
-            :Response           => "OKAY"                                                     ,
-            :AddrWait           => Dummy_Plug::ScenarioWriter::ConstantNumberGenerater.new(0) ,
-            :DataWait           => Dummy_Plug::ScenarioWriter::ConstantNumberGenerater.new(0) ,
-            :ResponseWait       => Dummy_Plug::ScenarioWriter::ConstantNumberGenerater.new(0) ,
+            :Response           => "OKAY"                                                     
           })
-          @read_transaction     = @default_transaction.clone({:Read  => 1})
-          @write_transaction    = @default_transaction.clone({:Write => 1})
-          @null_transaction     = @default_transaction.clone({:Address => 0, :BurstLength => 0})
+          @read_transaction     = @default_transaction.clone({:Read  => true})
+          @write_transaction    = @default_transaction.clone({:Write => true})
+          @null_transaction     = @default_transaction.clone({:Address => 0, :BurstLength => 1})
+          @default_sequence     = Sequence.new({
+            :AddrStartEvent     => :NO_WAIT,
+            :AddrDelayCycle     => 0,
+            :ResponseStartEvent => :ADDR_VALID,
+            :ResponseDelayCycle => 0,
+            :DataStartEvent     => :ADDR_VALID,
+            :DataXferPattern    => Dummy_Plug::ScenarioWriter::ConstantNumberGenerater.new(0)
+          })
         end
         #-------------------------------------------------------------------------
         # 
@@ -260,22 +367,28 @@ module Dummy_Plug
         # 
         #-------------------------------------------------------------------------
         def read(args)
-          return transaction_read(@read_transaction.clone(args))
+          sequence    = @default_sequence.clone(args)
+          transaction = @read_transaction.clone(args)
+          sequence.reset
+          return transaction_read(transaction, sequence)
         end
         #-------------------------------------------------------------------------
         # 
         #-------------------------------------------------------------------------
         def write(args)
-          return transaction_write(@write_transaction.clone(args))
+          sequence    = @default_sequence.clone(args)
+          transaction = @write_transaction.clone(args)
+          sequence.reset
+          return transaction_write(transaction, sequence)
         end
         #-------------------------------------------------------------------------
         # 
         #-------------------------------------------------------------------------
-        def execute(transaction)
+        def execute(transaction, sequence)
           if transaction.write then
-            return transaction_write(transaction)
+            return transaction_write(transaction, sequence)
           else
-            return transaction_read (transaction)
+            return transaction_read(transaction, sequence)
           end
         end
       end
@@ -292,19 +405,18 @@ module Dummy_Plug
         #-------------------------------------------------------------------------
         # 
         #-------------------------------------------------------------------------
-        def transaction_address(tag, channel_name, transaction)
+        def transaction_address(tag, channel_name, transaction, addr_delay_cycle)
           str    = tag + channel_name + ":\n"
           tab    = " " * tag.length
           indent = tab + "- "
-          wait = transaction.addr_wait.next
-          if wait > 0 then
+          if addr_delay_cycle > 0 then
             str += indent + "VALID : 0\n"
             str += @null_transaction.generate_address_channel_signals(indent)
-            str += indent + "WAIT  : " + wait.to_s + "\n"
+            str += indent + "WAIT  : " + addr_delay_cycle.to_s + "\n"
           end
           str   += indent + "VALID : 1\n"
           str   += transaction.generate_address_channel_signals(indent)
-          str   += indent + "WAIT  : {VALID : 1, READY : 1}\n"
+          str   += indent + "WAIT  : {AVALID : 1, AREADY : 1}\n"
           str   += indent + "VALID : 0\n"
           str   += @null_transaction.generate_address_channel_signals(indent)
           return str
@@ -312,24 +424,32 @@ module Dummy_Plug
         #-------------------------------------------------------------------------
         # 
         #-------------------------------------------------------------------------
-        def transaction_read(transaction)
+        def transaction_read(transaction, sequence)
+          addr_delay_cycle  = sequence.addr_delay_cycle
+          data_start_event  = sequence.data_start_event
+          data_xfer_pattern = sequence.data_xfer_pattern
           str    = "- - " + @name.to_s + "\n"
           str   += transaction_address(
-                   "  - ", "AR", transaction
+                   "  - ", "AR", transaction, addr_delay_cycle
                    )
           str   += "  - R :\n"
           str   += "    - READY : 0\n"
-          data_wait = transaction.data_wait.next
-          if data_wait < 0 then
-            str += "    - WAIT  : {ARVALID : 1, ARREADY : 1}\n"
-          end  
+          case data_start_event 
+          when :ADDR_XFER  then
+            str += "    - WAIT  : {AVALID : 1, AREADY : 1}\n"
+          when :ADDR_VALID then
+            str += "    - WAIT  : " + addr_delay_cycle.to_s + "\n"
+          when :NO_WAIT then
+          else
+            raise
+          end 
           while (transaction.data_pos < transaction.byte_data.size) do
-            data_wait = transaction.data_wait.next
-            str += "    - WAIT  : " + data_wait.to_s + "\n"
+            data_wait_cycle = data_xfer_pattern.next
+            str += "    - WAIT  : " + data_wait_cycle.to_s + "\n"
             str += "    - READY : 1\n"
-            str += "    - WAIT  : {VALID : 1, READY : 1}\n"
+            str += "    - WAIT  : {RVALID : 1, RREADY : 1}\n"
             str += "    - CHECK :\n"
-            str += transaction.generate_data_channel_signals("        ", @width.data/8, false, "--")
+            str += transaction.generate_data_channel_signals("        ", @width.data/8, "--")
             str += "    - READY : 0\n"
           end
           return str
@@ -337,35 +457,59 @@ module Dummy_Plug
         #-------------------------------------------------------------------------
         # 
         #-------------------------------------------------------------------------
-        def transaction_write(transaction)
+        def transaction_write(transaction, sequence)
+          addr_delay_cycle  = sequence.addr_delay_cycle
+          data_start_event  = sequence.data_start_event
+          data_xfer_pattern = sequence.data_xfer_pattern
+          resp_start_event  = sequence.resp_start_event
+          resp_delay_cycle  = sequence.resp_delay_cycle
           str    = "- - " + @name.to_s + "\n"
           str   += transaction_address(
-                   "  - ", "AW", transaction
+                   "  - ", "AW", transaction, addr_delay_cycle
                    )
           str   += "  - W :\n"
           str   += "    - VALID : 0\n"
-          data_wait = transaction.data_wait.next
-          if data_wait < 0 then
-            str += "    - WAIT  : {AWVALID : 1, AWREADY : 1}\n"
+          str   += "      DATA  : 0\n"
+          str   += "      STRB  : 0\n"
+          str   += "      LAST  : 0\n"
+          case data_start_event 
+          when :ADDR_XFER  then
+            str += "    - WAIT  : {AVALID : 1, AREADY : 1}\n"
+          when :ADDR_VALID then
+            str += "    - WAIT  : " + addr_delay_cycle.to_s + "\n"
+          when :NO_WAIT then
+          else
+            raise
           end  
           while (transaction.data_pos < transaction.byte_data.size) do
-            data_wait = transaction.data_wait.next
-            str += "    - WAIT  : " + data_wait.to_s + "\n"
+            data_wait_cycle = data_xfer_pattern.next
+            str += "    - WAIT  : " + data_wait_cycle.to_s + "\n"
             str += "    - VALID : 1\n"
-            str += transaction.generate_data_channel_signals("        ", @width.data/8, true, "FF")
-            str += "    - WAIT  : {VALID : 1, READY : 1}\n"
-            str += "    - READY : 0\n"
+            str += transaction.generate_data_channel_signals("      ", @width.data/8, "FF")
+            str += "    - WAIT  : {WVALID : 1, WREADY : 1}\n"
+            str += "    - VALID : 0\n"
           end
+          str   += "    - DATA  : 0\n"
+          str   += "      STRB  : 0\n"
+          str   += "      LAST  : 0\n"
           str   += "  - B :\n"
           str   += "    - READY : 0\n"
-          resp_wait = transaction.resp_wait.next
-          if resp_wait < 0 then
-            str += "    - WAIT  : {AWVALID : 1, AWREADY : 1}\n"
+          case resp_start_event
+          when :LAST_DATA_XFER  then
+            str += "    - WAIT  : {WVALID : 1, WREADY : 1, WLAST : 1, ON : on}\n"
+          when :FIRST_DATA_XFER then
+            str += "    - WAIT  : {WVALID : 1, WREADY : 1, ON : on}\n"
+          when :ADDR_XFER  then
+            str += "    - WAIT  : {AVALID : 1, AREADY : 1, ON : on}\n"
+          when :ADDR_VALID then
+            str += "    - WAIT  : " + addr_delay_cycle.to_s + "\n"
+          when :NO_WAIT then
+          else
+            raise
           end
-          resp_wait = transaction.resp_wait.next
-          str   += "    - WAIT  : " + resp_wait.to_s + "\n"
+          str   += "    - WAIT  : " + resp_delay_cycle.to_s + "\n"
           str   += "    - READY : 1\n"
-          str   += "    - WAIT  : {VALID : 1, READY : 1}\n"
+          str   += "    - WAIT  : {BVALID : 1, BREADY : 1}\n"
           str   += "    - CHECK : {RESP  : " + transaction.response + "}\n"
           str   += "    - READY : 0\n"
           return str
@@ -384,17 +528,25 @@ module Dummy_Plug
         #-------------------------------------------------------------------------
         # 
         #-------------------------------------------------------------------------
-        def transaction_address(tag, channel_name, transaction)
+        def transaction_address(tag, channel_name, transaction, addr_start_event, addr_delay_cycle)
           str    = tag + channel_name + ":\n"
           tab    = " " * tag.length
           indent = tab + "- "
-          wait = transaction.addr_wait.next
-          if wait > 0 then
+          case addr_start_event
+          when :ADDR_VALID then
             str += indent + "READY : 0\n"
-            str += indent + "WAIT  : " + wait.to_s + "\n"
+            str += indent + "WAIT  : {AVALID : 1, ON : on}\n"
+          when :NO_WAIT then
+            str += indent + "READY : 0\n"
+          else 
+            raise
+          end
+          if addr_delay_cycle > 0 then
+            str += indent + "READY : 0\n"
+            str += indent + "WAIT  : " + addr_delay_cycle.to_s + "\n"
           end
           str   += indent + "READY : 1\n"
-          str   += indent + "WAIT  : {VALID : 1, READY : 1}\n"
+          str   += indent + "WAIT  : {AVALID : 1, AREADY : 1}\n"
           str   += indent + "CHECK : \n"
           str   += transaction.generate_address_channel_signals(tab+"    ")
           str   += indent + "READY : 0\n"
@@ -403,62 +555,93 @@ module Dummy_Plug
         #-------------------------------------------------------------------------
         # 
         #-------------------------------------------------------------------------
-        def transaction_read(transaction)
+        def transaction_read(transaction, sequence)
+          addr_start_event  = sequence.addr_start_event
+          addr_delay_cycle  = sequence.addr_delay_cycle
+          data_start_event  = sequence.data_start_event
+          data_xfer_pattern = sequence.data_xfer_pattern
           str    = "- - " + @name.to_s + "\n"
           str   += transaction_address(
-                   "  - ", "AR", transaction
+                   "  - ", "AR", transaction, addr_start_event, addr_delay_cycle
                    )
-
           str   += "  - R :\n"
           str   += "    - VALID : 0\n"
-          data_wait = transaction.data_wait.next
-          if data_wait < 0 then
-            str += "    - WAIT  : {ARVALID : 1, ARREADY : 1}\n"
+          str   += "      DATA  : 0\n"
+          str   += "      LAST  : 0\n"
+          case data_start_event
+          when :ADDR_XFER  then
+            str += "    - WAIT  : {AVALID : 1, AREADY : 1, ON : on}\n"
+          when :ADDR_VALID then
+            str += "    - WAIT  : {AVALID : 1, ON : on}\n"
+          when :NO_WAIT then
+          else
+            raise
           end  
           while (transaction.data_pos < transaction.byte_data.size) do
-            data_wait = transaction.data_wait.next
-            str += "    - WAIT  : " + data_wait.to_s + "\n"
+            data_wait_cycle = data_xfer_pattern.next
+            str += "    - WAIT  : " + data_wait_cycle.to_s + "\n"
             str += "    - VALID : 1\n"
-            str += transaction.generate_data_channel_signals("      ", @width.data/8, false, "FF")
-            str += "    - WAIT  : {VALID : 1, READY : 1}\n"
-            str += "    - READY : 0\n"
+            str += transaction.generate_data_channel_signals("      ", @width.data/8, "FF")
+            str += "    - WAIT  : {RVALID : 1, RREADY : 1}\n"
+            str += "    - VALID : 0\n"
           end
+          str   += "    - DATA  : 0\n"
+          str   += "      LAST  : 0\n"
           return str
         end
         #-------------------------------------------------------------------------
         # 
         #-------------------------------------------------------------------------
-        def transaction_write(transaction)
+        def transaction_write(transaction, sequence)
+          addr_start_event  = sequence.addr_start_event
+          addr_delay_cycle  = sequence.addr_delay_cycle
+          data_start_event  = sequence.data_start_event
+          data_xfer_pattern = sequence.data_xfer_pattern
+          resp_start_event  = sequence.resp_start_event
+          resp_delay_cycle  = sequence.resp_delay_cycle
           str    = "- - " + @name.to_s + "\n"
           str   += transaction_address(
-                   "  - ", "AW", transaction
+                   "  - ", "AW", transaction, addr_start_event, addr_delay_cycle
                    )
           str   += "  - W :\n"
           str   += "    - READY : 0\n"
-          data_wait = transaction.data_wait.next
-          if data_wait < 0 then
-            str += "    - WAIT  : {AWVALID : 1, AWREADY : 1}\n"
+          case data_start_event
+          when :ADDR_XFER  then
+            str += "    - WAIT  : {AVALID : 1, AREADY : 1, ON : on}\n"
+          when :ADDR_VALID then
+            str += "    - WAIT  : {AVALID : 1, ON : on}\n"
+          when :NO_WAIT then
+          else
+            raise
           end  
           while (transaction.data_pos < transaction.byte_data.size) do
-            data_wait = transaction.data_wait.next
-            str += "    - WAIT  : " + data_wait.to_s + "\n"
+            data_wait_cycle = data_xfer_pattern.next
+            str += "    - WAIT  : " + data_wait_cycle.to_s + "\n"
             str += "    - READY : 1\n"
-            str += "    - WAIT  : {VALID : 1, READY : 1}\n"
+            str += "    - WAIT  : {WVALID : 1, WREADY : 1}\n"
             str += "    - CHECK :\n"
-            str += transaction.generate_data_channel_signals("        ", @width.data/8, true, "--")
+            str += transaction.generate_data_channel_signals("        ", @width.data/8, "--")
             str += "    - READY : 0\n"
           end
           str   += "  - B :\n"
           str   += "    - VALID : 0\n"
-          resp_wait = transaction.resp_wait.next
-          if resp_wait < 0 then
-            str += "    - WAIT  : {AWVALID : 1, AWREADY : 1}\n"
+          case resp_start_event
+          when :LAST_DATA_XFER  then
+            str += "    - WAIT  : {WVALID : 1, WREADY : 1, WLAST : 1, ON : on}\n"
+          when :FIRST_DATA_XFER then
+            str += "    - WAIT  : {WVALID : 1, WREADY : 1, ON : on}\n"
+          when :ADDR_XFER       then
+            str += "    - WAIT  : {AVALID : 1, AREADY : 1, ON : on}\n"
+          when :ADDR_VALID      then
+            str += "    - WAIT  : {AVALID : 1, ON : on}\n"
+          when :NO_WAIT then
+          else
+            raise
           end  
-          resp_wait = transaction.resp_wait.next
-          str   += "    - WAIT  : " + resp_wait.to_s + "\n"
+          str   += "    - WAIT  : " + resp_delay_cycle.to_s + "\n"
           str   += "    - VALID : 1\n"
           str   += "      RESP  : " + transaction.response + "\n"
-          str   += "    - WAIT  : {VALID : 1, READY : 1}\n"
+          str   += "    - WAIT  : {BVALID : 1, BREADY : 1}\n"
           str   += "    - VALID : 0\n"
           return str
         end

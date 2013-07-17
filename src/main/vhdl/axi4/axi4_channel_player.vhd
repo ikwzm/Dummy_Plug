@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_channel_player.vhd
 --!     @brief   AXI4 A/R/W/B Channel Dummy Plug Player.
---!     @version 1.5.0
---!     @date    2013/5/29
+--!     @version 1.5.1
+--!     @date    2013/7/17
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -1477,6 +1477,24 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
                 when KEY_STRB       =>
                     case channel is
                         when AXI4_CHANNEL_W  => return READ_WSTRB;
+                        when others          => null;
+                    end case;
+                when KEY_AVALID     =>
+                    case channel is
+                        when AXI4_CHANNEL_AR => return READ_ARVALID;
+                        when AXI4_CHANNEL_AW => return READ_AWVALID;
+                        when AXI4_CHANNEL_R  => return READ_ARVALID;
+                        when AXI4_CHANNEL_W  => return READ_AWVALID;
+                        when AXI4_CHANNEL_B  => return READ_AWVALID;
+                        when others          => null;
+                    end case;
+                when KEY_AREADY     =>
+                    case channel is
+                        when AXI4_CHANNEL_AR => return READ_ARREADY;
+                        when AXI4_CHANNEL_AW => return READ_AWREADY;
+                        when AXI4_CHANNEL_R  => return READ_ARREADY;
+                        when AXI4_CHANNEL_W  => return READ_AWREADY;
+                        when AXI4_CHANNEL_B  => return READ_AWREADY;
                         when others          => null;
                     end case;
                 when KEY_ARADDR              => return READ_ARADDR;
