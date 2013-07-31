@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_channel_player.vhd
 --!     @brief   AXI4 A/R/W/B Channel Dummy Plug Player.
---!     @version 1.4.1
---!     @date    2013/4/16
+--!     @version 1.5.1
+--!     @date    2013/7/17
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -97,14 +97,14 @@ entity  AXI4_CHANNEL_PLAYER is
         ---------------------------------------------------------------------------
         ARADDR_I        : in    std_logic_vector(WIDTH.ARADDR -1 downto 0);
         ARADDR_O        : out   std_logic_vector(WIDTH.ARADDR -1 downto 0);
-        ARLEN_I         : in    AXI4_ALEN_TYPE;
-        ARLEN_O         : out   AXI4_ALEN_TYPE;
+        ARLEN_I         : in    std_logic_vector(WIDTH.ALEN   -1 downto 0);
+        ARLEN_O         : out   std_logic_vector(WIDTH.ALEN   -1 downto 0);
         ARSIZE_I        : in    AXI4_ASIZE_TYPE;
         ARSIZE_O        : out   AXI4_ASIZE_TYPE;
         ARBURST_I       : in    AXI4_ABURST_TYPE;
         ARBURST_O       : out   AXI4_ABURST_TYPE;
-        ARLOCK_I        : in    AXI4_ALOCK_TYPE;
-        ARLOCK_O        : out   AXI4_ALOCK_TYPE;
+        ARLOCK_I        : in    std_logic_vector(WIDTH.ALOCK  -1 downto 0);
+        ARLOCK_O        : out   std_logic_vector(WIDTH.ALOCK  -1 downto 0);
         ARCACHE_I       : in    AXI4_ACACHE_TYPE;
         ARCACHE_O       : out   AXI4_ACACHE_TYPE;
         ARPROT_I        : in    AXI4_APROT_TYPE;
@@ -143,14 +143,14 @@ entity  AXI4_CHANNEL_PLAYER is
         ---------------------------------------------------------------------------
         AWADDR_I        : in    std_logic_vector(WIDTH.AWADDR -1 downto 0);
         AWADDR_O        : out   std_logic_vector(WIDTH.AWADDR -1 downto 0);
-        AWLEN_I         : in    AXI4_ALEN_TYPE;
-        AWLEN_O         : out   AXI4_ALEN_TYPE;
+        AWLEN_I         : in    std_logic_vector(WIDTH.ALEN   -1 downto 0);
+        AWLEN_O         : out   std_logic_vector(WIDTH.ALEN   -1 downto 0);
         AWSIZE_I        : in    AXI4_ASIZE_TYPE;
         AWSIZE_O        : out   AXI4_ASIZE_TYPE;
         AWBURST_I       : in    AXI4_ABURST_TYPE;
         AWBURST_O       : out   AXI4_ABURST_TYPE;
-        AWLOCK_I        : in    AXI4_ALOCK_TYPE;
-        AWLOCK_O        : out   AXI4_ALOCK_TYPE;
+        AWLOCK_I        : in    std_logic_vector(WIDTH.ALOCK  -1 downto 0);
+        AWLOCK_O        : out   std_logic_vector(WIDTH.ALOCK  -1 downto 0);
         AWCACHE_I       : in    AXI4_ACACHE_TYPE;
         AWCACHE_O       : out   AXI4_ACACHE_TYPE;
         AWPROT_I        : in    AXI4_APROT_TYPE;
@@ -322,12 +322,12 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
         if (WRITE_ENABLE) then
             aw_match := MATCH_STD_LOGIC(signals.AW.VALID               ,AWVALID_I ) and 
                         MATCH_STD_LOGIC(signals.AW.READY               ,AWREADY_I ) and 
-                        MATCH_STD_LOGIC(signals.AW.ID(AWID_I'range)    ,AWID_I    ) and 
+                        MATCH_STD_LOGIC(signals.AW.ID  (AWID_I  'range),AWID_I    ) and 
                         MATCH_STD_LOGIC(signals.AW.ADDR(AWADDR_I'range),AWADDR_I  ) and 
-                        MATCH_STD_LOGIC(signals.AW.LEN                 ,AWLEN_I   ) and 
+                        MATCH_STD_LOGIC(signals.AW.LEN (AWLEN_I 'range),AWLEN_I   ) and 
                         MATCH_STD_LOGIC(signals.AW.SIZE                ,AWSIZE_I  ) and 
                         MATCH_STD_LOGIC(signals.AW.BURST               ,AWBURST_I ) and 
-                        MATCH_STD_LOGIC(signals.AW.LOCK                ,AWLOCK_I  ) and 
+                        MATCH_STD_LOGIC(signals.AW.LOCK(AWLOCK_I'range),AWLOCK_I  ) and 
                         MATCH_STD_LOGIC(signals.AW.CACHE               ,AWCACHE_I ) and 
                         MATCH_STD_LOGIC(signals.AW.PROT                ,AWPROT_I  ) and
                         MATCH_STD_LOGIC(signals.AW.QOS                 ,AWQOS_I   ) and
@@ -361,12 +361,12 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
         if (READ_ENABLE) then
             ar_match := MATCH_STD_LOGIC(signals.AR.VALID               ,ARVALID_I ) and 
                         MATCH_STD_LOGIC(signals.AR.READY               ,ARREADY_I ) and 
-                        MATCH_STD_LOGIC(signals.AR.ID(ARID_I'range)    ,ARID_I    ) and 
+                        MATCH_STD_LOGIC(signals.AR.ID  (ARID_I  'range),ARID_I    ) and 
                         MATCH_STD_LOGIC(signals.AR.ADDR(ARADDR_I'range),ARADDR_I  ) and 
-                        MATCH_STD_LOGIC(signals.AR.LEN                 ,ARLEN_I   ) and 
+                        MATCH_STD_LOGIC(signals.AR.LEN (ARLEN_I 'range),ARLEN_I   ) and 
                         MATCH_STD_LOGIC(signals.AR.SIZE                ,ARSIZE_I  ) and 
                         MATCH_STD_LOGIC(signals.AR.BURST               ,ARBURST_I ) and 
-                        MATCH_STD_LOGIC(signals.AR.LOCK                ,ARLOCK_I  ) and 
+                        MATCH_STD_LOGIC(signals.AR.LOCK(ARLOCK_I'range),ARLOCK_I  ) and 
                         MATCH_STD_LOGIC(signals.AR.CACHE               ,ARCACHE_I ) and 
                         MATCH_STD_LOGIC(signals.AR.PROT                ,ARPROT_I  ) and
                         MATCH_STD_LOGIC(signals.AR.QOS                 ,ARQOS_I   ) and
@@ -399,10 +399,10 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
                   signals       : in    AXI4_A_CHANNEL_SIGNAL_TYPE;
                   match         : out   boolean;
         signal    ADDR          : in    std_logic_vector;
-        signal    LEN           : in    AXI4_ALEN_TYPE;
+        signal    LEN           : in    std_logic_vector;
         signal    SIZE          : in    AXI4_ASIZE_TYPE;
         signal    BURST         : in    AXI4_ABURST_TYPE;
-        signal    LOCK          : in    AXI4_ALOCK_TYPE;
+        signal    LOCK          : in    std_logic_vector;
         signal    CACHE         : in    AXI4_ACACHE_TYPE;
         signal    PROT          : in    AXI4_APROT_TYPE;
         signal    QOS           : in    AXI4_AQOS_TYPE;
@@ -433,7 +433,7 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
                             HEX_TO_STRING(signals.ADDR(ADDR'range)));
             count := count + 1;
         end if;
-        if (MATCH_STD_LOGIC(signals.LEN             ,LEN   ) = FALSE) then
+        if (MATCH_STD_LOGIC(signals.LEN(LEN'range)  ,LEN   ) = FALSE) then
             REPORT_MISMATCH(core, name & "LEN " &
                             BIN_TO_STRING(LEN  ) & " /= " &
                             BIN_TO_STRING(signals.LEN));
@@ -451,7 +451,7 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
                             BIN_TO_STRING(signals.BURST));
             count := count + 1;
         end if;
-        if (MATCH_STD_LOGIC(signals.LOCK            ,LOCK  ) = FALSE) then
+        if (MATCH_STD_LOGIC(signals.LOCK(LOCK'range),LOCK  ) = FALSE) then
             REPORT_MISMATCH(core, name & "LOCK " &
                             BIN_TO_STRING(LOCK ) & " /= " &
                             BIN_TO_STRING(signals.LOCK));
@@ -1479,6 +1479,24 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
                         when AXI4_CHANNEL_W  => return READ_WSTRB;
                         when others          => null;
                     end case;
+                when KEY_AVALID     =>
+                    case channel is
+                        when AXI4_CHANNEL_AR => return READ_ARVALID;
+                        when AXI4_CHANNEL_AW => return READ_AWVALID;
+                        when AXI4_CHANNEL_R  => return READ_ARVALID;
+                        when AXI4_CHANNEL_W  => return READ_AWVALID;
+                        when AXI4_CHANNEL_B  => return READ_AWVALID;
+                        when others          => null;
+                    end case;
+                when KEY_AREADY     =>
+                    case channel is
+                        when AXI4_CHANNEL_AR => return READ_ARREADY;
+                        when AXI4_CHANNEL_AW => return READ_AWREADY;
+                        when AXI4_CHANNEL_R  => return READ_ARREADY;
+                        when AXI4_CHANNEL_W  => return READ_AWREADY;
+                        when AXI4_CHANNEL_B  => return READ_AWREADY;
+                        when others          => null;
+                    end case;
                 when KEY_ARADDR              => return READ_ARADDR;
                 when KEY_ARLEN               => return READ_ARLEN; 
                 when KEY_ARSIZE              => return READ_ARSIZE;
@@ -1574,14 +1592,14 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
         variable  core          : inout CORE_TYPE;
         file      stream        :       TEXT;
                   proc_name     : in    string;
-                  val           : inout AXI4_ALEN_TYPE
+                  val           : inout std_logic_vector
     ) is
         variable  size          :       integer;
         variable  good          :       boolean;
     begin
         READ_INTEGER(core, stream, size, good);
         if (good) then
-            val := std_logic_vector(to_unsigned(size-1, AXI4_ALEN_WIDTH));
+            val := std_logic_vector(to_unsigned(size-1, WIDTH.ALEN));
         else
             READ_ERROR(core, proc_name, "KEY=SIZE READ_INTEGER not good");
         end if;
@@ -2243,30 +2261,30 @@ begin
                 if (MASTER and WRITE_ENABLE and CHANNEL = AXI4_CHANNEL_AW) then
                     AWADDR_O  <= signals.AW.ADDR(AWADDR_O'range)after OUTPUT_DELAY;
                     AWVALID_O <= signals.AW.VALID               after OUTPUT_DELAY;
-                    AWLEN_O   <= signals.AW.LEN                 after OUTPUT_DELAY;
+                    AWLEN_O   <= signals.AW.LEN (AWLEN_O 'range)after OUTPUT_DELAY;
                     AWSIZE_O  <= signals.AW.SIZE                after OUTPUT_DELAY;
                     AWBURST_O <= signals.AW.BURST               after OUTPUT_DELAY;
-                    AWLOCK_O  <= signals.AW.LOCK                after OUTPUT_DELAY;
+                    AWLOCK_O  <= signals.AW.LOCK(AWLOCK_O'range)after OUTPUT_DELAY;
                     AWCACHE_O <= signals.AW.CACHE               after OUTPUT_DELAY;
                     AWPROT_O  <= signals.AW.PROT                after OUTPUT_DELAY;
                     AWQOS_O   <= signals.AW.QOS                 after OUTPUT_DELAY;
                     AWREGION_O<= signals.AW.REGION              after OUTPUT_DELAY;
-                    AWUSER_O  <= signals.AW.id(AWUSER_O'range)  after OUTPUT_DELAY;
-                    AWID_O    <= signals.AW.id(AWID_O'range)    after OUTPUT_DELAY;
+                    AWUSER_O  <= signals.AW.id  (AWUSER_O'range)after OUTPUT_DELAY;
+                    AWID_O    <= signals.AW.id  (AWID_O  'range)after OUTPUT_DELAY;
                 end if;
                 if (MASTER and READ_ENABLE  and CHANNEL = AXI4_CHANNEL_AR) then
                     ARADDR_O  <= signals.AR.ADDR(ARADDR_O'range)after OUTPUT_DELAY;
                     ARVALID_O <= signals.AR.VALID               after OUTPUT_DELAY;
-                    ARLEN_O   <= signals.AR.LEN                 after OUTPUT_DELAY;
+                    ARLEN_O   <= signals.AR.LEN (ARLEN_O 'range)after OUTPUT_DELAY;
                     ARSIZE_O  <= signals.AR.SIZE                after OUTPUT_DELAY;
                     ARBURST_O <= signals.AR.BURST               after OUTPUT_DELAY;
-                    ARLOCK_O  <= signals.AR.LOCK                after OUTPUT_DELAY;
+                    ARLOCK_O  <= signals.AR.LOCK(ARLOCK_O'range)after OUTPUT_DELAY;
                     ARCACHE_O <= signals.AR.CACHE               after OUTPUT_DELAY;
                     ARPROT_O  <= signals.AR.PROT                after OUTPUT_DELAY;
                     ARQOS_O   <= signals.AR.QOS                 after OUTPUT_DELAY;
                     ARREGION_O<= signals.AR.REGION              after OUTPUT_DELAY;
-                    ARUSER_O  <= signals.AR.id(ARUSER_O'range)  after OUTPUT_DELAY;
-                    ARID_O    <= signals.AR.id(ARID_O'range)    after OUTPUT_DELAY;
+                    ARUSER_O  <= signals.AR.id  (ARUSER_O'range)after OUTPUT_DELAY;
+                    ARID_O    <= signals.AR.id  (ARID_O  'range)after OUTPUT_DELAY;
                 end if;
                 if (SLAVE  and WRITE_ENABLE and CHANNEL = AXI4_CHANNEL_AW) then
                     AWREADY_O <= signals.AW.READY               after OUTPUT_DELAY;
@@ -2388,10 +2406,10 @@ begin
                 out_signals.AR.USER(ARUSER_O'range) := tran_info.AUSER(ARUSER_O'range);
                 out_signals.AR.ID  (ARID_O  'range) := tran_info.ID   (ARID_O  'range);
                 out_signals.AR.WRITE                := '0';
-                out_signals.AR.LEN                  := tran_info.LEN;
+                out_signals.AR.LEN (ARLEN_O 'range) := tran_info.LEN  (ARLEN_O 'range);
                 out_signals.AR.SIZE                 := tran_info.SIZE;
                 out_signals.AR.BURST                := tran_info.BURST;
-                out_signals.AR.LOCK                 := tran_info.LOCK;
+                out_signals.AR.LOCK(ARLOCK_O'range) := tran_info.LOCK (ARLOCK_O'range);
                 out_signals.AR.CACHE                := tran_info.CACHE;
                 out_signals.AR.PROT                 := tran_info.PROT;
                 out_signals.AR.QOS                  := tran_info.QOS;
@@ -2425,10 +2443,10 @@ begin
                 out_signals.AW.USER(AWUSER_O'range) := tran_info.AUSER(AWUSER_O'range);
                 out_signals.AW.ID  (AWID_O  'range) := tran_info.ID   (AWID_O  'range);
                 out_signals.AW.WRITE                := '1';
-                out_signals.AW.LEN                  := tran_info.LEN;
+                out_signals.AW.LEN (AWLEN_O 'range) := tran_info.LEN  (AWLEN_O 'range);
                 out_signals.AW.SIZE                 := tran_info.SIZE;
                 out_signals.AW.BURST                := tran_info.BURST;
-                out_signals.AW.LOCK                 := tran_info.LOCK;
+                out_signals.AW.LOCK(AWLOCK_O'range) := tran_info.LOCK (AWLOCK_O'range);
                 out_signals.AW.CACHE                := tran_info.CACHE;
                 out_signals.AW.PROT                 := tran_info.PROT;
                 out_signals.AW.QOS                  := tran_info.QOS;
@@ -2467,10 +2485,10 @@ begin
                 chk_a_signals.USER(ARUSER_I'range) := tran_info.AUSER(ARUSER_I'range);
                 chk_a_signals.ID  (ARID_I  'range) := tran_info.ID   (ARID_I  'range);
                 chk_a_signals.WRITE                := tran_info.WRITE;
-                chk_a_signals.LEN                  := tran_info.LEN;
+                chk_a_signals.LEN (ARLEN_I 'range) := tran_info.LEN  (ARLEN_I 'range);
                 chk_a_signals.SIZE                 := tran_info.SIZE;
                 chk_a_signals.BURST                := tran_info.BURST;
-                chk_a_signals.LOCK                 := tran_info.LOCK;
+                chk_a_signals.LOCK(ARLOCK_I'range) := tran_info.LOCK (ARLOCK_I'range);
                 chk_a_signals.CACHE                := tran_info.CACHE;
                 chk_a_signals.PROT                 := tran_info.PROT;
                 chk_a_signals.QOS                  := tran_info.QOS;
@@ -2506,10 +2524,10 @@ begin
                 chk_a_signals.USER(AWUSER_I'range) := tran_info.AUSER(AWUSER_I'range);
                 chk_a_signals.ID  (AWID_I  'range) := tran_info.ID   (AWID_I  'range);
                 chk_a_signals.WRITE                := tran_info.WRITE;
-                chk_a_signals.LEN                  := tran_info.LEN;
+                chk_a_signals.LEN (AWLEN_I 'range) := tran_info.LEN  (AWLEN_I 'range);
                 chk_a_signals.SIZE                 := tran_info.SIZE;
                 chk_a_signals.BURST                := tran_info.BURST;
-                chk_a_signals.LOCK                 := tran_info.LOCK;
+                chk_a_signals.LOCK(AWLOCK_I'range) := tran_info.LOCK (AWLOCK_I'range);
                 chk_a_signals.CACHE                := tran_info.CACHE;
                 chk_a_signals.PROT                 := tran_info.PROT;
                 chk_a_signals.QOS                  := tran_info.QOS;

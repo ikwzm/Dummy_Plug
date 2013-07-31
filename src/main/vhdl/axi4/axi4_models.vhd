@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_models.vhd                                                 --
 --!     @brief   AXI4 Dummy Plug Component Package                               --
---!     @version 1.4.0                                                           --
---!     @date    2013/02/12                                                      --
+--!     @version 1.5.0                                                           --
+--!     @date    2013/05/31                                                      --
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>                     --
 -----------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------
@@ -91,10 +91,10 @@ component AXI4_MASTER_PLAYER
         -- リードアドレスチャネルシグナル.
         --------------------------------------------------------------------------
         ARADDR          : inout std_logic_vector(WIDTH.ARADDR -1 downto 0);
-        ARLEN           : inout AXI4_ALEN_TYPE;
+        ARLEN           : inout std_logic_vector(WIDTH.ALEN   -1 downto 0);
         ARSIZE          : inout AXI4_ASIZE_TYPE;
         ARBURST         : inout AXI4_ABURST_TYPE;
-        ARLOCK          : inout AXI4_ALOCK_TYPE;
+        ARLOCK          : inout std_logic_vector(WIDTH.ALOCK  -1 downto 0);
         ARCACHE         : inout AXI4_ACACHE_TYPE;
         ARPROT          : inout AXI4_APROT_TYPE;
         ARQOS           : inout AXI4_AQOS_TYPE;
@@ -117,10 +117,10 @@ component AXI4_MASTER_PLAYER
         -- ライトアドレスチャネルシグナル.
         --------------------------------------------------------------------------
         AWADDR          : inout std_logic_vector(WIDTH.AWADDR -1 downto 0);
-        AWLEN           : inout AXI4_ALEN_TYPE;
+        AWLEN           : inout std_logic_vector(WIDTH.ALEN   -1 downto 0);
         AWSIZE          : inout AXI4_ASIZE_TYPE;
         AWBURST         : inout AXI4_ABURST_TYPE;
-        AWLOCK          : inout AXI4_ALOCK_TYPE;
+        AWLOCK          : inout std_logic_vector(WIDTH.ALOCK  -1 downto 0);
         AWCACHE         : inout AXI4_ACACHE_TYPE;
         AWPROT          : inout AXI4_APROT_TYPE;
         AWQOS           : inout AXI4_AQOS_TYPE;
@@ -214,10 +214,10 @@ component AXI4_SLAVE_PLAYER
         -- リードアドレスチャネルシグナル.
         --------------------------------------------------------------------------
         ARADDR          : in    std_logic_vector(WIDTH.ARADDR -1 downto 0);
-        ARLEN           : in    AXI4_ALEN_TYPE;
+        ARLEN           : in    std_logic_vector(WIDTH.ALEN   -1 downto 0);
         ARSIZE          : in    AXI4_ASIZE_TYPE;
         ARBURST         : in    AXI4_ABURST_TYPE;
-        ARLOCK          : in    AXI4_ALOCK_TYPE;
+        ARLOCK          : in    std_logic_vector(WIDTH.ALOCK  -1 downto 0);
         ARCACHE         : in    AXI4_ACACHE_TYPE;
         ARPROT          : in    AXI4_APROT_TYPE;
         ARQOS           : in    AXI4_AQOS_TYPE;
@@ -240,10 +240,10 @@ component AXI4_SLAVE_PLAYER
         -- ライトアドレスチャネルシグナル.
         --------------------------------------------------------------------------
         AWADDR          : in    std_logic_vector(WIDTH.AWADDR -1 downto 0);
-        AWLEN           : in    AXI4_ALEN_TYPE;
+        AWLEN           : in    std_logic_vector(WIDTH.ALEN   -1 downto 0);
         AWSIZE          : in    AXI4_ASIZE_TYPE;
         AWBURST         : in    AXI4_ABURST_TYPE;
-        AWLOCK          : in    AXI4_ALOCK_TYPE;
+        AWLOCK          : in    std_logic_vector(WIDTH.ALOCK  -1 downto 0);
         AWCACHE         : in    AXI4_ACACHE_TYPE;
         AWPROT          : in    AXI4_APROT_TYPE;
         AWQOS           : in    AXI4_AQOS_TYPE;
@@ -476,10 +476,10 @@ component AXI4_SIGNAL_PRINTER
         -- リードアドレスチャネルシグナル.
         --------------------------------------------------------------------------
         ARADDR          : in    std_logic_vector(WIDTH.ARADDR -1 downto 0);
-        ARLEN           : in    AXI4_ALEN_TYPE;
+        ARLEN           : in    std_logic_vector(WIDTH.ALEN   -1 downto 0);
         ARSIZE          : in    AXI4_ASIZE_TYPE;
         ARBURST         : in    AXI4_ABURST_TYPE;
-        ARLOCK          : in    AXI4_ALOCK_TYPE;
+        ARLOCK          : in    std_logic_vector(WIDTH.ALOCK  -1 downto 0);
         ARCACHE         : in    AXI4_ACACHE_TYPE;
         ARPROT          : in    AXI4_APROT_TYPE;
         ARQOS           : in    AXI4_AQOS_TYPE;
@@ -502,10 +502,10 @@ component AXI4_SIGNAL_PRINTER
         -- ライトアドレスチャネルシグナル.
         --------------------------------------------------------------------------
         AWADDR          : in    std_logic_vector(WIDTH.AWADDR -1 downto 0);
-        AWLEN           : in    AXI4_ALEN_TYPE;
+        AWLEN           : in    std_logic_vector(WIDTH.ALEN   -1 downto 0);
         AWSIZE          : in    AXI4_ASIZE_TYPE;
         AWBURST         : in    AXI4_ABURST_TYPE;
-        AWLOCK          : in    AXI4_ALOCK_TYPE;
+        AWLOCK          : in    std_logic_vector(WIDTH.ALOCK  -1 downto 0);
         AWCACHE         : in    AXI4_ACACHE_TYPE;
         AWPROT          : in    AXI4_APROT_TYPE;
         AWQOS           : in    AXI4_AQOS_TYPE;

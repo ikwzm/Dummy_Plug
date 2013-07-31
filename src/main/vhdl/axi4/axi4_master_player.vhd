@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_master_player.vhd
 --!     @brief   AXI4 Master Dummy Plug Player.
---!     @version 1.4.0
---!     @date    2013/2/12
+--!     @version 1.5.0
+--!     @date    2013/5/29
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -86,10 +86,10 @@ entity  AXI4_MASTER_PLAYER is
         -- リードアドレスチャネルシグナル.
         --------------------------------------------------------------------------
         ARADDR          : inout std_logic_vector(WIDTH.ARADDR -1 downto 0);
-        ARLEN           : inout AXI4_ALEN_TYPE;
+        ARLEN           : inout std_logic_vector(WIDTH.ALEN   -1 downto 0);
         ARSIZE          : inout AXI4_ASIZE_TYPE;
         ARBURST         : inout AXI4_ABURST_TYPE;
-        ARLOCK          : inout AXI4_ALOCK_TYPE;
+        ARLOCK          : inout std_logic_vector(WIDTH.ALOCK  -1 downto 0);
         ARCACHE         : inout AXI4_ACACHE_TYPE;
         ARPROT          : inout AXI4_APROT_TYPE;
         ARQOS           : inout AXI4_AQOS_TYPE;
@@ -112,10 +112,10 @@ entity  AXI4_MASTER_PLAYER is
         -- ライトアドレスチャネルシグナル.
         --------------------------------------------------------------------------
         AWADDR          : inout std_logic_vector(WIDTH.AWADDR -1 downto 0);
-        AWLEN           : inout AXI4_ALEN_TYPE;
+        AWLEN           : inout std_logic_vector(WIDTH.ALEN   -1 downto 0);
         AWSIZE          : inout AXI4_ASIZE_TYPE;
         AWBURST         : inout AXI4_ABURST_TYPE;
-        AWLOCK          : inout AXI4_ALOCK_TYPE;
+        AWLOCK          : inout std_logic_vector(WIDTH.ALOCK  -1 downto 0);
         AWCACHE         : inout AXI4_ACACHE_TYPE;
         AWPROT          : inout AXI4_APROT_TYPE;
         AWQOS           : inout AXI4_AQOS_TYPE;

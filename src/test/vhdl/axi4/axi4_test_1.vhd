@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    aix4_test_1.vhd
 --!     @brief   TEST BENCH No.1 for DUMMY_PLUG.AXI4_MODELS
---!     @version 1.4.0
---!     @date    2013/2/12
+--!     @version 1.5.0
+--!     @date    2013/5/29
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -74,6 +74,8 @@ architecture MODEL of DUMMY_PLUG_AXI4_TEST_1 is
                                  ID          =>  4,
                                  AWADDR      => 32,
                                  ARADDR      => 32,
+                                 ALEN        =>  8,
+                                 ALOCK       =>  1,
                                  WDATA       => DATA_WIDTH,
                                  RDATA       => DATA_WIDTH,
                                  ARUSER      =>  1,
@@ -95,10 +97,10 @@ architecture MODEL of DUMMY_PLUG_AXI4_TEST_1 is
     ------------------------------------------------------------------------------
     signal   ARADDR          : std_logic_vector(WIDTH.ARADDR -1 downto 0);
     signal   ARWRITE         : std_logic;
-    signal   ARLEN           : AXI4_ALEN_TYPE;
+    signal   ARLEN           : std_logic_vector(WIDTH.ALEN   -1 downto 0);
     signal   ARSIZE          : AXI4_ASIZE_TYPE;
     signal   ARBURST         : AXI4_ABURST_TYPE;
-    signal   ARLOCK          : AXI4_ALOCK_TYPE;
+    signal   ARLOCK          : std_logic_vector(WIDTH.ALOCK  -1 downto 0);
     signal   ARCACHE         : AXI4_ACACHE_TYPE;
     signal   ARPROT          : AXI4_APROT_TYPE;
     signal   ARQOS           : AXI4_AQOS_TYPE;
@@ -121,10 +123,10 @@ architecture MODEL of DUMMY_PLUG_AXI4_TEST_1 is
     -- ライトアドレスチャネルシグナル.
     -------------------------------------------------------------------------------
     signal   AWADDR          : std_logic_vector(WIDTH.AWADDR -1 downto 0);
-    signal   AWLEN           : AXI4_ALEN_TYPE;
+    signal   AWLEN           : std_logic_vector(WIDTH.ALEN   -1 downto 0);
     signal   AWSIZE          : AXI4_ASIZE_TYPE;
     signal   AWBURST         : AXI4_ABURST_TYPE;
-    signal   AWLOCK          : AXI4_ALOCK_TYPE;
+    signal   AWLOCK          : std_logic_vector(WIDTH.ALOCK  -1 downto 0);
     signal   AWCACHE         : AXI4_ACACHE_TYPE;
     signal   AWPROT          : AXI4_APROT_TYPE;
     signal   AWQOS           : AXI4_AQOS_TYPE;
