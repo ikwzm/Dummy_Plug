@@ -1,12 +1,12 @@
 #!/usr/bin/env ruby
-# -*- coding: euc-jp -*-
+# -*- coding: utf-8 -*-
 #---------------------------------------------------------------------------------
 #
-#       Version     :   0.0.1
-#       Created     :   2013/6/11
+#       Version     :   1.5.1
+#       Created     :   2013/7/31
 #       File name   :   number-generater_spec.rb
 #       Author      :   Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
-#       Description :   Dummy_Plug::ScenarioWriter::NumberGenerater ¤Î Rspec
+#       Description :   Dummy_Plug::ScenarioWriter::NumberGenerater ã® Rspec
 #
 #---------------------------------------------------------------------------------
 #
@@ -45,21 +45,21 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
 
   describe 'ConstantNumberGenerater.new(1)' do
     before  { @gen = Dummy_Plug::ScenarioWriter::ConstantNumberGenerater.new(1) }
-    context '¿·µ¬ºîÀ®¸å' do
+    context 'æ–°è¦ä½œæˆå¾Œ' do
       it "@number==1" do 
         @gen.number.should == 1
       end
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "¾ï¤Ë1¤òÊÖ¤¹" do
+      it "å¸¸ã«1ã‚’è¿”ã™" do
         10.times do
           @gen.next.should == 1
           @gen.done.should be_false
         end
       end
     end
-    context '£²²ó¼Â¹Ô¸å¤Ë¥ê¥»¥Ã¥È' do
+    context 'ï¼’å›å®Ÿè¡Œå¾Œã«ãƒªã‚»ãƒƒãƒˆ' do
       before { 2.times{@gen.next};@gen.reset }
       it "@number==1" do 
         @gen.number.should == 1
@@ -67,7 +67,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "¾ï¤Ë1¤òÊÖ¤¹" do
+      it "å¸¸ã«1ã‚’è¿”ã™" do
         10.times do
           @gen.next.should == 1
           @gen.done.should be_false
@@ -78,14 +78,14 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
 
   describe 'ConstantNumberGenerater.new(2,3)' do
     before  { @gen = Dummy_Plug::ScenarioWriter::ConstantNumberGenerater.new(2,3) }
-    context '¿·µ¬ºîÀ®¸å' do
+    context 'æ–°è¦ä½œæˆå¾Œ' do
       it "@number==2" do 
         @gen.number.should == 2
       end
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "3²ó¤À¤±2¤òÊÖ¤·4²óÌÜ°Ê¹ß¤Ïnil¤òÊÖ¤¹" do
+      it "3å›ã ã‘2ã‚’è¿”ã—4å›ç›®ä»¥é™ã¯nilã‚’è¿”ã™" do
         @gen.next.should == 2
         @gen.done.should be_false
         @gen.next.should == 2
@@ -100,7 +100,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
         @gen.done.should be_true
       end
     end
-    context '5²ó¼Â¹Ô¸å¤Ë¥ê¥»¥Ã¥È' do
+    context '5å›å®Ÿè¡Œå¾Œã«ãƒªã‚»ãƒƒãƒˆ' do
       before { 5.times{@gen.next}; @gen.reset }
       it "@number==2" do 
         @gen.number.should == 2
@@ -108,7 +108,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "3²ó¤À¤±2¤òÊÖ¤·4²óÌÜ°Ê¹ß¤Ïnil¤òÊÖ¤¹" do
+      it "3å›ã ã‘2ã‚’è¿”ã—4å›ç›®ä»¥é™ã¯nilã‚’è¿”ã™" do
         @gen.next.should == 2
         @gen.done.should be_false
         @gen.next.should == 2
@@ -127,7 +127,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
 
   describe 'SequentialNumberGenerater.new([0,1,2,3])' do
     before  { @gen = Dummy_Plug::ScenarioWriter::SequentialNumberGenerater.new([0,1,2,3]) }
-    context '¿·µ¬ºîÀ®¸å' do
+    context 'æ–°è¦ä½œæˆå¾Œ' do
       it "@seq==[0,1,2,3]" do 
         @gen.seq.should == [0,1,2,3]
       end
@@ -137,7 +137,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3¤ò½çÈÖ¤ËÊÖ¤¹" do
+      it "0,1,2,3ã‚’é †ç•ªã«è¿”ã™" do
         @gen.curr_index.should == 0
         @gen.next.should == 0
         @gen.done.should be_false
@@ -164,7 +164,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
         @gen.done.should be_false
       end
     end
-    context '5²ó¼Â¹Ô¸å¤Ë¥ê¥»¥Ã¥È' do
+    context '5å›å®Ÿè¡Œå¾Œã«ãƒªã‚»ãƒƒãƒˆ' do
       before { 5.times{@gen.next}; @gen.reset }
       it "@curr_index==0" do 
         @gen.curr_index.should == 0
@@ -172,7 +172,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3¤ò½çÈÖ¤ËÊÖ¤¹" do
+      it "0,1,2,3ã‚’é †ç•ªã«è¿”ã™" do
         @gen.curr_index.should == 0
         @gen.next.should == 0
         @gen.done.should be_false
@@ -203,7 +203,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
 
   describe 'SequentialNumberGenerater.new([3,2,1,0],5)' do
     before  { @gen = Dummy_Plug::ScenarioWriter::SequentialNumberGenerater.new([3,2,1,0],5) }
-    context '¿·µ¬ºîÀ®¸å' do
+    context 'æ–°è¦ä½œæˆå¾Œ' do
       it "@seq==[3,2,1,0]" do 
         @gen.seq.should == [3,2,1,0]
       end
@@ -213,7 +213,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "3,2,1,0,3¤òÊÖ¤·¤½¤Î¸å¤Ïnil¤òÊÖ¤¹" do
+      it "3,2,1,0,3ã‚’è¿”ã—ãã®å¾Œã¯nilã‚’è¿”ã™" do
         @gen.curr_index.should == 0
         @gen.next.should == 3
         @gen.done.should be_false
@@ -237,7 +237,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
         @gen.done.should be_true
       end
     end
-    context '5²ó¼Â¹Ô¸å¤Ë¥ê¥»¥Ã¥È' do
+    context '5å›å®Ÿè¡Œå¾Œã«ãƒªã‚»ãƒƒãƒˆ' do
       before { 5.times{@gen.next}; @gen.reset }
       it "@seq==[3,2,1,0]" do 
         @gen.seq.should == [3,2,1,0]
@@ -248,7 +248,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "3,2,1,0,3¤òÊÖ¤·¤½¤Î¸å¤Ïnil¤òÊÖ¤¹" do
+      it "3,2,1,0,3ã‚’è¿”ã—ãã®å¾Œã¯nilã‚’è¿”ã™" do
         @gen.curr_index.should == 0
         @gen.next.should == 3
         @gen.done.should be_false
@@ -276,14 +276,14 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
 
   describe 'RandomNumberGenerater.new([4,4,4,4,4,5,5,6,7,8],100)' do
     before  { @gen = Dummy_Plug::ScenarioWriter::SequentialNumberGenerater.new([4,4,4,4,4,5,5,6,7,8],100) }
-    context '¿·µ¬ºîÀ®¸å' do
+    context 'æ–°è¦ä½œæˆå¾Œ' do
       it "@seq==[4,4,4,4,4,5,5,6,7,8]" do 
         @gen.seq.should == [4,4,4,4,4,5,5,6,7,8]
       end
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "100²ó¤À¤±4,5,6,7,8¤ÎÃæ¤«¤é¥é¥ó¥À¥à¤ËÊÖ¤·¤½¤Î¸å¤Ïnil¤òÊÖ¤¹" do
+      it "100å›ã ã‘4,5,6,7,8ã®ä¸­ã‹ã‚‰ãƒ©ãƒ³ãƒ€ãƒ ã«è¿”ã—ãã®å¾Œã¯nilã‚’è¿”ã™" do
         100.times do
           @gen.done.should be_false
           @gen.next.should be_within(2).of(6)
@@ -298,14 +298,14 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
 
   describe 'GenericNumberGenerater.new(0...4)' do
     before  { @gen = Dummy_Plug::ScenarioWriter::GenericNumberGenerater.new(0...4) }
-    context '¿·µ¬ºîÀ®¸å' do
+    context 'æ–°è¦ä½œæˆå¾Œ' do
       it "@curr_index==0" do 
         @gen.curr_index.should == 0
       end
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3,3,3,3,3,3....¤òÊÖ¤¹" do
+      it "0,1,2,3,3,3,3,3,3....ã‚’è¿”ã™" do
         @gen.curr_index.should == 0
         @gen.next.should == 0
         @gen.done.should be_false
@@ -325,7 +325,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
         end
       end
     end
-    context '5²ó¼Â¹Ô¸å¤Ë¥ê¥»¥Ã¥È' do
+    context '5å›å®Ÿè¡Œå¾Œã«ãƒªã‚»ãƒƒãƒˆ' do
       before { 5.times{@gen.next}; @gen.reset }
       it "@curr_index==0" do 
         @gen.curr_index.should == 0
@@ -333,7 +333,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3,3,3,3,3,3....¤òÊÖ¤¹" do
+      it "0,1,2,3,3,3,3,3,3....ã‚’è¿”ã™" do
         @gen.curr_index.should == 0
         @gen.next.should == 0
         @gen.done.should be_false
@@ -357,14 +357,14 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
 
   describe 'GenericNumberGenerater.new(0...4,6)' do
     before  { @gen = Dummy_Plug::ScenarioWriter::GenericNumberGenerater.new(0...4,6) }
-    context '¿·µ¬ºîÀ®¸å' do
+    context 'æ–°è¦ä½œæˆå¾Œ' do
       it "@curr_index==0" do 
         @gen.curr_index.should == 0
       end
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3,3,3¤òÊÖ¤·¤½¤Î¸å¤Ïnil¤òÊÖ¤¹" do
+      it "0,1,2,3,3,3ã‚’è¿”ã—ãã®å¾Œã¯nilã‚’è¿”ã™" do
         @gen.curr_index.should == 0
         @gen.next.should == 0
         @gen.done.should be_false
@@ -391,7 +391,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
         @gen.done.should be_true
       end
     end
-    context '5²ó¼Â¹Ô¸å¤Ë¥ê¥»¥Ã¥È' do
+    context '5å›å®Ÿè¡Œå¾Œã«ãƒªã‚»ãƒƒãƒˆ' do
       before { 5.times{@gen.next}; @gen.reset }
       it "@curr_index==0" do 
         @gen.curr_index.should == 0
@@ -399,7 +399,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3,3,3¤òÊÖ¤·¤½¤Î¸å¤Ïnil¤òÊÖ¤¹" do
+      it "0,1,2,3,3,3ã‚’è¿”ã—ãã®å¾Œã¯nilã‚’è¿”ã™" do
         @gen.curr_index.should == 0
         @gen.next.should == 0
         @gen.done.should be_false
@@ -430,14 +430,14 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
 
   describe 'GenericNumberGenerater.new([0,1,2,3])' do
     before  { @gen = Dummy_Plug::ScenarioWriter::GenericNumberGenerater.new([0,1,2,3]) }
-    context '¿·µ¬ºîÀ®¸å' do
+    context 'æ–°è¦ä½œæˆå¾Œ' do
       it "@curr_index==0" do 
         @gen.curr_index.should == 0
       end
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3,3,3,3,3,3....¤òÊÖ¤¹" do
+      it "0,1,2,3,3,3,3,3,3....ã‚’è¿”ã™" do
         @gen.curr_index.should == 0
         @gen.next.should == 0
         @gen.done.should be_false
@@ -457,7 +457,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
         end
       end
     end
-    context '3²ó¼Â¹Ô¸å¤Ë¥ê¥»¥Ã¥È' do
+    context '3å›å®Ÿè¡Œå¾Œã«ãƒªã‚»ãƒƒãƒˆ' do
       before { 3.times{@gen.next}; @gen.reset }
       it "@curr_index==0" do 
         @gen.curr_index.should == 0
@@ -465,7 +465,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3,3,3,3,3,3....¤òÊÖ¤¹" do
+      it "0,1,2,3,3,3,3,3,3....ã‚’è¿”ã™" do
         @gen.curr_index.should == 0
         @gen.next.should == 0
         @gen.done.should be_false
@@ -489,14 +489,14 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
 
   describe 'GenericNumberGenerater.new([0,1,2,3],6)' do
     before  { @gen = Dummy_Plug::ScenarioWriter::GenericNumberGenerater.new([0,1,2,3],6) }
-    context '¿·µ¬ºîÀ®¸å' do
+    context 'æ–°è¦ä½œæˆå¾Œ' do
       it "@curr_index==0" do 
         @gen.curr_index.should == 0
       end
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3,3,3¤òÊÖ¤·¤½¤Î¸å¤Ïnil¤òÊÖ¤¹" do
+      it "0,1,2,3,3,3ã‚’è¿”ã—ãã®å¾Œã¯nilã‚’è¿”ã™" do
         @gen.curr_index.should == 0
         @gen.next.should == 0
         @gen.done.should be_false
@@ -523,7 +523,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
         @gen.done.should be_true
       end
     end
-    context '3²ó¼Â¹Ô¸å¤Ë¥ê¥»¥Ã¥È' do
+    context '3å›å®Ÿè¡Œå¾Œã«ãƒªã‚»ãƒƒãƒˆ' do
       before { 3.times{@gen.next}; @gen.reset }
       it "@curr_index==0" do 
         @gen.curr_index.should == 0
@@ -531,7 +531,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3,3,3¤òÊÖ¤·¤½¤Î¸å¤Ïnil¤òÊÖ¤¹" do
+      it "0,1,2,3,3,3ã‚’è¿”ã—ãã®å¾Œã¯nilã‚’è¿”ã™" do
         @gen.curr_index.should == 0
         @gen.next.should == 0
         @gen.done.should be_false
@@ -562,14 +562,14 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
 
   describe 'GenericNumberGenerater.new([[0,1,2,3]])' do
     before  { @gen = Dummy_Plug::ScenarioWriter::GenericNumberGenerater.new([[0,1,2,3]]) }
-    context '¿·µ¬ºîÀ®¸å' do
+    context 'æ–°è¦ä½œæˆå¾Œ' do
       it "@curr_index==0" do 
         @gen.curr_index.should == 0
       end
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3,0,1,2,3,0,1,2,3...¤òÊÖ¤¹" do
+      it "0,1,2,3,0,1,2,3,0,1,2,3...ã‚’è¿”ã™" do
         10.times do
           @gen.next.should == 0
           @gen.done.should be_false
@@ -582,7 +582,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
         end
       end
     end
-    context '9²ó¼Â¹Ô¸å¤Ë¥ê¥»¥Ã¥È' do
+    context '9å›å®Ÿè¡Œå¾Œã«ãƒªã‚»ãƒƒãƒˆ' do
       before { 9.times{@gen.next}; @gen.reset }
       it "@curr_index==0" do 
         @gen.curr_index.should == 0
@@ -590,7 +590,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3,0,1,2,3,0,1,2,3...¤òÊÖ¤¹" do
+      it "0,1,2,3,0,1,2,3,0,1,2,3...ã‚’è¿”ã™" do
         10.times do
           @gen.next.should == 0
           @gen.done.should be_false
@@ -607,14 +607,14 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
 
   describe 'GenericNumberGenerater.new([[0,1,2,3]],6)' do
     before  { @gen = Dummy_Plug::ScenarioWriter::GenericNumberGenerater.new([[0,1,2,3]],6) }
-    context '¿·µ¬ºîÀ®¸å' do
+    context 'æ–°è¦ä½œæˆå¾Œ' do
       it "@curr_index==0" do 
         @gen.curr_index.should == 0
       end
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3,0,1¤òÊÖ¤·¤½¤Î¸å¤Ïnil¤òÊÖ¤¹" do
+      it "0,1,2,3,0,1ã‚’è¿”ã—ãã®å¾Œã¯nilã‚’è¿”ã™" do
         @gen.next.should == 0
         @gen.done.should be_false
         @gen.next.should == 1
@@ -635,7 +635,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
         @gen.done.should be_true
       end
     end
-    context '9²ó¼Â¹Ô¸å¤Ë¥ê¥»¥Ã¥È' do
+    context '9å›å®Ÿè¡Œå¾Œã«ãƒªã‚»ãƒƒãƒˆ' do
       before { 9.times{@gen.next}; @gen.reset }
       it "@curr_index==0" do 
         @gen.curr_index.should == 0
@@ -643,7 +643,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3,0,1¤òÊÖ¤·¤½¤Î¸å¤Ïnil¤òÊÖ¤¹" do
+      it "0,1,2,3,0,1ã‚’è¿”ã—ãã®å¾Œã¯nilã‚’è¿”ã™" do
         @gen.next.should == 0
         @gen.done.should be_false
         @gen.next.should == 1
@@ -668,14 +668,14 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
 
   describe 'GenericNumberGenerater.new([0,[1,2,3]])' do
     before  { @gen = Dummy_Plug::ScenarioWriter::GenericNumberGenerater.new([0,[1,2,3]]) }
-    context '¿·µ¬ºîÀ®¸å' do
+    context 'æ–°è¦ä½œæˆå¾Œ' do
       it "@curr_index==0" do 
         @gen.curr_index.should == 0
       end
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3,1,2,3,1,2,3...¤òÊÖ¤¹" do
+      it "0,1,2,3,1,2,3,1,2,3...ã‚’è¿”ã™" do
         @gen.next.should == 0
         @gen.done.should be_false
         10.times do
@@ -688,7 +688,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
         end
       end
     end
-    context '9²ó¼Â¹Ô¸å¤Ë¥ê¥»¥Ã¥È' do
+    context '9å›å®Ÿè¡Œå¾Œã«ãƒªã‚»ãƒƒãƒˆ' do
       before { 9.times{@gen.next}; @gen.reset }
       it "@curr_index==0" do 
         @gen.curr_index.should == 0
@@ -696,7 +696,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3,1,2,3,1,2,3...¤òÊÖ¤¹" do
+      it "0,1,2,3,1,2,3,1,2,3...ã‚’è¿”ã™" do
         @gen.next.should == 0
         @gen.done.should be_false
         10.times do
@@ -713,14 +713,14 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
 
   describe 'GenericNumberGenerater.new([0,[1,2,3]],6)' do
     before  { @gen = Dummy_Plug::ScenarioWriter::GenericNumberGenerater.new([0,[1,2,3]],6) }
-    context '¿·µ¬ºîÀ®¸å' do
+    context 'æ–°è¦ä½œæˆå¾Œ' do
       it "@curr_index==0" do 
         @gen.curr_index.should == 0
       end
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3,1,2¤òÊÖ¤·¤½¤Î¸å¤Ïnil¤òÊÖ¤¹" do
+      it "0,1,2,3,1,2ã‚’è¿”ã—ãã®å¾Œã¯nilã‚’è¿”ã™" do
         @gen.next.should == 0
         @gen.done.should be_false
         @gen.next.should == 1
@@ -741,7 +741,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
         @gen.done.should be_true
       end
     end
-    context '9²ó¼Â¹Ô¸å¤Ë¥ê¥»¥Ã¥È' do
+    context '9å›å®Ÿè¡Œå¾Œã«ãƒªã‚»ãƒƒãƒˆ' do
       before { 9.times{@gen.next}; @gen.reset }
       it "@curr_index==0" do 
         @gen.curr_index.should == 0
@@ -749,7 +749,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3,1,2¤òÊÖ¤·¤½¤Î¸å¤Ïnil¤òÊÖ¤¹" do
+      it "0,1,2,3,1,2ã‚’è¿”ã—ãã®å¾Œã¯nilã‚’è¿”ã™" do
         @gen.next.should == 0
         @gen.done.should be_false
         @gen.next.should == 1
@@ -774,14 +774,14 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
 
   describe 'GenericNumberGenerater.new([[0,1,2],3])' do
     before  { @gen = Dummy_Plug::ScenarioWriter::GenericNumberGenerater.new([[0,1,2],3]) }
-    context '¿·µ¬ºîÀ®¸å' do
+    context 'æ–°è¦ä½œæˆå¾Œ' do
       it "@curr_index==0" do 
         @gen.curr_index.should == 0
       end
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3,3,3,3,3...¤òÊÖ¤¹" do
+      it "0,1,2,3,3,3,3,3...ã‚’è¿”ã™" do
         @gen.next.should == 0
         @gen.done.should be_false
         @gen.next.should == 1
@@ -794,7 +794,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
         end
       end
     end
-    context '9²ó¼Â¹Ô¸å¤Ë¥ê¥»¥Ã¥È' do
+    context '9å›å®Ÿè¡Œå¾Œã«ãƒªã‚»ãƒƒãƒˆ' do
       before { 9.times{@gen.next}; @gen.reset }
       it "@curr_index==0" do 
         @gen.curr_index.should == 0
@@ -802,7 +802,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3,3,3,3,3...¤òÊÖ¤¹" do
+      it "0,1,2,3,3,3,3,3...ã‚’è¿”ã™" do
         @gen.next.should == 0
         @gen.done.should be_false
         @gen.next.should == 1
@@ -819,14 +819,14 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
 
   describe 'GenericNumberGenerater.new([[0,1,2],3],6)' do
     before  { @gen = Dummy_Plug::ScenarioWriter::GenericNumberGenerater.new([[0,1,2],3],6) }
-    context '¿·µ¬ºîÀ®¸å' do
+    context 'æ–°è¦ä½œæˆå¾Œ' do
       it "@curr_index==0" do 
         @gen.curr_index.should == 0
       end
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3,3,3¤òÊÖ¤·¤½¤Î¸å¤Ïnil¤òÊÖ¤¹" do
+      it "0,1,2,3,3,3ã‚’è¿”ã—ãã®å¾Œã¯nilã‚’è¿”ã™" do
         @gen.next.should == 0
         @gen.done.should be_false
         @gen.next.should == 1
@@ -847,7 +847,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
         @gen.done.should be_true
       end
     end
-    context '9²ó¼Â¹Ô¸å¤Ë¥ê¥»¥Ã¥È' do
+    context '9å›å®Ÿè¡Œå¾Œã«ãƒªã‚»ãƒƒãƒˆ' do
       before { 9.times{@gen.next}; @gen.reset }
       it "@curr_index==0" do 
         @gen.curr_index.should == 0
@@ -855,7 +855,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3,3,3¤òÊÖ¤·¤½¤Î¸å¤Ïnil¤òÊÖ¤¹" do
+      it "0,1,2,3,3,3ã‚’è¿”ã—ãã®å¾Œã¯nilã‚’è¿”ã™" do
         @gen.next.should == 0
         @gen.done.should be_false
         @gen.next.should == 1
@@ -880,14 +880,14 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
 
   describe 'GenericNumberGenerater.new([[0,1,2],[3,4]])' do
     before  { @gen = Dummy_Plug::ScenarioWriter::GenericNumberGenerater.new([[0,1,2],[3,4]]) }
-    context '¿·µ¬ºîÀ®¸å' do
+    context 'æ–°è¦ä½œæˆå¾Œ' do
       it "@curr_index==0" do 
         @gen.curr_index.should == 0
       end
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3,4,3,4,3,4,3,4...¤òÊÖ¤¹" do
+      it "0,1,2,3,4,3,4,3,4,3,4...ã‚’è¿”ã™" do
         @gen.next.should == 0
         @gen.done.should be_false
         @gen.next.should == 1
@@ -902,7 +902,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
         end
       end
     end
-    context '9²ó¼Â¹Ô¸å¤Ë¥ê¥»¥Ã¥È' do
+    context '9å›å®Ÿè¡Œå¾Œã«ãƒªã‚»ãƒƒãƒˆ' do
       before { 9.times{@gen.next}; @gen.reset }
       it "@curr_index==0" do 
         @gen.curr_index.should == 0
@@ -910,7 +910,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3,4,3,4,3,4,3,4...¤òÊÖ¤¹" do
+      it "0,1,2,3,4,3,4,3,4,3,4...ã‚’è¿”ã™" do
         @gen.next.should == 0
         @gen.done.should be_false
         @gen.next.should == 1
@@ -929,14 +929,14 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
 
   describe 'GenericNumberGenerater.new([[0,1,2],[3,4]],8)' do
     before  { @gen = Dummy_Plug::ScenarioWriter::GenericNumberGenerater.new([[0,1,2],[3,4]],8) }
-    context '¿·µ¬ºîÀ®¸å' do
+    context 'æ–°è¦ä½œæˆå¾Œ' do
       it "@curr_index==0" do 
         @gen.curr_index.should == 0
       end
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3,4,3,4,3¤òÊÖ¤·¤½¤Î¸å¤Ïnil¤òÊÖ¤¹" do
+      it "0,1,2,3,4,3,4,3ã‚’è¿”ã—ãã®å¾Œã¯nilã‚’è¿”ã™" do
         @gen.next.should == 0
         @gen.done.should be_false
         @gen.next.should == 1
@@ -961,7 +961,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
         @gen.done.should be_true
       end
     end
-    context '9²ó¼Â¹Ô¸å¤Ë¥ê¥»¥Ã¥È' do
+    context '9å›å®Ÿè¡Œå¾Œã«ãƒªã‚»ãƒƒãƒˆ' do
       before { 9.times{@gen.next}; @gen.reset }
       it "@curr_index==0" do 
         @gen.curr_index.should == 0
@@ -969,7 +969,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3,4,3,4,3¤òÊÖ¤·¤½¤Î¸å¤Ïnil¤òÊÖ¤¹" do
+      it "0,1,2,3,4,3,4,3ã‚’è¿”ã—ãã®å¾Œã¯nilã‚’è¿”ã™" do
         @gen.next.should == 0
         @gen.done.should be_false
         @gen.next.should == 1
@@ -998,14 +998,14 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
 
   describe 'GenericNumberGenerater.new([SequentialNumberGenerater.new([0,1,2,3],7),[4,5,6]])' do
     before  { @gen = Dummy_Plug::ScenarioWriter::GenericNumberGenerater.new([Dummy_Plug::ScenarioWriter::SequentialNumberGenerater.new([0,1,2,3],7),[4,5,6]]) }
-    context '¿·µ¬ºîÀ®¸å' do
+    context 'æ–°è¦ä½œæˆå¾Œ' do
       it "@curr_index==0" do 
         @gen.curr_index.should == 0
       end
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3,0,1,2,4,5,6,4,5,6,4,5,6...¤òÊÖ¤¹" do
+      it "0,1,2,3,0,1,2,4,5,6,4,5,6,4,5,6...ã‚’è¿”ã™" do
         @gen.next.should == 0
         @gen.done.should be_false
         @gen.next.should == 1
@@ -1030,7 +1030,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
         end
       end
     end
-    context '9²ó¼Â¹Ô¸å¤Ë¥ê¥»¥Ã¥È' do
+    context '9å›å®Ÿè¡Œå¾Œã«ãƒªã‚»ãƒƒãƒˆ' do
       before { 9.times{@gen.next}; @gen.reset }
       it "@curr_index==0" do 
         @gen.curr_index.should == 0
@@ -1038,7 +1038,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3,0,1,2,4,5,6,4,5,6,4,5,6...¤òÊÖ¤¹" do
+      it "0,1,2,3,0,1,2,4,5,6,4,5,6,4,5,6...ã‚’è¿”ã™" do
         @gen.next.should == 0
         @gen.done.should be_false
         @gen.next.should == 1
@@ -1067,14 +1067,14 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
 
   describe 'GenericNumberGenerater.new([GenericNumberGenerater.new([[0,1,2,3]],7),[4,5,6]])' do
     before  { @gen = Dummy_Plug::ScenarioWriter::GenericNumberGenerater.new([Dummy_Plug::ScenarioWriter::GenericNumberGenerater.new([[0,1,2,3]],7),[4,5,6]]) }
-    context '¿·µ¬ºîÀ®¸å' do
+    context 'æ–°è¦ä½œæˆå¾Œ' do
       it "@curr_index==0" do 
         @gen.curr_index.should == 0
       end
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3,0,1,2,4,5,6,4,5,6,4,5,6...¤òÊÖ¤¹" do
+      it "0,1,2,3,0,1,2,4,5,6,4,5,6,4,5,6...ã‚’è¿”ã™" do
         @gen.next.should == 0
         @gen.done.should be_false
         @gen.next.should == 1
@@ -1099,7 +1099,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
         end
       end
     end
-    context '9²ó¼Â¹Ô¸å¤Ë¥ê¥»¥Ã¥È' do
+    context '9å›å®Ÿè¡Œå¾Œã«ãƒªã‚»ãƒƒãƒˆ' do
       before { 9.times{@gen.next}; @gen.reset }
       it "@curr_index==0" do 
         @gen.curr_index.should == 0
@@ -1107,7 +1107,7 @@ describe 'Dummy_Plug::ScenarioWriter::NumberGenerater' do
       it "@done==false" do 
         @gen.done.should be_false
       end
-      it "0,1,2,3,0,1,2,4,5,6,4,5,6,4,5,6...¤òÊÖ¤¹" do
+      it "0,1,2,3,0,1,2,4,5,6,4,5,6,4,5,6...ã‚’è¿”ã™" do
         @gen.next.should == 0
         @gen.done.should be_false
         @gen.next.should == 1
