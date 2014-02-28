@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_types.vhd
 --!     @brief   AXI4 Channel Signal Type Package.
---!     @version 1.5.0
---!     @date    2013/5/29
+--!     @version 1.5.2
+--!     @date    2014/3/1
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012,2013 Ichiro Kawazome
+--      Copyright (C) 2012-2014 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -125,7 +125,7 @@ package AXI4_TYPES is
     -------------------------------------------------------------------------------
     --! @brief AXI4 ID の最大ビット幅
     -------------------------------------------------------------------------------
-    constant  AXI4_ID_MAX_WIDTH    : integer := 8;
+    constant  AXI4_ID_MAX_WIDTH    : integer := 32;
     -------------------------------------------------------------------------------
     --! @brief AXI4 ADDR の最大ビット幅
     -------------------------------------------------------------------------------
