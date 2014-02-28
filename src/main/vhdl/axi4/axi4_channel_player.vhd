@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_channel_player.vhd
 --!     @brief   AXI4 A/R/W/B Channel Dummy Plug Player.
---!     @version 1.5.1
---!     @date    2013/7/17
+--!     @version 1.5.2
+--!     @date    2014/3/1
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012,2013 Ichiro Kawazome
+--      Copyright (C) 2012-2014 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
