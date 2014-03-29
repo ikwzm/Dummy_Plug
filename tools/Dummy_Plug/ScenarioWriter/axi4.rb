@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 #---------------------------------------------------------------------------------
 #
-#       Version     :   1.5.1
-#       Created     :   2013/7/17
+#       Version     :   1.5.2
+#       Created     :   2014/3/23
 #       File name   :   axi4.rb
 #       Author      :   Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 #       Description :   AXI4用シナリオ生成モジュール
@@ -100,8 +100,8 @@ module Dummy_Plug
           if args.key?(:DataXferPattern) then
             @data_xfer_pattern = args[:DataXferPattern]
           end
-          if args.key?(:ResponseDeleyCycle) then
-            @resp_delay_cycle  = args[:ResponseDeleyCycle]
+          if args.key?(:ResponseDelayCycle) then
+            @resp_delay_cycle  = args[:ResponseDelayCycle]
           end
         end
         #-------------------------------------------------------------------------
