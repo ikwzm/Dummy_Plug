@@ -75,6 +75,8 @@
     - ADDR  : 0x00000010
       SIZE  : 4
       LEN   : 2
+      CACHE : 3
+      AUSER : 1
       VALID : 1
       READY : 1
     - WAIT  : {VALID: 1, READY: 1}
@@ -87,6 +89,8 @@
     - ADDR  : 0x00000012
       SIZE  : 2
       LEN   : 2
+      CACHE : 3
+      AUSER : 1
       VALID : 1
       READY : 1
     - WAIT  : {VALID : 1, READY : 1}
@@ -173,6 +177,7 @@
       AWPROT  : 3                         # AWPROT  <= 'b011
       AWQOS   : 3                         # AWQOS   <= 'b0011
       AWID    : 7                         # AWID    <= 7
+      AWUSER  : 1                         # AWUSER  <= 1
       AWVALID : 1                         # AWVALID <= 1
     - WAIT    : {AWVALID: 1, AWREADY: 1}  # AWVALID = 1 and AWREADY = 1まで待つ.
     - AWVALID : 0                         # AWVALID <= 0
@@ -220,6 +225,7 @@
         AWLOCK  : 1                       # 
         AWPROT  : 3                       # 
         AWQOS   : 3                       # 
+        AWUSER  : 1                       #
     - AWREADY : 0                         # AWREADY <= 0
   - W:                                    # ライトチャネルの挙動.
     - WREADY  : 0                         # WREADY <= 0
@@ -391,6 +397,7 @@
       AWPROT  : 3                         # AWPROT  <= 3
       AWQOS   : 3                         # AWQOS   <= 3
       AWID    : 7                         # AWID    <= 7
+      AWUSER  : 1                         # AWID    <= 1
       AWVALID : 1                         # AWVALID <= 1
     - WAIT    : {AWVALID: 1, AWREADY: 1}  # AWVALID = 1 and AWREADY = 1まで待つ.
     - AWVALID : 0                         # AWVALID <= 0
@@ -481,7 +488,7 @@
     - AWREADY : 1                         # AWREADY <= 1
     - WAIT    : {AWVALID: 1, AWREADY: 1}  # AWVALID = 1 and AWREADY = 1 まで待つ.
     - SAY     : "Expected mismatch! AWADDR, AWSIZE, AWID, AWLEN, AWBURST, AWLOCK, AWPROT, AWQOS ...!"
-    - CHECK   :                           # AWADDR, AWSIZE, AWID が
+    - CHECK   :                           # AWADDR, AWSIZE, AWID, AWUSER が
         AWADDR  : "32'h00000012"          # 指定した値になっていないことを調べる.
         AWSIZE  : 8                       #
         AWID    : 5                       #
@@ -490,6 +497,7 @@
         AWLOCK  : 0                       # 
         AWPROT  : 1                       # 
         AWQOS   : 1                       # 
+        AWUSER  : 0                       # 
     - AWREADY : 0                         # AWREADY <= 0
   - W:                                    # ライトチャネルの挙動.
     - WREADY  : 0                         # WREADY <= 0

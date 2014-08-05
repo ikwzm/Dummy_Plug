@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    aix4_test_1_1.vhd
 --!     @brief   TEST BENCH No.1.1 for DUMMY_PLUG.AXI4_MODELS
---!     @version 1.5.0
---!     @date    2013/5/31
+--!     @version 1.5.3
+--!     @date    2014/8/6
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -46,7 +46,7 @@ architecture MODEL of DUMMY_PLUG_AXI4_TEST_1_1 is
     constant EXP_REPORT      : REPORT_STATUS_TYPE := (
         valid          => TRUE,
         error_count    =>  0,
-        mismatch_count => 31,
+        mismatch_count => 32,
         warning_count  =>  0,
         failure_count  =>  0
     );
