@@ -27,6 +27,7 @@
         SIZE : 1
         BURST: INCR
         ID   : 10
+        AUSER: 0
         DATA : [0xE0,0xE1,0xE2,0xE3,
                 0xE4,0xE5,0xE6,0xE7,
                 0xE8,0xE9,0xEA,0xEB,
@@ -37,6 +38,7 @@
         SIZE : 1
         BURST: INCR
         ID   : 10
+        AUSER: 1
         DATA : [0xE0,0xE1,0xE2,0xE3,
                 0xE4,0xE5,0xE6,0xE7,
                 0xE8,0xE9,0xEA,0xEB,
@@ -47,6 +49,7 @@
         SIZE : 1
         BURST: INCR
         ID   : 10
+        AUSER: 0
         DATA : [0xE0,0xE1,0xE2,0xE3,
                 0xE4,0xE5,0xE6,0xE7,
                 0xE8,0xE9,0xEA,0xEB,
@@ -57,6 +60,7 @@
         SIZE : 1
         BURST: INCR
         ID   : 10
+        AUSER: 1
         DATA : [0xE0,0xE1,0xE2,0xE3,
                 0xE4,0xE5,0xE6,0xE7,
                 0xE8,0xE9,0xEA,0xEB,
@@ -67,6 +71,7 @@
         SIZE : 1
         BURST: INCR
         ID   : 10
+        AUSER: 0
         DATA : [0xE0,0xE1,0xE2,0xE3,
                 0xE4,0xE5,0xE6,0xE7,
                 0xE8,0xE9,0xEA,0xEB,
@@ -77,6 +82,7 @@
         SIZE : 1
         BURST: INCR
         ID   : 10
+        AUSER: 1
         DATA : [0xE0,0xE1,0xE2,0xE3,
                 0xE4,0xE5,0xE6,0xE7,
                 0xE8,0xE9,0xEA,0xEB,
@@ -87,6 +93,7 @@
         SIZE : 1
         BURST: INCR
         ID   : 10
+        AUSER: 0
         DATA : [0xE0,0xE1,0xE2,0xE3,
                 0xE4,0xE5,0xE6,0xE7,
                 0xE8,0xE9,0xEA,0xEB,
@@ -97,6 +104,7 @@
         SIZE : 1
         BURST: INCR
         ID   : 10
+        AUSER: 1
         DATA : [0xE0,0xE1,0xE2,0xE3,
                 0xE4,0xE5,0xE6,0xE7,
                 0xE8,0xE9,0xEA,0xEB,
@@ -109,7 +117,7 @@
     - WAIT    : {VALID: 1, TIMEOUT: 50}
     - READY   : 1
     - WAIT    : {VALID: 1, READY: 1, TIMEOUT: 50}
-    - CHECK   : {ADDR: 0x0000FC80, SIZE: 1, BURST: INCR, ID: 10, LEN: 16}
+    - CHECK   : {ADDR: 0x0000FC80, SIZE: 1, BURST: INCR, ID: 10, LEN: 16, USER: 0}
     - READY   : 0
   - R :
     - {VALID  : 0, DATA: "64'h0000000000000000", RESP: OKAY, ID:  0, LAST: 0}
@@ -152,7 +160,7 @@
     - WAIT    : {VALID: 1, TIMEOUT: 50}
     - READY   : 1
     - WAIT    : {VALID: 1, READY: 1, TIMEOUT: 50}
-    - CHECK   : {ADDR: 0x0000FC81, SIZE: 1, BURST: INCR, ID: 10, LEN: 16}
+    - CHECK   : {ADDR: 0x0000FC81, SIZE: 1, BURST: INCR, ID: 10, LEN: 16, USER: 1}
     - READY   : 0
   - R :
     - {VALID  : 0, DATA: "64'h0000000000000000", RESP: OKAY, ID:  0, LAST: 0}
@@ -195,7 +203,7 @@
     - WAIT    : {VALID: 1, TIMEOUT: 50}
     - READY   : 1
     - WAIT    : {VALID: 1, READY: 1, TIMEOUT: 50}
-    - CHECK   : {ADDR: 0x0000FC82, SIZE: 1, BURST: INCR, ID: 10, LEN: 16}
+    - CHECK   : {ADDR: 0x0000FC82, SIZE: 1, BURST: INCR, ID: 10, LEN: 16, USER: 0}
     - READY   : 0
   - R :
     - {VALID  : 0, DATA: "64'h0000000000000000", RESP: OKAY, ID:  0, LAST: 0}
@@ -238,7 +246,7 @@
     - WAIT    : {VALID: 1, TIMEOUT: 50}
     - READY   : 1
     - WAIT    : {VALID: 1, READY: 1, TIMEOUT: 50}
-    - CHECK   : {ADDR: 0x0000FC83, SIZE: 1, BURST: INCR, ID: 10, LEN: 16}
+    - CHECK   : {ADDR: 0x0000FC83, SIZE: 1, BURST: INCR, ID: 10, LEN: 16, USER: 1}
     - READY   : 0
   - R :
     - {VALID  : 0, DATA: "64'h0000000000000000", RESP: OKAY, ID:  0, LAST: 0}
@@ -281,7 +289,7 @@
     - WAIT    : {VALID: 1, TIMEOUT: 50}
     - READY   : 1
     - WAIT    : {VALID: 1, READY: 1, TIMEOUT: 50}
-    - CHECK   : {ADDR: 0x0000FC84, SIZE: 1, BURST: INCR, ID: 10, LEN: 16}
+    - CHECK   : {ADDR: 0x0000FC84, SIZE: 1, BURST: INCR, ID: 10, LEN: 16, USER: 0}
     - READY   : 0
   - R :
     - {VALID  : 0, DATA: "64'h0000000000000000", RESP: OKAY, ID:  0, LAST: 0}
@@ -324,7 +332,7 @@
     - WAIT    : {VALID: 1, TIMEOUT: 50}
     - READY   : 1
     - WAIT    : {VALID: 1, READY: 1, TIMEOUT: 50}
-    - CHECK   : {ADDR: 0x0000FC85, SIZE: 1, BURST: INCR, ID: 10, LEN: 16}
+    - CHECK   : {ADDR: 0x0000FC85, SIZE: 1, BURST: INCR, ID: 10, LEN: 16, USER: 1}
     - READY   : 0
   - R :
     - {VALID  : 0, DATA: "64'h0000000000000000", RESP: OKAY, ID:  0, LAST: 0}
@@ -367,7 +375,7 @@
     - WAIT    : {VALID: 1, TIMEOUT: 50}
     - READY   : 1
     - WAIT    : {VALID: 1, READY: 1, TIMEOUT: 50}
-    - CHECK   : {ADDR: 0x0000FC86, SIZE: 1, BURST: INCR, ID: 10, LEN: 16}
+    - CHECK   : {ADDR: 0x0000FC86, SIZE: 1, BURST: INCR, ID: 10, LEN: 16, USER: 0}
     - READY   : 0
   - R :
     - {VALID  : 0, DATA: "64'h0000000000000000", RESP: OKAY, ID:  0, LAST: 0}
@@ -410,7 +418,7 @@
     - WAIT    : {VALID: 1, TIMEOUT: 50}
     - READY   : 1
     - WAIT    : {VALID: 1, READY: 1, TIMEOUT: 50}
-    - CHECK   : {ADDR: 0x0000FC87, SIZE: 1, BURST: INCR, ID: 10, LEN: 16}
+    - CHECK   : {ADDR: 0x0000FC87, SIZE: 1, BURST: INCR, ID: 10, LEN: 16, USER: 1}
     - READY   : 0
   - R :
     - {VALID  : 0, DATA: "64'h0000000000000000", RESP: OKAY, ID:  0, LAST: 0}
@@ -1167,9 +1175,9 @@
        DUMMY-PLUG AXI4 TEST BENCH SCENARIO 1.2.5 DONE
 - MASTER:
   - AR : 
-    - {VALID  : 1, ADDR: 0x0000FC80, SIZE: 1, BURST: INCR , ID: 10, LEN: 16}
+    - {VALID  : 1, ADDR: 0x0000FC80, SIZE: 1, BURST: INCR , ID: 10, LEN: 16, USER:0}
     - WAIT    : {VALID: 1, READY: 1, TIMEOUT: 50}
-    - {VALID  : 0, ADDR: 0x00000000, SIZE: 1, BURST: FIXED, ID:  0, LEN:  1}
+    - {VALID  : 0, ADDR: 0x00000000, SIZE: 1, BURST: FIXED, ID:  0, LEN:  1, USER:0}
     - WAIT    : {RVALID: 1, RREADY: 1 , RLAST: 1, TIMEOUT: 50}
     - WAIT    : 2
   - R :
@@ -1210,9 +1218,9 @@
     - CHECK   : {DATA: "64'hEF--------------", RESP: OKAY , ID: 10, LAST: 1}
     - READY   : 0
   - AR : 
-    - {VALID  : 1, ADDR: 0x0000FC81, SIZE: 1, BURST: INCR , ID: 10, LEN: 16}
+    - {VALID  : 1, ADDR: 0x0000FC81, SIZE: 1, BURST: INCR , ID: 10, LEN: 16, USER:1}
     - WAIT    : {VALID: 1, READY: 1, TIMEOUT: 50}
-    - {VALID  : 0, ADDR: 0x00000000, SIZE: 1, BURST: FIXED, ID:  0, LEN:  1}
+    - {VALID  : 0, ADDR: 0x00000000, SIZE: 1, BURST: FIXED, ID:  0, LEN:  1, USER:0}
     - WAIT    : {RVALID: 1, RREADY: 1 , RLAST: 1, TIMEOUT: 50}
     - WAIT    : 2
   - R :
@@ -1253,9 +1261,9 @@
     - CHECK   : {DATA: "64'h--------------EF", RESP: OKAY , ID: 10, LAST: 1}
     - READY   : 0
   - AR : 
-    - {VALID  : 1, ADDR: 0x0000FC82, SIZE: 1, BURST: INCR , ID: 10, LEN: 16}
+    - {VALID  : 1, ADDR: 0x0000FC82, SIZE: 1, BURST: INCR , ID: 10, LEN: 16, USER:0}
     - WAIT    : {VALID: 1, READY: 1, TIMEOUT: 50}
-    - {VALID  : 0, ADDR: 0x00000000, SIZE: 1, BURST: FIXED, ID:  0, LEN:  1}
+    - {VALID  : 0, ADDR: 0x00000000, SIZE: 1, BURST: FIXED, ID:  0, LEN:  1, USER:0}
     - WAIT    : {RVALID: 1, RREADY: 1 , RLAST: 1, TIMEOUT: 50}
     - WAIT    : 2
   - R :
@@ -1296,9 +1304,9 @@
     - CHECK   : {DATA: "64'h------------EF--", RESP: OKAY , ID: 10, LAST: 1}
     - READY   : 0
   - AR : 
-    - {VALID  : 1, ADDR: 0x0000FC83, SIZE: 1, BURST: INCR , ID: 10, LEN: 16}
+    - {VALID  : 1, ADDR: 0x0000FC83, SIZE: 1, BURST: INCR , ID: 10, LEN: 16, USER:1}
     - WAIT    : {VALID: 1, READY: 1, TIMEOUT: 50}
-    - {VALID  : 0, ADDR: 0x00000000, SIZE: 1, BURST: FIXED, ID:  0, LEN:  1}
+    - {VALID  : 0, ADDR: 0x00000000, SIZE: 1, BURST: FIXED, ID:  0, LEN:  1, USER:0}
     - WAIT    : {RVALID: 1, RREADY: 1 , RLAST: 1, TIMEOUT: 50}
     - WAIT    : 2
   - R :
@@ -1339,9 +1347,9 @@
     - CHECK   : {DATA: "64'h----------EF----", RESP: OKAY , ID: 10, LAST: 1}
     - READY   : 0
   - AR : 
-    - {VALID  : 1, ADDR: 0x0000FC84, SIZE: 1, BURST: INCR , ID: 10, LEN: 16}
+    - {VALID  : 1, ADDR: 0x0000FC84, SIZE: 1, BURST: INCR , ID: 10, LEN: 16, USER:0}
     - WAIT    : {VALID: 1, READY: 1, TIMEOUT: 50}
-    - {VALID  : 0, ADDR: 0x00000000, SIZE: 1, BURST: FIXED, ID:  0, LEN:  1}
+    - {VALID  : 0, ADDR: 0x00000000, SIZE: 1, BURST: FIXED, ID:  0, LEN:  1, USER:0}
     - WAIT    : {RVALID: 1, RREADY: 1 , RLAST: 1, TIMEOUT: 50}
     - WAIT    : 2
   - R :
@@ -1382,9 +1390,9 @@
     - CHECK   : {DATA: "64'h--------EF------", RESP: OKAY , ID: 10, LAST: 1}
     - READY   : 0
   - AR : 
-    - {VALID  : 1, ADDR: 0x0000FC85, SIZE: 1, BURST: INCR , ID: 10, LEN: 16}
+    - {VALID  : 1, ADDR: 0x0000FC85, SIZE: 1, BURST: INCR , ID: 10, LEN: 16, USER:1}
     - WAIT    : {VALID: 1, READY: 1, TIMEOUT: 50}
-    - {VALID  : 0, ADDR: 0x00000000, SIZE: 1, BURST: FIXED, ID:  0, LEN:  1}
+    - {VALID  : 0, ADDR: 0x00000000, SIZE: 1, BURST: FIXED, ID:  0, LEN:  1, USER:0}
     - WAIT    : {RVALID: 1, RREADY: 1 , RLAST: 1, TIMEOUT: 50}
     - WAIT    : 2
   - R :
@@ -1425,9 +1433,9 @@
     - CHECK   : {DATA: "64'h------EF--------", RESP: OKAY , ID: 10, LAST: 1}
     - READY   : 0
   - AR : 
-    - {VALID  : 1, ADDR: 0x0000FC86, SIZE: 1, BURST: INCR , ID: 10, LEN: 16}
+    - {VALID  : 1, ADDR: 0x0000FC86, SIZE: 1, BURST: INCR , ID: 10, LEN: 16, USER:0}
     - WAIT    : {VALID: 1, READY: 1, TIMEOUT: 50}
-    - {VALID  : 0, ADDR: 0x00000000, SIZE: 1, BURST: FIXED, ID:  0, LEN:  1}
+    - {VALID  : 0, ADDR: 0x00000000, SIZE: 1, BURST: FIXED, ID:  0, LEN:  1, USER:0}
     - WAIT    : {RVALID: 1, RREADY: 1 , RLAST: 1, TIMEOUT: 50}
     - WAIT    : 2
   - R :
@@ -1468,9 +1476,9 @@
     - CHECK   : {DATA: "64'h----EF----------", RESP: OKAY , ID: 10, LAST: 1}
     - READY   : 0
   - AR : 
-    - {VALID  : 1, ADDR: 0x0000FC87, SIZE: 1, BURST: INCR , ID: 10, LEN: 16}
+    - {VALID  : 1, ADDR: 0x0000FC87, SIZE: 1, BURST: INCR , ID: 10, LEN: 16, USER:1}
     - WAIT    : {VALID: 1, READY: 1, TIMEOUT: 50}
-    - {VALID  : 0, ADDR: 0x00000000, SIZE: 1, BURST: FIXED, ID:  0, LEN:  1}
+    - {VALID  : 0, ADDR: 0x00000000, SIZE: 1, BURST: FIXED, ID:  0, LEN:  1, USER:0}
     - WAIT    : {RVALID: 1, RREADY: 1 , RLAST: 1, TIMEOUT: 50}
     - WAIT    : 2
   - R :
@@ -1517,6 +1525,7 @@
         SIZE : 1
         BURST: INCR
         ID   : 10
+        AUSER:  0
         DATA : [0xE0,0xE1,0xE2,0xE3,
                 0xE4,0xE5,0xE6,0xE7,
                 0xE8,0xE9,0xEA,0xEB,
@@ -1527,6 +1536,7 @@
         SIZE : 1
         BURST: INCR
         ID   : 10
+        AUSER:  1
         DATA : [0xE0,0xE1,0xE2,0xE3,
                 0xE4,0xE5,0xE6,0xE7,
                 0xE8,0xE9,0xEA,0xEB,
@@ -1537,6 +1547,7 @@
         SIZE : 1
         BURST: INCR
         ID   : 10
+        AUSER:  0
         DATA : [0xE0,0xE1,0xE2,0xE3,
                 0xE4,0xE5,0xE6,0xE7,
                 0xE8,0xE9,0xEA,0xEB,
@@ -1547,6 +1558,7 @@
         SIZE : 1
         BURST: INCR
         ID   : 10
+        AUSER:  1
         DATA : [0xE0,0xE1,0xE2,0xE3,
                 0xE4,0xE5,0xE6,0xE7,
                 0xE8,0xE9,0xEA,0xEB,
@@ -1557,6 +1569,7 @@
         SIZE : 1
         BURST: INCR
         ID   : 10
+        AUSER:  0
         DATA : [0xE0,0xE1,0xE2,0xE3,
                 0xE4,0xE5,0xE6,0xE7,
                 0xE8,0xE9,0xEA,0xEB,
@@ -1567,6 +1580,7 @@
         SIZE : 1
         BURST: INCR
         ID   : 10
+        AUSER:  1
         DATA : [0xE0,0xE1,0xE2,0xE3,
                 0xE4,0xE5,0xE6,0xE7,
                 0xE8,0xE9,0xEA,0xEB,
@@ -1577,6 +1591,7 @@
         SIZE : 1
         BURST: INCR
         ID   : 10
+        AUSER:  0
         DATA : [0xE0,0xE1,0xE2,0xE3,
                 0xE4,0xE5,0xE6,0xE7,
                 0xE8,0xE9,0xEA,0xEB,
@@ -1587,6 +1602,7 @@
         SIZE : 1
         BURST: INCR
         ID   : 10
+        AUSER:  1
         DATA : [0xE0,0xE1,0xE2,0xE3,
                 0xE4,0xE5,0xE6,0xE7,
                 0xE8,0xE9,0xEA,0xEB,
