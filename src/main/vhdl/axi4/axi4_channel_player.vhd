@@ -3051,7 +3051,9 @@ begin
                     proc_name => proc_name, 
                     signals   => out_signals.B
                 );
-                wait_until_xfer_w (core, proc_name, timeout, '1');
+                if (not (WVALID_I = '1' and WREADY_I = '1' and WLAST_I = '1')) then
+                    wait_until_xfer_w (core, proc_name, timeout, '1');
+                end if;
                 execute_output(out_signals);
                 wait_until_xfer_b (core, proc_name, timeout);
                 out_signals.B := AXI4_B_CHANNEL_SIGNAL_NULL;
