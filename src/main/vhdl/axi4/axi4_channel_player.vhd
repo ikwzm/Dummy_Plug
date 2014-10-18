@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_channel_player.vhd
 --!     @brief   AXI4 A/R/W/B Channel Dummy Plug Player.
---!     @version 1.5.3
---!     @date    2014/8/5
+--!     @version 1.5.4
+--!     @date    2014/10/18
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -2944,12 +2944,14 @@ begin
             -----------------------------------------------------------------------
             procedure execute_transaction_slave_read_data is
                 constant  proc_name  : string := "EXECUTE_TRANSACTION_SLAVE_READ_DATA";
+                variable  arid       : std_logic_vector(ARID_I'range);
             begin
                 REPORT_DEBUG(core, proc_name, "BEGIN");
                 EXECUTE_SKIP(core, stream);
                 local_sync(core, SYNC_TRANS_REQ, SYNC_TRANS_ACK);
                 get_transaction_info(proc_name, WIDTH.RDATA);
                 wait_until_xfer_ar(core, proc_name, timeout);
+                arid := ARID_I;
                 for i in 1 to burst_len loop
                     generate_r_channel_signals(
                         proc_name => proc_name, 
@@ -2957,6 +2959,9 @@ begin
                         default   => '0',
                         signals   => out_signals.R
                     );
+                    if (out_signals.R.ID(arid'range) = AXI4_TRANSACTION_SIGNAL_DONTCARE.ID(arid'range)) then
+                        out_signals.R.ID(arid'range) := arid;
+                    end if;
                     execute_output(out_signals);
                     wait_until_xfer_r(core, proc_name, timeout, '0');
                 end loop;
@@ -3040,6 +3045,7 @@ begin
             -----------------------------------------------------------------------
             procedure execute_transaction_slave_write_resp is
                 constant  proc_name  : string := "EXECUTE_TRANSACTION_SLAVE_WRITE_RESP";
+                variable  awid       : std_logic_vector(AWID_I'range);
             begin
                 REPORT_DEBUG(core, proc_name, "BEGIN");
                 EXECUTE_SKIP(core, stream);
@@ -3047,10 +3053,14 @@ begin
                 get_transaction_info(proc_name, WIDTH.WDATA);
                 timeout := 10000;
                 wait_until_xfer_aw(core, proc_name, timeout);
+                awid := AWID_I;
                 generate_b_channel_signals(
                     proc_name => proc_name, 
                     signals   => out_signals.B
                 );
+                if (out_signals.B.ID(awid'range) = AXI4_TRANSACTION_SIGNAL_DONTCARE.ID(awid'range)) then
+                    out_signals.B.ID(awid'range) := awid;
+                end if;
                 if (not (WVALID_I = '1' and WREADY_I = '1' and WLAST_I = '1')) then
                     wait_until_xfer_w (core, proc_name, timeout, '1');
                 end if;
