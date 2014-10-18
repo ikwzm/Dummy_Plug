@@ -592,6 +592,30 @@
   - SYNC  : {PORT: 0, TIMEOUT: 1000}
 #----------------------------------------------------------------------------------
 #
+# DUMMY-PLUG AXI4 TEST BENCH SCENARIO 1.1.7
+#
+#----------------------------------------------------------------------------------
+---
+- MARCHAL:
+  - SAY: >
+       DUMMY-PLUG AXI4 TEST BENCH SCENARIO 1.1.7 START
+  - SYNC  : {PORT: 0, TIMEOUT: 1000}
+  - SAY: >
+       DUMMY-PLUG AXI4 TEST BENCH SCENARIO 1.1.7 DONE
+- MASTER:
+  - WRITE : {ADDR: 0x0000FC83, SIZE: 4, BURST: INCR, ID: 5, DATA: [0x01,0x02,0x03,0x04,0x05,0x06], RESP: OKAY}
+  - SYNC  : {PORT: 0, TIMEOUT: 1000}
+- SLAVE:
+  - WRITE : {ADDR: 0x0000FC83, SIZE: 4, BURST: INCR,        DATA: [0x01,0x02,0x03,0x04,0x05,0x06], RESP: OKAY}
+  - SYNC  : {PORT: 0, TIMEOUT: 1000}
+- MASTER:
+  - READ  : {ADDR: 0x0000FC83, SIZE: 4, BURST: INCR, ID: 6, DATA: [0x01,0x02,0x03,0x04,0x05,0x06], RESP: OKAY}
+  - SYNC  : {PORT: 0, TIMEOUT: 1000}
+- SLAVE:
+  - READ  : {ADDR: 0x0000FC83, SIZE: 4, BURST: INCR,        DATA: [0x01,0x02,0x03,0x04,0x05,0x06], RESP: OKAY}
+  - SYNC  : {PORT: 0, TIMEOUT: 1000}
+#----------------------------------------------------------------------------------
+#
 # DUMMY-PLUG AXI4 TEST BENCH SCENARIO 1.1 ALL DONE
 #
 #----------------------------------------------------------------------------------
