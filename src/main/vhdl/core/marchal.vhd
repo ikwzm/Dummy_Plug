@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    marchal.vhd
 --!     @brief   Marchal Dummy Plug Player.
---!     @version 1.5.0
---!     @date    2013/5/31
+--!     @version 1.5.4
+--!     @date    2015/2/4
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012,2013 Ichiro Kawazome
+--      Copyright (C) 2012-2015 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -229,7 +229,7 @@ begin
         --! リセット信号の生成.
         ---------------------------------------------------------------------------
         REPORT_STATUS <= core.report_status;
-        sync_req <= (0 => 10, others => 0);
+        sync_req <= (0 => 0, others => -1);
         FINISH   <= '0';
         sync_rst <= '1';
         sync_clr <= '0';
