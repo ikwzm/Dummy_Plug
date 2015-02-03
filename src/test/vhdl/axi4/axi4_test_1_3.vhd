@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    aix4_test_1_3.vhd
 --!     @brief   TEST BENCH No.1.3 for DUMMY_PLUG.AXI4_MODELS
---!     @version 1.5.0
---!     @date    2013/5/31
+--!     @version 1.5.4
+--!     @date    2015/2/4
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012,2013 Ichiro Kawazome
+--      Copyright (C) 2012-2015 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -44,11 +44,12 @@ architecture MODEL of DUMMY_PLUG_AXI4_TEST_1_3 is
     constant NAME            : STRING  := "AXI4_TEST_1_3";
     constant SCENARIO_FILE   : STRING  := "../../../src/test/scenarios/axi4/axi4_test_1_3.snr";
     constant EXP_REPORT      : REPORT_STATUS_TYPE := (
-        valid          => TRUE,
-        error_count    =>  0,
-        mismatch_count =>  0,
-        warning_count  =>  0,
-        failure_count  =>  0
+        valid            => TRUE,
+        error_count      =>  0,
+        mismatch_count   =>  0,
+        warning_count    =>  0,
+        failure_count    =>  0,
+        read_error_count =>  0
     );
     component DUMMY_PLUG_AXI4_TEST_1
         generic (
