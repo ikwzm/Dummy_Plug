@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    aix4_test_1.vhd
 --!     @brief   TEST BENCH No.1 for DUMMY_PLUG.AXI4_MODELS
---!     @version 1.5.0
---!     @date    2013/5/29
+--!     @version 1.5.4
+--!     @date    2015/2/4
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012,2013 Ichiro Kawazome
+--      Copyright (C) 2012-2015 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -506,10 +506,11 @@ begin
         rv(1) := M_REPORT;
         rv(2) := S_REPORT;
         rep := MARGE_REPORT_STATUS(rv);
-        assert (rep.error_count    = EXP_REPORT.error_count   ) and
-               (rep.mismatch_count = EXP_REPORT.mismatch_count) and
-               (rep.warning_count  = EXP_REPORT.warning_count ) and
-               (rep.failure_count  = EXP_REPORT.failure_count )
+        assert (rep.error_count      = EXP_REPORT.error_count     ) and
+               (rep.mismatch_count   = EXP_REPORT.mismatch_count  ) and
+               (rep.warning_count    = EXP_REPORT.warning_count   ) and
+               (rep.failure_count    = EXP_REPORT.failure_count   ) and
+               (rep.read_error_count = EXP_REPORT.read_error_count)
         report "REPORT Mismatch !!" severity FAILURE;
         assert FALSE report "Simulation complete." severity FAILURE;
         wait;

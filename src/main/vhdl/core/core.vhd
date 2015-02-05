@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    core.vhd
 --!     @brief   Core Package for Dummy Plug.
---!     @version 1.5.0
---!     @date    2013/5/31
+--!     @version 1.5.4
+--!     @date    2015/2/4
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -86,6 +86,7 @@ package CORE is
                   mismatch_count      : integer;
                   error_count         : integer;
                   failure_count       : integer;
+                  read_error_count    : integer;
     end record;
     -------------------------------------------------------------------------------
     --! @brief ステータスレポートタイプのNULL定数.
@@ -95,7 +96,8 @@ package CORE is
                   warning_count       => 0,
                   mismatch_count      => 0,
                   error_count         => 0,
-                  failure_count       => 0
+                  failure_count       => 0,
+                  read_error_count    => 0
     );
     -------------------------------------------------------------------------------
     --! @brief ステータスレポート配列タイプ.
@@ -1652,6 +1654,7 @@ package body CORE is
     begin
         REPORT_READ_ERROR(SELF.vocal, string'("Undefined Scalar Operation(") & OP_WORD & ")");
         DEBUG_DUMP(SELF.reader);
+        SELF.report_status.read_error_count := SELF.report_status.read_error_count + 1;
     end procedure;
     ------------------------------------------------------------------------------
     --! @brief 不正なMAPオペレーションを警告して読み飛ばす.
@@ -1671,6 +1674,7 @@ package body CORE is
         DEBUG_DUMP(SELF.reader);
         SEEK_EVENT(SELF, STREAM, next_event);
         SKIP_EVENT(SELF, STREAM, next_event);
+        SELF.report_status.read_error_count := SELF.report_status.read_error_count + 1;
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief 致命的エラーによる中断.
@@ -1707,6 +1711,7 @@ package body CORE is
     begin
         REPORT_READ_ERROR(SELF.vocal, string'("Read Error ") & MESSAGE);
         DEBUG_DUMP(SELF.reader);
+        SELF.report_status.read_error_count := SELF.report_status.read_error_count + 1;
         assert FALSE report string'("Read Error ") & MESSAGE severity FAILURE;
     end procedure;
     -------------------------------------------------------------------------------
@@ -1720,6 +1725,7 @@ package body CORE is
     begin
         REPORT_READ_ERROR(SELF.vocal, NAME & " Read Error " & MESSAGE);
         DEBUG_DUMP(SELF.reader);
+        SELF.report_status.read_error_count := SELF.report_status.read_error_count + 1;
         assert FALSE report NAME & " Read Error " & MESSAGE severity FAILURE;
     end procedure;
     -------------------------------------------------------------------------------
@@ -1734,11 +1740,12 @@ package body CORE is
         status := REPORT_STATUS_NULL;
         for i in REPORTS'range loop
             if (REPORTS(i).valid) then
-                status.valid          := TRUE;
-                status.warning_count  := status.warning_count  + REPORTS(i).warning_count;
-                status.mismatch_count := status.mismatch_count + REPORTS(i).mismatch_count;
-                status.error_count    := status.error_count    + REPORTS(i).error_count;
-                status.failure_count  := status.failure_count  + REPORTS(i).failure_count;
+                status.valid            := TRUE;
+                status.warning_count    := status.warning_count    + REPORTS(i).warning_count;
+                status.mismatch_count   := status.mismatch_count   + REPORTS(i).mismatch_count;
+                status.error_count      := status.error_count      + REPORTS(i).error_count;
+                status.failure_count    := status.failure_count    + REPORTS(i).failure_count;
+                status.read_error_count := status.read_error_count + REPORTS(i).read_error_count;
             end if;
         end loop;
         return status;

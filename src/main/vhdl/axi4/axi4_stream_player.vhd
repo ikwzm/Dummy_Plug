@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_stream_player.vhd
 --!     @brief   AXI4-Stream Dummy Plug Player.
---!     @version 1.5.2
---!     @date    2014/3/1
+--!     @version 1.5.4
+--!     @date    2015/2/4
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012-2014 Ichiro Kawazome
+--      Copyright (C) 2012-2015 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -1104,7 +1104,7 @@ begin
         ---------------------------------------------------------------------------
         -- 信号の初期化
         ---------------------------------------------------------------------------
-        SYNC_REQ       <= (0 =>10, others => 0);
+        SYNC_REQ       <= (0 =>0, others => -1);
         FINISH         <= '0';
         REPORT_STATUS  <= core.report_status;
         if (MASTER) then

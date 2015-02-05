@@ -2,11 +2,11 @@
 --!     @file    axi4_channel_player.vhd
 --!     @brief   AXI4 A/R/W/B Channel Dummy Plug Player.
 --!     @version 1.5.4
---!     @date    2014/10/18
+--!     @date    2015/2/4
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012-2014 Ichiro Kawazome
+--      Copyright (C) 2012-2015 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -1402,6 +1402,12 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
                         when AXI4_CHANNEL_B  => return READ_BREADY;
                         when others          => null;
                     end case;
+                when KEY_AUSER      =>
+                    case channel is
+                        when AXI4_CHANNEL_AR => return READ_ARUSER;
+                        when AXI4_CHANNEL_AW => return READ_AWUSER;
+                        when others          => null;
+                    end case;
                 when KEY_DATA       =>
                     case channel is
                         when AXI4_CHANNEL_R  => return READ_RDATA;
@@ -2175,9 +2181,9 @@ begin
             -----------------------------------------------------------------------
             -- 信号の初期化
             -----------------------------------------------------------------------
-            SYNC_REQ       <= (0 =>10, others => 0);
-            SYNC_LOCAL_REQ <= (        others => 0);
-            SYNC_TRANS_REQ <= (        others => 0);
+            SYNC_REQ       <= (0 => 0, others => -1);
+            SYNC_LOCAL_REQ <= (        others =>  0);
+            SYNC_TRANS_REQ <= (        others =>  0);
             FINISH         <= '0';
             REPORT_STATUS  <= core.report_status;
             -----------------------------------------------------------------------
