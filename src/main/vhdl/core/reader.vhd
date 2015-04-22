@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    reader.vhd
 --!     @brief   Package for Dummy Plug Scenario Reader.
---!     @version 1.5.0
---!     @date    2013/5/31
+--!     @version 1.5.5
+--!     @date    2015/4/22
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012,2013 Ichiro Kawazome
+--      Copyright (C) 2012-2015 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -3316,33 +3316,72 @@ package body  READER is
         end case;
     end function;
     -------------------------------------------------------------------------------
+    --! @brief 状態に対応した文字列.
+    -------------------------------------------------------------------------------
+    constant  STRING_STATE_NONE                   : string := "STATE_NONE"                  ;
+    constant  STRING_STATE_DOCUMENT               : string := "STATE_DOCUMENT"              ;
+    constant  STRING_STATE_BLOCK_SEQ_VAL          : string := "STATE_BLOCK_SEQ_VAL"         ;
+    constant  STRING_STATE_BLOCK_SEQ_END          : string := "STATE_BLOCK_SEQ_END"         ;
+    constant  STRING_STATE_BLOCK_MAP_IMPLICIT_KEY : string := "STATE_BLOCK_MAP_IMPLICIT_KEY";
+    constant  STRING_STATE_BLOCK_MAP_IMPLICIT_SEP : string := "STATE_BLOCK_MAP_IMPLICIT_SEP";
+    constant  STRING_STATE_BLOCK_MAP_IMPLICIT_VAL : string := "STATE_BLOCK_MAP_IMPLICIT_VAL";
+    constant  STRING_STATE_BLOCK_MAP_IMPLICIT_END : string := "STATE_BLOCK_MAP_IMPLICIT_END";
+    constant  STRING_STATE_BLOCK_MAP_EXPLICIT_KEY : string := "STATE_BLOCK_MAP_EXPLICIT_KEY";
+    constant  STRING_STATE_BLOCK_MAP_EXPLICIT_SEP : string := "STATE_BLOCK_MAP_EXPLICIT_SEP";
+    constant  STRING_STATE_BLOCK_MAP_EXPLICIT_VAL : string := "STATE_BLOCK_MAP_EXPLICIT_VAL";
+    constant  STRING_STATE_BLOCK_MAP_EXPLICIT_END : string := "STATE_BLOCK_MAP_EXPLICIT_END";
+    constant  STRING_STATE_FLOW_SEQ_VAL           : string := "STATE_FLOW_SEQ_VAL"          ;
+    constant  STRING_STATE_FLOW_SEQ_END           : string := "STATE_FLOW_SEQ_END"          ;
+    constant  STRING_STATE_FLOW_MAP_KEY           : string := "STATE_FLOW_MAP_KEY"          ;
+    constant  STRING_STATE_FLOW_MAP_VAL           : string := "STATE_FLOW_MAP_VAL"          ;
+    constant  STRING_STATE_FLOW_MAP_SEP           : string := "STATE_FLOW_MAP_SEP"          ;
+    constant  STRING_STATE_FLOW_MAP_END           : string := "STATE_FLOW_MAP_END"          ;
+    constant  STRING_STATE_ERROR                  : string := "STATE_ERROR"                 ;
+    -------------------------------------------------------------------------------
     --! @brief 状態を文字列に変換する関数.
     -------------------------------------------------------------------------------
-    function struct_state_to_string(state: STATE_TYPE;indent:INDENT_TYPE;mapkey:MAPKEY_MODE) return string
+    function  struct_state_to_string(state: STATE_TYPE) return string
     is
-        function i return string is begin return INTEGER_TO_STRING(indent); end function;
-        function k return string is begin return INTEGER_TO_STRING(mapkey); end function;
     begin
         case(state) is
-            when STATE_NONE                   => return "STATE_NONE("                   & i & "," & k & ")";
-            when STATE_DOCUMENT               => return "STATE_DOCUMENT("               & i & "," & k & ")";
-            when STATE_BLOCK_SEQ_VAL          => return "STATE_BLOCK_SEQ_VAL("          & i & "," & k & ")";
-            when STATE_BLOCK_SEQ_END          => return "STATE_BLOCK_SEQ_END("          & i & "," & k & ")";
-            when STATE_BLOCK_MAP_IMPLICIT_KEY => return "STATE_BLOCK_MAP_IMPLICIT_KEY(" & i & "," & k & ")";
-            when STATE_BLOCK_MAP_IMPLICIT_SEP => return "STATE_BLOCK_MAP_IMPLICIT_SEP(" & i & "," & k & ")";
-            when STATE_BLOCK_MAP_IMPLICIT_VAL => return "STATE_BLOCK_MAP_IMPLICIT_VAL(" & i & "," & k & ")";
-            when STATE_BLOCK_MAP_IMPLICIT_END => return "STATE_BLOCK_MAP_IMPLICIT_END(" & i & "," & k & ")";
-            when STATE_BLOCK_MAP_EXPLICIT_KEY => return "STATE_BLOCK_MAP_EXPLICIT_KEY(" & i & "," & k & ")";
-            when STATE_BLOCK_MAP_EXPLICIT_SEP => return "STATE_BLOCK_MAP_EXPLICIT_SEP(" & i & "," & k & ")";
-            when STATE_BLOCK_MAP_EXPLICIT_VAL => return "STATE_BLOCK_MAP_EXPLICIT_VAL(" & i & "," & k & ")";
-            when STATE_BLOCK_MAP_EXPLICIT_END => return "STATE_BLOCK_MAP_EXPLICIT_END(" & i & "," & k & ")";
-            when STATE_FLOW_SEQ_VAL           => return "STATE_FLOW_SEQ_VAL("           & i & "," & k & ")";
-            when STATE_FLOW_SEQ_END           => return "STATE_FLOW_SEQ_END("           & i & "," & k & ")";
-            when STATE_FLOW_MAP_KEY           => return "STATE_FLOW_MAP_KEY("           & i & "," & k & ")";
-            when STATE_FLOW_MAP_VAL           => return "STATE_FLOW_MAP_VAL("           & i & "," & k & ")";
-            when STATE_FLOW_MAP_SEP           => return "STATE_FLOW_MAP_SEP("           & i & "," & k & ")";
-            when STATE_FLOW_MAP_END           => return "STATE_FLOW_MAP_END("           & i & "," & k & ")";
-            when others                       => return "STATE_ERROR("                  & i & "," & k & ")";
+            when STATE_NONE                   => return STRING_STATE_NONE                   ;
+            when STATE_DOCUMENT               => return STRING_STATE_DOCUMENT               ;
+            when STATE_BLOCK_SEQ_VAL          => return STRING_STATE_BLOCK_SEQ_VAL          ;
+            when STATE_BLOCK_SEQ_END          => return STRING_STATE_BLOCK_SEQ_END          ;
+            when STATE_BLOCK_MAP_IMPLICIT_KEY => return STRING_STATE_BLOCK_MAP_IMPLICIT_KEY ;
+            when STATE_BLOCK_MAP_IMPLICIT_SEP => return STRING_STATE_BLOCK_MAP_IMPLICIT_SEP ;
+            when STATE_BLOCK_MAP_IMPLICIT_VAL => return STRING_STATE_BLOCK_MAP_IMPLICIT_VAL ;
+            when STATE_BLOCK_MAP_IMPLICIT_END => return STRING_STATE_BLOCK_MAP_IMPLICIT_END ;
+            when STATE_BLOCK_MAP_EXPLICIT_KEY => return STRING_STATE_BLOCK_MAP_EXPLICIT_KEY ;
+            when STATE_BLOCK_MAP_EXPLICIT_SEP => return STRING_STATE_BLOCK_MAP_EXPLICIT_SEP ;
+            when STATE_BLOCK_MAP_EXPLICIT_VAL => return STRING_STATE_BLOCK_MAP_EXPLICIT_VAL ;
+            when STATE_BLOCK_MAP_EXPLICIT_END => return STRING_STATE_BLOCK_MAP_EXPLICIT_END ;
+            when STATE_FLOW_SEQ_VAL           => return STRING_STATE_FLOW_SEQ_VAL           ;
+            when STATE_FLOW_SEQ_END           => return STRING_STATE_FLOW_SEQ_END           ;
+            when STATE_FLOW_MAP_KEY           => return STRING_STATE_FLOW_MAP_KEY           ;
+            when STATE_FLOW_MAP_VAL           => return STRING_STATE_FLOW_MAP_VAL           ;
+            when STATE_FLOW_MAP_SEP           => return STRING_STATE_FLOW_MAP_SEP           ;
+            when STATE_FLOW_MAP_END           => return STRING_STATE_FLOW_MAP_END           ;
+            when others                       => return STRING_STATE_ERROR                  ;
+        end case;
+    end function;
+    -------------------------------------------------------------------------------
+    --! @brief MAPKEY_MODE に対応した文字列.
+    -------------------------------------------------------------------------------
+    constant  STRING_MAPKEY_NULL       : string := "MAPKEY_NULL" ;
+    constant  STRING_MAPKEY_FOUND      : string := "MAPKEY_FOUND";
+    constant  STRING_MAPKEY_READ       : string := "MAPKEY_READ" ;
+    constant  STRING_MAPKEY_ERROR      : string := "MAPKEY_ERROR";
+    -------------------------------------------------------------------------------
+    --! @brief MAPKEY_MODE を文字列に変換する関数.
+    -------------------------------------------------------------------------------
+    function  struct_mapkey_to_string(mapkey: MAPKEY_MODE) return string is
+    begin
+        case (mapkey) is
+            when MAPKEY_NULL  => return STRING_MAPKEY_NULL ;
+            when MAPKEY_FOUND => return STRING_MAPKEY_FOUND;
+            when MAPKEY_READ  => return STRING_MAPKEY_READ ;
+            when others       => return STRING_MAPKEY_ERROR;
         end case;
     end function;
     -------------------------------------------------------------------------------
@@ -3379,19 +3418,26 @@ package body  READER is
         variable  indent        :       INDENT_TYPE;
         variable  mapkey        :       MAPKEY_MODE;
     begin
-        get_struct_state(SELF, state, indent, mapkey);
-        WRITE(line, "   name       : " & SELF.name     (SELF.name'range)     );
-        WRITELINE(OUTPUT, line);
-        WRITE(line, "   stream_name: " & SELF.stream_name(SELF.stream_name'range) &
-                                   "(" & INTEGER_TO_STRING(SELF.line_num) &
-                                   "," & INTEGER_TO_STRING(SELF.text_pos) &
-                                   "," & INTEGER_TO_STRING(SELF.text_end) & ")");
-        WRITELINE(OUTPUT, line);
-        WRITE(line, "   curr_state : " & struct_state_to_string(state,indent,mapkey));
-        WRITELINE(OUTPUT, line);
+        if TRUE then
+            get_struct_state(SELF, state, indent, mapkey);
+            WRITE(line, "   name       : " & SELF.name(SELF.name'range));
+            WRITELINE(OUTPUT, line);
+            WRITE(line, "   stream_name: " & SELF.stream_name(SELF.stream_name'range) &
+                                       "(" & INTEGER_TO_STRING(SELF.line_num) &
+                                       "," & INTEGER_TO_STRING(SELF.text_pos) &
+                                       "," & INTEGER_TO_STRING(SELF.text_end) & ")");
+            WRITELINE(OUTPUT, line);
+            WRITE(line, "   curr_state : " & struct_state_to_string(state)    &
+                                       "(" & INTEGER_TO_STRING(indent)        &
+                                       "," & struct_mapkey_to_string(mapkey)  & ")");
+                                        
+            WRITELINE(OUTPUT, line);
+        end if;
         for i in SELF.state_top-1 downto SELF.state_stack'low loop
             unpack_struct_state_value(SELF.state_stack(i),state,indent,mapkey);
-            WRITE(line, "   prev_state : " & struct_state_to_string(state,indent,mapkey));
+            WRITE(line, "   prev_state : " & struct_state_to_string(state)    &
+                                       "(" & INTEGER_TO_STRING(indent)        &
+                                       "," & struct_mapkey_to_string(mapkey)  & ")");
             WRITELINE(OUTPUT, line);
         end loop;
         if (SELF.text_line = null) then
