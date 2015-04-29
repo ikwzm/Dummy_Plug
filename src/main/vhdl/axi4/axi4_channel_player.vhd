@@ -2160,6 +2160,58 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
         end case;
         REPORT_DEBUG(core, proc_name, "END");
     end procedure;
+    -------------------------------------------------------------------------------
+    --! @brief  WAITオペレーション. 指定された条件まで待機.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    core        コア変数.
+    --! @param    stream      入力ストリーム.
+    -------------------------------------------------------------------------------
+    procedure execute_skip_sync_io(
+        variable  core           : inout CORE_TYPE;
+        file      stream         :       TEXT;
+                  sync_io        : inout boolean
+    ) is
+        constant  proc_name      :       STRING := "EXECUTE_SKIP_SYNC_IO";
+        variable  next_event     :       EVENT_TYPE;
+    begin
+        REPORT_DEBUG(core, proc_name, "BEGIN");
+        sync_io   := DEFAULT_SYNC_IO;
+        SEEK_EVENT(core, stream, next_event);
+        case next_event is
+            when EVENT_SCALAR =>
+                SKIP_EVENT(core, stream, EVENT_SCALAR);
+            when EVENT_MAP_BEGIN =>
+                READ_EVENT(core, stream, EVENT_MAP_BEGIN);
+                MAP_READ_LOOP: loop
+                    REPORT_DEBUG(core, proc_name, "MAP_READ_LOOP");
+                    MAP_READ_PREPARE_FOR_NEXT(
+                        SELF       => core            ,  -- I/O:
+                        STREAM     => stream          ,  -- I/O:
+                        EVENT      => next_event         -- I/O:
+                    );
+                    MAP_READ_BOOLEAN(
+                        SELF       => core            ,  -- I/O:
+                        STREAM     => stream          ,  -- I/O:
+                        KEY        => "SYNC"          ,  -- In :
+                        VAL        => sync_io         ,  -- I/O:
+                        EVENT      => next_event         -- I/O:
+                    );
+                    case next_event is
+                        when EVENT_SCALAR  =>
+                            SEEK_EVENT(core, STREAM, next_event);
+                            SKIP_EVENT(core, STREAM, next_event);
+                        when EVENT_MAP_END =>
+                            exit MAP_READ_LOOP;
+                        when others        =>
+                            READ_ERROR(core, proc_name, "need EVENT_MAP_END but " &
+                                       EVENT_TO_STRING(next_event));
+                    end case;
+                end loop;
+            when others =>
+                READ_ERROR(core, proc_name, "SEEK_EVENT NG");
+        end case;
+        REPORT_DEBUG(core, proc_name, "END");
+    end procedure;
 begin 
     -------------------------------------------------------------------------------
     -- メインチャネル.
@@ -2258,16 +2310,22 @@ begin
                             when KEY_OUT    => EXECUTE_OUT   (core, stream, gpo_signals, GPO);
                             when KEY_SYNC   => execute_sync  (core, stream, operation);
                             when KEY_WAIT   => execute_wait  (core, stream, sync_io);
-                                               if (sync_io) then
-                                                   local_sync(core, SYNC_LOCAL_REQ, SYNC_LOCAL_ACK);
-                                               end if;
+                                                   if (sync_io) then
+                                                       local_sync(core, SYNC_LOCAL_REQ, SYNC_LOCAL_ACK);
+                                                   end if;
                             when KEY_READ   => if (READ_ENABLE ) then
-                                                   EXECUTE_SKIP(core, stream);
+                                                   execute_skip_sync_io(core, stream, sync_io);
+                                                   if (sync_io) then
+                                                       local_sync(core, SYNC_LOCAL_REQ, SYNC_LOCAL_ACK);
+                                                   end if;
                                                else
                                                    EXECUTE_UNDEFINED_MAP_KEY(core, stream, keyword);
                                                end if;
                             when KEY_WRITE  => if (WRITE_ENABLE) then
-                                                   EXECUTE_SKIP(core, stream);
+                                                   execute_skip_sync_io(core, stream, sync_io);
+                                                   if (sync_io) then
+                                                       local_sync(core, SYNC_LOCAL_REQ, SYNC_LOCAL_ACK);
+                                                   end if;
                                                else
                                                    EXECUTE_UNDEFINED_MAP_KEY(core, stream, keyword);
                                                end if;
@@ -2349,7 +2407,8 @@ begin
             --! @param    timeout    タイムアウトのクロック数.
             -----------------------------------------------------------------------
             procedure read_transaction_info(
-                          proc_name  : in     string
+                          proc_name  : in     string;
+                          sync_io    : inout  boolean
             ) is
                 variable  next_event : EVENT_TYPE;
                 variable  addr_width : integer;
@@ -2357,6 +2416,7 @@ begin
                 variable  duser_width: integer;
                 variable  buser_width: integer;
             begin
+                sync_io   := DEFAULT_SYNC_IO;
                 case CHANNEL is
                     when AXI4_CHANNEL_AR =>
                         addr_width  := WIDTH.ARADDR;
@@ -2391,6 +2451,13 @@ begin
                                 id_width   => WIDTH.ID        ,  -- In :
                                 trans      => tran_info       ,  -- I/O:
                                 event      => next_event         -- I/O:
+                            );
+                            MAP_READ_BOOLEAN(
+                                SELF       => core            ,  -- I/O:
+                                STREAM     => stream          ,  -- I/O:
+                                KEY        => "SYNC"          ,  -- In :
+                                VAL        => sync_io         ,  -- I/O:
+                                EVENT      => next_event         -- I/O:
                             );
                             case next_event is
                                 when EVENT_SCALAR  =>
@@ -2431,6 +2498,7 @@ begin
             -----------------------------------------------------------------------
             procedure execute_transaction_master_read_addr is
                 constant  proc_name  : string := "EXECUTE_TRANSACTION_MASTER_READ_ADDR";
+                variable  sync_io    : boolean;
             begin
                 REPORT_DEBUG(core, proc_name, "BEGIN");
                 tran_info         := AXI4_TRANSACTION_SIGNAL_NULL;
@@ -2439,7 +2507,7 @@ begin
                 tran_info.DUSER   := (others => '-');
                 tran_info.VALID   := '1';
                 tran_info.TIMEOUT := DEFAULT_WAIT_TIMEOUT;
-                read_transaction_info(proc_name);
+                read_transaction_info(proc_name, sync_io);
                 local_sync(core, SYNC_TRANS_REQ, SYNC_TRANS_ACK);
                 TRAN_O <= tran_info;
                 out_signals.AR.ADDR(ARADDR_O'range) := tran_info.ADDR (ARADDR_O'range);
@@ -2461,6 +2529,9 @@ begin
                 wait_until_xfer_ar(core, proc_name, tran_info.TIMEOUT);
                 out_signals.AR                      := AXI4_A_CHANNEL_SIGNAL_NULL;
                 execute_output(out_signals);
+                if (sync_io) then
+                    local_sync(core, SYNC_LOCAL_REQ, SYNC_LOCAL_ACK);
+                end if;
                 REPORT_DEBUG(core, proc_name, "END");
             end procedure;
             -----------------------------------------------------------------------
@@ -2468,6 +2539,7 @@ begin
             -----------------------------------------------------------------------
             procedure execute_transaction_master_write_addr is
                 constant  proc_name  : string := "EXECUTE_TRANSACTION_MASTER_WRITE_ADDR";
+                variable  sync_io    : boolean;
             begin
                 REPORT_DEBUG(core, proc_name, "BEGIN");
                 tran_info         := AXI4_TRANSACTION_SIGNAL_NULL;
@@ -2476,7 +2548,7 @@ begin
                 tran_info.BUSER   := (others => '-');
                 tran_info.VALID   := '1';
                 tran_info.TIMEOUT := DEFAULT_WAIT_TIMEOUT;
-                read_transaction_info(proc_name);
+                read_transaction_info(proc_name, sync_io);
                 local_sync(core, SYNC_TRANS_REQ, SYNC_TRANS_ACK);
                 TRAN_O <= tran_info;
                 out_signals.AW.ADDR(AWADDR_O'range) := tran_info.ADDR (AWADDR_O'range);
@@ -2498,6 +2570,9 @@ begin
                 wait_until_xfer_aw(core, proc_name, tran_info.TIMEOUT);
                 out_signals.AW                      := AXI4_A_CHANNEL_SIGNAL_NULL;
                 execute_output(out_signals);
+                if (sync_io) then
+                    local_sync(core, SYNC_LOCAL_REQ, SYNC_LOCAL_ACK);
+                end if;
                 REPORT_DEBUG(core, proc_name, "END");
             end procedure;
             -----------------------------------------------------------------------
@@ -2506,6 +2581,7 @@ begin
             procedure execute_transaction_slave_read_addr is
                 constant  proc_name  : string := "EXECUTE_TRANSACTION_SLAVE_READ_ADDR";
                 variable  match      : boolean;
+                variable  sync_io    : boolean;
             begin
                 REPORT_DEBUG(core, proc_name, "BEGIN");
                 tran_info         := AXI4_TRANSACTION_SIGNAL_DONTCARE;
@@ -2513,7 +2589,7 @@ begin
                 tran_info.BURST   := AXI4_ABURST_INCR;
                 tran_info.VALID   := '1';
                 tran_info.TIMEOUT := DEFAULT_WAIT_TIMEOUT;
-                read_transaction_info(proc_name);
+                read_transaction_info(proc_name, sync_io);
                 local_sync(core, SYNC_TRANS_REQ, SYNC_TRANS_ACK);
                 TRAN_O       <= tran_info;
                 ARREADY_O    <= '1';
@@ -2536,6 +2612,9 @@ begin
                 chk_a_signals.VALID                := '1';
                 chk_a_signals.READY                := '1';
                 match_axi4_ar_channel(core, chk_a_signals, match);
+                if (sync_io) then
+                    local_sync(core, SYNC_LOCAL_REQ, SYNC_LOCAL_ACK);
+                end if;
                 REPORT_DEBUG(core, proc_name, "END");
             end procedure;
             -----------------------------------------------------------------------
@@ -2544,6 +2623,7 @@ begin
             procedure execute_transaction_slave_write_addr is
                 constant  proc_name  : string := "EXECUTE_TRANSACTION_SLAVE_WRITE_ADDR";
                 variable  match      : boolean;
+                variable  sync_io    : boolean;
             begin
                 REPORT_DEBUG(core, proc_name, "BEGIN");
                 tran_info         := AXI4_TRANSACTION_SIGNAL_DONTCARE;
@@ -2552,7 +2632,7 @@ begin
                 tran_info.BUSER   := (others => '0');
                 tran_info.VALID   := '1';
                 tran_info.TIMEOUT := DEFAULT_WAIT_TIMEOUT;
-                read_transaction_info(proc_name);
+                read_transaction_info(proc_name, sync_io);
                 local_sync(core, SYNC_TRANS_REQ, SYNC_TRANS_ACK);
                 TRAN_O       <= tran_info;
                 AWREADY_O    <= '1';
@@ -2575,7 +2655,21 @@ begin
                 chk_a_signals.VALID                := '1';
                 chk_a_signals.READY                := '1';
                 match_axi4_aw_channel(core, chk_a_signals, match);
+                if (sync_io) then
+                    local_sync(core, SYNC_LOCAL_REQ, SYNC_LOCAL_ACK);
+                end if;
                 REPORT_DEBUG(core, proc_name, "END");
+            end procedure;
+            -----------------------------------------------------------------------
+            --! @brief 関係無いトランザクションを実行するサブプログラム.
+            -----------------------------------------------------------------------
+            procedure execute_dummy_operation is
+                variable  sync_io    : boolean;
+            begin
+                execute_skip_sync_io(core, stream, sync_io);
+                if (sync_io) then
+                    local_sync(core, SYNC_LOCAL_REQ, SYNC_LOCAL_ACK);
+                end if;
             end procedure;
             -----------------------------------------------------------------------
             --! @brief チャネルオペレーション(SCALAR)実行サブプログラム.
@@ -2703,10 +2797,15 @@ begin
                             execute_channel_operation;
                         elsif (keyword = KEY_REPORT ) then
                             EXECUTE_REPORT(core, stream);
-                        elsif (keyword = KEY_SYNC   ) or
-                              (keyword = KEY_WAIT   ) then
+                        elsif (keyword = KEY_SYNC   ) then
                             local_sync(core, SYNC_LOCAL_REQ, SYNC_LOCAL_ACK);
                             EXECUTE_SKIP(core, stream);
+                        elsif (keyword = KEY_WAIT   ) or
+                              (CHANNEL = AXI4_CHANNEL_AR and MASTER and WRITE_ENABLE and keyword = KEY_WRITE) or
+                              (CHANNEL = AXI4_CHANNEL_AR and SLAVE  and WRITE_ENABLE and keyword = KEY_WRITE) or
+                              (CHANNEL = AXI4_CHANNEL_AW and MASTER and READ_ENABLE  and keyword = KEY_READ ) or
+                              (CHANNEL = AXI4_CHANNEL_AW and SLAVE  and READ_ENABLE  and keyword = KEY_READ ) then
+                            execute_dummy_operation;
                         elsif (CHANNEL = AXI4_CHANNEL_AR and MASTER and READ_ENABLE  and keyword = KEY_READ ) then
                             execute_transaction_master_read_addr;
                         elsif (CHANNEL = AXI4_CHANNEL_AR and SLAVE  and READ_ENABLE  and keyword = KEY_READ ) then
@@ -2960,9 +3059,10 @@ begin
             -----------------------------------------------------------------------
             procedure execute_transaction_master_read_data is
                 constant  proc_name  : string := "EXECUTE_TRANSACTION_MASTER_READ_DATA";
+                variable  sync_io    : boolean;
             begin
                 REPORT_DEBUG(core, proc_name, "BEGIN");
-                EXECUTE_SKIP(core, stream);
+                execute_skip_sync_io(core, stream, sync_io);
                 local_sync(core, SYNC_TRANS_REQ, SYNC_TRANS_ACK);
                 get_transaction_info(proc_name, WIDTH.RDATA);
                 for i in 1 to burst_len loop
@@ -2977,6 +3077,9 @@ begin
                     match_axi4_r_channel(core, chk_r_signals, match);
                 end loop;
                 RREADY_O <= '0' after OUTPUT_DELAY;
+                if (sync_io) then
+                    local_sync(core, SYNC_LOCAL_REQ, SYNC_LOCAL_ACK);
+                end if;
                 REPORT_DEBUG(core, proc_name, "END");
             end procedure;
             -----------------------------------------------------------------------
@@ -2985,9 +3088,10 @@ begin
             procedure execute_transaction_slave_read_data is
                 constant  proc_name  : string := "EXECUTE_TRANSACTION_SLAVE_READ_DATA";
                 variable  arid       : std_logic_vector(ARID_I'range);
+                variable  sync_io    : boolean;
             begin
                 REPORT_DEBUG(core, proc_name, "BEGIN");
-                EXECUTE_SKIP(core, stream);
+                execute_skip_sync_io(core, stream, sync_io);
                 local_sync(core, SYNC_TRANS_REQ, SYNC_TRANS_ACK);
                 get_transaction_info(proc_name, WIDTH.RDATA);
                 wait_until_xfer_ar(core, proc_name, tran_info.TIMEOUT);
@@ -3007,6 +3111,9 @@ begin
                 end loop;
                 out_signals.R := AXI4_R_CHANNEL_SIGNAL_NULL;
                 execute_output(out_signals);
+                if (sync_io) then
+                    local_sync(core, SYNC_LOCAL_REQ, SYNC_LOCAL_ACK);
+                end if;
                 REPORT_DEBUG(core, proc_name, "END");
             end procedure;
             -----------------------------------------------------------------------
@@ -3014,9 +3121,10 @@ begin
             -----------------------------------------------------------------------
             procedure execute_transaction_master_write_data is
                 constant  proc_name  : string := "EXECUTE_TRANSACTION_MASTER_WRITE_DATA";
+                variable  sync_io    : boolean;
             begin
                 REPORT_DEBUG(core, proc_name, "BEGIN");
-                EXECUTE_SKIP(core, stream);
+                execute_skip_sync_io(core, stream, sync_io);
                 local_sync(core, SYNC_TRANS_REQ, SYNC_TRANS_ACK);
                 get_transaction_info(proc_name, WIDTH.WDATA);
                 for i in 1 to burst_len loop
@@ -3031,6 +3139,9 @@ begin
                 end loop;
                 out_signals.W := AXI4_W_CHANNEL_SIGNAL_NULL;
                 execute_output(out_signals);
+                if (sync_io) then
+                    local_sync(core, SYNC_LOCAL_REQ, SYNC_LOCAL_ACK);
+                end if;
                 REPORT_DEBUG(core, proc_name, "END");
             end procedure;
             -----------------------------------------------------------------------
@@ -3038,9 +3149,10 @@ begin
             -----------------------------------------------------------------------
             procedure execute_transaction_slave_write_data is
                 constant  proc_name  : string := "EXECUTE_TRANSACTION_SLAVE_WRITE_DATA";
+                variable  sync_io    : boolean;
             begin
                 REPORT_DEBUG(core, proc_name, "BEGIN");
-                EXECUTE_SKIP(core, stream);
+                execute_skip_sync_io(core, stream, sync_io);
                 local_sync(core, SYNC_TRANS_REQ, SYNC_TRANS_ACK);
                 get_transaction_info(proc_name, WIDTH.WDATA);
                 for i in 1 to burst_len loop
@@ -3056,6 +3168,9 @@ begin
                     match_axi4_w_channel(core, chk_w_signals, match);
                 end loop;
                 WREADY_O <= '0' after OUTPUT_DELAY;
+                if (sync_io) then
+                    local_sync(core, SYNC_LOCAL_REQ, SYNC_LOCAL_ACK);
+                end if;
                 REPORT_DEBUG(core, proc_name, "END");
             end procedure;
             -----------------------------------------------------------------------
@@ -3063,9 +3178,10 @@ begin
             -----------------------------------------------------------------------
             procedure execute_transaction_master_write_resp is
                 constant  proc_name  : string := "EXECUTE_TRANSACTION_MASTER_WRITE_RESP";
+                variable  sync_io    : boolean;
             begin
                 REPORT_DEBUG(core, proc_name, "BEGIN");
-                EXECUTE_SKIP(core, stream);
+                execute_skip_sync_io(core, stream, sync_io);
                 local_sync(core, SYNC_TRANS_REQ, SYNC_TRANS_ACK);
                 get_transaction_info(proc_name, WIDTH.WDATA);
                 wait_until_xfer_aw(core, proc_name, tran_info.TIMEOUT);
@@ -3077,6 +3193,9 @@ begin
                 wait_until_xfer_b (core, proc_name, tran_info.TIMEOUT);
                 BREADY_O <= '0' after OUTPUT_DELAY;
                 match_axi4_b_channel(core, chk_b_signals, match);
+                if (sync_io) then
+                    local_sync(core, SYNC_LOCAL_REQ, SYNC_LOCAL_ACK);
+                end if;
                 REPORT_DEBUG(core, proc_name, "END");
             end procedure;
             -----------------------------------------------------------------------
@@ -3085,9 +3204,10 @@ begin
             procedure execute_transaction_slave_write_resp is
                 constant  proc_name  : string := "EXECUTE_TRANSACTION_SLAVE_WRITE_RESP";
                 variable  awid       : std_logic_vector(AWID_I'range);
+                variable  sync_io    : boolean;
             begin
                 REPORT_DEBUG(core, proc_name, "BEGIN");
-                EXECUTE_SKIP(core, stream);
+                execute_skip_sync_io(core, stream, sync_io);
                 local_sync(core, SYNC_TRANS_REQ, SYNC_TRANS_ACK);
                 get_transaction_info(proc_name, WIDTH.WDATA);
                 wait_until_xfer_aw(core, proc_name, tran_info.TIMEOUT);
@@ -3106,7 +3226,21 @@ begin
                 wait_until_xfer_b (core, proc_name, tran_info.TIMEOUT);
                 out_signals.B := AXI4_B_CHANNEL_SIGNAL_NULL;
                 execute_output(out_signals);
+                if (sync_io) then
+                    local_sync(core, SYNC_LOCAL_REQ, SYNC_LOCAL_ACK);
+                end if;
                 REPORT_DEBUG(core, proc_name, "END");
+            end procedure;
+            -----------------------------------------------------------------------
+            --! @brief 関係無いトランザクションを実行するサブプログラム.
+            -----------------------------------------------------------------------
+            procedure execute_dummy_operation is
+                variable  sync_io    : boolean;
+            begin
+                execute_skip_sync_io(core, stream, sync_io);
+                if (sync_io) then
+                    local_sync(core, SYNC_LOCAL_REQ, SYNC_LOCAL_ACK);
+                end if;
             end procedure;
             -----------------------------------------------------------------------
             --! @brief チャネルオペレーション(SCALAR)実行サブプログラム.
@@ -3234,10 +3368,17 @@ begin
                             execute_channel_operation;
                         elsif (keyword = KEY_REPORT ) then
                             EXECUTE_REPORT(core, stream);
-                        elsif (keyword = KEY_SYNC   ) or
-                              (keyword = KEY_WAIT   ) then
+                        elsif (keyword = KEY_SYNC   ) then
                             local_sync(core, SYNC_LOCAL_REQ, SYNC_LOCAL_ACK);
                             EXECUTE_SKIP(core, stream);
+                        elsif (keyword = KEY_WAIT   ) or
+                              (CHANNEL = AXI4_CHANNEL_R and MASTER and WRITE_ENABLE and keyword = KEY_WRITE) or
+                              (CHANNEL = AXI4_CHANNEL_R and SLAVE  and WRITE_ENABLE and keyword = KEY_WRITE) or
+                              (CHANNEL = AXI4_CHANNEL_W and MASTER and READ_ENABLE  and keyword = KEY_READ ) or
+                              (CHANNEL = AXI4_CHANNEL_W and SLAVE  and READ_ENABLE  and keyword = KEY_READ ) or
+                              (CHANNEL = AXI4_CHANNEL_B and MASTER and READ_ENABLE  and keyword = KEY_READ ) or
+                              (CHANNEL = AXI4_CHANNEL_B and SLAVE  and READ_ENABLE  and keyword = KEY_READ ) then
+                            execute_dummy_operation;
                         elsif (CHANNEL = AXI4_CHANNEL_R and MASTER and READ_ENABLE  and keyword = KEY_READ ) then
                             execute_transaction_master_read_data;
                         elsif (CHANNEL = AXI4_CHANNEL_R and SLAVE  and READ_ENABLE  and keyword = KEY_READ ) then
