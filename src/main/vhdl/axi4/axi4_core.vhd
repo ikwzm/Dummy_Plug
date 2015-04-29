@@ -404,6 +404,10 @@ package AXI4_CORE is
                               integer :=  1;
             SYNC_LOCAL_WAIT : --! @brief ローカル同期時のウェイトクロック数.
                               integer := 2;
+            DEFAULT_SYNC_IO : --! @brief リードトランザクション/ライトトランザクション
+                              --         ウェイト時に完了を待ってから次のコマンドを実行
+                              --         するか否かを指定する.
+                              boolean := false;
             GPI_WIDTH       : --! @brief GPI(General Purpose Input)信号のビット幅.
                               integer := 8;
             GPO_WIDTH       : --! @brief GPO(General Purpose Output)信号のビット幅.

@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    aix4_test_1.vhd
 --!     @brief   TEST BENCH No.1 for DUMMY_PLUG.AXI4_MODELS
---!     @version 1.5.4
---!     @date    2015/2/4
+--!     @version 1.5.5
+--!     @date    2015/4/29
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -86,6 +86,7 @@ architecture MODEL of DUMMY_PLUG_AXI4_TEST_1 is
     constant SYNC_WIDTH      : integer :=  2;
     constant GPO_WIDTH       : integer :=  8;
     constant GPI_WIDTH       : integer :=  2*GPO_WIDTH;
+    constant DEFAULT_SYNC_IO : boolean :=  TRUE;
     -------------------------------------------------------------------------------
     -- グローバルシグナル.
     -------------------------------------------------------------------------------
@@ -207,6 +208,7 @@ begin
             WIDTH           => WIDTH           ,
             SYNC_PLUG_NUM   => 2               ,
             SYNC_WIDTH      => SYNC_WIDTH      ,
+            DEFAULT_SYNC_IO => DEFAULT_SYNC_IO ,
             GPI_WIDTH       => GPI_WIDTH       ,
             GPO_WIDTH       => GPO_WIDTH       ,
             FINISH_ABORT    => FALSE
@@ -306,6 +308,7 @@ begin
             WIDTH           => WIDTH           ,
             SYNC_PLUG_NUM   => 3               ,
             SYNC_WIDTH      => SYNC_WIDTH      ,
+            DEFAULT_SYNC_IO => DEFAULT_SYNC_IO ,
             GPI_WIDTH       => GPI_WIDTH       ,
             GPO_WIDTH       => GPO_WIDTH       ,
             FINISH_ABORT    => FALSE

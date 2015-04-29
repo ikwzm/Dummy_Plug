@@ -75,6 +75,10 @@ entity  AXI4_CHANNEL_PLAYER is
                           integer :=  1;
         SYNC_LOCAL_WAIT : --! @brief ローカル同期時のウェイトクロック数.
                           integer := 2;
+        DEFAULT_SYNC_IO : --! @brief リードトランザクション/ライトトランザクション
+                          --         ウェイト時に完了を待ってから次のコマンドを実行
+                          --         するか否かを指定する.
+                          boolean := false;
         GPI_WIDTH       : --! @brief GPI(General Purpose Input)信号のビット幅.
                           integer := 8;
         GPO_WIDTH       : --! @brief GPO(General Purpose Output)信号のビット幅.
@@ -2025,7 +2029,8 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
     -------------------------------------------------------------------------------
     procedure execute_wait(
         variable  core           : inout CORE_TYPE;
-        file      stream         :       TEXT
+        file      stream         :       TEXT;
+                  sync_io        : inout boolean
     ) is
         constant  proc_name      : string := "EXECUTE_WAIT";
         variable  next_event     : EVENT_TYPE;
@@ -2042,6 +2047,7 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
         REPORT_DEBUG(core, proc_name, "BEGIN");
         timeout   := DEFAULT_WAIT_TIMEOUT;
         wait_on   := FALSE;
+        sync_io   := DEFAULT_SYNC_IO;
         SEEK_EVENT(core, stream, next_event);
         case next_event is
             when EVENT_SCALAR =>
@@ -2100,6 +2106,13 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
                         STREAM     => stream          ,  -- I/O:
                         KEY        => "ON"            ,  -- In :
                         VAL        => wait_on         ,  -- I/O:
+                        EVENT      => next_event         -- I/O:
+                    );
+                    MAP_READ_BOOLEAN(
+                        SELF       => core            ,  -- I/O:
+                        STREAM     => stream          ,  -- I/O:
+                        KEY        => "SYNC"          ,  -- In :
+                        VAL        => sync_io         ,  -- I/O:
                         EVENT      => next_event         -- I/O:
                     );
                     case next_event is
@@ -2161,6 +2174,7 @@ begin
             variable  keyword       : KEY_TYPE;
             variable  operation     : OPERATION_TYPE;
             variable  gpo_signals   : std_logic_vector(GPO'range);
+            variable  sync_io       : boolean;
             -----------------------------------------------------------------------
             --! @brief  SYNCオペレーション. 
             --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2240,10 +2254,13 @@ begin
                             when KEY_REPORT => EXECUTE_REPORT(core, stream);
                             when KEY_DEBUG  => EXECUTE_DEBUG (core, stream);
                             when KEY_SAY    => EXECUTE_SAY   (core, stream);
-                            when KEY_WAIT   => execute_wait  (core, stream);
                             when KEY_CHECK  => execute_check (core, stream);
                             when KEY_OUT    => EXECUTE_OUT   (core, stream, gpo_signals, GPO);
                             when KEY_SYNC   => execute_sync  (core, stream, operation);
+                            when KEY_WAIT   => execute_wait  (core, stream, sync_io);
+                                               if (sync_io) then
+                                                   local_sync(core, SYNC_LOCAL_REQ, SYNC_LOCAL_ACK);
+                                               end if;
                             when KEY_READ   => if (READ_ENABLE ) then
                                                    EXECUTE_SKIP(core, stream);
                                                else
@@ -2573,6 +2590,7 @@ begin
             procedure execute_channel_map_operation is
                 constant  proc_name  : string := "EXECUTE_CHANNEL_MAP_OPERATION";
                 variable  next_event : EVENT_TYPE;
+                variable  sync_io    : boolean;
             begin
                 REPORT_DEBUG(core, proc_name, "BEGIN");
                 READ_EVENT(core, stream, EVENT_MAP_BEGIN);
@@ -2600,7 +2618,7 @@ begin
                                 when KEY_DEBUG  => EXECUTE_DEBUG (core, stream);
                                 when KEY_REPORT => EXECUTE_REPORT(core, stream);
                                 when KEY_SAY    => EXECUTE_SAY   (core, stream);
-                                when KEY_WAIT   => execute_wait  (core, stream);
+                                when KEY_WAIT   => execute_wait  (core, stream, sync_io);
                                 when KEY_CHECK  => execute_check (core, stream);
                                 when others     => EXECUTE_UNDEFINED_MAP_KEY(core, stream, keyword);
                             end case;
@@ -2685,7 +2703,8 @@ begin
                             execute_channel_operation;
                         elsif (keyword = KEY_REPORT ) then
                             EXECUTE_REPORT(core, stream);
-                        elsif (keyword = KEY_SYNC   ) then
+                        elsif (keyword = KEY_SYNC   ) or
+                              (keyword = KEY_WAIT   ) then
                             local_sync(core, SYNC_LOCAL_REQ, SYNC_LOCAL_ACK);
                             EXECUTE_SKIP(core, stream);
                         elsif (CHANNEL = AXI4_CHANNEL_AR and MASTER and READ_ENABLE  and keyword = KEY_READ ) then
@@ -3102,6 +3121,7 @@ begin
             procedure execute_channel_map_operation is
                 constant  proc_name  : string := "EXECUTE_CHANNEL_MAP_OPERATION";
                 variable  next_event : EVENT_TYPE;
+                variable  sync_io    : boolean;
             begin
                 REPORT_DEBUG(core, proc_name, "BEGIN");
                 READ_EVENT(core, stream, EVENT_MAP_BEGIN);
@@ -3129,7 +3149,7 @@ begin
                                 when KEY_DEBUG  => EXECUTE_DEBUG (core, stream);
                                 when KEY_REPORT => EXECUTE_REPORT(core, stream);
                                 when KEY_SAY    => EXECUTE_SAY   (core, stream);
-                                when KEY_WAIT   => execute_wait  (core, stream);
+                                when KEY_WAIT   => execute_wait  (core, stream, sync_io);
                                 when KEY_CHECK  => execute_check (core, stream);
                                 when others     => EXECUTE_UNDEFINED_MAP_KEY(core, stream, keyword);
                             end case;
@@ -3214,7 +3234,8 @@ begin
                             execute_channel_operation;
                         elsif (keyword = KEY_REPORT ) then
                             EXECUTE_REPORT(core, stream);
-                        elsif (keyword = KEY_SYNC   ) then
+                        elsif (keyword = KEY_SYNC   ) or
+                              (keyword = KEY_WAIT   ) then
                             local_sync(core, SYNC_LOCAL_REQ, SYNC_LOCAL_ACK);
                             EXECUTE_SKIP(core, stream);
                         elsif (CHANNEL = AXI4_CHANNEL_R and MASTER and READ_ENABLE  and keyword = KEY_READ ) then
