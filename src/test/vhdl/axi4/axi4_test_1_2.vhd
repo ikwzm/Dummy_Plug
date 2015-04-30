@@ -2,7 +2,7 @@
 --!     @file    aix4_test_1_2.vhd
 --!     @brief   TEST BENCH No.1.2 for DUMMY_PLUG.AXI4_MODELS
 --!     @version 1.5.5
---!     @date    2015/4/29
+--!     @date    2015/4/30
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -39,10 +39,12 @@ use     ieee.std_logic_1164.all;
 library DUMMY_PLUG;
 use     DUMMY_PLUG.CORE.REPORT_STATUS_TYPE;
 entity  DUMMY_PLUG_AXI4_TEST_1_2 is
+    generic (
+        SCENARIO_FILE   : STRING  := "../../../src/test/scenarios/axi4/axi4_test_1_2.snr"
+    );
 end     DUMMY_PLUG_AXI4_TEST_1_2;
 architecture MODEL of DUMMY_PLUG_AXI4_TEST_1_2 is
     constant NAME            : STRING  := "AXI4_TEST_1_2";
-    constant SCENARIO_FILE   : STRING  := "../../../src/test/scenarios/axi4/axi4_test_1_2.snr";
     constant EXP_REPORT      : REPORT_STATUS_TYPE := (
         valid            => TRUE,
         error_count      =>  0,

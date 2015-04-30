@@ -39,10 +39,12 @@ use     ieee.std_logic_1164.all;
 library DUMMY_PLUG;
 use     DUMMY_PLUG.CORE.REPORT_STATUS_TYPE;
 entity  DUMMY_PLUG_AXI4_STREAM_TEST_1_1 is
+    generic (
+        SCENARIO_FILE   : STRING  := "../../../src/test/scenarios/axi4/axi4_stream_test_1_1.snr"
+    );
 end     DUMMY_PLUG_AXI4_STREAM_TEST_1_1;
 architecture MODEL of DUMMY_PLUG_AXI4_STREAM_TEST_1_1 is
     constant NAME            : STRING  := "AXI4_STREAM_TEST_1_1";
-    constant SCENARIO_FILE   : STRING  := "../../../src/test/scenarios/axi4/axi4_stream_test_1_1.snr";
     constant EXP_REPORT      : REPORT_STATUS_TYPE := (
         valid            => TRUE,
         error_count      =>  0,
