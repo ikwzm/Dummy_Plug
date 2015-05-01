@@ -2,7 +2,7 @@
 --!     @file    axi4_models.vhd                                                 --
 --!     @brief   AXI4 Dummy Plug Component Package                               --
 --!     @version 1.5.5                                                           --
---!     @date    2015/04/29                                                      --
+--!     @date    2015/05/01                                                      --
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>                     --
 -----------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------
@@ -73,7 +73,7 @@ component AXI4_MASTER_PLAYER
         DEFAULT_SYNC_IO : --! @brief リードトランザクション/ライトトランザクション
                           --         ウェイト時に完了を待ってから次のコマンドを実行
                           --         するか否かを指定する.
-                          boolean := false;
+                          boolean := true;
         GPI_WIDTH       : --! @brief GPI(General Purpose Input)信号のビット幅.
                           integer := 8;
         GPO_WIDTH       : --! @brief GPO(General Purpose Output)信号のビット幅.
@@ -200,7 +200,7 @@ component AXI4_SLAVE_PLAYER
         DEFAULT_SYNC_IO : --! @brief リードトランザクション/ライトトランザクション
                           --         ウェイト時に完了を待ってから次のコマンドを実行
                           --         するか否かを指定する.
-                          boolean := false;
+                          boolean := true;
         GPI_WIDTH       : --! @brief GPI(General Purpose Input)信号のビット幅.
                           integer := 8;
         GPO_WIDTH       : --! @brief GPO(General Purpose Output)信号のビット幅.
