@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_slave_player.vhd
 --!     @brief   AXI4 Slave Dummy Plug Player.
---!     @version 1.5.5
---!     @date    2015/5/1
+--!     @version 1.6.0
+--!     @date    2015/5/4
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
