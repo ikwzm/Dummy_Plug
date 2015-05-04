@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_stream_signal_printer.vhd
 --!     @brief   AXI4-Stream Signal Printer Module.
---!     @version 1.5.4
---!     @date    2015/2/4
+--!     @version 1.6.0
+--!     @date    2015/5/4
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --

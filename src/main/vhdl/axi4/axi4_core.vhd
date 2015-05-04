@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_core.vhd
 --!     @brief   AXI4 Dummy Plug Core Package.
---!     @version 1.5.4
---!     @date    2015/2/2
+--!     @version 1.6.0
+--!     @date    2015/5/4
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -280,6 +280,7 @@ package AXI4_CORE is
         QOS      : AXI4_AQOS_TYPE;
         REGION   : AXI4_AREGION_TYPE;
         RESP     : AXI4_RESP_TYPE;
+        TIMEOUT  : integer;
     end record;
     -------------------------------------------------------------------------------
     --! @brief AXI4トランザクション信号のNULL定数.
@@ -302,7 +303,8 @@ package AXI4_CORE is
         PROT     => (others => '0')  ,
         QOS      => (others => '0')  ,
         REGION   => (others => '0')  ,
-        RESP     => (others => '0')
+        RESP     => (others => '0')  ,
+        TIMEOUT  => 0
     );
     -------------------------------------------------------------------------------
     --! @brief AXI4トランザクション信号のドントケア定数.
@@ -325,7 +327,8 @@ package AXI4_CORE is
         PROT     => (others => '-')  ,
         QOS      => (others => '-')  ,
         REGION   => (others => '-')  ,
-        RESP     => (others => '-')
+        RESP     => (others => '-')  ,
+        TIMEOUT  => 0
     );
     -------------------------------------------------------------------------------
     --! @brief AXI4-Stream 信号のレコード宣言.
@@ -401,6 +404,10 @@ package AXI4_CORE is
                               integer :=  1;
             SYNC_LOCAL_WAIT : --! @brief ローカル同期時のウェイトクロック数.
                               integer := 2;
+            DEFAULT_SYNC_IO : --! @brief リードトランザクション/ライトトランザクション
+                              --         ウェイト時に完了を待ってから次のコマンドを実行
+                              --         するか否かを指定する.
+                              boolean := false;
             GPI_WIDTH       : --! @brief GPI(General Purpose Input)信号のビット幅.
                               integer := 8;
             GPO_WIDTH       : --! @brief GPO(General Purpose Output)信号のビット幅.
