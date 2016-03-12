@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    util.vhd
 --!     @brief   Utility Package for Dummy Plug.
---!     @version 1.6.0
---!     @date    2015/5/4
+--!     @version 1.6.1
+--!     @date    2016/3/12
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012-2015 Ichiro Kawazome
+--      Copyright (C) 2012-2016 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -338,6 +338,7 @@ package body UTIL is
         variable  value     :       integer;
         variable  pos       :       integer;
         variable  len       :       integer;
+        variable  quote     :       boolean;
     begin
         ---------------------------------------------------------------------------
         -- 最初の文字が'0'の場合...
@@ -371,7 +372,12 @@ package body UTIL is
             -----------------------------------------------------------------------
             -- 次の字句が ' の場合は、最初に読んだ定数はベクタの大きさになる.
             -----------------------------------------------------------------------
-            if (pos <= STR'high and STR(pos) = ''') then
+            if (pos <= STR'high) then
+                quote := (STR(pos) = ''');
+            else
+                quote := FALSE;
+            end if;
+            if (quote) then
                 if (value < 0 or pos+1 > STR'high) then 
                     STR_LEN := 0;
                     VAL_LEN := 0;
