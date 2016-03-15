@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    reader.vhd
 --!     @brief   Package for Dummy Plug Scenario Reader.
---!     @version 1.6.0
---!     @date    2015/5/4
+--!     @version 1.6.1
+--!     @date    2016/1/7
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012-2015 Ichiro Kawazome
+--      Copyright (C) 2012-2016 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -3391,10 +3391,10 @@ package body  READER is
         variable  SELF          : inout READER_TYPE;
                   MESSAGE       : in    string
     ) is
-        variable  line          :       LINE;
+        variable  text_line     :       LINE;
     begin
-        WRITE(line, "message    : " & MESSAGE);
-        WRITELINE(OUTPUT, line);
+        WRITE(text_line, "message    : " & MESSAGE);
+        WRITELINE(OUTPUT, text_line);
         DEBUG_DUMP(SELF);
     end procedure;
     -------------------------------------------------------------------------------
@@ -3413,48 +3413,48 @@ package body  READER is
         variable  SELF          : inout READER_TYPE;
                   POS           : in    integer
     ) is
-        variable  line          :       LINE;
+        variable  text_line     :       LINE;
         variable  state         :       STATE_TYPE;
         variable  indent        :       INDENT_TYPE;
         variable  mapkey        :       MAPKEY_MODE;
     begin
         if TRUE then
             get_struct_state(SELF, state, indent, mapkey);
-            WRITE(line, "   name       : " & SELF.name(SELF.name'range));
-            WRITELINE(OUTPUT, line);
-            WRITE(line, "   stream_name: " & SELF.stream_name(SELF.stream_name'range) &
-                                       "(" & INTEGER_TO_STRING(SELF.line_num) &
-                                       "," & INTEGER_TO_STRING(SELF.text_pos) &
-                                       "," & INTEGER_TO_STRING(SELF.text_end) & ")");
-            WRITELINE(OUTPUT, line);
-            WRITE(line, "   curr_state : " & struct_state_to_string(state)    &
-                                       "(" & INTEGER_TO_STRING(indent)        &
-                                       "," & struct_mapkey_to_string(mapkey)  & ")");
+            WRITE(text_line, "   name       : " & SELF.name(SELF.name'range));
+            WRITELINE(OUTPUT, text_line);
+            WRITE(text_line, "   stream_name: " & SELF.stream_name(SELF.stream_name'range) &
+                                            "(" & INTEGER_TO_STRING(SELF.line_num) &
+                                            "," & INTEGER_TO_STRING(SELF.text_pos) &
+                                            "," & INTEGER_TO_STRING(SELF.text_end) & ")");
+            WRITELINE(OUTPUT, text_line);
+            WRITE(text_line, "   curr_state : " & struct_state_to_string(state)    &
+                                            "(" & INTEGER_TO_STRING(indent)        &
+                                            "," & struct_mapkey_to_string(mapkey)  & ")");
                                         
-            WRITELINE(OUTPUT, line);
+            WRITELINE(OUTPUT, text_line);
         end if;
         for i in SELF.state_top-1 downto SELF.state_stack'low loop
             unpack_struct_state_value(SELF.state_stack(i),state,indent,mapkey);
-            WRITE(line, "   prev_state : " & struct_state_to_string(state)    &
-                                       "(" & INTEGER_TO_STRING(indent)        &
-                                       "," & struct_mapkey_to_string(mapkey)  & ")");
-            WRITELINE(OUTPUT, line);
+            WRITE(text_line, "   prev_state : " & struct_state_to_string(state)    &
+                                            "(" & INTEGER_TO_STRING(indent)        &
+                                            "," & struct_mapkey_to_string(mapkey)  & ")");
+            WRITELINE(OUTPUT, text_line);
         end loop;
         if (SELF.text_line = null) then
-            WRITE(line, string'("   text_line  : null "));
+            WRITE(text_line, string'("   text_line  : null "));
         else
-            WRITE(line, "   text_line  : " & SELF.text_line(SELF.text_line'range));
-            WRITELINE(OUTPUT, line);
-            WRITE(line, string'("               |"));
+            WRITE(text_line, "   text_line  : " & SELF.text_line(SELF.text_line'range));
+            WRITELINE(OUTPUT, text_line);
+            WRITE(text_line, string'("               |"));
             for i in SELF.text_line'low to SELF.text_line'high loop
                 if (i = POS) then
-                    WRITE(line, string'("^"));
+                    WRITE(text_line, string'("^"));
                 else
-                    WRITE(line, string'(" "));
+                    WRITE(text_line, string'(" "));
                 end if;
             end loop;
         end if;
-        WRITE(line, string'("|"));
-        WRITELINE(OUTPUT, line);
+        WRITE(text_line, string'("|"));
+        WRITELINE(OUTPUT, text_line);
     end procedure;
 end READER;
