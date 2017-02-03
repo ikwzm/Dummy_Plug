@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    reader_test_1.vhd
 --!     @brief   TEST BENCH No.1 for DUMMY_PLUG.READER
---!     @version 1.6.0
---!     @date    2015/5/4
+--!     @version 1.6.1
+--!     @date    2017/2/3
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -44,12 +44,14 @@ use     DUMMY_PLUG.READER.all;
 use     DUMMY_PLUG.UTIL.HEX_TO_STRING;
 use     DUMMY_PLUG.UTIL.BOOLEAN_TO_STRING;
 entity  DUMMY_PLUG_READER_TEST_1 is
+    generic (
+        TEST_FILE : STRING  := "../../../src/test/scenarios/core/reader_test_1.snr"
+    );
 end     DUMMY_PLUG_READER_TEST_1;
 architecture MODEL of DUMMY_PLUG_READER_TEST_1 is
 begin
     process
         constant  NAME      : STRING  := "DUMMY_PLUG_READER_TEST_1";
-        constant  TEST_FILE : STRING  := "../../../src/test/scenarios/core/reader_test_1.snr";
         variable  text_line : LINE;
         variable  debug     : boolean := FALSE;
         file      stream    : TEXT;
