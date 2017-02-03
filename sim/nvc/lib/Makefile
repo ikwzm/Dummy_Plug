@@ -17,6 +17,7 @@ dummy_plug_data = \
 	dummy_plug/DUMMY_PLUG.AXI4_SLAVE_PLAYER          \
 	dummy_plug/DUMMY_PLUG.AXI4_STREAM_PLAYER         \
 	dummy_plug/DUMMY_PLUG.AXI4_MASTER_PLAYER         \
+	dummy_plug/DUMMY_PLUG.AXI4_STREAM_MASTER_PLAYER  \
 	dummy_plug/DUMMY_PLUG.AXI4_STREAM_SLAVE_PLAYER   \
 	dummy_plug/DUMMY_PLUG.AXI4_STREAM_SIGNAL_PRINTER \
 	$(ENDLIST)
