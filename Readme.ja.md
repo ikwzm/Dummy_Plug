@@ -123,6 +123,15 @@ shell$ cd sim/nvc/axi4
 shell$ make
 ```
 
+### Vivado 2017.2
+
+```console
+Vivado% vivado -mode batch -source simulate_axi4_test_1_1.tcl
+Vivado% vivado -mode batch -source simulate_axi4_test_1_2.tcl
+Vivado% vivado -mode batch -source simulate_axi4_test_1_3.tcl
+Vivado% vivado -mode batch -source simulate_axi4_test_1_4.tcl
+```
+
 ## ライセンス
 
 二条項BSDライセンス (2-clause BSD license) で公開しています。
