@@ -101,14 +101,21 @@ The operation of *Dummy Plug* is confirmed with the following simulator.
  - [nvc](https://github.com/nickg/nvc)
  - [Vivado 2017.2 Xilinx](https://www.xilinx.com/products/design-tools/vivado/simulator.html)
 
-### GHDL-0.35
+### GHDL 0.29
+
+```console
+shell$ cd sim/ghdl-0.29/axi4
+shell$ make
+```
+
+### GHDL 0.35
 
 ```console
 shell$ cd sim/ghdl-0.35/axi4
 shell$ make
 ```
 
-### NVC
+### nvc
 
 ```console
 shell$ cd sim/nvc/lib
