@@ -1,7 +1,7 @@
 *Dummy Plug*
 ============
 
-##*Dummy Plug* とは##
+## *Dummy Plug* とは
 
 *Dummy Plug* は VHDL だけで書かれたとってもシンプルなバス機能モデルのライブラリです.  
 
@@ -91,13 +91,48 @@ AXI4のマスターモデルとスレーブモデルに対応しています.
             AIX DUMMU-PLUG SAMPLE SCENARIO 1 DONE
         ---
 
-##お試し
+## お試し
 
-*Dummy Plug* は GHDL で動作確認をしています.  
-sim/ghdl の下に Makefile があります.  
-make コマンドを実行することでライブラリとテストベンチがコンパイルされ走ります.
+*Dummy Plug* は次のシミュレーターで動作を確認しています。
 
-##ライセンス##
+ - GHDL 0.29
+ - [GHDL 0.35](https://github.com/ghdl/ghdl)
+ - [nvc](https://github.com/nickg/nvc)
+ - [Vivado 2017.2 Xilinx](https://www.xilinx.com/products/design-tools/vivado/simulator.html)
+
+### GHDL 0.29
+
+```console
+shell$ cd sim/ghdl-0.29/axi4
+shell$ make
+```
+
+### GHDL 0.35
+
+```console
+shell$ cd sim/ghdl-0.35/axi4
+shell$ make
+```
+
+### nvc
+
+```console
+shell$ cd sim/nvc/lib
+shell$ make
+shell$ cd sim/nvc/axi4
+shell$ make
+```
+
+### Vivado 2017.2
+
+```console
+Vivado% vivado -mode batch -source simulate_axi4_test_1_1.tcl
+Vivado% vivado -mode batch -source simulate_axi4_test_1_2.tcl
+Vivado% vivado -mode batch -source simulate_axi4_test_1_3.tcl
+Vivado% vivado -mode batch -source simulate_axi4_test_1_4.tcl
+```
+
+## ライセンス
 
 二条項BSDライセンス (2-clause BSD license) で公開しています。
 

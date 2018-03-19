@@ -58,6 +58,7 @@ lappend work_src_list       {../../../src/test/vhdl/axi4/axi4_test_1_2.vhd}
 add_files -fileset sim_1 -norecurse $work_src_list
 
 set_property generic SCENARIO_FILE=\"../../../../../../src/test/scenarios/axi4/axi4_test_1_2.snr\" [get_filesets sim_1]
+set_property -name {xsim.simulate.runtime} -value {all} -objects [get_filesets sim_1]
 update_compile_order -fileset sim_1
 #
 # Close project

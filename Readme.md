@@ -1,7 +1,7 @@
 *Dummy Plug*
 ============
 
-##What's *Dummy Plug*##
+## What's *Dummy Plug*
 
 *Dummy Plug* is a simple bus functional model library written by VHDL Only.  
 
@@ -92,12 +92,48 @@ For example, when the master performs a write transaction will write the scenari
             AIX DUMMU-PLUG SAMPLE SCENARIO 1 DONE
         ---
 
-##Trial##
+## Trial
 
-*Dummy Plug* is checking operation by GHDL.  
-When "cd sim/ghdl" and "make",  library and test bench is compiled and it is begun to run.
+The operation of *Dummy Plug* is confirmed with the following simulator.
 
-##License##
+ - GHDL 0.29
+ - [GHDL 0.35](https://github.com/ghdl/ghdl)
+ - [nvc](https://github.com/nickg/nvc)
+ - [Vivado 2017.2 Xilinx](https://www.xilinx.com/products/design-tools/vivado/simulator.html)
+
+### GHDL 0.29
+
+```console
+shell$ cd sim/ghdl-0.29/axi4
+shell$ make
+```
+
+### GHDL 0.35
+
+```console
+shell$ cd sim/ghdl-0.35/axi4
+shell$ make
+```
+
+### nvc
+
+```console
+shell$ cd sim/nvc/lib
+shell$ make
+shell$ cd sim/nvc/axi4
+shell$ make
+```
+
+### Vivado 2017.2
+
+```console
+Vivado% vivado -mode batch -source simulate_axi4_test_1_1.tcl
+Vivado% vivado -mode batch -source simulate_axi4_test_1_2.tcl
+Vivado% vivado -mode batch -source simulate_axi4_test_1_3.tcl
+Vivado% vivado -mode batch -source simulate_axi4_test_1_4.tcl
+```
+
+## License
 
 2-clause BSD license
 
