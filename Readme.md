@@ -127,6 +127,7 @@ shell$ make
 ### Vivado 2017.2
 
 ```console
+Vivado% cd sim/vivado/axi4
 Vivado% vivado -mode batch -source simulate_axi4_test_1_1.tcl
 Vivado% vivado -mode batch -source simulate_axi4_test_1_2.tcl
 Vivado% vivado -mode batch -source simulate_axi4_test_1_3.tcl
