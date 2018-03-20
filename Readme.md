@@ -117,6 +117,22 @@ shell$ make
 
 ### nvc
 
+#### Build nvc
+
+```console
+shell$ git clone https://github.com/nickg/nvc
+shell$ cd nvc
+shell$ git checkout 978fdb2354bc0013d8a3d1ef751a00ac5f3d4465
+shell$ ./autogen.sh
+shell$ ./tools/fetch-ieee.sh
+shell$ mkdir build && cd build
+shell$ ../configure
+shell$ make
+shell$ sudo make install
+```
+
+#### Simulate
+
 ```console
 shell$ cd sim/nvc/lib
 shell$ make
