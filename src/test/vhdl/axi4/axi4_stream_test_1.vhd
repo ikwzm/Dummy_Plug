@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    aix4_stream_test_1.vhd
 --!     @brief   TEST BENCH No.1 for DUMMY_PLUG.AXI4_MODELS
---!     @version 1.6.0
---!     @date    2015/5/4
+--!     @version 1.7.1
+--!     @date    2018/3/20
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012-2015 Ichiro Kawazome
+--      Copyright (C) 2012-2018 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -260,10 +260,15 @@ begin
     );    
         
     process begin
-        ACLK <= '1';
-        wait for PERIOD / 2;
+        while (TRUE) loop
+            ACLK <= '1';
+            wait for PERIOD / 2;
+            ACLK <= '0';
+            wait for PERIOD / 2;
+            exit when (N_FINISH = '1');
+        end loop;
         ACLK <= '0';
-        wait for PERIOD / 2;
+        wait;
     end process;
 
     ARESETn <= '1' when (RESET = '0') else '0';
@@ -298,7 +303,7 @@ begin
                (rep.failure_count    = EXP_REPORT.failure_count   ) and
                (rep.read_error_count = EXP_REPORT.read_error_count)
         report "REPORT Mismatch !!" severity FAILURE;
-        assert FALSE report "Simulation complete." severity FAILURE;
+        assert FALSE report "Simulation complete." severity NOTE;
         wait;
     end process;
     

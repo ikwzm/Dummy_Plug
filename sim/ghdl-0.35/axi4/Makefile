@@ -1,3 +1,4 @@
+
 GHDL=ghdl
 GHDLFLAGS=--mb-comments
 WORK=dummy_plug
@@ -22,7 +23,7 @@ clean:
 
 $(TEST_BENCH) : $(addsuffix .o,$(TEST_BENCH))
 	 $(GHDL) -e $(GHDLFLAGS) --work=work $@
-	-$(GHDL) -r $(GHDLFLAGS) --work=work $@
+	 $(GHDL) -r $(GHDLFLAGS) --work=work $@
 
 
 DUMMY_PLUG_CORE_SRC_PATH = $(SRC_MAIN_VHDL_PATH)/core
