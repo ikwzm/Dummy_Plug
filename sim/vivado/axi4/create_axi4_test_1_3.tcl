@@ -5,6 +5,10 @@ set project_directory       [file dirname [info script]]
 set project_name            "axi4_test_1_3"
 set device_parts            "xc7z010clg400-1"
 #
+# Change Directory
+#
+cd $project_directory
+#
 # Create project
 #
 create_project -force $project_name $project_directory
