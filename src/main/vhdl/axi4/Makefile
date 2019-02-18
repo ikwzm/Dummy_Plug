@@ -1,5 +1,6 @@
 ENTITY_FILES = axi4_master_player.vhd         \
                axi4_slave_player.vhd          \
+               axi4_memory_player.vhd          \
                axi4_stream_master_player.vhd  \
                axi4_stream_slave_player.vhd   \
                axi4_signal_printer.vhd        \

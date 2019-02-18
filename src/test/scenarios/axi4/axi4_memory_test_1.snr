@@ -1,0 +1,116 @@
+#----------------------------------------------------------------------------------
+#
+# AXI4 DUMMY-PLUG MEMORY Test Bench Scenario 1.1
+#
+#----------------------------------------------------------------------------------
+- MARCHAL:
+  -  SAY: >
+       DUMMY-PLUG AXI4 MEMORY TEST BENCH SCENARIO 1.1
+       READ_ENABLE  = TRUE
+       WRITE_ENABLE = TRUE
+       DATA_WIDTH   = 32
+- MEMORY:
+  - DOMAIN: 
+      INDEX      : 0
+      MAP        : 0x0000
+      READ       : true
+      WRITE      : true
+      ADDR       : 0x7B000000
+      SIZE       : 0x100
+      ASIZE      : "3'b010"
+      ALOCK      : "1'b0"
+      ACACHE     : "4'b----"
+      APROT      : "3'b---"
+      AQOS       : "4'b----"
+      AREGION    : "4'b----"
+      RESP       : OKAY
+      LATENCY    : 8
+      TIMEOUT    : 10000
+  - DOMAIN: 
+      INDEX      : 1
+      MAP        : 0x0100
+      READ       : true
+      WRITE      : true
+      ADDR       : 0x7C000000
+      SIZE       : 0x100
+      ASIZE      : "3'b010"
+      ALOCK      : "1'b0"
+      ACACHE     : "4'b----"
+      APROT      : "3'b---"
+      AQOS       : "4'b----"
+      AREGION    : "4'b----"
+      RESP       : OKAY
+      LATENCY    : 8
+      TIMEOUT    : 10000
+  - SET
+  - ORG   : 0x0000
+  - DATA  : ["64'h0706050403020100", "64'h0F0E0D0C0B0A0908"]
+  - DATA  : ["64'h1716151413121110", "64'h1F1E1D1C1B1A1918"]
+  - DATA  : ["64'h2726252423222120", "64'h2F2E2D2C2B2A2928"]
+  - DATA  : ["64'h3736353433323130", "64'h3F3E3D3C3B3A3938"]
+  - ORG   : 0x0100
+  - DB    : [0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0A,0x0B,0x0C,0x0D,0x0E,0x0F]
+  - DH    : [0x1110   ,0x1312   ,0x1514   ,0x1716   ,0x1918   ,0x1B1A   ,0x1D1C   ,0x1F1E   ]
+  - DW    : [0x23222120         ,0x27262524         ,0x2B2A2928         ,0x2F2E2D2C         ]
+  - DD    : [0x3736353433323130                     ,0x3F3E3D3C3B3A3938                     ]
+  - CHECK
+  - ORG   : 0x0000
+  - DATA  : ["64'h0706050403020100", "64'h0F0E0D0C0B0A0908"]
+  - DATA  : ["64'h1716151413121110", "64'h1F1E1D1C1B1A1918"]
+  - DATA  : ["64'h2726252423222120", "64'h2F2E2D2C2B2A2928"]
+  - DATA  : ["64'h3736353433323130", "64'h3F3E3D3C3B3A3938"]
+  - ORG   : 0x0100
+  - DB    : [0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0A,0x0B,0x0C,0x0D,0x0E,0x0F]
+  - DH    : [0x1110   ,0x1312   ,0x1514   ,0x1716   ,0x1918   ,0x1B1A   ,0x1D1C   ,0x1F1E   ]
+  - DW    : [0x23222120         ,0x27262524         ,0x2B2A2928         ,0x2F2E2D2C         ]
+  - DD    : [0x3736353433323130                     ,0x3F3E3D3C3B3A3938                     ]
+#----------------------------------------------------------------------------------
+#
+# DUMMY-PLUG AXI4 MEMORY TEST BENCH SCENARIO 1.1.1
+#
+#----------------------------------------------------------------------------------
+---
+- MASTER:
+  - DEBUG: 0
+  - AW : [{DEBUG : 0}]
+  - AR : [{DEBUG : 0}]
+  - R  : [{DEBUG : 0}]
+  - W  : [{DEBUG : 0}]
+  - B  : [{DEBUG : 0}]
+- SLAVE:
+  - DEBUG: 0
+  - AW : [{DEBUG : 0}]
+  - AR : [{DEBUG : 0}]
+  - R  : [{DEBUG : 0}]
+  - W  : [{DEBUG : 0}]
+  - B  : [{DEBUG : 0}]
+---
+- - [MARCHAL,MASTER,MEMORY]
+  - SAY: >
+       DUMMY-PLUG AXI4 MEMORY TEST BENCH SCENARIO 1.1.1 START
+- MASTER: 
+  - READ  : {ADDR: 0x7B000000, SIZE: 4, BURST: INCR, ID: 10, DATA: [32'h03020100, 32'h07060504, 32'h0B0A0908, 32'h0F0E0D0C], RESP: OKAY}
+  - READ  : {ADDR: 0x7B000010, SIZE: 4, BURST: INCR, ID: 10, DATA: [32'h13121110, 32'h17161514, 32'h1B1A1918, 32'h1F1E1D1C], RESP: OKAY}
+  - READ  : {ADDR: 0x7B000020, SIZE: 4, BURST: INCR, ID: 10, DATA: [32'h23222120, 32'h27262524, 32'h2B2A2928, 32'h2F2E2D2C], RESP: OKAY}
+  - READ  : {ADDR: 0x7B000030, SIZE: 4, BURST: INCR, ID: 10, DATA: [32'h33323130, 32'h37363534, 32'h3B3A3938, 32'h3F3E3D3C], RESP: OKAY}
+  - READ  : {ADDR: 0x7C000000, SIZE: 4, BURST: INCR, ID: 10, DATA: [32'h03020100, 32'h07060504, 32'h0B0A0908, 32'h0F0E0D0C], RESP: OKAY}
+  - READ  : {ADDR: 0x7C000010, SIZE: 4, BURST: INCR, ID: 10, DATA: [32'h13121110, 32'h17161514, 32'h1B1A1918, 32'h1F1E1D1C], RESP: OKAY}
+  - READ  : {ADDR: 0x7C000020, SIZE: 4, BURST: INCR, ID: 10, DATA: [32'h23222120, 32'h27262524, 32'h2B2A2928, 32'h2F2E2D2C], RESP: OKAY}
+  - READ  : {ADDR: 0x7C000030, SIZE: 4, BURST: INCR, ID: 10, DATA: [32'h33323130, 32'h37363534, 32'h3B3A3938, 32'h3F3E3D3C], RESP: OKAY}
+  - WRITE : {ADDR: 0x7B000013, SIZE: 4, BURST: INCR, ID: 10, DATA: [0x01,0x02,0x03,0x04,0x05,0x06], RESP: OKAY}
+  - READ  : {ADDR: 0x7B000013, SIZE: 4, BURST: INCR, ID: 10, DATA: [0x01,0x02,0x03,0x04,0x05,0x06], RESP: OKAY}
+  - READ  : {ADDR: 0x7B000010, SIZE: 4, BURST: INCR, ID: 10, DATA: [0x10,0x11,0x12,
+                                                                    0x01,0x02,0x03,0x04,0x05,0x06,
+								    0x19,0x1A,0x1B,0x1C,0x1D,0x1E], RESP: OKAY}
+- MEMORY:
+  - START
+#----------------------------------------------------------------------------------
+#
+# DUMMY-PLUG AXI4 MEMORY TEST BENCH SCENARIO 1.1 ALL DONE
+#
+#----------------------------------------------------------------------------------
+---                                       # これで全てのダミープラグが同期.
+- - [MARCHAL,MASTER,MEMORY]
+  - SAY: >
+       DUMMY-PLUG AXI4 MEMORY TEST BENCH SCENARIO 1.1 ALL DONE
+---

@@ -2,12 +2,12 @@
 --!     @file    axi4_models.vhd                                                 --
 --!     @brief   AXI4 Dummy Plug Component Package                               --
 --!     @version 1.6.1                                                           --
---!     @date    2016/03/15                                                      --
+--!     @date    2019/02/17                                                      --
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>                     --
 -----------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------
 --                                                                               --
---      Copyright (C) 2016 Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>           --
+--      Copyright (C) 2019 Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>           --
 --      All rights reserved.                                                     --
 --                                                                               --
 --      Redistribution and use in source and binary forms, with or without       --
@@ -277,6 +277,137 @@ component AXI4_SLAVE_PLAYER
         BUSER           : inout std_logic_vector(WIDTH.BUSER  -1 downto 0);
         BID             : inout std_logic_vector(WIDTH.ID     -1 downto 0);
         BVALID          : inout std_logic;
+        BREADY          : in    std_logic;
+        --------------------------------------------------------------------------
+        -- シンクロ用信号
+        --------------------------------------------------------------------------
+        SYNC            : inout SYNC_SIG_VECTOR (SYNC_WIDTH   -1 downto 0);
+        --------------------------------------------------------------------------
+        -- General Purpose Input 信号
+        --------------------------------------------------------------------------
+        GPI             : in    std_logic_vector(GPI_WIDTH    -1 downto 0) := (others => '0');
+        --------------------------------------------------------------------------
+        -- General Purpose Output 信号
+        --------------------------------------------------------------------------
+        GPO             : out   std_logic_vector(GPO_WIDTH    -1 downto 0);
+        --------------------------------------------------------------------------
+        -- レポートステータス出力.
+        --------------------------------------------------------------------------
+        REPORT_STATUS   : out   REPORT_STATUS_TYPE;
+        --------------------------------------------------------------------------
+        -- シミュレーション終了通知信号.
+        --------------------------------------------------------------------------
+        FINISH          : out   std_logic
+    );
+end component;
+-----------------------------------------------------------------------------------
+--! @brief AXI4_MEMORY_PLAYER                                                    --
+-----------------------------------------------------------------------------------
+component AXI4_MEMORY_PLAYER
+    -------------------------------------------------------------------------------
+    -- ジェネリック変数.
+    -------------------------------------------------------------------------------
+    generic (
+        SCENARIO_FILE   : --! @brief シナリオファイルの名前.
+                          STRING;
+        NAME            : --! @brief 固有名詞.
+                          STRING;
+        READ_ENABLE     : --! @brief リードトランザクションの可/不可を指定する.
+                          boolean   := TRUE;
+        WRITE_ENABLE    : --! @brief ライトトランザクションの可/不可を指定する.
+                          boolean   := TRUE;
+        OUTPUT_DELAY    : --! @brief 出力信号遅延時間
+                          time    := 0 ns;
+        WIDTH           : --! @brief AXI4 チャネルの可変長信号のビット幅.
+                          AXI4_SIGNAL_WIDTH_TYPE;
+        SYNC_PLUG_NUM   : --! @brief シンクロ用信号のプラグ番号.
+                          SYNC_PLUG_NUM_TYPE := 1;
+        SYNC_WIDTH      : --! @brief シンクロ用信号の本数.
+                          integer :=  1;
+        GPI_WIDTH       : --! @brief GPI(General Purpose Input)信号のビット幅.
+                          integer := 8;
+        GPO_WIDTH       : --! @brief GPO(General Purpose Output)信号のビット幅.
+                          integer := 8;
+        MEMORY_SIZE     : --! @brief メモリの大きさをバイト数で指定する.
+                          integer := 4096;
+        READ_QUEUE_SIZE : --! @brief リードトランザクションのキューの数を指定する.
+                          integer := 8;
+        WRITE_QUEUE_SIZE: --! @brief ライトトランザクションのキューの数を指定する.
+                          integer := 8;
+        DOMAIN_SIZE     : --! @brief ドメインの数を指定する.
+                          integer := 8;
+        FINISH_ABORT    : --! @brief FINISH コマンド実行時にシミュレーションを
+                          --!        アボートするかどうかを指定するフラグ.
+                          boolean := true
+    );
+    -------------------------------------------------------------------------------
+    -- 入出力ポートの定義.
+    -------------------------------------------------------------------------------
+    port(
+        --------------------------------------------------------------------------
+        -- グローバルシグナル.
+        --------------------------------------------------------------------------
+        ACLK            : in    std_logic;
+        ARESETn         : in    std_logic;
+        --------------------------------------------------------------------------
+        -- リードアドレスチャネルシグナル.
+        --------------------------------------------------------------------------
+        ARADDR          : in    std_logic_vector(WIDTH.ARADDR -1 downto 0);
+        ARLEN           : in    std_logic_vector(WIDTH.ALEN   -1 downto 0);
+        ARSIZE          : in    AXI4_ASIZE_TYPE;
+        ARBURST         : in    AXI4_ABURST_TYPE;
+        ARLOCK          : in    std_logic_vector(WIDTH.ALOCK  -1 downto 0);
+        ARCACHE         : in    AXI4_ACACHE_TYPE;
+        ARPROT          : in    AXI4_APROT_TYPE;
+        ARQOS           : in    AXI4_AQOS_TYPE;
+        ARREGION        : in    AXI4_AREGION_TYPE;
+        ARUSER          : in    std_logic_vector(WIDTH.ARUSER -1 downto 0);
+        ARID            : in    std_logic_vector(WIDTH.ID     -1 downto 0);
+        ARVALID         : in    std_logic;
+        ARREADY         : out   std_logic;
+        --------------------------------------------------------------------------
+        -- リードデータチャネルシグナル.
+        --------------------------------------------------------------------------
+        RLAST           : out   std_logic;
+        RDATA           : out   std_logic_vector(WIDTH.RDATA  -1 downto 0);
+        RRESP           : out   AXI4_RESP_TYPE;
+        RUSER           : out   std_logic_vector(WIDTH.RUSER  -1 downto 0);
+        RID             : out   std_logic_vector(WIDTH.ID     -1 downto 0);
+        RVALID          : out   std_logic;
+        RREADY          : in    std_logic;
+        --------------------------------------------------------------------------
+        -- ライトアドレスチャネルシグナル.
+        --------------------------------------------------------------------------
+        AWADDR          : in    std_logic_vector(WIDTH.AWADDR -1 downto 0);
+        AWLEN           : in    std_logic_vector(WIDTH.ALEN   -1 downto 0);
+        AWSIZE          : in    AXI4_ASIZE_TYPE;
+        AWBURST         : in    AXI4_ABURST_TYPE;
+        AWLOCK          : in    std_logic_vector(WIDTH.ALOCK  -1 downto 0);
+        AWCACHE         : in    AXI4_ACACHE_TYPE;
+        AWPROT          : in    AXI4_APROT_TYPE;
+        AWQOS           : in    AXI4_AQOS_TYPE;
+        AWREGION        : in    AXI4_AREGION_TYPE;
+        AWUSER          : in    std_logic_vector(WIDTH.AWUSER -1 downto 0);
+        AWID            : in    std_logic_vector(WIDTH.ID     -1 downto 0);
+        AWVALID         : in    std_logic;
+        AWREADY         : out   std_logic;
+        --------------------------------------------------------------------------
+        -- ライトデータチャネルシグナル.
+        --------------------------------------------------------------------------
+        WLAST           : in    std_logic;
+        WDATA           : in    std_logic_vector(WIDTH.WDATA  -1 downto 0);
+        WSTRB           : in    std_logic_vector(WIDTH.WDATA/8-1 downto 0);
+        WUSER           : in    std_logic_vector(WIDTH.WUSER  -1 downto 0);
+        WID             : in    std_logic_vector(WIDTH.ID     -1 downto 0);
+        WVALID          : in    std_logic;
+        WREADY          : out   std_logic;
+        --------------------------------------------------------------------------
+        -- ライト応答チャネルシグナル.
+        --------------------------------------------------------------------------
+        BRESP           : out   AXI4_RESP_TYPE;
+        BUSER           : out   std_logic_vector(WIDTH.BUSER  -1 downto 0);
+        BID             : out   std_logic_vector(WIDTH.ID     -1 downto 0);
+        BVALID          : out   std_logic;
         BREADY          : in    std_logic;
         --------------------------------------------------------------------------
         -- シンクロ用信号
