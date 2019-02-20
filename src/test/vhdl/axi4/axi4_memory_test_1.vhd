@@ -63,9 +63,9 @@ entity  DUMMY_PLUG_AXI4_MEMORY_TEST_1 is
         MEMORY_SIZE     : --! @brief メモリの大きさをバイト数で指定する.
                           integer := 4096;
         READ_QUEUE_SIZE : --! @brief リードトランザクションのキューの数を指定する.
-                          integer := 8;
+                          integer := 4;
         WRITE_QUEUE_SIZE: --! @brief ライトトランザクションのキューの数を指定する.
-                          integer := 8;
+                          integer := 4;
         DOMAIN_SIZE     : --! @brief ドメインの数を指定する.
                           integer := 8;
         FINISH_ABORT    : boolean := FALSE
@@ -91,8 +91,8 @@ architecture MODEL of DUMMY_PLUG_AXI4_MEMORY_TEST_1 is
                                  RUSER       =>  1,
                                  BUSER       =>  1);
     constant SYNC_WIDTH      : integer :=  2;
-    constant GPO_WIDTH       : integer :=  8;
-    constant GPI_WIDTH       : integer :=  2*GPO_WIDTH;
+    constant GPO_WIDTH       : integer :=  1;
+    constant GPI_WIDTH       : integer :=  1;
     constant DEFAULT_SYNC_IO : boolean :=  TRUE;
     -------------------------------------------------------------------------------
     -- グローバルシグナル.
@@ -485,7 +485,9 @@ begin
             BVALID          => BVALID          , -- In  :
             BREADY          => BREADY            -- In  :
     );
-
+    -------------------------------------------------------------------------------
+    --
+    -------------------------------------------------------------------------------
     process begin
         while (TRUE) loop
             ACLK <= '1';
@@ -497,10 +499,15 @@ begin
         ACLK <= '0';
         wait;
     end process;
-
+    -------------------------------------------------------------------------------
+    --
+    -------------------------------------------------------------------------------
     ARESETn <= '1' when (RESET = '0') else '0';
-    M_GPI   <= S_GPO & M_GPO;
-    S_GPI   <= S_GPO & M_GPO;
+    M_GPI   <= S_GPO;
+    S_GPI   <= M_GPO;
+    -------------------------------------------------------------------------------
+    --
+    -------------------------------------------------------------------------------
     process
         variable L   : LINE;
         constant T   : STRING(1 to 7) := "  ***  ";
