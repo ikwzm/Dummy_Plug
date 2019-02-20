@@ -539,6 +539,7 @@ architecture MODEL of AXI4_MEMORY_PLAYER is
     constant  KEY_READ      : KEY_TYPE := "READ   ";
     constant  KEY_WRITE     : KEY_TYPE := "WRITE  ";
     constant  KEY_ADDR      : KEY_TYPE := "ADDR   ";
+    constant  KEY_LAST      : KEY_TYPE := "LAST   ";
     constant  KEY_SIZE      : KEY_TYPE := "SIZE   ";
     constant  KEY_ASIZE     : KEY_TYPE := "ASIZE  ";
     constant  KEY_ALOCK     : KEY_TYPE := "ALOCK  ";
@@ -783,7 +784,8 @@ begin
             constant  proc_name     :  string := "MAP_READ_DOMAIN";
             variable  next_event    :  EVENT_TYPE;
             variable  key_word      :  KEY_TYPE;
-            variable  range_addr    :  std_logic_vector(AADDR_BITS-1 downto 0) := (others => '0');
+            variable  range_base    :  std_logic_vector(AADDR_BITS-1 downto 0) := (others => '0');
+            variable  range_last    :  std_logic_vector(AADDR_BITS-1 downto 0) := (others => '0');
             variable  range_size    :  integer := 0;
             -----------------------------------------------------------------------
             --! @brief シナリオからトランザクション応答ステータスの値を読み取るサブプログラム.
@@ -888,7 +890,8 @@ begin
                             when KEY_READ    => read_value    (domain.READ_ENABLE );
                             when KEY_WRITE   => read_value    (domain.WRITE_ENABLE);
                             when KEY_MAP     => read_value    (domain.MEM_BASE    );
-                            when KEY_ADDR    => read_value    (range_addr         );
+                            when KEY_ADDR    => read_value    (range_base         );
+                            when KEY_LAST    => read_value    (range_last         );
                             when KEY_SIZE    => read_value    (range_size         );
                             when KEY_RESP    => read_axi4_resp(domain.RESP        );
                             when KEY_USER    => read_value    (domain.USER        );
@@ -915,11 +918,14 @@ begin
                     READ_EVENT(core, stream, EVENT_SCALAR);
                 end if;
             end loop;
-            if (range_size > 0) then
-                domain.MIN_ADDR := unsigned(range_addr);
-                domain.MAX_ADDR := unsigned(range_addr) + range_size - 1;
+            if    (range_size > 0) then
+                domain.MIN_ADDR := unsigned(range_base);
+                domain.MAX_ADDR := unsigned(range_base) + range_size - 1;
+            elsif (unsigned(range_last) > 0) then
+                domain.MIN_ADDR := unsigned(range_base);
+                domain.MAX_ADDR := unsigned(range_last);
             else
-                EXECUTE_ABORT(core, proc_name, "DOMAIN SIZE ERROR");
+                EXECUTE_ABORT(core, proc_name, "Domain Address Range Error");
             end if;
             event := next_event;
             REPORT_DEBUG(core, proc_name, "END");
@@ -980,7 +986,7 @@ begin
             if (index >= domains'low and index <= domains'high) then
                 domains(index) <= domain;
             else
-                EXECUTE_ABORT(core, proc_name, "DOMAIN INDEX ERROR");
+                EXECUTE_ABORT(core, proc_name, "Domain Index Error");
             end if;
             REPORT_DEBUG(core, proc_name, "END");
         end procedure;
@@ -1461,6 +1467,7 @@ begin
             variable  upper_lane    :  integer;
             variable  burst_len     :  integer;
             variable  mem_pos       :  integer;
+            constant  proc_name     :  string := "R-Channel";
             -----------------------------------------------------------------------
             --! @brief TRAN_INFO_READ で取り込んだトランザクション情報から
             --!        ワード毎のリードデータチャネル信号の値を生成するサブプログラム
@@ -1526,8 +1533,10 @@ begin
             --! @brief メモリから読んでリードチャネルに出力するサブプログラム
             -----------------------------------------------------------------------
             procedure output_r_channel_from_memory is
+                constant proc_name      :  string := "OUTPUT_R_CHANNEL_FROM_MEMORY";
                 variable timeout_count  :  integer;
             begin
+                REPORT_DEBUG(core, proc_name, "BEGIN");
                 -------------------------------------------------------------------
                 -- tran_info.LATENCY がキューに入っていたサイクルよりも多い場合、
                 -- 差分の分だけウェイトを入れる
@@ -1561,7 +1570,7 @@ begin
                         tran_req_ready <= FALSE;
                         exit when  (RREADY = '1');
                         if (timeout_count >= tran_info.TIMEOUT) then
-                            EXECUTE_ABORT(core, string'(""), "WAIT RREADY Time Out!");
+                            EXECUTE_ABORT(core, proc_name, "Wait RREADY Time Out!");
                         end if;
                         timeout_count := timeout_count + 1;
                     end loop;
@@ -1582,13 +1591,16 @@ begin
                         end if;
                     end if;
                 end loop;
+                REPORT_DEBUG(core, proc_name, "END");
             end procedure;
             -----------------------------------------------------------------------
             --! @brief エラーレスポンスだけをリードチャネルに出力するサブプログラム
             -----------------------------------------------------------------------
             procedure output_r_channel_error_response is
+                constant proc_name      :  string := "OUTPUT_R_CHANNEL_ERROR_RESPONSE";
                 variable timeout_count  :  integer;
             begin
+                REPORT_DEBUG(core, proc_name, "BEGIN");
                 -------------------------------------------------------------------
                 -- tran_info.RESP_DELAY がキューに入っていたサイクルよりも多い場合、
                 -- 差分の分だけウェイトを入れる
@@ -1618,7 +1630,7 @@ begin
                     tran_req_ready <= FALSE;
                     exit when  (RREADY = '1');
                     if (timeout_count >= tran_info.TIMEOUT) then
-                        EXECUTE_ABORT(core, string'(""), "WAIT RREADY Time Out!");
+                        EXECUTE_ABORT(core, proc_name, "Wait RREADY Time Out!");
                     end if;
                     timeout_count := timeout_count + 1;
                 end loop;
@@ -1626,6 +1638,7 @@ begin
                 -- リードデータチャネルの出力をデフォルトに戻しておく
                 -------------------------------------------------------------------
                 output_r_channel_signals(AXI4_R_CHANNEL_SIGNAL_NULL);
+                REPORT_DEBUG(core, proc_name, "END");
             end procedure;
         begin
             -----------------------------------------------------------------------
@@ -1642,6 +1655,7 @@ begin
             -- 変数の初期化
             -----------------------------------------------------------------------
             out_signals := AXI4_R_CHANNEL_SIGNAL_NULL;
+            core.debug  := 1;
             -----------------------------------------------------------------------
             -- 信号の初期化
             -----------------------------------------------------------------------
@@ -1658,8 +1672,11 @@ begin
                 -------------------------------------------------------------------
                 -- tran_queue に新しいトランザクションが届くまで待つ
                 -------------------------------------------------------------------
-                wait until (tran_req_valid = TRUE);
-                wait for 0 ns;
+                wait for 0 ns; -- tran_req_ready の変化で tran_queue が変化するのを待つ
+                wait for 0 ns; -- tran_queue の変化で tran_req_valid が変化するのを待つ
+                if tran_req_valid = FALSE then
+                    wait until (tran_req_valid = TRUE);
+                end if;
                 tran_proc_busy <= TRUE;
                 tran_req_ready <= TRUE;
                 tran_info      := tran_queue(tran_queue'low);
@@ -1679,7 +1696,7 @@ begin
                 -- 
                 -------------------------------------------------------------------
                 if tran_info.DOMAIN < domains'low or domains'high < tran_info.DOMAIN then
-                    EXECUTE_ABORT(core, string'(""), "NOT FOUND DOMAIN");
+                    EXECUTE_ABORT(core, proc_name, "Not Found Domain");
                 end if;
                 -------------------------------------------------------------------
                 -- tran_info から各種情報に従ってリードチャネルに出力
@@ -1760,7 +1777,8 @@ begin
             variable  burst_len     :  integer;
             variable  mem_pos       :  integer;
             variable  timeout_count :  integer;
-            constant  word_bytes    :     integer := WIDTH.WDATA/8;
+            constant  word_bytes    :  integer := WIDTH.WDATA/8;
+            constant  proc_name     :  string := "W-Channel";
             -----------------------------------------------------------------------
             --! @brief 信号変数(signals)の値をポートに出力するサブプログラム.
             --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1805,8 +1823,11 @@ begin
                 -------------------------------------------------------------------
                 -- tran_queue に新しいトランザクションが届くまで待つ
                 -------------------------------------------------------------------
-                wait until (tran_req_valid = TRUE);
-                wait for 0 ns;
+                wait for 0 ns; -- tran_req_ready の変化で tran_queue が変化するのを待つ
+                wait for 0 ns; -- tran_queue の変化で tran_req_valid が変化するのを待つ
+                if tran_req_valid = FALSE then
+                    wait until (tran_req_valid = TRUE);
+                end if;
                 tran_proc_busy <= TRUE;
                 tran_req_ready <= TRUE;
                 tran_info      := tran_queue(tran_queue'low);
@@ -1826,7 +1847,7 @@ begin
                 -- 
                 -------------------------------------------------------------------
                 if tran_info.DOMAIN < domains'low or domains'high < tran_info.DOMAIN then
-                    EXECUTE_ABORT(core, string'(""), "NOT FOUND DOMAIN");
+                    EXECUTE_ABORT(core, proc_name, "Not Found Domain");
                 end if;
                 -------------------------------------------------------------------
                 -- tran_info.LATENCY がキューに入っていたサイクルよりも多い場合、
@@ -1854,7 +1875,7 @@ begin
                         tran_req_ready <= FALSE;
                         exit when  (WVALID = '1');
                         if (timeout_count >= tran_info.TIMEOUT) then
-                            EXECUTE_ABORT(core, string'(""), "WAIT WVALID Time Out!");
+                            EXECUTE_ABORT(core, proc_name, "Wait WVALID Time Out!");
                         end if;
                         timeout_count := timeout_count + 1;
                     end loop;
@@ -1868,9 +1889,11 @@ begin
                     if (tran_info.RESP = AXI4_RESP_OKAY  ) or
                        (tran_info.RESP = AXI4_RESP_EXOKAY) then
                         for lane in 0 to word_bytes-1 loop
-                            if (lower_lane <= lane and lane <= upper_lane and WSTRB(lane) = '1') then
-                                mem(mem_pos) := WDATA(lane*8+7 downto lane*8);
-                                mem_pos      := mem_pos + 1;
+                            if (lower_lane <= lane and lane <= upper_lane) then
+                                if (WSTRB(lane) = '1') then
+                                    mem(mem_pos) := WDATA(lane*8+7 downto lane*8);
+                                end if;
+                                mem_pos := mem_pos + 1;
                             end if;
                         end loop;
                         lower_lane := (upper_lane + 1)  mod word_bytes;
@@ -1884,7 +1907,7 @@ begin
                     ---------------------------------------------------------------
                     if (WLAST = '1') then
                         if (i /= burst_len) then
-                            EXECUTE_ABORT(core, string'(""), "MISMATCH WLAST");
+                            EXECUTE_ABORT(core, proc_name, "Mismatch WLAST");
                         end if;
                         exit BURST_LOOP;
                     end if;
@@ -1952,6 +1975,7 @@ begin
             variable  tran_info     :  TRAN_INFO_TYPE;
             variable  out_signals   :  AXI4_B_CHANNEL_SIGNAL_TYPE;
             variable  timeout_count :  integer;
+            constant  proc_name     :  string := "B-Channel";
             -----------------------------------------------------------------------
             --! @brief 信号変数(signals)の値をポートに出力するサブプログラム.
             --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1997,8 +2021,11 @@ begin
                 -------------------------------------------------------------------
                 -- tran_queue に新しいトランザクションが届くまで待つ
                 -------------------------------------------------------------------
-                wait until (tran_req_valid = TRUE);
-                wait for 0 ns;
+                wait for 0 ns; -- tran_req_ready の変化で tran_queue が変化するのを待つ
+                wait for 0 ns; -- tran_queue の変化で tran_req_valid が変化するのを待つ
+                if tran_req_valid = FALSE then
+                    wait until (tran_req_valid = TRUE);
+                end if;
                 tran_proc_busy <= TRUE;
                 tran_req_ready <= TRUE;
                 tran_info      := tran_queue(tran_queue'low);
@@ -2030,7 +2057,7 @@ begin
                     tran_req_ready <= FALSE;
                     exit when  (BREADY = '1');
                     if (timeout_count >= tran_info.TIMEOUT) then
-                        EXECUTE_ABORT(core, string'(""), "WAIT BREADY Time Out!");
+                        EXECUTE_ABORT(core, proc_name, "Wait BREADY Time Out!");
                     end if;
                     timeout_count := timeout_count + 1;
                 end loop;
