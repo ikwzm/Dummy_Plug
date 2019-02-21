@@ -2,7 +2,7 @@
 --!     @file    axi4_memory_player.vhd
 --!     @brief   AXI4 Memory Dummy Plug Player.
 --!     @version 1.7.1
---!     @date    2019/2/14
+--!     @date    2019/2/21
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -1427,7 +1427,8 @@ begin
     -- リードデータチャネル制御ブロック
     -------------------------------------------------------------------------------
     R: block
-        signal    tran_queue        :  TRAN_INFO_VECTOR(0 to READ_QUEUE_SIZE-1);
+        constant  QUEUE_SIZE        :  integer := MAX(1, READ_QUEUE_SIZE);
+        signal    tran_queue        :  TRAN_INFO_VECTOR(0 to QUEUE_SIZE-1);
         signal    tran_req_valid    :  boolean;
         signal    tran_req_ready    :  boolean;
         signal    tran_proc_busy    :  boolean;
@@ -1450,8 +1451,10 @@ begin
                  );
             end if;
         end process;
-        r_tran_busy    <= (tran_queue(tran_queue'low ).VALID  = TRUE or tran_proc_busy = TRUE);
-        r_tran_ready   <= (tran_queue(tran_queue'high).VALID /= TRUE);
+        r_tran_busy    <= (READ_QUEUE_SIZE > 0 and (tran_proc_busy = TRUE or tran_queue(tran_queue'low ).VALID  = TRUE)) or
+                          (READ_QUEUE_SIZE = 0 and (tran_proc_busy = TRUE ));
+        r_tran_ready   <= (READ_QUEUE_SIZE > 0 and (tran_queue(tran_queue'high).VALID /= TRUE)) or
+                          (READ_QUEUE_SIZE = 0 and (tran_proc_busy = FALSE));
         tran_req_valid <= (tran_queue(tran_queue'low ).VALID  = TRUE);
         ---------------------------------------------------------------------------
         -- 
@@ -1736,10 +1739,12 @@ begin
     -- ライトデータチャネル制御ブロック
     -------------------------------------------------------------------------------
     W: block
-        signal    tran_queue        :  TRAN_INFO_VECTOR(0 to WRITE_QUEUE_SIZE-1);
+        constant  QUEUE_SIZE        :  integer := 1;
+        signal    tran_queue        :  TRAN_INFO_VECTOR(0 to QUEUE_SIZE-1);
         signal    tran_req_valid    :  boolean;
         signal    tran_req_ready    :  boolean;
         signal    tran_proc_busy    :  boolean;
+        signal    tran_proc_last    :  boolean;
     begin
         ---------------------------------------------------------------------------
         -- ライトリクエストキュー
@@ -1759,9 +1764,10 @@ begin
                  );
             end if;
         end process;
-        w_tran_busy    <= (tran_queue(tran_queue'low ).VALID  = TRUE or tran_proc_busy = TRUE);
-        w_tran_ready   <= (tran_queue(tran_queue'high).VALID /= TRUE);
-        tran_req_valid <= (tran_queue(tran_queue'low ).VALID  = TRUE);
+        w_tran_busy    <= (tran_proc_busy = TRUE or tran_queue(tran_queue'low ).VALID = TRUE);
+        w_tran_ready   <= (tran_queue(tran_queue'high).VALID = FALSE);
+        tran_req_valid <= (tran_queue(tran_queue'low ).VALID = TRUE );
+        tran_req_ready <= (tran_proc_last = TRUE and WVALID = '1');
         ---------------------------------------------------------------------------
         -- 
         ---------------------------------------------------------------------------
@@ -1811,8 +1817,8 @@ begin
             output_w_channel_signals(AXI4_W_CHANNEL_SIGNAL_NULL);
             reports(W_REPORT_STATUS) <= core.report_status;
             tran_proc_busy           <= FALSE;
+            tran_proc_last           <= FALSE;
             b_tran_info              <= TRAN_INFO_NULL;
-            b_tran_valid             <= FALSE;
             -----------------------------------------------------------------------
             --
             -----------------------------------------------------------------------
@@ -1820,16 +1826,17 @@ begin
             MAIN_LOOP: loop
                 reports(W_REPORT_STATUS) <= core.report_status;
                 tran_proc_busy <= FALSE;
+                tran_proc_last <= FALSE;
                 -------------------------------------------------------------------
-                -- tran_queue に新しいトランザクションが届くまで待つ
+                -- tran_queue に新しいトランザクションが届き、かつライト応答キュー
+                -- が空くまで待つ.
                 -------------------------------------------------------------------
                 wait for 0 ns; -- tran_req_ready の変化で tran_queue が変化するのを待つ
                 wait for 0 ns; -- tran_queue の変化で tran_req_valid が変化するのを待つ
-                if tran_req_valid = FALSE then
-                    wait until (tran_req_valid = TRUE);
+                if (tran_req_valid = FALSE or b_tran_ready = FALSE) then
+                    wait until (tran_req_valid = TRUE and b_tran_ready = TRUE);
                 end if;
                 tran_proc_busy <= TRUE;
-                tran_req_ready <= TRUE;
                 tran_info      := tran_queue(tran_queue'low);
                 -------------------------------------------------------------------
                 -- tran_info から各種情報を引き出す
@@ -1850,6 +1857,10 @@ begin
                     EXECUTE_ABORT(core, proc_name, "Not Found Domain");
                 end if;
                 -------------------------------------------------------------------
+                -- ライト応答キューに入れる b_tran_info を設定しておく
+                -------------------------------------------------------------------
+                b_tran_info <= tran_info;
+                -------------------------------------------------------------------
                 -- tran_info.LATENCY がキューに入っていたサイクルよりも多い場合、
                 -- 差分の分だけウェイトを入れる
                 -------------------------------------------------------------------
@@ -1857,13 +1868,22 @@ begin
                     output_w_channel_signals(AXI4_W_CHANNEL_SIGNAL_NULL);
                     LATENCY_LOOP: for i in 0 to tran_info.LATENCY - tran_info.COUNT loop
                         wait until (ACLK'event and ACLK = '1');
-                        tran_req_ready <= FALSE;
                     end loop;
                 end if;
                 -------------------------------------------------------------------
                 -- 指定されたバースト長の回数分データを入力する
                 -------------------------------------------------------------------
                 BURST_LOOP: for i in 1 to burst_len loop
+                    ---------------------------------------------------------------
+                    -- 最後の転送時に、ライトリクエストキューからリクエスト情報を取
+                    -- り除くため、またはライト応答キューに b_tran_info を入れるた
+                    -- めに tran_proc_last 信号をアサートしておく.
+                    ---------------------------------------------------------------
+                    if (i = burst_len) then
+                        tran_proc_last <= TRUE;
+                    else
+                        tran_proc_last <= FALSE;
+                    end if;
                     ---------------------------------------------------------------
                     -- ライトデータチャネルからデータが届くのを待つ
                     ---------------------------------------------------------------
@@ -1872,7 +1892,6 @@ begin
                     timeout_count := 0;
                     WAIT_VALID_LOOP: loop
                         wait until (ACLK'event and ACLK = '1');
-                        tran_req_ready <= FALSE;
                         exit when  (WVALID = '1');
                         if (timeout_count >= tran_info.TIMEOUT) then
                             EXECUTE_ABORT(core, proc_name, "Wait WVALID Time Out!");
@@ -1883,6 +1902,10 @@ begin
                     -- WREADY をネゲートしておく
                     ---------------------------------------------------------------
                     output_w_channel_signals(AXI4_W_CHANNEL_SIGNAL_NULL);
+                    ---------------------------------------------------------------
+                    -- tran_proc_last もネゲートしておく
+                    ---------------------------------------------------------------
+                    tran_proc_last <= FALSE;
                     ---------------------------------------------------------------
                     -- ライトデータチャネルからのデータをメモリに書く
                     ---------------------------------------------------------------
@@ -1919,27 +1942,24 @@ begin
                         if (i mod tran_info.BLK_LENGTH = 0) then
                             BLK_INTERVAL_LOOP: for i in 1 to tran_info.BLK_INTERVAL loop
                                 wait until (ACLK'event and ACLK = '1');
-                                tran_req_ready <= FALSE;
                             end loop;
                         end if;
                     end if;
                 end loop;
-                -------------------------------------------------------------------
-                -- ライト応答キューに入れる
-                -------------------------------------------------------------------
-                b_tran_info  <= tran_info;
-                b_tran_valid <= TRUE;
-                wait until (ACLK'event and ACLK = '1' and b_tran_ready = TRUE);
-                b_tran_valid <= FALSE;
             end loop;
             reports(W_REPORT_STATUS) <= core.report_status;
         end process;
+        ---------------------------------------------------------------------------
+        -- ライト応答キューに b_tran_info を入れるための信号
+        ---------------------------------------------------------------------------
+        b_tran_valid <= (tran_proc_last = TRUE and WVALID = '1');
     end block;
     -------------------------------------------------------------------------------
     -- ライト応答チャネル制御ブロック
     -------------------------------------------------------------------------------
     B: block
-        signal    tran_queue        :  TRAN_INFO_VECTOR(0 to WRITE_QUEUE_SIZE-1);
+        constant  QUEUE_SIZE        :  integer := MAX(1, WRITE_QUEUE_SIZE);
+        signal    tran_queue        :  TRAN_INFO_VECTOR(0 to QUEUE_SIZE-1);
         signal    tran_req_valid    :  boolean;
         signal    tran_req_ready    :  boolean;
         signal    tran_proc_busy    :  boolean;
@@ -1962,8 +1982,10 @@ begin
                  );
             end if;
         end process;
-        b_tran_busy    <= (tran_queue(tran_queue'low ).VALID  = TRUE or tran_proc_busy = TRUE);
-        b_tran_ready   <= (tran_queue(tran_queue'high).VALID /= TRUE);
+        b_tran_busy    <= (WRITE_QUEUE_SIZE > 0 and (tran_proc_busy = TRUE or tran_queue(tran_queue'low ).VALID  = TRUE)) or
+                          (WRITE_QUEUE_SIZE = 0 and (tran_proc_busy = TRUE));
+        b_tran_ready   <= (WRITE_QUEUE_SIZE > 0 and (tran_queue(tran_queue'high).VALID /= TRUE)) or
+                          (WRITE_QUEUE_SIZE = 0 and (tran_proc_busy = FALSE));
         tran_req_valid <= (tran_queue(tran_queue'low ).VALID  = TRUE);
         ---------------------------------------------------------------------------
         -- 
