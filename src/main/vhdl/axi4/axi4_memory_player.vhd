@@ -2,7 +2,7 @@
 --!     @file    axi4_memory_player.vhd
 --!     @brief   AXI4 Memory Dummy Plug Player.
 --!     @version 1.7.1
---!     @date    2019/2/21
+--!     @date    2019/2/22
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -523,6 +523,7 @@ architecture MODEL of AXI4_MEMORY_PLAYER is
     constant  KEY_WAIT      : KEY_TYPE := "WAIT   ";
     constant  KEY_CHECK     : KEY_TYPE := "CHECK  ";
     constant  KEY_SET       : KEY_TYPE := "SET    ";
+    constant  KEY_FILL      : KEY_TYPE := "FILL   ";
     constant  KEY_ORG       : KEY_TYPE := "ORG    ";
     constant  KEY_DATA      : KEY_TYPE := "DATA   ";
     constant  KEY_DB        : KEY_TYPE := "DB     ";
@@ -574,8 +575,9 @@ begin
         variable  gpo_signals   :  std_logic_vector(GPO'range);
         variable  sync_io       :  boolean;
         variable  mem_addr      :  integer;
-        type      MEM_MODE_TYPE is (MEM_SET_MODE, MEM_CHECK_MODE);
+        type      MEM_MODE_TYPE is (MEM_SET_MODE, MEM_FILL_MODE, MEM_CHECK_MODE);
         variable  mem_mode      :  MEM_MODE_TYPE;
+        variable  mem_fill_size :  integer := 1;
         ---------------------------------------------------------------------------
         --! @brief  SYNCオペレーション. 
         --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -998,14 +1000,46 @@ begin
         --! @param    core        コア変数.
         --! @param    stream      入力ストリーム.
         ---------------------------------------------------------------------------
-        procedure execute_memset(
+        procedure execute_set(
             variable  core           :  inout CORE_TYPE;
             file      stream         :        TEXT
         ) is
-            constant  proc_name      :  string := "EXECUTE_MEMSET";
+            constant  proc_name      :  string := "EXECUTE_SET";
         begin
             REPORT_DEBUG(core, proc_name, "BEGIN");
             mem_mode := MEM_SET_MODE;
+            REPORT_DEBUG(core, proc_name, "END");
+        end procedure;
+        ---------------------------------------------------------------------------
+        --! @brief  FILL オペレーション. 
+        --!         FILL の回数を指定する
+        --!         指定されたFILL回数は mem_fill_size 変数に格納される.
+        --!         ORG/DB/DH/DW/DD/DATA オペレーション実行時に MEM SET をすることを
+        --!         指定する
+        --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        --! @param    core        コア変数.
+        --! @param    stream      入力ストリーム.
+        ---------------------------------------------------------------------------
+        procedure execute_fill(
+            variable  core           :  inout CORE_TYPE;
+            file      stream         :        TEXT
+        ) is
+            constant  proc_name      :  string := "EXECUTE_FILL";
+            variable  next_event     :  EVENT_TYPE;
+            variable  good           :  boolean;
+            variable  size           :  integer;
+        begin 
+            REPORT_DEBUG(core, proc_name, "BEGIN");
+            SEEK_EVENT(core, stream, next_event);
+            READ_INTEGER(core, stream, size, good);
+            if (good = FALSE) then
+                READ_ERROR(core, proc_name, "READ_INTEGER not good");
+            end if;
+            if (size < 1) then
+                READ_ERROR(core, proc_name, "FILL SIZE less than 1");
+            end if;
+            mem_mode := MEM_FILL_MODE;
+            mem_fill_size := size;
             REPORT_DEBUG(core, proc_name, "END");
         end procedure;
         ---------------------------------------------------------------------------
@@ -1016,11 +1050,11 @@ begin
         --! @param    core        コア変数.
         --! @param    stream      入力ストリーム.
         ---------------------------------------------------------------------------
-        procedure execute_memchk(
+        procedure execute_check(
             variable  core           :  inout CORE_TYPE;
             file      stream         :        TEXT
         ) is
-            constant  proc_name      :  string := "EXECUTE_MEMCHK";
+            constant  proc_name      :  string := "EXECUTE_CHECK";
         begin
             REPORT_DEBUG(core, proc_name, "BEGIN");
             mem_mode := MEM_CHECK_MODE;
@@ -1034,12 +1068,12 @@ begin
         --! @param    stream      入力ストリーム.
         --! @param    data_size   データのサイズをバイト単位で指定する.
         ---------------------------------------------------------------------------
-        procedure memset(
+        procedure mem_set(
             variable  core           :  inout CORE_TYPE;
             file      stream         :        TEXT     ;
                       data_size      :  in    integer
         ) is
-            constant  proc_name      :  string := "MEMSET";
+            constant  proc_name      :  string := "MEM_SET";
             variable  next_event     :  EVENT_TYPE;
             variable  str_len        :  integer;
             variable  seq_level      :  integer;
@@ -1087,6 +1121,79 @@ begin
             REPORT_DEBUG(core, proc_name, "END");
         end procedure;
         ---------------------------------------------------------------------------
+        --! @brief  シナリオで指定された値を mem_addr で指定された開始アドレスから
+        --!         mem_fill_size 分だけ mem に書き込むサブプログラム
+        --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        --! @param    core        コア変数.
+        --! @param    stream      入力ストリーム.
+        --! @param    data_size   データのサイズをバイト単位で指定する.
+        ---------------------------------------------------------------------------
+        procedure mem_fil(
+            variable  core           :  inout CORE_TYPE;
+            file      stream         :        TEXT     ;
+                      data_size      :  in    integer
+        ) is
+            constant  proc_name      :  string := "MEM_FIL";
+            variable  next_event     :  EVENT_TYPE;
+            variable  str_len        :  integer;
+            variable  seq_level      :  integer;
+            variable  len            :  integer;
+            variable  byte_size      :  integer;
+            variable  data           :  std_logic_vector(8*data_size-1 downto 0);
+            variable  start_addr     :  integer;
+            variable  last_addr      :  integer;
+        begin
+            REPORT_DEBUG(core, proc_name, "BEGIN DATA_SIZE=" & INTEGER_TO_STRING(data_size));
+            seq_level := 0;
+            start_addr:= mem_addr;
+            MAIN_LOOP: loop
+                SEEK_EVENT(core, stream, next_event);
+                case next_event is
+                    when EVENT_SEQ_BEGIN  =>
+                        READ_EVENT(core, stream, next_event);
+                        seq_level := seq_level + 1;
+                    when EVENT_SEQ_END    =>
+                        if (seq_level > 0) then
+                            READ_EVENT(core, stream, next_event);
+                            seq_level := seq_level - 1;
+                        end if;
+                    when EVENT_SCALAR     =>
+                        READ_EVENT(core, stream, next_event);
+                        data := (others => '0');
+                        STRING_TO_STD_LOGIC_VECTOR(
+                            STR     => core.str_buf(1 to core.str_len),
+                            VAL     => data,
+                            STR_LEN => str_len,
+                            VAL_LEN => len
+                        );
+                        byte_size := ((len+7)/8);
+                        for i in 0 to byte_size-1 loop
+                            if (mem_addr < mem'low ) or (mem_addr > mem'high) then
+                                READ_ERROR(core, proc_name, "MEM_ADDR BOUND CHECK ERROR : " & HEX_TO_STRING(mem_addr,32));
+                            end if;
+                            mem(mem_addr) := data(8*i+7 downto 8*i);
+                            last_addr := mem_addr;
+                            mem_addr  := mem_addr + 1;
+                        end loop;
+                    when EVENT_ERROR      =>
+                        READ_ERROR(core, proc_name, "SEEK_EVENT NG");
+                    when others =>
+                        SKIP_EVENT(core, stream, next_event);
+                end case;
+                exit when (seq_level = 0);
+            end loop;
+            for i in 2 to mem_fill_size loop
+                for addr in start_addr to last_addr loop
+                    if (mem_addr < mem'low ) or (mem_addr > mem'high) then
+                        READ_ERROR(core, proc_name, "MEM_ADDR BOUND CHECK ERROR : " & HEX_TO_STRING(mem_addr,32));
+                    end if;
+                    mem(mem_addr) := mem(addr);
+                    mem_addr := mem_addr + 1;
+                end loop;
+            end loop;
+            REPORT_DEBUG(core, proc_name, "END");
+        end procedure;
+        ---------------------------------------------------------------------------
         --! @brief  シナリオで指定された値と mem_addr で指定された開始アドレスから
         --!         mem の値を読んで比較するサブプログラム
         --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1094,12 +1201,12 @@ begin
         --! @param    stream      入力ストリーム.
         --! @param    data_size   データのサイズをバイト単位で指定する.
         ---------------------------------------------------------------------------
-        procedure memchk(
+        procedure mem_chk(
             variable  core           :  inout CORE_TYPE;
             file      stream         :        TEXT     ;
                       data_size      :  in    integer
         ) is
-            constant  proc_name      :  string := "MEMCHK";
+            constant  proc_name      :  string := "MEM_CHK";
             variable  next_event     :  EVENT_TYPE;
             variable  str_len        :  integer;
             variable  seq_level      :  integer;
@@ -1178,8 +1285,9 @@ begin
             REPORT_DEBUG(core, proc_name, "BEGIN");
             SEEK_EVENT(core, stream, next_event);
             case mem_mode is
-                when MEM_SET_MODE   => memset(core, stream, 1);
-                when MEM_CHECK_MODE => memchk(core, stream, 1);
+                when MEM_SET_MODE   => mem_set(core, stream, 1);
+                when MEM_FILL_MODE  => mem_fil(core, stream, 1);
+                when MEM_CHECK_MODE => mem_chk(core, stream, 1);
             end case;
             REPORT_DEBUG(core, proc_name, "END");
         end procedure;
@@ -1204,8 +1312,9 @@ begin
             REPORT_DEBUG(core, proc_name, "BEGIN");
             SEEK_EVENT(core, stream, next_event);
             case mem_mode is
-                when MEM_SET_MODE   => memset(core, stream, 2);
-                when MEM_CHECK_MODE => memchk(core, stream, 2);
+                when MEM_SET_MODE   => mem_set(core, stream, 2);
+                when MEM_FILL_MODE  => mem_fil(core, stream, 2);
+                when MEM_CHECK_MODE => mem_chk(core, stream, 2);
             end case;
             REPORT_DEBUG(core, proc_name, "END");
         end procedure;
@@ -1230,8 +1339,9 @@ begin
             REPORT_DEBUG(core, proc_name, "BEGIN");
             SEEK_EVENT(core, stream, next_event);
             case mem_mode is
-                when MEM_SET_MODE   => memset(core, stream, 4);
-                when MEM_CHECK_MODE => memchk(core, stream, 4);
+                when MEM_SET_MODE   => mem_set(core, stream, 4);
+                when MEM_FILL_MODE  => mem_fil(core, stream, 4);
+                when MEM_CHECK_MODE => mem_chk(core, stream, 4);
             end case;
             REPORT_DEBUG(core, proc_name, "END");
         end procedure;
@@ -1256,8 +1366,9 @@ begin
             REPORT_DEBUG(core, proc_name, "BEGIN");
             SEEK_EVENT(core, stream, next_event);
             case mem_mode is
-                when MEM_SET_MODE   => memset(core, stream, 8);
-                when MEM_CHECK_MODE => memchk(core, stream, 8);
+                when MEM_SET_MODE   => mem_set(core, stream, 8);
+                when MEM_FILL_MODE  => mem_fil(core, stream, 8);
+                when MEM_CHECK_MODE => mem_chk(core, stream, 8);
             end case;
             REPORT_DEBUG(core, proc_name, "END");
         end procedure;
@@ -1283,24 +1394,25 @@ begin
             REPORT_DEBUG(core, proc_name, "BEGIN");
             SEEK_EVENT(core, stream, next_event);
             case mem_mode is
-                when MEM_SET_MODE   => memset(core, stream, 32);
-                when MEM_CHECK_MODE => memchk(core, stream, 32);
+                when MEM_SET_MODE   => mem_set(core, stream, 32);
+                when MEM_FILL_MODE  => mem_fil(core, stream, 32);
+                when MEM_CHECK_MODE => mem_chk(core, stream, 32);
             end case;
             REPORT_DEBUG(core, proc_name, "END");
         end procedure;
         ---------------------------------------------------------------------------
         --! @brief  ORG オペレーション. 
-        --!         SET/CHECK時の開始アドレスを指定する.
+        --!         SET/FILL/CHECK時の開始アドレスを指定する.
         --!         指定された開始アドレスは mem_addr 変数に格納される.
         --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         --! @param    core        コア変数.
         --! @param    stream      入力ストリーム.
         ---------------------------------------------------------------------------
-        procedure execute_memorg(
+        procedure execute_org(
             variable  core           :  inout CORE_TYPE;
             file      stream         :        TEXT
         ) is
-            constant  proc_name      :  string := "EXECUTE_MEMORG";
+            constant  proc_name      :  string := "EXECUTE_ORG";
             variable  next_event     :  EVENT_TYPE;
             variable  good           :  boolean;
             variable  org            :  integer;
@@ -1370,8 +1482,8 @@ begin
                         when KEY_SYNC   => execute_sync  (core, stream, operation);
                         when KEY_START  => execute_start (core, stream, operation);
                         when KEY_STOP   => execute_stop  (core, stream, operation);
-                        when KEY_SET    => execute_memset(core, stream);
-                        when KEY_CHECK  => execute_memchk(core, stream);
+                        when KEY_SET    => execute_set   (core, stream);
+                        when KEY_CHECK  => execute_check (core, stream);
                         when others     => EXECUTE_UNDEFINED_SCALAR(core, stream, keyword);
                     end case;
                 when OP_MAP             =>
@@ -1383,7 +1495,8 @@ begin
                         when KEY_OUT    => EXECUTE_OUT    (core, stream, gpo_signals, GPO);
                         when KEY_SYNC   => execute_sync   (core, stream, operation);
                         when KEY_WAIT   => execute_wait   (core, stream, sync_io);
-                        when KEY_ORG    => execute_memorg (core, stream);
+                        when KEY_ORG    => execute_org    (core, stream);
+                        when KEY_FILL   => execute_fill   (core, stream);
                         when KEY_DATA   => execute_memdata(core, stream);
                         when KEY_DB     => execute_memdb  (core, stream);
                         when KEY_DH     => execute_memdh  (core, stream);
