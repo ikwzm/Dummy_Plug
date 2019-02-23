@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
---!     @file    aix4_test_1.vhd
---!     @brief   TEST BENCH No.1 for DUMMY_PLUG.AXI4_MODELS
+--!     @file    aix4_memory_test_1.vhd
+--!     @brief   TEST BENCH No.1 for DUMMY_PLUG.AXI4_MEMORY_PLAYER
 --!     @version 1.7.1
---!     @date    2018/3/20
+--!     @date    2019/2/17
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012-2018 Ichiro Kawazome
+--      Copyright (C) 2019 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -41,30 +41,37 @@ use     std.textio.all;
 library DUMMY_PLUG;
 use     DUMMY_PLUG.AXI4_TYPES.all;
 use     DUMMY_PLUG.AXI4_MODELS.AXI4_MASTER_PLAYER;
-use     DUMMY_PLUG.AXI4_MODELS.AXI4_SLAVE_PLAYER;
+use     DUMMY_PLUG.AXI4_MODELS.AXI4_MEMORY_PLAYER;
 use     DUMMY_PLUG.AXI4_MODELS.AXI4_SIGNAL_PRINTER;
 use     DUMMY_PLUG.SYNC.all;
 use     DUMMY_PLUG.CORE.MARCHAL;
 use     DUMMY_PLUG.CORE.REPORT_STATUS_TYPE;
 use     DUMMY_PLUG.CORE.REPORT_STATUS_VECTOR;
 use     DUMMY_PLUG.CORE.MARGE_REPORT_STATUS;
-entity  DUMMY_PLUG_AXI4_TEST_1 is
+entity  DUMMY_PLUG_AXI4_MEMORY_TEST_1 is
     generic (
         NAME            : --! @brief テストベンチの識別名.
-                          STRING;
+                          STRING    := "AXI4_MEMORY_TEST_1";
         SCENARIO_FILE   : --! @brief シナリオファイルの名前.
-                          STRING;
+                          STRING    := "../../../src/test/scenarios/axi4/axi4_memory_test_1.snr";
         DATA_WIDTH      : --! @brief データチャネルのビット幅.
-                          integer;
+                          integer   := 32;
         READ_ENABLE     : --! @brief リードモードを指定する.
                           boolean   := TRUE;
         WRITE_ENABLE    : --! @brief ライトモードを指定する.
                           boolean   := TRUE;
-        EXP_REPORT      : --! @brief 期待しているREPORT_STATUSの値.
-                          REPORT_STATUS_TYPE
+        MEMORY_SIZE     : --! @brief メモリの大きさをバイト数で指定する.
+                          integer := 4096;
+        READ_QUEUE_SIZE : --! @brief リードトランザクションのキューの数を指定する.
+                          integer := 4;
+        WRITE_QUEUE_SIZE: --! @brief ライトトランザクションのキューの数を指定する.
+                          integer := 4;
+        DOMAIN_SIZE     : --! @brief ドメインの数を指定する.
+                          integer := 8;
+        FINISH_ABORT    : boolean := FALSE
     );
-end     DUMMY_PLUG_AXI4_TEST_1;
-architecture MODEL of DUMMY_PLUG_AXI4_TEST_1 is
+end     DUMMY_PLUG_AXI4_MEMORY_TEST_1;
+architecture MODEL of DUMMY_PLUG_AXI4_MEMORY_TEST_1 is
     -------------------------------------------------------------------------------
     -- 各種定数
     -------------------------------------------------------------------------------
@@ -84,8 +91,8 @@ architecture MODEL of DUMMY_PLUG_AXI4_TEST_1 is
                                  RUSER       =>  1,
                                  BUSER       =>  1);
     constant SYNC_WIDTH      : integer :=  2;
-    constant GPO_WIDTH       : integer :=  8;
-    constant GPI_WIDTH       : integer :=  2*GPO_WIDTH;
+    constant GPO_WIDTH       : integer :=  1;
+    constant GPI_WIDTH       : integer :=  1;
     constant DEFAULT_SYNC_IO : boolean :=  TRUE;
     -------------------------------------------------------------------------------
     -- グローバルシグナル.
@@ -296,21 +303,24 @@ begin
             FINISH          => M_FINISH          -- Out :
         );
     ------------------------------------------------------------------------------
-    -- AXI4_SLAVE_PLAYER
+    -- AXI4_MEMORY_PLAYER
     ------------------------------------------------------------------------------
-    S: AXI4_SLAVE_PLAYER
+    S: AXI4_MEMORY_PLAYER
         generic map (
             SCENARIO_FILE   => SCENARIO_FILE   ,
-            NAME            => "SLAVE"         ,
+            NAME            => "MEMORY"        ,
             READ_ENABLE     => READ_ENABLE     ,
             WRITE_ENABLE    => WRITE_ENABLE    ,
             OUTPUT_DELAY    => DELAY           ,
             WIDTH           => WIDTH           ,
             SYNC_PLUG_NUM   => 3               ,
             SYNC_WIDTH      => SYNC_WIDTH      ,
-            DEFAULT_SYNC_IO => DEFAULT_SYNC_IO ,
             GPI_WIDTH       => GPI_WIDTH       ,
             GPO_WIDTH       => GPO_WIDTH       ,
+            MEMORY_SIZE     => MEMORY_SIZE     ,
+            READ_QUEUE_SIZE => READ_QUEUE_SIZE ,
+            WRITE_QUEUE_SIZE=> WRITE_QUEUE_SIZE,
+            DOMAIN_SIZE     => DOMAIN_SIZE     ,
             FINISH_ABORT    => FALSE
         )
         port map(
@@ -475,7 +485,9 @@ begin
             BVALID          => BVALID          , -- In  :
             BREADY          => BREADY            -- In  :
     );
-
+    -------------------------------------------------------------------------------
+    --
+    -------------------------------------------------------------------------------
     process begin
         while (TRUE) loop
             ACLK <= '1';
@@ -487,10 +499,15 @@ begin
         ACLK <= '0';
         wait;
     end process;
-
+    -------------------------------------------------------------------------------
+    --
+    -------------------------------------------------------------------------------
     ARESETn <= '1' when (RESET = '0') else '0';
-    M_GPI   <= S_GPO & M_GPO;
-    S_GPI   <= S_GPO & M_GPO;
+    M_GPI   <= S_GPO;
+    S_GPI   <= M_GPO;
+    -------------------------------------------------------------------------------
+    --
+    -------------------------------------------------------------------------------
     process
         variable L   : LINE;
         constant T   : STRING(1 to 7) := "  ***  ";
@@ -514,13 +531,17 @@ begin
         rv(1) := M_REPORT;
         rv(2) := S_REPORT;
         rep := MARGE_REPORT_STATUS(rv);
-        assert (rep.error_count      = EXP_REPORT.error_count     ) and
-               (rep.mismatch_count   = EXP_REPORT.mismatch_count  ) and
-               (rep.warning_count    = EXP_REPORT.warning_count   ) and
-               (rep.failure_count    = EXP_REPORT.failure_count   ) and
-               (rep.read_error_count = EXP_REPORT.read_error_count)
-        report "REPORT Mismatch !!" severity FAILURE;
-        assert FALSE report "Simulation complete." severity NOTE;
+        assert (rep.error_count      = 0) and
+               (rep.mismatch_count   = 0) and
+               (rep.warning_count    = 0) and
+               (rep.failure_count    = 0) and
+               (rep.read_error_count = 0)
+            report "REPORT Mismatch !!" severity FAILURE;
+        if (FINISH_ABORT) then
+            assert FALSE report "Simulation complete(success)."  severity FAILURE;
+        else
+            assert FALSE report "Simulation complete(success)."  severity NOTE;
+        end if;
         wait;
     end process;
     
