@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_core.vhd
 --!     @brief   AXI4 Dummy Plug Core Package.
---!     @version 1.6.1
---!     @date    2016/3/15
+--!     @version 1.7.2
+--!     @date    2019/4/15
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012-2016 Ichiro Kawazome
+--      Copyright (C) 2012-2019 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -68,7 +68,7 @@ package AXI4_CORE is
     -------------------------------------------------------------------------------
     --! @brief AXI4 トランザクションデータの最大バイト数.
     -------------------------------------------------------------------------------
-    constant  AXI4_XFER_MAX_BYTES  : integer := 1024;
+    constant  AXI4_XFER_MAX_BYTES  : integer := 4096;
     -------------------------------------------------------------------------------
     --! @brief AXI4 アドレスチャネル信号のレコード宣言.
     -------------------------------------------------------------------------------
