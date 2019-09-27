@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 #---------------------------------------------------------------------------------
 #
-#       Version     :   1.5.1
-#       Created     :   2013/7/31
+#       Version     :   1.7.3
+#       Created     :   2019/9/27
 #       File name   :   number-generater.rb
 #       Author      :   Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 #       Description :   番号(整数)を生成するクラスを定義しているモジュール.
@@ -122,40 +122,38 @@ module Dummy_Plug
       def initialize(args, limit_life = 0)
         count = 1
         @seq = Array.new()
-        if args.class.name == "Range" then
+        if args.kind_of?(Range) then
           args = args.to_a
         end
         args.each {|arg|
         ## p arg.class
-          case arg.class.name
-          when "Dummy_Plug::ScenarioWriter::ConstantNumberGenerater"   then
+          if arg.kind_of?(Dummy_Plug::ScenarioWriter::ConstantNumberGenerater  ) or
+             arg.kind_of?(Dummy_Plug::ScenarioWriter::SequentialNumberGenerater) or
+             arg.kind_of?(Dummy_Plug::ScenarioWriter::RandomNumberGenerater    ) or
+             arg.kind_of?(Dummy_Plug::ScenarioWriter::GenericNumberGenerater   ) then
             @seq.push(arg)
-          when "Dummy_Plug::ScenarioWriter::SequentialNumberGenerater" then
-            @seq.push(arg)
-          when "Dummy_Plug::ScenarioWriter::RandomNumberGenerater"     then
-            @seq.push(arg)
-          when "Dummy_Plug::ScenarioWriter::GenericNumberGenerater"    then
-            @seq.push(arg)
-          when "Range" then
+          elsif arg.kind_of?(Range) then
             vec = arg.to_a
             if count < args.size
               @seq.push(SequentialNumberGenerater.new(vec,vec.size))
             else
               @seq.push(SequentialNumberGenerater.new(vec,0))
             end
-          when "Array" then
+          elsif arg.kind_of?(Array) then
             if count < args.size
               @seq.push(SequentialNumberGenerater.new(arg,arg.size))
             else
               @seq.push(SequentialNumberGenerater.new(arg,0))
             end
-          when "Fixnum" then
+          elsif arg.kind_of?(Integer) then
             if count < args.size
               @seq.push(ConstantNumberGenerater.new(arg, 1))
             else
               @seq.push(ConstantNumberGenerater.new(arg, 0))
             end
-          end
+          else
+            raise "Invalid Array Element (element=#{arg} element.class=#{arg.class})"
+         end
           count = count + 1
         }
         @curr_index = 0
