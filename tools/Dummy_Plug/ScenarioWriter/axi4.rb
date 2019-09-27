@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 #---------------------------------------------------------------------------------
 #
-#       Version     :   1.5.2
-#       Created     :   2014/3/23
+#       Version     :   1.7.3
+#       Created     :   2019/9/27
 #       File name   :   axi4.rb
 #       Author      :   Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 #       Description :   AXI4用シナリオ生成モジュール
@@ -216,9 +216,9 @@ module Dummy_Plug
         def generate_byte_data_array(data_array)
           byte_data = Array.new()
           data_array.each {|word_data|
-            if    word_data.class.name == "Fixnum" then
+            if    word_data.kind_of?(Integer) then
               byte_data.push((word_data & 0xFF))
-            elsif word_data.class.name == "String" 
+            elsif word_data.kind_of?(String) then
               if word_data =~ /^0x([0-9a-fA-F]+)$/ then
                 word_str  = $1
                 byte_size = (word_str.length+1)/2
@@ -227,6 +227,7 @@ module Dummy_Plug
                 }
               end
             else # T.B.D
+              raise "Invalid Array Element (element=#{word_data} element.class=#{word_data.class})"
             end
           }
           return byte_data
