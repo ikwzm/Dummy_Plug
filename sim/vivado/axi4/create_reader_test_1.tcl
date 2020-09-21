@@ -48,7 +48,8 @@ set work_src_list [list]
 lappend work_src_list       {../../../src/test/vhdl/core/reader_test_1.vhd}
 add_files -fileset sim_1 -norecurse $work_src_list
 set_property "top"     "DUMMY_PLUG_READER_TEST_1"  [get_filesets sim_1]
-set_property "generic" TEST_FILE=\"../../../../../../src/test/scenarios/core/reader_test_1.snr\" [get_filesets sim_1]
+set scenario_file [file join $project_directory ".." ".." ".." "src" "test" "scenarios" "core" "reader_test_1.snr" ]
+set_property "generic" "TEST_FILE=$scenario_file" [get_filesets sim_1]
 set_property -name {xsim.simulate.runtime} -value {all} -objects [get_filesets sim_1]
 
 update_compile_order -fileset sim_1
