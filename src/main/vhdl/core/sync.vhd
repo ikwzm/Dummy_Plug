@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    sync.vhd
 --!     @brief   Package for Synchronize some dummy-plugs.
---!     @version 1.6.1
---!     @date    2016/3/12
+--!     @version 1.7.4
+--!     @date    2020/9/21
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012-2016 Ichiro Kawazome
+--      Copyright (C) 2012-2020 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -102,43 +102,43 @@ package SYNC is
     --! @brief モデル間同期(SYNC)信号を制御するコンポーネント.
     -------------------------------------------------------------------------------
     component SYNC_SIG_DRIVER
-        generic (
-                 NAME     :       STRING;
-                 PLUG_NUM :       SYNC_PLUG_NUM_TYPE
-        );
-        port (
-                 CLK      : in    std_logic;
-                 RST      : in    std_logic;
-                 CLR      : in    std_logic;
-                 DEBUG    : in    boolean;
-                 SYNC     : inout SYNC_SIG_TYPE;
-                 REQ      : in    SYNC_REQ_TYPE;
-                 ACK      : out   SYNC_ACK_TYPE
-        );
+        generic (                                              -- 
+            NAME     :       STRING             := "";         --! デバッグ出力用の名前.
+            PLUG_NUM :       SYNC_PLUG_NUM_TYPE := 1           --! プラグの番号.
+        );                                                     -- 
+        port (                                                 -- 
+            CLK      : in    std_logic;                        --! クロック.
+            RST      : in    std_logic;                        --! 非同期リセット.
+            CLR      : in    std_logic;                        --! 同期リセット.
+            DEBUG    : in    boolean;                          --! デバッグ出力をするための信号.
+            SYNC     : inout SYNC_SIG_TYPE;                    --! モデル間同期用入出力信号.
+            REQ      : in    SYNC_REQ_TYPE;                    --! 同期要求入力信号.
+            ACK      : out   SYNC_ACK_TYPE                     --! 同期応答出力信号.
+        );                                                     -- 
     end component;
     -------------------------------------------------------------------------------
     --! @brief モジュール内でローカルにモデル間同期するためのコンポーネント.
     -------------------------------------------------------------------------------
     component SYNC_LOCAL_HUB
-        generic (
-                 NAME     :       STRING;
-                 PLUG_SIZE:       SYNC_PLUG_NUM_TYPE
-        );
-        port (
-                 CLK      : in    std_logic;
-                 RST      : in    std_logic;
-                 CLR      : in    std_logic;
-                 DEBUG    : in    boolean;
-                 SYNC     : inout SYNC_SIG_TYPE;
-                 REQ      : in    SYNC_REQ_VECTOR(1 to PLUG_SIZE);
-                 ACK      : out   SYNC_ACK_VECTOR(1 to PLUG_SIZE)
-        );
+        generic (                                              -- 
+            NAME     :       STRING             := "";         --! デバッグ出力用の名前.
+            PLUG_SIZE:       SYNC_PLUG_NUM_TYPE := 1           --! 接続するモデルの数.
+        );                                                     -- 
+        port (                                                 -- 
+            CLK      : in    std_logic;                        --! クロック.
+            RST      : in    std_logic;                        --! 非同期リセット.
+            CLR      : in    std_logic;                        --! 同期リセット.
+            DEBUG    : in    boolean;                          --! デバッグ出力をするための信号.
+            SYNC     : inout SYNC_SIG_TYPE;                    --! モデル間同期用入出力信号.
+            REQ      : in    SYNC_REQ_VECTOR(1 to PLUG_SIZE);  --! 同期要求入力信号.
+            ACK      : out   SYNC_ACK_VECTOR(1 to PLUG_SIZE)   --! 同期応答出力信号.
+        );                                                     -- 
     end component;
     -------------------------------------------------------------------------------
     --! @brief 同期信号の値を標準出力に出力するコンポーネント.
     -------------------------------------------------------------------------------
     component SYNC_PRINT
-        generic( NAME     :       STRING);
+        generic( NAME     :       STRING := "");
         port   ( SYNC     : in    SYNC_SIG_TYPE);
     end component;
 end package;
@@ -258,19 +258,19 @@ use     DUMMY_PLUG.SYNC.all;
 --! @brief モデル間同期(SYNC)信号を制御するコンポーネント.
 -----------------------------------------------------------------------------------
 entity  SYNC_SIG_DRIVER is
-    generic (
-        NAME     :       STRING;            --! デバッグ出力用の名前.
-        PLUG_NUM :       SYNC_PLUG_NUM_TYPE --! プラグの番号.
-    );
-    port (
-        CLK      : in    std_logic;         --! クロック.
-        RST      : in    std_logic;         --! 非同期リセット.
-        CLR      : in    std_logic;         --! 同期リセット.
-        DEBUG    : in    boolean;           --! デバッグ出力をするための信号.
-        SYNC     : inout SYNC_SIG_TYPE;     --! モデル間同期用入出力信号.
-        REQ      : in    SYNC_REQ_TYPE;     --! 同期要求入力信号.
-        ACK      : out   SYNC_ACK_TYPE      --! 同期応答出力信号.
-    );
+    generic (                                              -- 
+        NAME     :       STRING             := "";         --! デバッグ出力用の名前.
+        PLUG_NUM :       SYNC_PLUG_NUM_TYPE := 1           --! プラグの番号.
+    );                                                     -- 
+    port (                                                 -- 
+        CLK      : in    std_logic;                        --! クロック.
+        RST      : in    std_logic;                        --! 非同期リセット.
+        CLR      : in    std_logic;                        --! 同期リセット.
+        DEBUG    : in    boolean;                          --! デバッグ出力をするための信号.
+        SYNC     : inout SYNC_SIG_TYPE;                    --! モデル間同期用入出力信号.
+        REQ      : in    SYNC_REQ_TYPE;                    --! 同期要求入力信号.
+        ACK      : out   SYNC_ACK_TYPE                     --! 同期応答出力信号.
+    );                                                     -- 
 end     SYNC_SIG_DRIVER;
 architecture MODEL of SYNC_SIG_DRIVER is
     procedure REPORT_DEBUG(MESSAGE: STRING) is
@@ -331,19 +331,19 @@ use     DUMMY_PLUG.UTIL.INTEGER_TO_STRING;
 --! @brief モジュール内でローカルにモデル間同期するためのコンポーネント.
 -----------------------------------------------------------------------------------
 entity SYNC_LOCAL_HUB is
-    generic (
-        NAME     :       STRING;            --! デバッグ出力用の名前.
-        PLUG_SIZE:       SYNC_PLUG_NUM_TYPE --! 接続するモデルの数.
-    );
-    port (
-        CLK      : in    std_logic;         --! クロック.
-        RST      : in    std_logic;         --! 非同期リセット.
-        CLR      : in    std_logic;         --! 同期リセット.
-        DEBUG    : in    boolean;           --! デバッグ出力をするための信号.
-        SYNC     : inout SYNC_SIG_TYPE;     --! モデル間同期用入出力信号.
+    generic (                                              -- 
+        NAME     :       STRING             := "";         --! デバッグ出力用の名前.
+        PLUG_SIZE:       SYNC_PLUG_NUM_TYPE := 1           --! 接続するモデルの数.
+    );                                                     -- 
+    port (                                                 -- 
+        CLK      : in    std_logic;                        --! クロック.
+        RST      : in    std_logic;                        --! 非同期リセット.
+        CLR      : in    std_logic;                        --! 同期リセット.
+        DEBUG    : in    boolean;                          --! デバッグ出力をするための信号.
+        SYNC     : inout SYNC_SIG_TYPE;                    --! モデル間同期用入出力信号.
         REQ      : in    SYNC_REQ_VECTOR(1 to PLUG_SIZE);  --! 同期要求入力信号.
         ACK      : out   SYNC_ACK_VECTOR(1 to PLUG_SIZE)   --! 同期応答出力信号.
-    );
+    );                                                     -- 
 end SYNC_LOCAL_HUB;
 architecture MODEL of SYNC_LOCAL_HUB is
 begin
@@ -377,7 +377,7 @@ use     DUMMY_PLUG.UTIL.BIN_TO_STRING;
 --! @brief 同期信号の値を標準出力に出力するコンポーネント.
 -----------------------------------------------------------------------------------
 entity  SYNC_PRINT is
-    generic(NAME:    STRING       );
+    generic(NAME:    STRING  := "");
     port   (SYNC: in SYNC_SIG_TYPE);
 end SYNC_PRINT;
 architecture MODEL of SYNC_PRINT is
