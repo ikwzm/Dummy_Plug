@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_memory_player.vhd
 --!     @brief   AXI4 Memory Dummy Plug Player.
---!     @version 1.7.1
---!     @date    2019/2/22
+--!     @version 1.7.5
+--!     @date    2020/10/6
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012-2019 Ichiro Kawazome
+--      Copyright (C) 2012-2020 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -234,6 +234,7 @@ architecture MODEL of AXI4_MEMORY_PLAYER is
     type      TRAN_INFO_TYPE    is record
                   VALID         :  boolean;
                   DOMAIN        :  integer;
+                  RECV_TIME     :  time;
                   COUNT         :  integer;
                   ADDR          :  std_logic_vector(AADDR_BITS-1 downto 0);
                   ALEN          :  std_logic_vector(WIDTH.ALEN-1 downto 0);
@@ -252,6 +253,7 @@ architecture MODEL of AXI4_MEMORY_PLAYER is
                   VALID         => FALSE,
                   DOMAIN        => 0,
                   COUNT         => 0,
+                  RECV_TIME     => 0 ns,
                   ADDR          => (others => '0'),
                   ALEN          => (others => '0'),
                   ASIZE         => (others => '0'),
@@ -302,9 +304,10 @@ architecture MODEL of AXI4_MEMORY_PLAYER is
             if (I_VALID = TRUE and I_READY = TRUE) then
                 I_LOOP: for i in next_queue'low to next_queue'high loop
                     if (next_queue(i).VALID = FALSE) then
-                        next_queue(i)       := I_INFO;
-                        next_queue(i).VALID := TRUE;
-                        next_queue(i).COUNT := 0;
+                        next_queue(i)           := I_INFO;
+                        next_queue(i).VALID     := TRUE;
+                        next_queue(i).COUNT     := 0;
+                        next_queue(i).RECV_TIME := Now;
                         exit I_LOOP;
                     end if;
                 end loop;
@@ -350,9 +353,11 @@ architecture MODEL of AXI4_MEMORY_PLAYER is
         variable  BURST_LEN     : inout integer;
         variable  LOWER_LANE    : inout integer;
         variable  UPPER_LANE    : inout integer;
-        variable  MEM_POS       : inout integer
+        variable  MEM_POS       : inout integer;
+        variable  BOUNDARY_ERROR: out   boolean
     ) is
         variable  aligned_addr  :       integer;
+        variable  boundary_addr :       integer;
     begin
         case tran_info.ASIZE is
             when AXI4_ASIZE_1BYTE   => ASIZE_BYTES :=   1; aligned_addr := 0;
@@ -382,6 +387,8 @@ architecture MODEL of AXI4_MEMORY_PLAYER is
         else
             UPPER_LANE := LOWER_LANE + ASIZE_BYTES - aligned_addr - 1;
         end if;
+        boundary_addr  := TO_INTEGER(unsigned(TRAN_INFO.ADDR(11 downto 0)));
+        BOUNDARY_ERROR := ((boundary_addr + ASIZE_BYTES * BURST_LEN) > 4096);
     end procedure;
     -------------------------------------------------------------------------------
     --! ドメイン情報
@@ -1583,6 +1590,7 @@ begin
             variable  upper_lane    :  integer;
             variable  burst_len     :  integer;
             variable  mem_pos       :  integer;
+            variable  boundary_error:  boolean;
             constant  proc_name     :  string := "R-Channel";
             -----------------------------------------------------------------------
             --! @brief TRAN_INFO_READ で取り込んだトランザクション情報から
@@ -1800,19 +1808,26 @@ begin
                 -- tran_info から各種情報を引き出す
                 -------------------------------------------------------------------
                 TRAN_INFO_READ(
-                    TRAN_INFO    => tran_info   ,  -- In  :
-                    DATA_WIDTH   => WIDTH.RDATA ,  -- In  :
-                    ASIZE_BYTES  => asize_bytes ,  -- Out :
-                    BURST_LEN    => burst_len   ,  -- Out :
-                    LOWER_LANE   => lower_lane  ,  -- Out :
-                    UPPER_LANE   => upper_lane  ,  -- Out :
-                    MEM_POS      => mem_pos        -- Out :
+                    TRAN_INFO      => tran_info     ,  -- In  :
+                    DATA_WIDTH     => WIDTH.RDATA   ,  -- In  :
+                    ASIZE_BYTES    => asize_bytes   ,  -- Out :
+                    BURST_LEN      => burst_len     ,  -- Out :
+                    LOWER_LANE     => lower_lane    ,  -- Out :
+                    UPPER_LANE     => upper_lane    ,  -- Out :
+                    MEM_POS        => mem_pos       ,  -- Out :
+                    BOUNDARY_ERROR => boundary_error   -- Out :
                 );
                 -------------------------------------------------------------------
                 -- 
                 -------------------------------------------------------------------
                 if tran_info.DOMAIN < domains'low or domains'high < tran_info.DOMAIN then
                     EXECUTE_ABORT(core, proc_name, "Not Found Domain");
+                end if;
+                -------------------------------------------------------------------
+                -- 4Kbyte 境界の検証
+                -------------------------------------------------------------------
+                if boundary_error then
+                    REPORT_ERROR(core, "4KByte Boundary Error");
                 end if;
                 -------------------------------------------------------------------
                 -- tran_info から各種情報に従ってリードチャネルに出力
@@ -1857,7 +1872,8 @@ begin
         signal    tran_req_valid    :  boolean;
         signal    tran_req_ready    :  boolean;
         signal    tran_proc_busy    :  boolean;
-        signal    tran_proc_last    :  boolean;
+        signal    tran_data_last    :  boolean;
+        signal    tran_data_ready   :  boolean;
     begin
         ---------------------------------------------------------------------------
         -- ライトリクエストキュー
@@ -1880,7 +1896,7 @@ begin
         w_tran_busy    <= (tran_proc_busy = TRUE or tran_queue(tran_queue'low ).VALID = TRUE);
         w_tran_ready   <= (tran_queue(tran_queue'high).VALID = FALSE);
         tran_req_valid <= (tran_queue(tran_queue'low ).VALID = TRUE );
-        tran_req_ready <= (tran_proc_last = TRUE and WVALID = '1');
+        tran_req_ready <= ((tran_data_last = TRUE or WLAST = '1') and WVALID = '1' and tran_data_ready = TRUE);
         ---------------------------------------------------------------------------
         -- 
         ---------------------------------------------------------------------------
@@ -1895,6 +1911,7 @@ begin
             variable  upper_lane    :  integer;
             variable  burst_len     :  integer;
             variable  mem_pos       :  integer;
+            variable  boundary_error:  boolean;
             variable  timeout_count :  integer;
             constant  word_bytes    :  integer := WIDTH.WDATA/8;
             constant  proc_name     :  string := "W-Channel";
@@ -1930,7 +1947,8 @@ begin
             output_w_channel_signals(AXI4_W_CHANNEL_SIGNAL_NULL);
             reports(W_REPORT_STATUS) <= core.report_status;
             tran_proc_busy           <= FALSE;
-            tran_proc_last           <= FALSE;
+            tran_data_last           <= FALSE;
+            tran_data_ready          <= FALSE;
             b_tran_info              <= TRAN_INFO_NULL;
             -----------------------------------------------------------------------
             --
@@ -1938,8 +1956,9 @@ begin
             wait until (ACLK'event and ACLK = '1');
             MAIN_LOOP: loop
                 reports(W_REPORT_STATUS) <= core.report_status;
-                tran_proc_busy <= FALSE;
-                tran_proc_last <= FALSE;
+                tran_proc_busy  <= FALSE;
+                tran_data_last  <= FALSE;
+                tran_data_ready <= FALSE;
                 -------------------------------------------------------------------
                 -- tran_queue に新しいトランザクションが届き、かつライト応答キュー
                 -- が空くまで待つ.
@@ -1955,19 +1974,26 @@ begin
                 -- tran_info から各種情報を引き出す
                 -------------------------------------------------------------------
                 TRAN_INFO_READ(
-                    TRAN_INFO    => tran_info   ,  -- In  :
-                    DATA_WIDTH   => WIDTH.WDATA ,  -- In  :
-                    ASIZE_BYTES  => asize_bytes ,  -- Out :
-                    BURST_LEN    => burst_len   ,  -- Out :
-                    LOWER_LANE   => lower_lane  ,  -- Out :
-                    UPPER_LANE   => upper_lane  ,  -- Out :
-                    MEM_POS      => mem_pos        -- Out :
+                    TRAN_INFO      => tran_info     ,  -- In  :
+                    DATA_WIDTH     => WIDTH.WDATA   ,  -- In  :
+                    ASIZE_BYTES    => asize_bytes   ,  -- Out :
+                    BURST_LEN      => burst_len     ,  -- Out :
+                    LOWER_LANE     => lower_lane    ,  -- Out :
+                    UPPER_LANE     => upper_lane    ,  -- Out :
+                    MEM_POS        => mem_pos       ,  -- Out :
+                    BOUNDARY_ERROR => boundary_error
                 );
                 -------------------------------------------------------------------
                 -- 
                 -------------------------------------------------------------------
                 if tran_info.DOMAIN < domains'low or domains'high < tran_info.DOMAIN then
                     EXECUTE_ABORT(core, proc_name, "Not Found Domain");
+                end if;
+                -------------------------------------------------------------------
+                -- 4Kbyte 境界の検証
+                -------------------------------------------------------------------
+                if boundary_error then
+                    REPORT_ERROR(core, "4KByte Boundary Error");
                 end if;
                 -------------------------------------------------------------------
                 -- ライト応答キューに入れる b_tran_info を設定しておく
@@ -1990,16 +2016,17 @@ begin
                     ---------------------------------------------------------------
                     -- 最後の転送時に、ライトリクエストキューからリクエスト情報を取
                     -- り除くため、またはライト応答キューに b_tran_info を入れるた
-                    -- めに tran_proc_last 信号をアサートしておく.
+                    -- めに tran_data_last 信号をアサートしておく.
                     ---------------------------------------------------------------
                     if (i = burst_len) then
-                        tran_proc_last <= TRUE;
+                        tran_data_last <= TRUE;
                     else
-                        tran_proc_last <= FALSE;
+                        tran_data_last <= FALSE;
                     end if;
                     ---------------------------------------------------------------
                     -- ライトデータチャネルからデータが届くのを待つ
                     ---------------------------------------------------------------
+                    tran_data_ready   <= TRUE;
                     out_signals.READY := '1';
                     output_w_channel_signals(out_signals);
                     timeout_count := 0;
@@ -2016,9 +2043,10 @@ begin
                     ---------------------------------------------------------------
                     output_w_channel_signals(AXI4_W_CHANNEL_SIGNAL_NULL);
                     ---------------------------------------------------------------
-                    -- tran_proc_last もネゲートしておく
+                    -- tran_data_last もネゲートしておく
                     ---------------------------------------------------------------
-                    tran_proc_last <= FALSE;
+                    tran_data_last  <= FALSE;
+                    tran_data_ready <= FALSE;
                     ---------------------------------------------------------------
                     -- ライトデータチャネルからのデータをメモリに書く
                     ---------------------------------------------------------------
@@ -2041,10 +2069,13 @@ begin
                     ---------------------------------------------------------------
                     -- WLAST 信号とバースト長のチェック
                     ---------------------------------------------------------------
+                    if (WLAST = '0' and i  = burst_len) then
+                        REPORT_MISMATCH(core, "Expect WLAST=1 but 0");
+                    end if;
+                    if (WLAST = '1' and i /= burst_len) then
+                        REPORT_MISMATCH(core, "Expect WLAST=0 but 1");
+                    end if;
                     if (WLAST = '1') then
-                        if (i /= burst_len) then
-                            EXECUTE_ABORT(core, proc_name, "Mismatch WLAST");
-                        end if;
                         exit BURST_LOOP;
                     end if;
                     ---------------------------------------------------------------
@@ -2065,7 +2096,7 @@ begin
         ---------------------------------------------------------------------------
         -- ライト応答キューに b_tran_info を入れるための信号
         ---------------------------------------------------------------------------
-        b_tran_valid <= (tran_proc_last = TRUE and WVALID = '1');
+        b_tran_valid <= ((tran_data_last = TRUE or WLAST = '1') and WVALID = '1' and tran_data_ready = TRUE);
     end block;
     -------------------------------------------------------------------------------
     -- ライト応答チャネル制御ブロック

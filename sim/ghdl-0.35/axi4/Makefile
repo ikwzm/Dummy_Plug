@@ -12,6 +12,7 @@ TEST_BENCH = dummy_plug_reader_test_1        \
              dummy_plug_axi4_test_1_4        \
              dummy_plug_axi4_stream_test_1_1 \
              dummy_plug_axi4_memory_test_1   \
+             dummy_plug_axi4_memory_test_2   \
              $(END_LIST)
 
 all: $(TEST_BENCH)
@@ -138,6 +139,12 @@ dummy_plug_axi4_stream_test_1.o    : $(SRC_TEST_VHDL_PATH)/axi4/axi4_stream_test
 dummy_plug_axi4_stream_test_1_1.o  : $(SRC_TEST_VHDL_PATH)/axi4/axi4_stream_test_1_1.vhd dummy_plug_axi4_stream_test_1.o $(DUMMY_PLUG_AXI4)
 	 $(GHDL) -a $(GHDLFLAGS) --work=work $<
 
-dummy_plug_axi4_memory_test_1.o    : $(SRC_TEST_VHDL_PATH)/axi4/axi4_memory_test_1.vhd   $(DUMMY_PLUG_AXI4)
+dummy_plug_axi4_memory_test.o      : $(SRC_TEST_VHDL_PATH)/axi4/axi4_memory_test.vhd   $(DUMMY_PLUG_AXI4)
+	 $(GHDL) -a $(GHDLFLAGS) --work=work $<
+
+dummy_plug_axi4_memory_test_1.o    : $(SRC_TEST_VHDL_PATH)/axi4/axi4_memory_test_1.vhd dummy_plug_axi4_memory_test.o $(DUMMY_PLUG_AXI4)
+	 $(GHDL) -a $(GHDLFLAGS) --work=work $<
+
+dummy_plug_axi4_memory_test_2.o    : $(SRC_TEST_VHDL_PATH)/axi4/axi4_memory_test_2.vhd dummy_plug_axi4_memory_test.o $(DUMMY_PLUG_AXI4)
 	 $(GHDL) -a $(GHDLFLAGS) --work=work $<
 
