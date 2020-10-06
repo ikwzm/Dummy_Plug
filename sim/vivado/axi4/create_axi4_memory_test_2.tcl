@@ -2,7 +2,7 @@
 # create_project.tcl  Tcl script for creating project
 #
 set project_directory       [file dirname [info script]]
-set project_name            "axi4_memory_test_1"
+set project_name            "axi4_memory_test_2"
 set device_parts            "xc7z010clg400-1"
 #
 # Change Directory
@@ -59,10 +59,10 @@ add_files -fileset sim_1 -norecurse $dummy_plug_src_list
 set_property library Dummy_Plug [get_files $dummy_plug_src_list]
 set work_src_list [list]
 lappend work_src_list       {../../../src/test/vhdl/axi4/axi4_memory_test.vhd}
-lappend work_src_list       {../../../src/test/vhdl/axi4/axi4_memory_test_1.vhd}
+lappend work_src_list       {../../../src/test/vhdl/axi4/axi4_memory_test_2.vhd}
 add_files -fileset sim_1 -norecurse $work_src_list
 
-set scenario_file [file join $project_directory ".." ".." ".." "src" "test" "scenarios" "axi4" "axi4_memory_test_1.snr" ]
+set scenario_file [file join $project_directory ".." ".." ".." "src" "test" "scenarios" "axi4" "axi4_memory_test_2.snr" ]
 set_property "generic" "SCENARIO_FILE=$scenario_file" [get_filesets sim_1]
 set_property -name {xsim.simulate.runtime} -value {all} -objects [get_filesets sim_1]
 update_compile_order -fileset sim_1

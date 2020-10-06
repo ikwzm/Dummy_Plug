@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_memory_player.vhd
 --!     @brief   AXI4 Memory Dummy Plug Player.
---!     @version 1.7.1
---!     @date    2019/2/22
+--!     @version 1.7.5
+--!     @date    2020/10/6
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012-2019 Ichiro Kawazome
+--      Copyright (C) 2012-2020 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -1857,7 +1857,8 @@ begin
         signal    tran_req_valid    :  boolean;
         signal    tran_req_ready    :  boolean;
         signal    tran_proc_busy    :  boolean;
-        signal    tran_proc_last    :  boolean;
+        signal    tran_data_last    :  boolean;
+        signal    tran_data_ready   :  boolean;
     begin
         ---------------------------------------------------------------------------
         -- ライトリクエストキュー
@@ -1880,7 +1881,7 @@ begin
         w_tran_busy    <= (tran_proc_busy = TRUE or tran_queue(tran_queue'low ).VALID = TRUE);
         w_tran_ready   <= (tran_queue(tran_queue'high).VALID = FALSE);
         tran_req_valid <= (tran_queue(tran_queue'low ).VALID = TRUE );
-        tran_req_ready <= (tran_proc_last = TRUE and WVALID = '1');
+        tran_req_ready <= ((tran_data_last = TRUE or WLAST = '1') and WVALID = '1' and tran_data_ready = TRUE);
         ---------------------------------------------------------------------------
         -- 
         ---------------------------------------------------------------------------
@@ -1930,7 +1931,8 @@ begin
             output_w_channel_signals(AXI4_W_CHANNEL_SIGNAL_NULL);
             reports(W_REPORT_STATUS) <= core.report_status;
             tran_proc_busy           <= FALSE;
-            tran_proc_last           <= FALSE;
+            tran_data_last           <= FALSE;
+            tran_data_ready          <= FALSE;
             b_tran_info              <= TRAN_INFO_NULL;
             -----------------------------------------------------------------------
             --
@@ -1938,8 +1940,9 @@ begin
             wait until (ACLK'event and ACLK = '1');
             MAIN_LOOP: loop
                 reports(W_REPORT_STATUS) <= core.report_status;
-                tran_proc_busy <= FALSE;
-                tran_proc_last <= FALSE;
+                tran_proc_busy  <= FALSE;
+                tran_data_last  <= FALSE;
+                tran_data_ready <= FALSE;
                 -------------------------------------------------------------------
                 -- tran_queue に新しいトランザクションが届き、かつライト応答キュー
                 -- が空くまで待つ.
@@ -1990,16 +1993,17 @@ begin
                     ---------------------------------------------------------------
                     -- 最後の転送時に、ライトリクエストキューからリクエスト情報を取
                     -- り除くため、またはライト応答キューに b_tran_info を入れるた
-                    -- めに tran_proc_last 信号をアサートしておく.
+                    -- めに tran_data_last 信号をアサートしておく.
                     ---------------------------------------------------------------
                     if (i = burst_len) then
-                        tran_proc_last <= TRUE;
+                        tran_data_last <= TRUE;
                     else
-                        tran_proc_last <= FALSE;
+                        tran_data_last <= FALSE;
                     end if;
                     ---------------------------------------------------------------
                     -- ライトデータチャネルからデータが届くのを待つ
                     ---------------------------------------------------------------
+                    tran_data_ready   <= TRUE;
                     out_signals.READY := '1';
                     output_w_channel_signals(out_signals);
                     timeout_count := 0;
@@ -2016,9 +2020,10 @@ begin
                     ---------------------------------------------------------------
                     output_w_channel_signals(AXI4_W_CHANNEL_SIGNAL_NULL);
                     ---------------------------------------------------------------
-                    -- tran_proc_last もネゲートしておく
+                    -- tran_data_last もネゲートしておく
                     ---------------------------------------------------------------
-                    tran_proc_last <= FALSE;
+                    tran_data_last  <= FALSE;
+                    tran_data_ready <= FALSE;
                     ---------------------------------------------------------------
                     -- ライトデータチャネルからのデータをメモリに書く
                     ---------------------------------------------------------------
@@ -2041,10 +2046,13 @@ begin
                     ---------------------------------------------------------------
                     -- WLAST 信号とバースト長のチェック
                     ---------------------------------------------------------------
+                    if (WLAST = '0' and i  = burst_len) then
+                        REPORT_MISMATCH(core, "Expect WLAST=1 but 0");
+                    end if;
+                    if (WLAST = '1' and i /= burst_len) then
+                        REPORT_MISMATCH(core, "Expect WLAST=0 but 1");
+                    end if;
                     if (WLAST = '1') then
-                        if (i /= burst_len) then
-                            EXECUTE_ABORT(core, proc_name, "Mismatch WLAST");
-                        end if;
                         exit BURST_LOOP;
                     end if;
                     ---------------------------------------------------------------
@@ -2065,7 +2073,7 @@ begin
         ---------------------------------------------------------------------------
         -- ライト応答キューに b_tran_info を入れるための信号
         ---------------------------------------------------------------------------
-        b_tran_valid <= (tran_proc_last = TRUE and WVALID = '1');
+        b_tran_valid <= ((tran_data_last = TRUE or WLAST = '1') and WVALID = '1' and tran_data_ready = TRUE);
     end block;
     -------------------------------------------------------------------------------
     -- ライト応答チャネル制御ブロック

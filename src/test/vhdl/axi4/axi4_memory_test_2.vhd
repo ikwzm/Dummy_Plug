@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------------
---!     @file    aix4_memory_test_1.vhd
---!     @brief   TEST BENCH No.1 for DUMMY_PLUG.AXI4_MEMORY_PLAYER
+--!     @file    aix4_memory_test_2.vhd
+--!     @brief   TEST BENCH No.2 for DUMMY_PLUG.AXI4_MEMORY_PLAYER
 --!     @version 1.7.5
 --!     @date    2020/10/6
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
@@ -36,12 +36,12 @@
 -----------------------------------------------------------------------------------
 library ieee;
 use     ieee.std_logic_1164.all;
-entity  DUMMY_PLUG_AXI4_MEMORY_TEST_1 is
+entity  DUMMY_PLUG_AXI4_MEMORY_TEST_2 is
     generic (
         NAME            : --! @brief テストベンチの識別名.
                           STRING    := "AXI4_MEMORY_TEST_1";
         SCENARIO_FILE   : --! @brief シナリオファイルの名前.
-                          STRING    := "../../../src/test/scenarios/axi4/axi4_memory_test_1.snr";
+                          STRING    := "../../../src/test/scenarios/axi4/axi4_memory_test_2.snr";
         DATA_WIDTH      : --! @brief データチャネルのビット幅.
                           integer   := 32;
         READ_ENABLE     : --! @brief リードモードを指定する.
@@ -58,16 +58,16 @@ entity  DUMMY_PLUG_AXI4_MEMORY_TEST_1 is
                           integer := 8;
         FINISH_ABORT    : boolean := FALSE
     );
-end     DUMMY_PLUG_AXI4_MEMORY_TEST_1;
+end     DUMMY_PLUG_AXI4_MEMORY_TEST_2;
 library ieee;
 use     ieee.std_logic_1164.all;
 library DUMMY_PLUG;
 use     DUMMY_PLUG.CORE.REPORT_STATUS_TYPE;
-architecture MODEL of DUMMY_PLUG_AXI4_MEMORY_TEST_1 is
+architecture MODEL of DUMMY_PLUG_AXI4_MEMORY_TEST_2 is
     constant EXP_REPORT  : REPORT_STATUS_TYPE := (
         valid            => TRUE,
         error_count      =>  0,
-        mismatch_count   =>  0,
+        mismatch_count   =>  2,
         warning_count    =>  0,
         failure_count    =>  0,
         read_error_count =>  0
