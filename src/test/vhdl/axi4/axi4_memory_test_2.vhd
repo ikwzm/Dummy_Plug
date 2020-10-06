@@ -49,7 +49,7 @@ entity  DUMMY_PLUG_AXI4_MEMORY_TEST_2 is
         WRITE_ENABLE    : --! @brief ライトモードを指定する.
                           boolean   := TRUE;
         MEMORY_SIZE     : --! @brief メモリの大きさをバイト数で指定する.
-                          integer := 4096;
+                          integer := 4096*4;
         READ_QUEUE_SIZE : --! @brief リードトランザクションのキューの数を指定する.
                           integer := 4;
         WRITE_QUEUE_SIZE: --! @brief ライトトランザクションのキューの数を指定する.
@@ -66,7 +66,7 @@ use     DUMMY_PLUG.CORE.REPORT_STATUS_TYPE;
 architecture MODEL of DUMMY_PLUG_AXI4_MEMORY_TEST_2 is
     constant EXP_REPORT  : REPORT_STATUS_TYPE := (
         valid            => TRUE,
-        error_count      =>  0,
+        error_count      =>  2,
         mismatch_count   =>  2,
         warning_count    =>  0,
         failure_count    =>  0,
