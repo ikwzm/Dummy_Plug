@@ -16,6 +16,7 @@ AXI4          = $(AXI4_PACKAGE)              \
                 axi4_stream_master_player.o  \
                 axi4_stream_slave_player.o   \
                 axi4_stream_signal_printer.o \
+                axi4_memory_player.o         \
                 $(END_LIST)
 
 all: $(CORE) $(AXI4)
@@ -94,5 +95,8 @@ axi4_stream_slave_player.o   : $(AXI4_SRC_PATH)/axi4_stream_slave_player.vhd
 	 $(GHDL) -a $(GHDLFLAGS) --work=$(WORK) $<
 
 axi4_stream_signal_printer.o : $(AXI4_SRC_PATH)/axi4_stream_signal_printer.vhd  
+	 $(GHDL) -a $(GHDLFLAGS) --work=$(WORK) $<
+
+axi4_memory_player.o         : $(AXI4_SRC_PATH)/axi4_memory_player.vhd 
 	 $(GHDL) -a $(GHDLFLAGS) --work=$(WORK) $<
 
