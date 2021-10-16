@@ -20,7 +20,7 @@ all: $(TEST_BENCH)
 
 clean:
 	$(MAKE) -C ../lib clean
-	rm -r work dummy_plug
+	rm -r work
 
 dummy_plug_reader_test_1 : work/WORK.DUMMY_PLUG_READER_TEST_1.elab $(SRC_TEST_SCENARIO_PATH)/core/reader_test_1.snr
 	-$(NVC) -L ../lib/ -r DUMMY_PLUG_READER_TEST_1
