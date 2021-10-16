@@ -118,9 +118,22 @@ shell$ make
 
 ### nvc
 
+#### Build nvc
+
 ```console
-shell$ cd sim/nvc/lib
+shell$ git clone https://github.com/nickg/nvc
+shell$ cd nvc
+shell$ git checkout fc0546c2e1d0b3168511523ad2d11f3d8018db3e
+shell$ ./autogen.sh
+shell$ mkdir build && cd build
+shell$ ../configure
 shell$ make
+shell$ sudo make install
+```
+
+#### Simulate
+
+```console
 shell$ cd sim/nvc/axi4
 shell$ make
 ```
