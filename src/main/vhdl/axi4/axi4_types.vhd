@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_types.vhd
 --!     @brief   AXI4 Channel Signal Type Package.
---!     @version 1.6.1
---!     @date    2016/3/15
+--!     @version 1.7.7
+--!     @date    2021/10/17
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012-2016 Ichiro Kawazome
+--      Copyright (C) 2012-2021 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -155,9 +155,9 @@ package AXI4_TYPES is
     -------------------------------------------------------------------------------
     type      AXI4_SIGNAL_WIDTH_TYPE is record
               ID                   : integer range 1 to AXI4_ID_MAX_WIDTH;
-              AWADDR               : integer range 1 to AXI4_USER_MAX_WIDTH;
+              AWADDR               : integer range 1 to AXI4_ADDR_MAX_WIDTH;
               AWUSER               : integer range 1 to AXI4_USER_MAX_WIDTH;
-              ARADDR               : integer range 1 to AXI4_USER_MAX_WIDTH;
+              ARADDR               : integer range 1 to AXI4_ADDR_MAX_WIDTH;
               ARUSER               : integer range 1 to AXI4_USER_MAX_WIDTH;
               ALEN                 : integer range 4 to AXI4_ALEN_MAX_WIDTH;
               ALOCK                : integer range 1 to AXI4_ALOCK_MAX_WIDTH;
