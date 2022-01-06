@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_channel_player.vhd
 --!     @brief   AXI4 A/R/W/B Channel Dummy Plug Player.
---!     @version 1.6.1
---!     @date    2016/3/15
+--!     @version 1.8.0
+--!     @date    2022/1/6
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012-2016 Ichiro Kawazome
+--      Copyright (C) 2012-2022 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -69,6 +69,8 @@ entity  AXI4_CHANNEL_PLAYER is
                           boolean   := TRUE;
         OUTPUT_DELAY    : --! @brief 出力信号遅延時間
                           time;
+        DEBUG_LEVEL     : --! @brief デバッグ出力フラグの初期値を指定する.
+                          integer := 0;
         WIDTH           : --! @brief AXI4 IS WIDTH :
                           AXI4_SIGNAL_WIDTH_TYPE;
         SYNC_WIDTH      : --! @brief シンクロ用信号の本数.
@@ -2269,7 +2271,7 @@ begin
             -- 変数の初期化.
             -----------------------------------------------------------------------
             gpo_signals := (others => 'Z');
-            core.debug  := 0;
+            core.debug  := DEBUG_LEVEL;
             -----------------------------------------------------------------------
             -- 信号の初期化
             -----------------------------------------------------------------------
@@ -2782,7 +2784,7 @@ begin
             FINISH         <= '0';
             REPORT_STATUS  <= core.report_status;
             execute_output(out_signals);
-            core.debug := 0;
+            core.debug := DEBUG_LEVEL;
             -----------------------------------------------------------------------
             -- メインオペレーションループ
             -----------------------------------------------------------------------
@@ -3353,7 +3355,7 @@ begin
             FINISH         <= '0';
             REPORT_STATUS  <= core.report_status;
             execute_output(out_signals);
-            core.debug := 0;
+            core.debug := DEBUG_LEVEL;
             -----------------------------------------------------------------------
             -- メインオペレーションループ
             -----------------------------------------------------------------------

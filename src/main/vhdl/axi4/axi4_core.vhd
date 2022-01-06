@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_core.vhd
 --!     @brief   AXI4 Dummy Plug Core Package.
---!     @version 1.7.2
---!     @date    2019/4/15
+--!     @version 1.8.0
+--!     @date    2022/1/6
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012-2019 Ichiro Kawazome
+--      Copyright (C) 2012-2022 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -398,6 +398,8 @@ package AXI4_CORE is
                               boolean   := TRUE;
             OUTPUT_DELAY    : --! @brief 出力信号遅延時間
                               time;
+            DEBUG_LEVEL     : --! @brief デバッグ出力フラグの初期値を指定する.
+                              integer := 0;
             WIDTH           : --! @brief AXI4 IS WIDTH :
                               AXI4_SIGNAL_WIDTH_TYPE;
             SYNC_WIDTH      : --! @brief シンクロ用信号の本数.
@@ -576,6 +578,8 @@ package AXI4_CORE is
                               boolean   := FALSE;
             OUTPUT_DELAY    : --! @brief 出力信号遅延時間
                               time;
+            DEBUG_LEVEL     : --! @brief デバッグ出力フラグの初期値を指定する.
+                              integer := 0;
             WIDTH           : --! @brief AXI4 IS WIDTH :
                               AXI4_STREAM_SIGNAL_WIDTH_TYPE;
             SYNC_WIDTH      : --! @brief シンクロ用信号の本数.

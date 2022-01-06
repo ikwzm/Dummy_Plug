@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    marchal.vhd
 --!     @brief   Marchal Dummy Plug Player.
---!     @version 1.6.1
---!     @date    2016/3/15
+--!     @version 1.8.0
+--!     @date    2022/1/6
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012-2016 Ichiro Kawazome
+--      Copyright (C) 2012-2021 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,8 @@ entity  MARCHAL is
                           SYNC_PLUG_NUM_TYPE := 1;
         SYNC_WIDTH      : --! @brief シンクロ用信号のビット幅.
                           integer :=  1;
+        SYNC_DEBUG      : --! @brief SYNC 機構のデバッグ出力を有効にするかどうかを指定する
+                          boolean := FALSE;
         FINISH_ABORT    : --! @brief FINISH コマンド実行時にシミュレーションを
                           --!        アボートするかどうかを指定するフラグ.
                           boolean := true
@@ -110,7 +112,6 @@ architecture MODEL of MARCHAL is
     signal    sync_ack          : SYNC_ACK_VECTOR(SYNC'range);
     signal    sync_rst          : std_logic := '0';
     signal    sync_clr          : std_logic := '0';
-    signal    sync_debug        : boolean   := FALSE;
     -------------------------------------------------------------------------------
     --! TIME_KEEPER
     -------------------------------------------------------------------------------
@@ -298,16 +299,18 @@ begin
     --! @ SYNC制御
     -------------------------------------------------------------------------------
     SYNC_DRIVER: for i in SYNC'range generate
+        constant UNIT_NAME : string := "MARCHAL:SYNC(" & INTEGER_TO_STRING(i) & ")";
+    begin 
         UNIT: SYNC_SIG_DRIVER
             generic map (
-                NAME     => string'("MARCHAL:SYNC"),
+                NAME     => UNIT_NAME,
                 PLUG_NUM => SYNC_PLUG_NUM
             )
             port map (
                 CLK      => CLK ,                -- In :
                 RST      => sync_rst,            -- In :
                 CLR      => sync_clr,            -- In :
-                DEBUG    => sync_debug,          -- In :
+                DEBUG    => SYNC_DEBUG,          -- In :
                 SYNC     => SYNC(i),             -- I/O:
                 REQ      => sync_req(i),         -- In :
                 ACK      => sync_ack(i)          -- Out:

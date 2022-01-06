@@ -1,13 +1,13 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_models.vhd                                                 --
 --!     @brief   AXI4 Dummy Plug Component Package                               --
---!     @version 1.7.7                                                           --
---!     @date    2021/10/17                                                      --
+--!     @version 1.8.0                                                           --
+--!     @date    2022/01/06                                                      --
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>                     --
 -----------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------
 --                                                                               --
---      Copyright (C) 2021 Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>           --
+--      Copyright (C) 2022 Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>           --
 --      All rights reserved.                                                     --
 --                                                                               --
 --      Redistribution and use in source and binary forms, with or without       --
@@ -70,6 +70,8 @@ component AXI4_MASTER_PLAYER
                           SYNC_PLUG_NUM_TYPE := 1;
         SYNC_WIDTH      : --! @brief シンクロ用信号の本数.
                           integer :=  1;
+        SYNC_DEBUG      : --! @brief SYNC 機構のデバッグ出力を有効にするかどうかを指定する
+                          boolean := FALSE;
         DEFAULT_SYNC_IO : --! @brief リードトランザクション/ライトトランザクション
                           --         ウェイト時に完了を待ってから次のコマンドを実行
                           --         するか否かを指定する.
@@ -78,6 +80,18 @@ component AXI4_MASTER_PLAYER
                           integer := 8;
         GPO_WIDTH       : --! @brief GPO(General Purpose Output)信号のビット幅.
                           integer := 8;
+        DEBUG_MAIN      : --! @brief MAIN CHANNEL のデバッグレベル
+                          integer := 0;
+        DEBUG_CHANNEL_AR: --! @brief AR CHANNEL のデバッグレベル
+                          integer := 0;
+        DEBUG_CHANNEL_R : --! @brief R CHANNEL のデバッグレベル
+                          integer := 0;
+        DEBUG_CHANNEL_AW: --! @brief AW CHANNEL のデバッグレベル
+                          integer := 0;
+        DEBUG_CHANNEL_W : --! @brief W CHANNEL のデバッグレベル
+                          integer := 0;
+        DEBUG_CHANNEL_B : --! @brief B CHANNEL のデバッグレベル
+                          integer := 0;
         FINISH_ABORT    : --! @brief FINISH コマンド実行時にシミュレーションを
                           --!        アボートするかどうかを指定するフラグ.
                           boolean := true
@@ -197,6 +211,8 @@ component AXI4_SLAVE_PLAYER
                           SYNC_PLUG_NUM_TYPE := 1;
         SYNC_WIDTH      : --! @brief シンクロ用信号の本数.
                           integer :=  1;
+        SYNC_DEBUG      : --! @brief SYNC 機構のデバッグ出力を有効にするかどうかを指定する
+                          boolean := FALSE;
         DEFAULT_SYNC_IO : --! @brief リードトランザクション/ライトトランザクション
                           --         ウェイト時に完了を待ってから次のコマンドを実行
                           --         するか否かを指定する.
@@ -205,6 +221,18 @@ component AXI4_SLAVE_PLAYER
                           integer := 8;
         GPO_WIDTH       : --! @brief GPO(General Purpose Output)信号のビット幅.
                           integer := 8;
+        DEBUG_MAIN      : --! @brief MAIN CHANNEL のデバッグレベル
+                          integer := 0;
+        DEBUG_CHANNEL_AR: --! @brief AR CHANNEL のデバッグレベル
+                          integer := 0;
+        DEBUG_CHANNEL_R : --! @brief R CHANNEL のデバッグレベル
+                          integer := 0;
+        DEBUG_CHANNEL_AW: --! @brief AW CHANNEL のデバッグレベル
+                          integer := 0;
+        DEBUG_CHANNEL_W : --! @brief W CHANNEL のデバッグレベル
+                          integer := 0;
+        DEBUG_CHANNEL_B : --! @brief B CHANNEL のデバッグレベル
+                          integer := 0;
         FINISH_ABORT    : --! @brief FINISH コマンド実行時にシミュレーションを
                           --!        アボートするかどうかを指定するフラグ.
                           boolean := true
@@ -322,6 +350,8 @@ component AXI4_MEMORY_PLAYER
                           AXI4_SIGNAL_WIDTH_TYPE;
         SYNC_PLUG_NUM   : --! @brief シンクロ用信号のプラグ番号.
                           SYNC_PLUG_NUM_TYPE := 1;
+        SYNC_DEBUG      : --! @brief SYNC 機構のデバッグ出力を有効にするかどうかを指定する
+                          boolean := FALSE;
         SYNC_WIDTH      : --! @brief シンクロ用信号の本数.
                           integer :=  1;
         GPI_WIDTH       : --! @brief GPI(General Purpose Input)信号のビット幅.
@@ -447,6 +477,8 @@ component AXI4_STREAM_MASTER_PLAYER
                           time;
         SYNC_PLUG_NUM   : --! @brief シンクロ用信号のプラグ番号.
                           SYNC_PLUG_NUM_TYPE := 1;
+        SYNC_DEBUG      : --! @brief SYNC 機構のデバッグ出力を有効にするかどうかを指定する
+                          boolean := FALSE;
         WIDTH           : --! @brief AXI4 IS WIDTH :
                           AXI4_STREAM_SIGNAL_WIDTH_TYPE;
         SYNC_WIDTH      : --! @brief シンクロ用信号の本数.
@@ -518,6 +550,8 @@ component AXI4_STREAM_SLAVE_PLAYER
                           time;
         SYNC_PLUG_NUM   : --! @brief シンクロ用信号のプラグ番号.
                           SYNC_PLUG_NUM_TYPE := 1;
+        SYNC_DEBUG      : --! @brief SYNC 機構のデバッグ出力を有効にするかどうかを指定する
+                          boolean := FALSE;
         WIDTH           : --! @brief AXI4 IS WIDTH :
                           AXI4_STREAM_SIGNAL_WIDTH_TYPE;
         SYNC_WIDTH      : --! @brief シンクロ用信号の本数.

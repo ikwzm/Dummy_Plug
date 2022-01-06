@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_slave_player.vhd
 --!     @brief   AXI4 Slave Dummy Plug Player.
---!     @version 1.6.1
---!     @date    2016/3/15
+--!     @version 1.8.0
+--!     @date    2022/1/6
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012-2016 Ichiro Kawazome
+--      Copyright (C) 2012-2022 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -65,6 +65,8 @@ entity  AXI4_SLAVE_PLAYER is
                           SYNC_PLUG_NUM_TYPE := 1;
         SYNC_WIDTH      : --! @brief シンクロ用信号の本数.
                           integer :=  1;
+        SYNC_DEBUG      : --! @brief SYNC 機構のデバッグ出力を有効にするかどうかを指定する
+                          boolean := FALSE;
         DEFAULT_SYNC_IO : --! @brief リードトランザクション/ライトトランザクション
                           --         ウェイト時に完了を待ってから次のコマンドを実行
                           --         するか否かを指定する.
@@ -73,6 +75,18 @@ entity  AXI4_SLAVE_PLAYER is
                           integer := 8;
         GPO_WIDTH       : --! @brief GPO(General Purpose Output)信号のビット幅.
                           integer := 8;
+        DEBUG_MAIN      : --! @brief MAIN CHANNEL のデバッグレベル
+                          integer := 0;
+        DEBUG_CHANNEL_AR: --! @brief AR CHANNEL のデバッグレベル
+                          integer := 0;
+        DEBUG_CHANNEL_R : --! @brief R CHANNEL のデバッグレベル
+                          integer := 0;
+        DEBUG_CHANNEL_AW: --! @brief AW CHANNEL のデバッグレベル
+                          integer := 0;
+        DEBUG_CHANNEL_W : --! @brief W CHANNEL のデバッグレベル
+                          integer := 0;
+        DEBUG_CHANNEL_B : --! @brief B CHANNEL のデバッグレベル
+                          integer := 0;
         FINISH_ABORT    : --! @brief FINISH コマンド実行時にシミュレーションを
                           --!        アボートするかどうかを指定するフラグ.
                           boolean := true
@@ -178,6 +192,7 @@ use     DUMMY_PLUG.AXI4_TYPES.all;
 use     DUMMY_PLUG.AXI4_CORE.all;
 use     DUMMY_PLUG.CORE.all;
 use     DUMMY_PLUG.SYNC.all;
+use     DUMMY_PLUG.UTIL.all;
 -----------------------------------------------------------------------------------
 --! @brief   AXI4 Slave Dummy Plug Player.
 -----------------------------------------------------------------------------------
@@ -189,7 +204,6 @@ architecture MODEL of AXI4_SLAVE_PLAYER is
     signal    sync_clr          : std_logic := '0';
     signal    sync_req          : SYNC_REQ_VECTOR(SYNC'range);
     signal    sync_ack          : SYNC_ACK_VECTOR(SYNC'range);
-    signal    sync_debug        : boolean   := FALSE;
     -------------------------------------------------------------------------------
     --! ローカル同期制御信号
     -------------------------------------------------------------------------------
@@ -247,6 +261,7 @@ begin
             READ_ENABLE         => READ_ENABLE      ,
             WRITE_ENABLE        => WRITE_ENABLE     ,
             OUTPUT_DELAY        => OUTPUT_DELAY     ,
+            DEBUG_LEVEL         => DEBUG_MAIN       ,
             WIDTH               => WIDTH            ,
             SYNC_WIDTH          => SYNC_WIDTH       ,
             SYNC_LOCAL_WAIT     => SYNC_LOCAL_WAIT  ,
@@ -405,6 +420,7 @@ begin
             READ_ENABLE         => READ_ENABLE      ,
             WRITE_ENABLE        => WRITE_ENABLE     ,
             OUTPUT_DELAY        => OUTPUT_DELAY     ,
+            DEBUG_LEVEL         => DEBUG_CHANNEL_AR ,
             WIDTH               => WIDTH            ,
             SYNC_WIDTH          => SYNC_WIDTH       ,
             SYNC_LOCAL_WAIT     => SYNC_LOCAL_WAIT  ,
@@ -563,6 +579,7 @@ begin
             READ_ENABLE         => READ_ENABLE      ,
             WRITE_ENABLE        => WRITE_ENABLE     ,
             OUTPUT_DELAY        => OUTPUT_DELAY     ,
+            DEBUG_LEVEL         => DEBUG_CHANNEL_R  ,
             WIDTH               => WIDTH            ,
             SYNC_WIDTH          => SYNC_WIDTH       ,
             SYNC_LOCAL_WAIT     => SYNC_LOCAL_WAIT  ,
@@ -721,6 +738,7 @@ begin
             READ_ENABLE         => READ_ENABLE      ,
             WRITE_ENABLE        => WRITE_ENABLE     ,
             OUTPUT_DELAY        => OUTPUT_DELAY     ,
+            DEBUG_LEVEL         => DEBUG_CHANNEL_AW ,
             WIDTH               => WIDTH            ,
             SYNC_WIDTH          => SYNC_WIDTH       ,
             SYNC_LOCAL_WAIT     => SYNC_LOCAL_WAIT  ,
@@ -879,6 +897,7 @@ begin
             READ_ENABLE         => READ_ENABLE      ,
             WRITE_ENABLE        => WRITE_ENABLE     ,
             OUTPUT_DELAY        => OUTPUT_DELAY     ,
+            DEBUG_LEVEL         => DEBUG_CHANNEL_W  ,
             WIDTH               => WIDTH            ,
             SYNC_WIDTH          => SYNC_WIDTH       ,
             SYNC_LOCAL_WAIT     => SYNC_LOCAL_WAIT  ,
@@ -1037,6 +1056,7 @@ begin
             READ_ENABLE         => READ_ENABLE      ,
             WRITE_ENABLE        => WRITE_ENABLE     ,
             OUTPUT_DELAY        => OUTPUT_DELAY     ,
+            DEBUG_LEVEL         => DEBUG_CHANNEL_B  ,
             WIDTH               => WIDTH            ,
             SYNC_WIDTH          => SYNC_WIDTH       ,
             SYNC_LOCAL_WAIT     => SYNC_LOCAL_WAIT  ,
@@ -1189,16 +1209,18 @@ begin
     -- このコア用の同期回路
     -------------------------------------------------------------------------------
     SYNC_DRIVER: for i in SYNC'range generate
+        constant UNIT_NAME : string := NAME & ":SYNC(" & INTEGER_TO_STRING(i) & ")";
+    begin 
         UNIT: SYNC_SIG_DRIVER
             generic map (
-                NAME     => string'("SLAVE:SYNC"),
+                NAME     => UNIT_NAME           ,
                 PLUG_NUM => SYNC_PLUG_NUM
             )
             port map (
                 CLK      => ACLK                ,  -- In :
                 RST      => sync_rst            ,  -- In :
                 CLR      => sync_clr            ,  -- In :
-                DEBUG    => sync_debug          ,  -- In :
+                DEBUG    => SYNC_DEBUG          ,  -- In :
                 SYNC     => SYNC(i)             ,  -- I/O:
                 REQ      => sync_req(i)         ,  -- In :
                 ACK      => sync_ack(i)            -- Out:
@@ -1211,7 +1233,7 @@ begin
     -------------------------------------------------------------------------------
     SYNC_LOCAL : SYNC_LOCAL_HUB 
         generic map (
-            NAME     => string'("SLAVE:SYNC_LOCAL_HUB"),
+            NAME     => NAME & ":SYNC_LOCAL"    ,
             PLUG_SIZE=> 6
         )
         port map (
@@ -1239,7 +1261,7 @@ begin
     -------------------------------------------------------------------------------
     SYNC_TRANSACTION_WRITE : SYNC_LOCAL_HUB
         generic map (
-            NAME     => string'("SLAVE:SYNC_TRANSACTION_WRITE_HUB"),
+            NAME     => NAME & ":SYNC_TRANSACTION_WRITE",
             PLUG_SIZE=> 3
         )
         port map (
@@ -1260,7 +1282,7 @@ begin
     -------------------------------------------------------------------------------
     SYNC_TRANSACTION_READ : SYNC_LOCAL_HUB
         generic map (
-            NAME     => string'("SLAVE:SYNC_TRANSACTION_READ_HUB"),
+            NAME     => NAME & ":SYNC_TRANSACTION_READ",
             PLUG_SIZE=> 2
         )
         port map (
