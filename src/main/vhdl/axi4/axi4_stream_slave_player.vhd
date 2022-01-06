@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_stream_slave player.vhd
 --!     @brief   AXI4-Stream Slave Dummy Plug Player.
---!     @version 1.6.1
---!     @date    2016/3/15
+--!     @version 1.8.0
+--!     @date    2022/1/6
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012-2016 Ichiro Kawazome
+--      Copyright (C) 2012-2022 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -57,6 +57,8 @@ entity  AXI4_STREAM_SLAVE_PLAYER is
                           time;
         SYNC_PLUG_NUM   : --! @brief シンクロ用信号のプラグ番号.
                           SYNC_PLUG_NUM_TYPE := 1;
+        SYNC_DEBUG      : --! @brief SYNC 機構のデバッグ出力を有効にするかどうかを指定する
+                          boolean := FALSE;
         WIDTH           : --! @brief AXI4 IS WIDTH :
                           AXI4_STREAM_SIGNAL_WIDTH_TYPE;
         SYNC_WIDTH      : --! @brief シンクロ用信号の本数.
@@ -121,6 +123,7 @@ library DUMMY_PLUG;
 use     DUMMY_PLUG.AXI4_TYPES.all;
 use     DUMMY_PLUG.AXI4_CORE.all;
 use     DUMMY_PLUG.SYNC.all;
+use     DUMMY_PLUG.UTIL.all;
 -----------------------------------------------------------------------------------
 --! @brief   AXI4-Stream Slave Dummy Plug Player.
 -----------------------------------------------------------------------------------
@@ -132,7 +135,6 @@ architecture MODEL of AXI4_STREAM_SLAVE_PLAYER is
     signal    sync_clr          : std_logic := '0';
     signal    sync_req          : SYNC_REQ_VECTOR(SYNC'range);
     signal    sync_ack          : SYNC_ACK_VECTOR(SYNC'range);
-    signal    sync_debug        : boolean   := FALSE;
 begin
     T: AXI4_STREAM_PLAYER
         ---------------------------------------------------------------------------
@@ -207,9 +209,11 @@ begin
     -- 同期回路
     -------------------------------------------------------------------------------
     SYNC_DRIVER: for i in SYNC'range generate
+        constant UNIT_NAME : string := NAME & ":SYNC(" & INTEGER_TO_STRING(i) & ")";
+    begin 
         UNIT: SYNC_SIG_DRIVER
             generic map (
-                NAME     => string'("MASTER:SYNC"),
+                NAME     => UNIT_NAME           ,
                 PLUG_NUM => SYNC_PLUG_NUM
             )
             port map (

@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    core.vhd
 --!     @brief   Core Package for Dummy Plug.
---!     @version 1.6.1
---!     @date    2016/3/15
+--!     @version 1.8.0
+--!     @date    2022/1/6
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012-2016 Ichiro Kawazome
+--      Copyright (C) 2012-2022 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -583,9 +583,10 @@ package CORE is
         generic (
             SCENARIO_FILE   : STRING;
             NAME            : STRING;
-            SYNC_PLUG_NUM   : SYNC_PLUG_NUM_TYPE;
-            SYNC_WIDTH      : integer;
-            FINISH_ABORT    : boolean
+            SYNC_PLUG_NUM   : SYNC_PLUG_NUM_TYPE := 1;
+            SYNC_WIDTH      : integer := 1;
+            SYNC_DEBUG      : boolean := false;
+            FINISH_ABORT    : boolean := true
         );
         port(
             CLK             : in    std_logic;

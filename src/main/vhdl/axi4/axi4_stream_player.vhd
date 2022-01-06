@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_stream_player.vhd
 --!     @brief   AXI4-Stream Dummy Plug Player.
---!     @version 1.6.1
---!     @date    2016/3/15
+--!     @version 1.8.0
+--!     @date    2022/1/6
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012-2016 Ichiro Kawazome
+--      Copyright (C) 2012-2022 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -62,6 +62,8 @@ entity  AXI4_STREAM_PLAYER is
                           boolean   := FALSE;
         OUTPUT_DELAY    : --! @brief 出力信号遅延時間
                           time;
+        DEBUG_LEVEL     : --! @brief デバッグ出力フラグの初期値を指定する.
+                          integer := 0;
         WIDTH           : --! @brief AXI4 IS WIDTH :
                           AXI4_STREAM_SIGNAL_WIDTH_TYPE;
         SYNC_WIDTH      : --! @brief シンクロ用信号の本数.
@@ -1100,7 +1102,7 @@ begin
         gpo_signals := (others => 'Z');
         gpi_signals := (others => '-');
         xfer_data   := AXI4_STREAM_XFER_DATA_NULL;
-        core.debug  := 0;
+        core.debug  := DEBUG_LEVEL;
         ---------------------------------------------------------------------------
         -- 信号の初期化
         ---------------------------------------------------------------------------
