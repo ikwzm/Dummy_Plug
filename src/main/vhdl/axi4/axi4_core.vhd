@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_core.vhd
 --!     @brief   AXI4 Dummy Plug Core Package.
---!     @version 1.8.0
---!     @date    2022/1/6
+--!     @version 1.9.0
+--!     @date    2022/10/28
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -334,12 +334,12 @@ package AXI4_CORE is
     --! @brief AXI4-Stream 信号のレコード宣言.
     -------------------------------------------------------------------------------
     type      AXI4_STREAM_SIGNAL_TYPE is record
-        DATA     : std_logic_vector(AXI4_DATA_MAX_WIDTH-1 downto 0);
-        KEEP     : std_logic_vector(AXI4_STRB_MAX_WIDTH-1 downto 0);
-        STRB     : std_logic_vector(AXI4_STRB_MAX_WIDTH-1 downto 0);
-        USER     : std_logic_vector(AXI4_USER_MAX_WIDTH-1 downto 0);
-        DEST     : std_logic_vector(AXI4_DEST_MAX_WIDTH-1 downto 0);
-        ID       : std_logic_vector(AXI4_ID_MAX_WIDTH  -1 downto 0);
+        DATA     : std_logic_vector(AXI4_TDATA_MAX_WIDTH-1 downto 0);
+        KEEP     : std_logic_vector(AXI4_TSTRB_MAX_WIDTH-1 downto 0);
+        STRB     : std_logic_vector(AXI4_TSTRB_MAX_WIDTH-1 downto 0);
+        USER     : std_logic_vector(AXI4_TUSER_MAX_WIDTH-1 downto 0);
+        DEST     : std_logic_vector(AXI4_TDEST_MAX_WIDTH-1 downto 0);
+        ID       : std_logic_vector(AXI4_TID_MAX_WIDTH  -1 downto 0);
         LAST     : std_logic;
         VALID    : std_logic;
         READY    : std_logic;
