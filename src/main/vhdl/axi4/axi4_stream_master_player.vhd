@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_stream_master player.vhd
 --!     @brief   AXI4-Stream Master Dummy Plug Player.
---!     @version 1.8.0
---!     @date    2022/1/6
+--!     @version 1.9.0
+--!     @date    2022/10/28
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
