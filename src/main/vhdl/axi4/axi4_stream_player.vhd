@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_stream_player.vhd
 --!     @brief   AXI4-Stream Dummy Plug Player.
---!     @version 1.8.0
---!     @date    2022/1/6
+--!     @version 1.9.0
+--!     @date    2022/10/28
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
@@ -151,9 +151,9 @@ architecture MODEL of AXI4_STREAM_PLAYER is
     --! @brief AXI4-Stream Xferのレコード宣言.
     -------------------------------------------------------------------------------
     type      AXI4_STREAM_XFER_DATA_TYPE is record
-        id       : std_logic_vector(AXI4_ID_MAX_WIDTH    -1 downto 0);
-        dest     : std_logic_vector(AXI4_DEST_MAX_WIDTH  -1 downto 0);
-        user     : std_logic_vector(AXI4_USER_MAX_WIDTH  -1 downto 0);
+        id       : std_logic_vector(AXI4_TID_MAX_WIDTH   -1 downto 0);
+        dest     : std_logic_vector(AXI4_TDEST_MAX_WIDTH -1 downto 0);
+        user     : std_logic_vector(AXI4_TUSER_MAX_WIDTH -1 downto 0);
         data     : std_logic_vector(AXI4_XFER_MAX_BYTES*8-1 downto 0);
         strb     : std_logic_vector(AXI4_XFER_MAX_BYTES  -1 downto 0);
         keep     : std_logic_vector(AXI4_XFER_MAX_BYTES  -1 downto 0);
