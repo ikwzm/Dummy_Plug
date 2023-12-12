@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    sync_alt.vhd
 --!     @brief   Package for Synchronize some dummy-plugs.
---!     @version 1.7.4
---!     @date    2020/9/21
+--!     @version 1.9.1
+--!     @date    2023/12/12
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012-2020 Ichiro Kawazome
+--      Copyright (C) 2012-2023 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
