@@ -10,6 +10,7 @@ TEST_BENCH = dummy_plug_reader_test_1        \
              dummy_plug_axi4_test_1_2        \
              dummy_plug_axi4_test_1_3        \
              dummy_plug_axi4_test_1_4        \
+             dummy_plug_axi4_test_1_5        \
              dummy_plug_axi4_stream_test_1_1 \
              dummy_plug_axi4_memory_test_1   \
              dummy_plug_axi4_memory_test_2   \
@@ -131,6 +132,9 @@ dummy_plug_axi4_test_1_3.o         : $(SRC_TEST_VHDL_PATH)/axi4/axi4_test_1_3.vh
 	 $(GHDL) -a $(GHDLFLAGS) --work=work $<
 
 dummy_plug_axi4_test_1_4.o         : $(SRC_TEST_VHDL_PATH)/axi4/axi4_test_1_4.vhd dummy_plug_axi4_test_1.o $(DUMMY_PLUG_AXI4)
+	 $(GHDL) -a $(GHDLFLAGS) --work=work $<
+
+dummy_plug_axi4_test_1_5.o         : $(SRC_TEST_VHDL_PATH)/axi4/axi4_test_1_5.vhd dummy_plug_axi4_test_1.o $(DUMMY_PLUG_AXI4)
 	 $(GHDL) -a $(GHDLFLAGS) --work=work $<
 
 dummy_plug_axi4_stream_test_1.o    : $(SRC_TEST_VHDL_PATH)/axi4/axi4_stream_test_1.vhd   $(DUMMY_PLUG_AXI4)
