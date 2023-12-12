@@ -1,0 +1,561 @@
+#----------------------------------------------------------------------------------
+#
+# AXI4 DUMMY-PLUG Test Bench Scenario 1.5
+#
+#----------------------------------------------------------------------------------
+- - [MARCHAL]
+  - SAY: >
+       DUMMY-PLUG AXI4 TEST BENCH SCENARIO 1.5
+       READ_ENABLE  = FALSE
+       WRITE_ENABLE = TRUE
+       DATA_WIDTH   = 64
+#----------------------------------------------------------------------------------
+#
+# AXI4 DUMMY-PLUG Test Bench Scenario 1.5.1
+#
+#----------------------------------------------------------------------------------
+---
+- MASTER:
+  - DEBUG: 0
+  - AW : [{DEBUG : 0}]
+  - AR : [{DEBUG : 0}]
+  - R  : [{DEBUG : 0}]
+  - W  : [{DEBUG : 0}]
+  - B  : [{DEBUG : 0}]
+- SLAVE:
+  - DEBUG: 0
+  - AW : [{DEBUG : 0}]
+  - AR : [{DEBUG : 0}]
+  - R  : [{DEBUG : 0}]
+  - W  : [{DEBUG : 0}]
+  - B  : [{DEBUG : 0}]
+---
+- - [MARCHAL]
+  - SAY: >
+       DUMMY-PLUG AXI4 TEST BENCH SCENARIO 1.5.1 START
+  - SYNC  : {PORT: 0, TIMEOUT: 1000}
+  - SAY: >
+       DUMMY-PLUG AXI4 TEST BENCH SCENARIO 1.5.1 DONE
+- MASTER:
+  - WRITE : 
+        ADDR : 0x0000FC80
+        SIZE : 1
+        BURST: INCR
+        ID   : 10
+        AUSER: 0
+        RESP : OKAY
+  - WRITE : 
+        ADDR : 0x0000FC81
+        SIZE : 1
+        BURST: INCR
+        ID   : 10
+        AUSER: 1
+        RESP : OKAY
+  - WRITE : 
+        ADDR : 0x0000FC82
+        SIZE : 1
+        BURST: INCR
+        ID   : 10
+        AUSER: 0
+        RESP : OKAY
+  - WRITE : 
+        ADDR : 0x0000FC83
+        SIZE : 1
+        BURST: INCR
+        ID   : 10
+        AUSER: 1
+        RESP : OKAY
+  - WRITE : 
+        ADDR : 0x0000FC84
+        SIZE : 1
+        BURST: INCR
+        ID   : 10
+        AUSER: 0
+        RESP : OKAY
+  - WRITE : 
+        ADDR : 0x0000FC85
+        SIZE : 1
+        BURST: INCR
+        ID   : 10
+        AUSER: 1
+        RESP : OKAY
+  - WRITE : 
+        ADDR : 0x0000FC86
+        SIZE : 1
+        BURST: INCR
+        ID   : 10
+        AUSER: 0
+        RESP : OKAY
+  - WRITE : 
+        ADDR : 0x0000FC87
+        SIZE : 1
+        BURST: INCR
+        ID   : 10
+        AUSER: 1
+        RESP : OKAY
+  - WRITE : 
+        ADDR : 0x0000FC88
+        SIZE : 1
+        BURST: INCR
+        ID   : 10
+        AUSER: 0
+        RESP : OKAY
+  - SYNC  : {PORT: 0, TIMEOUT: 1000}
+- SLAVE:
+  - AW : 
+    - READY   : 0                        
+    - WAIT    : {AWVALID: 1, TIMEOUT: 50}
+    - READY   : 1
+    - WAIT    : {AWVALID: 1, AWREADY: 1, TIMEOUT: 50}
+    - CHECK   : {ADDR: 0x0000FC80, SIZE: 1, BURST: INCR, ID: 10, LEN: 1, USER: 0}
+    - READY   : 0
+  - W :
+    - READY   : 0
+    - WAIT    : {AWVALID: 1, AWREADY: 1, TIMEOUT: 50}
+    - WAIT    : 10
+    - READY   : 1
+    - WAIT    : {WVALID: 1, WREADY: 1, TIMEOUT: 50}
+    - CHECK   : {DATA: "64'h----------------", STRB: "8'b00000000", LAST: 1}
+    - READY   : 0
+  - B:
+    - VALID   : 0
+    - WAIT    : {WVALID: 1, WREADY: 1, WLAST: 1, TIMEOUT: 1000}
+    - VALID   : 1
+      RESP    : OKAY
+      ID      : 10
+    - WAIT    : {VALID: 1, READY : 1, TIMEOUT: 10}
+    - VALID   : 0
+  - AW:
+    - READY   : 0
+    - WAIT    : {AWVALID: 1, TIMEOUT: 50}
+    - READY   : 1
+    - WAIT    : {AWVALID: 1, AWREADY: 1, TIMEOUT: 50}
+    - CHECK   : {ADDR: 0x0000FC81, SIZE: 1, BURST: INCR, ID: 10, LEN: 1, USER: 1}
+    - READY   : 0
+  - W :
+    - READY   : 0
+    - WAIT    : {AWVALID: 1, AWREADY: 1, TIMEOUT: 50}
+    - READY   : 1
+    - WAIT    : {WVALID: 1, WREADY: 1, TIMEOUT: 50}
+    - CHECK   : {DATA: "64'h----------------", STRB: "8'b00000000", LAST: 1}
+    - READY   : 0
+  - B :
+    - VALID   : 0
+    - WAIT    : {WVALID: 1, WREADY: 1, WLAST: 1, TIMEOUT: 1000}
+    - VALID   : 1
+      RESP    : OKAY
+      ID      : 10
+    - WAIT    : {VALID: 1, READY : 1, TIMEOUT: 10}
+    - VALID   : 0
+  - AW:
+    - READY   : 0
+    - WAIT    : {AWVALID: 1, TIMEOUT: 50}
+    - READY   : 1
+    - WAIT    : {AWVALID: 1, AWREADY: 1, TIMEOUT: 50}
+    - CHECK   : {ADDR: 0x0000FC82, SIZE: 1, BURST: INCR, ID: 10, LEN: 1, USER: 0}
+    - READY   : 0
+  - W :
+    - READY   : 0
+    - WAIT    : {AWVALID: 1, AWREADY: 1, TIMEOUT: 50}
+    - READY   : 1
+    - WAIT    : {WVALID: 1, WREADY: 1, TIMEOUT: 50}
+    - CHECK   : {DATA: "64'h----------------", STRB: "8'b00000000", LAST: 1}
+    - READY   : 0
+  - B: 
+    - VALID   : 0
+    - WAIT    : {WVALID: 1, WREADY: 1, WLAST: 1, TIMEOUT: 1000}
+    - VALID   : 1
+      RESP    : OKAY
+      ID      : 10
+    - WAIT    : {VALID: 1, READY : 1, TIMEOUT: 10}
+    - VALID   : 0
+  - AW:
+    - READY   : 0
+    - WAIT    : {AWVALID: 1, TIMEOUT: 50}
+    - READY   : 1
+    - WAIT    : {AWVALID: 1, AWREADY: 1, TIMEOUT: 50}
+    - CHECK   : {ADDR: 0x0000FC83, SIZE: 1, BURST: INCR, ID: 10, LEN: 1, USER: 1}
+    - READY   : 0
+  - W :
+    - READY   : 0
+    - WAIT    : {AWVALID: 1, AWREADY: 1, TIMEOUT: 50}
+    - READY   : 1
+    - WAIT    : {WVALID: 1, WREADY: 1, TIMEOUT: 50}
+    - CHECK   : {DATA: "64'h----------------", STRB: "8'b00000000", LAST: 1}
+    - READY   : 0
+  - B: 
+    - VALID   : 0
+    - WAIT    : {WVALID: 1, WREADY: 1, WLAST: 1, TIMEOUT: 1000}
+    - VALID   : 1
+      RESP    : OKAY
+      ID      : 10
+    - WAIT    : {VALID: 1, READY : 1, TIMEOUT: 10}
+    - VALID   : 0
+  - AW:
+    - READY   : 0
+    - WAIT    : {AWVALID: 1, TIMEOUT: 50}
+    - READY   : 1
+    - WAIT    : {AWVALID: 1, AWREADY: 1, TIMEOUT: 50}
+    - CHECK   : {ADDR: 0x0000FC84, SIZE: 1, BURST: INCR, ID: 10, LEN: 1, USER: 0}
+    - READY   : 0
+  - W :
+    - READY   : 0
+    - WAIT    : {AWVALID: 1, AWREADY: 1, TIMEOUT: 50}
+    - READY   : 1
+    - WAIT    : {WVALID: 1, WREADY: 1, TIMEOUT: 50}
+    - CHECK   : {DATA: "64'h----------------", STRB: "8'b00000000", LAST: 1}
+    - READY   : 0
+  - B: 
+    - VALID   : 0
+    - WAIT    : {WVALID: 1, WREADY: 1, WLAST: 1, TIMEOUT: 1000}
+    - VALID   : 1
+      RESP    : OKAY
+      ID      : 10
+    - WAIT    : {VALID: 1, READY : 1, TIMEOUT: 10}
+    - VALID   : 0
+  - AW:
+    - READY   : 0
+    - WAIT    : {AWVALID: 1, TIMEOUT: 50}
+    - READY   : 1
+    - WAIT    : {AWVALID: 1, AWREADY: 1, TIMEOUT: 50}
+    - CHECK   : {ADDR: 0x0000FC85, SIZE: 1, BURST: INCR, ID: 10, LEN: 1, USER: 1}
+    - READY   : 0
+  - W :
+    - READY   : 0
+    - WAIT    : {AWVALID: 1, AWREADY: 1, TIMEOUT: 50}
+    - READY   : 1
+    - WAIT    : {WVALID: 1, WREADY: 1, TIMEOUT: 50}
+    - CHECK   : {DATA: "64'h----------------", STRB: "8'b00000000", LAST: 1}
+    - READY   : 0
+  - B: 
+    - VALID   : 0
+    - WAIT    : {WVALID: 1, WREADY: 1, WLAST: 1, TIMEOUT: 1000}
+    - VALID   : 1
+      RESP    : OKAY
+      ID      : 10
+    - WAIT    : {VALID: 1, READY : 1, TIMEOUT: 10}
+    - VALID   : 0
+  - AW:
+    - READY   : 0
+    - WAIT    : {AWVALID: 1, TIMEOUT: 50}
+    - READY   : 1
+    - WAIT    : {AWVALID: 1, AWREADY: 1, TIMEOUT: 50}
+    - CHECK   : {ADDR: 0x0000FC86, SIZE: 1, BURST: INCR, ID: 10, LEN: 1, USER: 0}
+    - READY   : 0
+  - W :
+    - READY   : 0
+    - WAIT    : {AWVALID: 1, AWREADY: 1, TIMEOUT: 50}
+    - READY   : 1
+    - WAIT    : {WVALID: 1, WREADY: 1, TIMEOUT: 50}
+    - CHECK   : {DATA: "64'h----------------", STRB: "8'b00000000", LAST: 1}
+    - READY   : 0
+  - B: 
+    - VALID   : 0
+    - WAIT    : {WVALID: 1, WREADY: 1, WLAST: 1, TIMEOUT: 1000}
+    - VALID   : 1
+      RESP    : OKAY
+      ID      : 10
+    - WAIT    : {VALID: 1, READY : 1, TIMEOUT: 10}
+    - VALID   : 0
+  - AW:
+    - READY   : 0
+    - WAIT    : {AWVALID: 1, TIMEOUT: 50}
+    - READY   : 1
+    - WAIT    : {AWVALID: 1, AWREADY: 1, TIMEOUT: 50}
+    - CHECK   : {ADDR: 0x0000FC87, SIZE: 1, BURST: INCR, ID: 10, LEN: 1, USER: 1}
+    - READY   : 0
+  - W :
+    - READY   : 0
+    - WAIT    : {AWVALID: 1, AWREADY: 1, TIMEOUT: 50}
+    - READY   : 1
+    - WAIT    : {WVALID: 1, WREADY: 1, TIMEOUT: 50}
+    - CHECK   : {DATA: "64'h----------------", STRB: "8'b00000000", LAST: 1}
+    - READY   : 0
+  - B: 
+    - VALID   : 0
+    - WAIT    : {WVALID: 1, WREADY: 1, WLAST: 1, TIMEOUT: 1000}
+    - VALID   : 1
+      RESP    : OKAY
+      ID      : 10
+    - WAIT    : {VALID: 1, READY : 1, TIMEOUT: 10}
+    - VALID   : 0
+  - AW:
+    - READY   : 0
+    - WAIT    : {AWVALID: 1, TIMEOUT: 50}
+    - READY   : 1
+    - WAIT    : {AWVALID: 1, AWREADY: 1, TIMEOUT: 50}
+    - CHECK   : {ADDR: 0x0000FC88, SIZE: 1, BURST: INCR, ID: 10, LEN: 1, USER: 0}
+    - READY   : 0
+  - W :
+    - READY   : 0
+    - WAIT    : {AWVALID: 1, AWREADY: 1, TIMEOUT: 50}
+    - READY   : 1
+    - WAIT    : {WVALID: 1, WREADY: 1, TIMEOUT: 50}
+    - CHECK   : {DATA: "64'h----------------", STRB: "8'b00000000", LAST: 1}
+    - READY   : 0
+  - B: 
+    - VALID   : 0
+    - WAIT    : {WVALID: 1, WREADY: 1, WLAST: 1, TIMEOUT: 1000}
+    - VALID   : 1
+      RESP    : OKAY
+      ID      : 10
+    - WAIT    : {VALID: 1, READY : 1, TIMEOUT: 10}
+    - VALID   : 0
+  - SYNC  : {PORT: 0, TIMEOUT: 1000}
+#----------------------------------------------------------------------------------
+#
+# AXI4 DUMMY-PLUG Test Bench Scenario 1.5.2
+#
+#----------------------------------------------------------------------------------
+---
+- MASTER:
+  - DEBUG: 0
+  - AW : [{DEBUG : 0}]
+  - AR : [{DEBUG : 0}]
+  - R  : [{DEBUG : 0}]
+  - W  : [{DEBUG : 0}]
+  - B  : [{DEBUG : 0}]
+- SLAVE:
+  - DEBUG: 0
+  - AW : [{DEBUG : 0}]
+  - AR : [{DEBUG : 0}]
+  - R  : [{DEBUG : 0}]
+  - W  : [{DEBUG : 0}]
+  - B  : [{DEBUG : 0}]
+---
+- - [MARCHAL]
+  - SAY: >
+       DUMMY-PLUG AXI4 TEST BENCH SCENARIO 1.5.2 START
+  - SYNC  : {PORT: 0, TIMEOUT: 1000}
+  - SAY: >
+       DUMMY-PLUG AXI4 TEST BENCH SCENARIO 1.5.2 DONE
+- MASTER:
+  - AW : 
+    - {VALID  : 1, ADDR: 0x0000FC80, SIZE: 1, BURST: INCR, ID: 10, LEN: 1, USER:0}
+    - WAIT    : {AWVALID: 1, AWREADY: 1, TIMEOUT: 50}
+    - VALID   : 0
+  - W :
+    - {VALID  : 0}
+    - WAIT    : {AWVALID: 1, TIMEOUT: 50, ON: on}
+    - {VALID: 1, DATA: "64'h0000000000000000", STRB: "8'b00000000", LAST: 1}
+    - WAIT    : {VALID: 1, READY: 1, TIMEOUT: 50}
+    - {VALID: 0, DATA: "64'h0000000000000000", STRB: "8'b00000000", LAST: 0}
+  - B:
+    - READY   : 0
+    - WAIT    : {WVALID: 1, WREADY: 1, WLAST: 1, TIMEOUT: 1000}
+    - READY   : 1
+    - WAIT    : {VALID: 1, READY : 1, TIMEOUT: 10}
+    - CHECK   : {RESP : OKAY, ID: 10}
+    - READY   : 0
+  - AW:
+    - {VALID  : 1, ADDR: 0x0000FC81, SIZE: 1, BURST: INCR, ID: 10, LEN: 1, USER:1}
+    - WAIT    : {AWVALID: 1, AWREADY: 1, TIMEOUT: 50}
+    - VALID   : 0
+  - W :
+    - {VALID  : 0}
+    - WAIT    : {AWVALID: 1, TIMEOUT: 50, ON: on}
+    - {VALID: 1, DATA: "64'h0000000000000000", STRB: "8'b00000000", LAST: 1}
+    - WAIT    : {VALID: 1, READY: 1, TIMEOUT: 50}
+    - {VALID: 0, DATA: "64'h0000000000000000", STRB: "8'b00000000", LAST: 0}
+  - B:
+    - READY   : 0
+    - WAIT    : {WVALID: 1, WREADY: 1, WLAST: 1, TIMEOUT: 1000}
+    - READY   : 1
+    - WAIT    : {VALID: 1, READY : 1, TIMEOUT: 10}
+    - CHECK   : {RESP : OKAY, ID: 10}
+    - READY   : 0
+  - AW:
+    - {VALID  : 1, ADDR: 0x0000FC82, SIZE: 1, BURST: INCR, ID: 10, LEN: 1, USER:0}
+    - WAIT    : {AWVALID: 1, AWREADY: 1, TIMEOUT: 50}
+    - VALID   : 0
+  - W :
+    - {VALID  : 0}
+    - WAIT    : {AWVALID: 1, TIMEOUT: 50, ON: on}
+    - {VALID: 1, DATA: "64'h0000000000000000", STRB: "8'b00000000", LAST: 1}
+    - WAIT    : {VALID: 1, READY: 1, TIMEOUT: 50}
+    - {VALID: 0, DATA: "64'h0000000000000000", STRB: "8'b00000000", LAST: 0}
+  - B:
+    - READY   : 0
+    - WAIT    : {WVALID: 1, WREADY: 1, WLAST: 1, TIMEOUT: 1000}
+    - READY   : 1
+    - WAIT    : {VALID: 1, READY : 1, TIMEOUT: 10}
+    - CHECK   : {RESP : OKAY, ID: 10}
+    - READY   : 0
+  - AW:
+    - {VALID  : 1, ADDR: 0x0000FC83, SIZE: 1, BURST: INCR, ID: 10, LEN: 1, USER:1}
+    - WAIT    : {AWVALID: 1, AWREADY: 1, TIMEOUT: 50}
+    - VALID   : 0
+  - W :
+    - {VALID  : 0}
+    - WAIT    : {AWVALID: 1, TIMEOUT: 50, ON: on}
+    - {VALID: 1, DATA: "64'h0000000000000000", STRB: "8'b00000000", LAST: 1}
+    - WAIT    : {VALID: 1, READY: 1, TIMEOUT: 50}
+    - {VALID: 0, DATA: "64'h0000000000000000", STRB: "8'b00000000", LAST: 0}
+  - B:
+    - READY   : 0
+    - WAIT    : {WVALID: 1, WREADY: 1, WLAST: 1, TIMEOUT: 1000}
+    - READY   : 1
+    - WAIT    : {VALID: 1, READY : 1, TIMEOUT: 10}
+    - CHECK   : {RESP : OKAY, ID: 10}
+    - READY   : 0
+  - AW:
+    - {VALID  : 1, ADDR: 0x0000FC84, SIZE: 1, BURST: INCR, ID: 10, LEN: 1, USER:0}
+    - WAIT    : {AWVALID: 1, AWREADY: 1, TIMEOUT: 50}
+    - VALID   : 0
+  - W :
+    - {VALID  : 0}
+    - WAIT    : {AWVALID: 1, TIMEOUT: 50, ON: on}
+    - {VALID: 1, DATA: "64'h0000000000000000", STRB: "8'b00000000", LAST: 1}
+    - WAIT    : {VALID: 1, READY: 1, TIMEOUT: 50}
+    - {VALID: 0, DATA: "64'h0000000000000000", STRB: "8'b00000000", LAST: 0}
+  - B:
+    - READY   : 0
+    - WAIT    : {WVALID: 1, WREADY: 1, WLAST: 1, TIMEOUT: 1000}
+    - READY   : 1
+    - WAIT    : {VALID: 1, READY : 1, TIMEOUT: 10}
+    - CHECK   : {RESP : OKAY, ID: 10}
+    - READY   : 0
+  - AW:
+    - {VALID  : 1, ADDR: 0x0000FC85, SIZE: 1, BURST: INCR, ID: 10, LEN: 1, USER:1}
+    - WAIT    : {AWVALID: 1, AWREADY: 1, TIMEOUT: 50}
+    - VALID   : 0
+  - W :
+    - {VALID  : 0}
+    - WAIT    : {AWVALID: 1, TIMEOUT: 50, ON: on}
+    - {VALID: 1, DATA: "64'h0000000000000000", STRB: "8'b00000000", LAST: 1}
+    - WAIT    : {VALID: 1, READY: 1, TIMEOUT: 50}
+    - {VALID: 0, DATA: "64'h0000000000000000", STRB: "8'b00000000", LAST: 0}
+  - B:
+    - READY   : 0
+    - WAIT    : {WVALID: 1, WREADY: 1, WLAST: 1, TIMEOUT: 1000}
+    - READY   : 1
+    - WAIT    : {VALID: 1, READY : 1, TIMEOUT: 10}
+    - CHECK   : {RESP : OKAY, ID: 10}
+    - READY   : 0
+  - AW:
+    - {VALID  : 1, ADDR: 0x0000FC86, SIZE: 1, BURST: INCR, ID: 10, LEN: 1, USER:0}
+    - WAIT    : {AWVALID: 1, AWREADY: 1, TIMEOUT: 50}
+    - VALID   : 0
+  - W :
+    - {VALID  : 0}
+    - WAIT    : {AWVALID: 1, TIMEOUT: 50, ON: on}
+    - {VALID: 1, DATA: "64'h0000000000000000", STRB: "8'b00000000", LAST: 1}
+    - WAIT    : {VALID: 1, READY: 1, TIMEOUT: 50}
+    - {VALID: 0, DATA: "64'h0000000000000000", STRB: "8'b00000000", LAST: 0}
+  - B:
+    - READY   : 0
+    - WAIT    : {WVALID: 1, WREADY: 1, WLAST: 1, TIMEOUT: 1000}
+    - READY   : 1
+    - WAIT    : {VALID: 1, READY : 1, TIMEOUT: 10}
+    - CHECK   : {RESP : OKAY, ID: 10}
+    - READY   : 0
+  - AW:
+    - {VALID  : 1, ADDR: 0x0000FC87, SIZE: 1, BURST: INCR, ID: 10, LEN: 1, USER:1}
+    - WAIT    : {AWVALID: 1, AWREADY: 1, TIMEOUT: 50}
+    - VALID   : 0
+  - W :
+    - {VALID  : 0}
+    - WAIT    : {AWVALID: 1, TIMEOUT: 50, ON: on}
+    - {VALID: 1, DATA: "64'h0000000000000000", STRB: "8'b00000000", LAST: 1}
+    - WAIT    : {VALID: 1, READY: 1, TIMEOUT: 50}
+    - {VALID: 0, DATA: "64'h0000000000000000", STRB: "8'b00000000", LAST: 0}
+  - B:
+    - READY   : 0
+    - WAIT    : {WVALID: 1, WREADY: 1, WLAST: 1, TIMEOUT: 1000}
+    - READY   : 1
+    - WAIT    : {VALID: 1, READY : 1, TIMEOUT: 10}
+    - CHECK   : {RESP : OKAY, ID: 10}
+    - READY   : 0
+  - AW:
+    - {VALID  : 1, ADDR: 0x0000FC88, SIZE: 1, BURST: INCR, ID: 10, LEN: 1, USER:0}
+    - WAIT    : {AWVALID: 1, AWREADY: 1, TIMEOUT: 50}
+    - VALID   : 0
+  - W :
+    - {VALID  : 0}
+    - WAIT    : {AWVALID: 1, TIMEOUT: 50, ON: on}
+    - {VALID: 1, DATA: "64'h0000000000000000", STRB: "8'b00000000", LAST: 1}
+    - WAIT    : {VALID: 1, READY: 1, TIMEOUT: 50}
+    - {VALID: 0, DATA: "64'h0000000000000000", STRB: "8'b00000000", LAST: 0}
+  - B:
+    - READY   : 0
+    - WAIT    : {WVALID: 1, WREADY: 1, WLAST: 1, TIMEOUT: 1000}
+    - READY   : 1
+    - WAIT    : {VALID: 1, READY : 1, TIMEOUT: 10}
+    - CHECK   : {RESP : OKAY, ID: 10}
+    - READY   : 0
+  - SYNC  : {PORT: 0, TIMEOUT: 1000}
+- SLAVE:
+  - WRITE : 
+        ADDR : 0x0000FC80
+        SIZE : 1
+        BURST: INCR
+        ID   : 10
+        AUSER: 0
+        RESP : OKAY
+  - WRITE : 
+        ADDR : 0x0000FC81
+        SIZE : 1
+        BURST: INCR
+        ID   : 10
+        AUSER: 1
+        RESP : OKAY
+  - WRITE : 
+        ADDR : 0x0000FC82
+        SIZE : 1
+        BURST: INCR
+        ID   : 10
+        AUSER: 0
+        RESP : OKAY
+  - WRITE : 
+        ADDR : 0x0000FC83
+        SIZE : 1
+        BURST: INCR
+        ID   : 10
+        AUSER: 1
+        RESP : OKAY
+  - WRITE : 
+        ADDR : 0x0000FC84
+        SIZE : 1
+        BURST: INCR
+        ID   : 10
+        AUSER: 0
+        RESP : OKAY
+  - WRITE : 
+        ADDR : 0x0000FC85
+        SIZE : 1
+        BURST: INCR
+        ID   : 10
+        AUSER: 1
+        RESP : OKAY
+  - WRITE : 
+        ADDR : 0x0000FC86
+        SIZE : 1
+        BURST: INCR
+        ID   : 10
+        AUSER: 0
+        RESP : OKAY
+  - WRITE : 
+        ADDR : 0x0000FC87
+        SIZE : 1
+        BURST: INCR
+        ID   : 10
+        AUSER: 1
+        RESP : OKAY
+  - WRITE : 
+        ADDR : 0x0000FC88
+        SIZE : 1
+        BURST: INCR
+        ID   : 10
+        AUSER: 0
+        RESP : OKAY
+  - SYNC  : {PORT: 0, TIMEOUT: 1000}
+#----------------------------------------------------------------------------------
+#
+# DUMMY-PLUG AXI4 TEST BENCH SCENARIO 1.5 ALL DONE
+#
+#----------------------------------------------------------------------------------
+---
+- - [MARCHAL,MASTER,SLAVE]
+  - SAY: >
+       DUMMY-PLUG AXI4 TEST BENCH SCENARIO 1.5 ALL DONE
+---

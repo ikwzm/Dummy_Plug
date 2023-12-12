@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_channel_player.vhd
 --!     @brief   AXI4 A/R/W/B Channel Dummy Plug Player.
---!     @version 1.9.0
---!     @date    2022/10/28
+--!     @version 1.9.1
+--!     @date    2023/12/12
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012-2022 Ichiro Kawazome
+--      Copyright (C) 2012-2023 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -1933,7 +1933,11 @@ architecture MODEL of AXI4_CHANNEL_PLAYER is
         transaction_to_addr_and_bytes(trans, address, number_bytes);
         data_bytes := (pos+7)/8;
         burst_len  := (address + data_bytes + number_bytes - 1) / number_bytes;
-        trans.LEN  := std_logic_vector(TO_UNSIGNED(burst_len-1, AXI4_ALEN_WIDTH));
+        if (burst_len > 0) then
+            trans.LEN  := std_logic_vector(TO_UNSIGNED(burst_len-1, AXI4_ALEN_WIDTH));
+        else 
+            trans.LEN  := std_logic_vector(TO_UNSIGNED(0          , AXI4_ALEN_WIDTH));
+        end if;
         REPORT_DEBUG(core, proc_name, "END");
     end procedure;
     -------------------------------------------------------------------------------
