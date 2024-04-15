@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_channel_player.vhd
 --!     @brief   AXI4 A/R/W/B Channel Dummy Plug Player.
---!     @version 1.9.1
---!     @date    2023/12/12
+--!     @version 1.9.2
+--!     @date    2024/4/15
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012-2023 Ichiro Kawazome
+--      Copyright (C) 2012-2024 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -2951,28 +2951,28 @@ begin
             --! @brief get_transaction_info で取り込んだトランザクション情報から
             --!        ワード毎のリードデータチャネル信号の値を生成するサブプログラム.
             --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-            --! @param    proc_name  プロシージャの名前.
-            --! @param    last       最後のワードであることを指定する.
-            --! @param    default    指定の無いstd_logicの値.
-            --! @param    signals    生成されたワード毎の信号を出力する.
+            --! @param    proc_name       プロシージャの名前.
+            --! @param    last_word       最後のワードであることを指定する.
+            --! @param    default_value   指定の無いstd_logicの値.
+            --! @param    signals         生成されたワード毎の信号を出力する.
             -----------------------------------------------------------------------
             procedure generate_r_channel_signals(
-                          proc_name   : in  string;
-                          last        : in  boolean;
-                          default     : in  std_logic;
-                          signals     : out AXI4_R_CHANNEL_SIGNAL_TYPE
+                          proc_name     : in  string;
+                          last_word     : in  boolean;
+                          default_value : in  std_logic;
+                          signals       : out AXI4_R_CHANNEL_SIGNAL_TYPE
             ) is
-                constant  word_bytes  :     integer := WIDTH.RDATA/8;
+                constant  word_bytes    :     integer := WIDTH.RDATA/8;
             begin 
                 signals.USER  := tran_info.DUSER;
                 signals.ID    := tran_info.ID;
                 signals.VALID := '1';
                 signals.READY := '1';
-                if (last) then
+                if (last_word) then
                     signals.RESP := tran_info.RESP;
                     signals.LAST := '1';
                 else
-                    signals.RESP := (others => default);
+                    signals.RESP := (others => default_value);
                     signals.LAST := '0';
                 end if;
                 for lane in 0 to word_bytes-1 loop
@@ -2982,11 +2982,11 @@ begin
                                 signals.DATA(lane*8+bit) := tran_info.DATA(data_pos);
                                 data_pos := data_pos + 1;
                             else
-                                signals.DATA(lane*8+bit) := default;
+                                signals.DATA(lane*8+bit) := default_value;
                             end if;
                         end loop;
                     else
-                        signals.DATA(lane*8+7 downto lane*8) := (lane*8+7 downto lane*8 => default);
+                        signals.DATA(lane*8+7 downto lane*8) := (lane*8+7 downto lane*8 => default_value);
                     end if;
                 end loop;
                 lower_lane := (upper_lane + 1)  mod word_bytes;
@@ -2999,23 +2999,23 @@ begin
             --! @brief get_transaction_info で取り込んだトランザクション情報から
             --!        ワード毎のライトデータチャネル信号の値を生成するサブプログラム.
             --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-            --! @param    proc_name  プロシージャの名前.
-            --! @param    last       最後のワードであることを指定する.
-            --! @param    default    指定の無いstd_logicの値.
-            --! @param    signals    生成されたワード毎の信号を出力する.
+            --! @param    proc_name     プロシージャの名前.
+            --! @param    last_word     最後のワードであることを指定する.
+            --! @param    default_value 指定の無いstd_logicの値.
+            --! @param    signals       生成されたワード毎の信号を出力する.
             -----------------------------------------------------------------------
             procedure generate_w_channel_signals(
-                          proc_name   : in  string;
-                          last        : in  boolean;
-                          default     : in  std_logic;
-                          signals     : out AXI4_W_CHANNEL_SIGNAL_TYPE
+                          proc_name     : in  string;
+                          last_word     : in  boolean;
+                          default_value : in  std_logic;
+                          signals       : out AXI4_W_CHANNEL_SIGNAL_TYPE
             ) is
-                constant  word_bytes  :     integer := WIDTH.WDATA/8;
+                constant  word_bytes    :     integer := WIDTH.WDATA/8;
             begin
                 signals.USER  := tran_info.DUSER;
                 signals.VALID := '1';
                 signals.READY := '1';
-                if (last) then
+                if (last_word) then
                     signals.LAST := '1';
                 else
                     signals.LAST := '0';
@@ -3029,11 +3029,11 @@ begin
                                 data_pos := data_pos + 1;
                                 signals.STRB(lane) := '1';
                             else
-                                signals.DATA(lane*8+bit) := default;
+                                signals.DATA(lane*8+bit) := default_value;
                             end if;
                         end loop;
                     else
-                        signals.DATA(lane*8+7 downto lane*8) := (lane*8+7 downto lane*8 => default);
+                        signals.DATA(lane*8+7 downto lane*8) := (lane*8+7 downto lane*8 => default_value);
                     end if;
                 end loop;
                 lower_lane := (upper_lane + 1)  mod word_bytes;
@@ -3074,10 +3074,10 @@ begin
                 for i in 1 to burst_len loop
                     RREADY_O <= '1' after OUTPUT_DELAY;
                     generate_r_channel_signals(
-                        proc_name => proc_name,
-                        last      => (i = burst_len),
-                        default   => '-',
-                        signals   => chk_r_signals
+                        proc_name     => proc_name,
+                        last_word     => (i = burst_len),
+                        default_value => '-',
+                        signals       => chk_r_signals
                     );
                     wait_until_xfer_r(core, proc_name, tran_info.TIMEOUT, '0');
                     match_axi4_r_channel(core, chk_r_signals, match);
@@ -3104,10 +3104,10 @@ begin
                 arid := ARID_I;
                 for i in 1 to burst_len loop
                     generate_r_channel_signals(
-                        proc_name => proc_name, 
-                        last      => (i = burst_len),
-                        default   => '0',
-                        signals   => out_signals.R
+                        proc_name     => proc_name, 
+                        last_word     => (i = burst_len),
+                        default_value => '0',
+                        signals       => out_signals.R
                     );
                     if (out_signals.R.ID(arid'range) = AXI4_TRANSACTION_SIGNAL_DONTCARE.ID(arid'range)) then
                         out_signals.R.ID(arid'range) := arid;
@@ -3135,10 +3135,10 @@ begin
                 get_transaction_info(proc_name, WIDTH.WDATA);
                 for i in 1 to burst_len loop
                     generate_w_channel_signals(
-                        proc_name => proc_name, 
-                        last      => (i = burst_len),
-                        default   => '0',
-                        signals   => out_signals.W
+                        proc_name     => proc_name, 
+                        last_word     => (i = burst_len),
+                        default_value => '0',
+                        signals       => out_signals.W
                     );
                     execute_output(out_signals);
                     wait_until_xfer_w(core, proc_name, tran_info.TIMEOUT, '0');
@@ -3164,10 +3164,10 @@ begin
                 for i in 1 to burst_len loop
                     WREADY_O <= '1' after OUTPUT_DELAY;
                     generate_w_channel_signals(
-                        proc_name => proc_name,
-                        last      => (i = burst_len),
-                        default   => '-',
-                        signals   => chk_w_signals
+                        proc_name     => proc_name,
+                        last_word     => (i = burst_len),
+                        default_value => '-',
+                        signals       => chk_w_signals
                     );
                     chk_w_signals.ID := (others => '-');
                     wait_until_xfer_w(core, proc_name, tran_info.TIMEOUT, '0');

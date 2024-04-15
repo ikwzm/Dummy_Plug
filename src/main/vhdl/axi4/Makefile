@@ -10,7 +10,7 @@ ENTITY_FILES = axi4_master_player.vhd         \
 axi4_models.vhd : ${ENTITY_FILES}
 	../../../../tools/MakeComponentPackage.rb --verbose \
             --brief   'AXI4 Dummy Plug Component Package' \
-            --version 1.9.1 \
+            --version 1.9.2 \
             --author  'Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>' \
             --library DUMMY_PLUG \
             --package AXI4_MODELS \
