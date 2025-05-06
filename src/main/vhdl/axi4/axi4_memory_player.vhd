@@ -1709,7 +1709,7 @@ begin
                     ---------------------------------------------------------------
                     if (i < burst_len and tran_info.BLK_LENGTH > 0) then
                         if (i mod tran_info.BLK_LENGTH = 0) then
-                            BLK_INTERVAL_LOOP: for i in 1 to tran_info.BLK_INTERVAL loop
+                            BLK_INTERVAL_LOOP: for n in 1 to tran_info.BLK_INTERVAL loop
                                 wait until (ACLK'event and ACLK = '1');
                                 tran_req_ready <= FALSE;
                             end loop;
@@ -2085,7 +2085,7 @@ begin
                     ---------------------------------------------------------------
                     if (i < burst_len and tran_info.BLK_LENGTH > 0) then
                         if (i mod tran_info.BLK_LENGTH = 0) then
-                            BLK_INTERVAL_LOOP: for i in 1 to tran_info.BLK_INTERVAL loop
+                            BLK_INTERVAL_LOOP: for n in 1 to tran_info.BLK_INTERVAL loop
                                 wait until (ACLK'event and ACLK = '1');
                             end loop;
                         end if;
