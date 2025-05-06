@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 #---------------------------------------------------------------------------------
 #
-#       Version     :   1.7.3
-#       Created     :   2019/9/27
+#       Version     :   1.7.4
+#       Created     :   2025/5/6
 #       File name   :   axi4.rb
 #       Author      :   Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 #       Description :   AXI4用シナリオ生成モジュール
@@ -139,6 +139,7 @@ module Dummy_Plug
           @id                   = nil
           @lock                 = nil
           @cache                = nil
+          @prot                 = nil
           @qos                  = nil
           @region               = nil
           @address              = nil
@@ -165,6 +166,7 @@ module Dummy_Plug
           @id                   = args[:ID                ] if args.key?(:ID                )
           @lock                 = args[:Lock              ] if args.key?(:Lock              )
           @cache                = args[:Cache             ] if args.key?(:Cache             )
+          @prot                 = args[:Prot              ] if args.key?(:Prot              )
           @qos                  = args[:QOS               ] if args.key?(:QOS               )
           @region               = args[:Region            ] if args.key?(:Region            )
           @address              = args[:Address           ] if args.key?(:Address           )
@@ -244,6 +246,7 @@ module Dummy_Plug
           str += tab + "BURST : " + sprintf("%s"    , @burst_type   ) + "\n" if (@burst_type != nil)
           str += tab + "LOCK  : " + sprintf("%d"    , @lock         ) + "\n" if (@lock       != nil)
           str += tab + "CACHE : " + sprintf("%d"    , @cache        ) + "\n" if (@cache      != nil)
+          str += tab + "PROT  : " + sprintf("%d"    , @prot         ) + "\n" if (@prot       != nil)
           str += tab + "QOS   : " + sprintf("%d"    , @qos          ) + "\n" if (@qos        != nil)
           str += tab + "REGION: " + sprintf("%d"    , @region       ) + "\n" if (@region     != nil)
           str += tab + "USER  : " + sprintf("%d"    , @addr_user    ) + "\n" if (@addr_user  != nil)
