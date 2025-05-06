@@ -9,17 +9,18 @@ dummy_plug_data = \
 	dummy_plug/DUMMY_PLUG.CORE                       \
 	dummy_plug/DUMMY_PLUG.MARCHAL                    \
 	dummy_plug/DUMMY_PLUG.AXI4_TYPES                 \
+	dummy_plug/DUMMY_PLUG.AXI4_MODELS                \
 	dummy_plug/DUMMY_PLUG.AXI4_CORE                  \
 	dummy_plug/DUMMY_PLUG.AXI4_CHANNEL_PLAYER        \
 	dummy_plug/DUMMY_PLUG.AXI4_MASTER_PLAYER         \
-	dummy_plug/DUMMY_PLUG.AXI4_MODELS                \
 	dummy_plug/DUMMY_PLUG.AXI4_SIGNAL_PRINTER        \
 	dummy_plug/DUMMY_PLUG.AXI4_SLAVE_PLAYER          \
-	dummy_plug/DUMMY_PLUG.AXI4_STREAM_PLAYER         \
 	dummy_plug/DUMMY_PLUG.AXI4_MASTER_PLAYER         \
+	dummy_plug/DUMMY_PLUG.AXI4_STREAM_PLAYER         \
 	dummy_plug/DUMMY_PLUG.AXI4_STREAM_MASTER_PLAYER  \
 	dummy_plug/DUMMY_PLUG.AXI4_STREAM_SLAVE_PLAYER   \
 	dummy_plug/DUMMY_PLUG.AXI4_STREAM_SIGNAL_PRINTER \
+	dummy_plug/DUMMY_PLUG.AXI4_MEMORY_PLAYER         \
 	$(ENDLIST)
 
 all  : $(dummy_plug_data)
@@ -68,6 +69,9 @@ dummy_plug/DUMMY_PLUG.AXI4_SLAVE_PLAYER          : $(srcdir)/axi4/axi4_slave_pla
 
 dummy_plug/DUMMY_PLUG.AXI4_STREAM_PLAYER         : $(srcdir)/axi4/axi4_stream_player.vhd
 	$(NVC) --work=dummy_plug -a $<
+
+dummy_plug/DUMMY_PLUG.AXI4_MEMORY_PLAYER         : $(srcdir)/axi4/axi4_memory_player.vhd
+	$(NVC) --work=dummy_plug -a --relaxed $<
 
 dummy_plug/DUMMY_PLUG.AXI4_STREAM_MASTER_PLAYER  : $(srcdir)/axi4/axi4_stream_master_player.vhd
 	$(NVC) --work=dummy_plug -a $<

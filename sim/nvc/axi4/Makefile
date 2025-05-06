@@ -12,6 +12,8 @@ TEST_BENCH = dummy_plug_reader_test_1        \
              dummy_plug_axi4_test_1_4        \
              dummy_plug_axi4_test_1_5        \
              dummy_plug_axi4_stream_test_1_1 \
+             dummy_plug_axi4_memory_test_1   \
+             dummy_plug_axi4_memory_test_2   \
              $(END_LIST)
 
 LIB_PATH        = ../lib
@@ -44,6 +46,12 @@ dummy_plug_axi4_test_1_5 : work/WORK.DUMMY_PLUG_AXI4_TEST_1_5.elab $(SRC_TEST_SC
 dummy_plug_axi4_stream_test_1_1 : work/WORK.DUMMY_PLUG_AXI4_STREAM_TEST_1_1.elab $(SRC_TEST_SCENARIO_PATH)/axi4/axi4_stream_test_1_1.snr
 	-$(NVC) -L ../lib/ -r DUMMY_PLUG_AXI4_STREAM_TEST_1_1
 
+dummy_plug_axi4_memory_test_1 : work/WORK.DUMMY_PLUG_AXI4_MEMORY_TEST_1.elab $(SRC_TEST_SCENARIO_PATH)/axi4/axi4_memory_test_1.snr
+	-$(NVC) -L ../lib/ -r DUMMY_PLUG_AXI4_MEMORY_TEST_1
+
+dummy_plug_axi4_memory_test_2 : work/WORK.DUMMY_PLUG_AXI4_MEMORY_TEST_2.elab $(SRC_TEST_SCENARIO_PATH)/axi4/axi4_memory_test_2.snr
+	-$(NVC) -L ../lib/ -r DUMMY_PLUG_AXI4_MEMORY_TEST_2
+
 work/WORK.DUMMY_PLUG_READER_TEST_1.elab : work/WORK.DUMMY_PLUG_READER_TEST_1
 	$(NVC) -L ../lib/ -e DUMMY_PLUG_READER_TEST_1
 
@@ -65,6 +73,12 @@ work/WORK.DUMMY_PLUG_AXI4_TEST_1_5.elab : work/WORK.DUMMY_PLUG_AXI4_TEST_1_5 wor
 work/WORK.DUMMY_PLUG_AXI4_STREAM_TEST_1_1.elab : work/WORK.DUMMY_PLUG_AXI4_STREAM_TEST_1_1 work/WORK.DUMMY_PLUG_AXI4_STREAM_TEST_1
 	$(NVC) -L ../lib/ -e DUMMY_PLUG_AXI4_STREAM_TEST_1_1
 
+work/WORK.DUMMY_PLUG_AXI4_MEMORY_TEST_1.elab : work/WORK.DUMMY_PLUG_AXI4_MEMORY_TEST_1 work/WORK.DUMMY_PLUG_AXI4_MEMORY_TEST
+	$(NVC) -L ../lib/ -e DUMMY_PLUG_AXI4_MEMORY_TEST_1
+
+work/WORK.DUMMY_PLUG_AXI4_MEMORY_TEST_2.elab : work/WORK.DUMMY_PLUG_AXI4_MEMORY_TEST_2 work/WORK.DUMMY_PLUG_AXI4_MEMORY_TEST
+	$(NVC) -L ../lib/ -e DUMMY_PLUG_AXI4_MEMORY_TEST_2
+
 analyze: work/WORK.DUMMY_PLUG_AXI4_TEST_1          \
          work/WORK.DUMMY_PLUG_AXI4_TEST_1_1        \
          work/WORK.DUMMY_PLUG_AXI4_TEST_1_2        \
@@ -72,33 +86,45 @@ analyze: work/WORK.DUMMY_PLUG_AXI4_TEST_1          \
          work/WORK.DUMMY_PLUG_AXI4_TEST_1_4        \
          work/WORK.DUMMY_PLUG_AXI4_TEST_1_5        \
          work/WORK.DUMMY_PLUG_AXI4_STREAM_TEST_1   \
-         work/WORK.DUMMY_PLUG_AXI4_STREAM_TEST_1_1
+         work/WORK.DUMMY_PLUG_AXI4_STREAM_TEST_1_1 \
+         work/WORK.DUMMY_PLUG_AXI4_MEMORY_TEST     \
+         work/WORK.DUMMY_PLUG_AXI4_MEMORY_TEST_1   \
+         work/WORK.DUMMY_PLUG_AXI4_MEMORY_TEST_2   
 
 work/WORK.DUMMY_PLUG_READER_TEST_1 : $(SRC_TEST_VHDL_PATH)/core/reader_test_1.vhd                $(LIB_DUMMY_PLUG)
 	$(NVC) -L ../lib/ -a $<
 
-work/WORK.DUMMY_PLUG_AXI4_TEST_1   : $(SRC_TEST_VHDL_PATH)/axi4/axi4_test_1.vhd                  $(LIB_DUMMY_PLUG)
+work/WORK.DUMMY_PLUG_AXI4_TEST_1   : $(SRC_TEST_VHDL_PATH)/axi4/axi4_test_1.vhd                  $(LIB_DUMMY_PLUG) work/WORK.DUMMY_PLUG_AXI4_TEST_1
 	$(NVC) -L ../lib/ -a $<
 
-work/WORK.DUMMY_PLUG_AXI4_TEST_1_1 : $(SRC_TEST_VHDL_PATH)/axi4/axi4_test_1_1.vhd                $(LIB_DUMMY_PLUG)
+work/WORK.DUMMY_PLUG_AXI4_TEST_1_1 : $(SRC_TEST_VHDL_PATH)/axi4/axi4_test_1_1.vhd                $(LIB_DUMMY_PLUG) work/WORK.DUMMY_PLUG_AXI4_TEST_1
 	$(NVC) -L ../lib/ -a $<
 
-work/WORK.DUMMY_PLUG_AXI4_TEST_1_2 : $(SRC_TEST_VHDL_PATH)/axi4/axi4_test_1_2.vhd                $(LIB_DUMMY_PLUG)
+work/WORK.DUMMY_PLUG_AXI4_TEST_1_2 : $(SRC_TEST_VHDL_PATH)/axi4/axi4_test_1_2.vhd                $(LIB_DUMMY_PLUG) work/WORK.DUMMY_PLUG_AXI4_TEST_1
 	$(NVC) -L ../lib/ -a $<
 
-work/WORK.DUMMY_PLUG_AXI4_TEST_1_3 : $(SRC_TEST_VHDL_PATH)/axi4/axi4_test_1_3.vhd                $(LIB_DUMMY_PLUG)
+work/WORK.DUMMY_PLUG_AXI4_TEST_1_3 : $(SRC_TEST_VHDL_PATH)/axi4/axi4_test_1_3.vhd                $(LIB_DUMMY_PLUG) work/WORK.DUMMY_PLUG_AXI4_TEST_1
 	$(NVC) -L ../lib/ -a $<
 
-work/WORK.DUMMY_PLUG_AXI4_TEST_1_4 : $(SRC_TEST_VHDL_PATH)/axi4/axi4_test_1_4.vhd                $(LIB_DUMMY_PLUG)
+work/WORK.DUMMY_PLUG_AXI4_TEST_1_4 : $(SRC_TEST_VHDL_PATH)/axi4/axi4_test_1_4.vhd                $(LIB_DUMMY_PLUG) work/WORK.DUMMY_PLUG_AXI4_TEST_1
 	$(NVC) -L ../lib/ -a $<
 
-work/WORK.DUMMY_PLUG_AXI4_TEST_1_5 : $(SRC_TEST_VHDL_PATH)/axi4/axi4_test_1_5.vhd                $(LIB_DUMMY_PLUG)
+work/WORK.DUMMY_PLUG_AXI4_TEST_1_5 : $(SRC_TEST_VHDL_PATH)/axi4/axi4_test_1_5.vhd                $(LIB_DUMMY_PLUG) work/WORK.DUMMY_PLUG_AXI4_TEST_1
 	$(NVC) -L ../lib/ -a $<
 
 work/WORK.DUMMY_PLUG_AXI4_STREAM_TEST_1   : $(SRC_TEST_VHDL_PATH)/axi4/axi4_stream_test_1.vhd    $(LIB_DUMMY_PLUG)
 	$(NVC) -L ../lib/ -a $<
 
-work/WORK.DUMMY_PLUG_AXI4_STREAM_TEST_1_1 : $(SRC_TEST_VHDL_PATH)/axi4/axi4_stream_test_1_1.vhd  $(LIB_DUMMY_PLUG)
+work/WORK.DUMMY_PLUG_AXI4_STREAM_TEST_1_1 : $(SRC_TEST_VHDL_PATH)/axi4/axi4_stream_test_1_1.vhd  $(LIB_DUMMY_PLUG) work/WORK.DUMMY_PLUG_AXI4_STREAM_TEST_1
+	$(NVC) -L ../lib/ -a $<
+
+work/WORK.DUMMY_PLUG_AXI4_MEMORY_TEST     : $(SRC_TEST_VHDL_PATH)/axi4/axi4_memory_test.vhd      $(LIB_DUMMY_PLUG)
+	$(NVC) -L ../lib/ -a $<
+
+work/WORK.DUMMY_PLUG_AXI4_MEMORY_TEST_1   : $(SRC_TEST_VHDL_PATH)/axi4/axi4_memory_test_1.vhd    $(LIB_DUMMY_PLUG) work/WORK.DUMMY_PLUG_AXI4_MEMORY_TEST
+	$(NVC) -L ../lib/ -a $<
+
+work/WORK.DUMMY_PLUG_AXI4_MEMORY_TEST_2   : $(SRC_TEST_VHDL_PATH)/axi4/axi4_memory_test_2.vhd    $(LIB_DUMMY_PLUG) work/WORK.DUMMY_PLUG_AXI4_MEMORY_TEST
 	$(NVC) -L ../lib/ -a $<
 
 $(LIB_DUMMY_PLUG):

@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_memory_player.vhd
 --!     @brief   AXI4 Memory Dummy Plug Player.
---!     @version 1.9.2
---!     @date    2024/4/15
+--!     @version 1.9.3
+--!     @date    2025/5/6
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012-2024 Ichiro Kawazome
+--      Copyright (C) 2012-2025 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -1709,7 +1709,7 @@ begin
                     ---------------------------------------------------------------
                     if (i < burst_len and tran_info.BLK_LENGTH > 0) then
                         if (i mod tran_info.BLK_LENGTH = 0) then
-                            BLK_INTERVAL_LOOP: for i in 1 to tran_info.BLK_INTERVAL loop
+                            BLK_INTERVAL_LOOP: for n in 1 to tran_info.BLK_INTERVAL loop
                                 wait until (ACLK'event and ACLK = '1');
                                 tran_req_ready <= FALSE;
                             end loop;
@@ -2085,7 +2085,7 @@ begin
                     ---------------------------------------------------------------
                     if (i < burst_len and tran_info.BLK_LENGTH > 0) then
                         if (i mod tran_info.BLK_LENGTH = 0) then
-                            BLK_INTERVAL_LOOP: for i in 1 to tran_info.BLK_INTERVAL loop
+                            BLK_INTERVAL_LOOP: for n in 1 to tran_info.BLK_INTERVAL loop
                                 wait until (ACLK'event and ACLK = '1');
                             end loop;
                         end if;
