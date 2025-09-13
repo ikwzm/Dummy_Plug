@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    reader_test_1.vhd
 --!     @brief   TEST BENCH No.1 for DUMMY_PLUG.READER
---!     @version 1.7.1
---!     @date    2017/3/20
+--!     @version 2.0.0
+--!     @date    2025/9/13
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012-2018 Ichiro Kawazome
+--      Copyright (C) 2012-2025 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -43,6 +43,7 @@ use     DUMMY_PLUG.READER;
 use     DUMMY_PLUG.READER.all;
 use     DUMMY_PLUG.UTIL.HEX_TO_STRING;
 use     DUMMY_PLUG.UTIL.BOOLEAN_TO_STRING;
+use     DUMMY_PLUG.UTIL.INTEGER_TO_STRING;
 entity  DUMMY_PLUG_READER_TEST_1 is
     generic (
         TEST_FILE : STRING  := "../../../src/test/scenarios/core/reader_test_1.snr"
@@ -55,7 +56,7 @@ begin
         variable  text_line : LINE;
         variable  debug     : boolean := FALSE;
         file      stream    : TEXT;
-        variable  r         : READER.READER_TYPE := READER.NEW_READER(NAME,TEST_FILE);
+        variable  r         : READER.READER_TYPE;
         variable  get_event : READER.EVENT_TYPE;
         variable  good      : boolean;
         --------------------------------------------------------------------------
@@ -70,12 +71,16 @@ begin
             if (debug) then
                 WRITE(text_line, NAME & "::event(" & READER.EVENT_TO_STRING(exp_event) & ") begin");
                 WRITELINE(OUTPUT, text_line);
+                -- assert (FALSE) report NAME & "READER.DEBUG_DUMP() begin";
                 READER.DEBUG_DUMP(r);
+                -- assert (FALSE) report NAME & "READER.DEBUG_DUMP() done";
                 r.debug_mode := 1;
             else
                 r.debug_mode := 0;
             end if;
+            -- assert (FALSE) report NAME & " READER.SEEK_EVENT() begin";
             READER.SEEK_EVENT(r, stream, get_event);
+            -- assert (FALSE) report NAME & " READER.SEEK_EVENT() done";
             assert(get_event = exp_event)
                 report   NAME & " Mismatch SEEK_EVENT=>"  &
                          READER.EVENT_TO_STRING(get_event) & " /= "&
@@ -222,6 +227,11 @@ begin
         -- 
         --------------------------------------------------------------------------
         file_open(stream, TEST_FILE, READ_MODE);
+        -- assert (FALSE) report "r.state_stack.low   := " & INTEGER_TO_STRING(r.state_stack'low)   & "; ";
+        -- assert (FALSE) report "r.state_stack.high  := " & INTEGER_TO_STRING(r.state_stack'high)  & "; ";
+        -- assert (FALSE) report "r.state_stack.left  := " & INTEGER_TO_STRING(r.state_stack'left)  & "; ";
+        -- assert (FALSE) report "r.state_stack.right := " & INTEGER_TO_STRING(r.state_stack'right) & "; ";
+        r := READER.NEW_READER(NAME,TEST_FILE);
         --------------------------------------------------------------------------
         -- reader_test_1 1
         --------------------------------------------------------------------------
