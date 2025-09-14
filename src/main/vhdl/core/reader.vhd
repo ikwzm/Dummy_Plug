@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    reader.vhd
 --!     @brief   Package for Dummy Plug Scenario Reader.
---!     @version 1.9.1
---!     @date    2023/12/12
+--!     @version 2.0.0
+--!     @date    2025/9/14
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012-2022 Ichiro Kawazome
+--      Copyright (C) 2012-2025 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -63,6 +63,15 @@ package READER is
               EVENT_ERROR            -- ノードの読み込みに失敗したことを示す.
     );
     -------------------------------------------------------------------------------
+    --! @brief リーダーの各種名前を保持する構造体.
+    -------------------------------------------------------------------------------
+    type      READER_NAME_TYPE is record
+        str                 : STRING(1 to 1024);
+        lo                  : integer;
+        hi                  : integer;
+        len                 : integer;
+    end record;
+    -------------------------------------------------------------------------------
     --! @brief 処理できる構造(STRUCTURE)の状態の深さの最大値.
     -------------------------------------------------------------------------------
     constant  STRUCT_STATE_DEPTH   : integer := 16;
@@ -78,12 +87,14 @@ package READER is
     --! @brief リーダーの状態を保持する構造体.
     -------------------------------------------------------------------------------
     type      READER_TYPE is record
-        name                : LINE;               -- インスタンス名を保持.
-        stream_name         : LINE;               -- ストリーム名を保持.
-        text_line           : LINE;               -- 現在処理中の行の内容を保持.
+        name                : READER_NAME_TYPE;   -- インスタンス名を保持.
+        stream_name         : READER_NAME_TYPE;   -- ストリーム名を保持.
+        text_line           : STRING(1 to 4096);  -- 現在処理中の行の内容を保持.
         text_pos            : integer;            -- 現在処理中の文字の位置を保持.
         text_end            : integer;            -- 現在処理中の行の最後の文字位置を保持.
         line_num            : integer;            -- 行番号.
+        line_empty          : boolean;            -- 空行であることを示すフラグ.
+        line_overflow       : boolean;            -- 行の文字数が text_line の容量を越えたことを示すフラグ.
         end_of_file         : boolean;            -- ファイルの終端に達したことを示すフラグ.
         debug_mode          : integer;            -- デバッグモード.
         state_stack         : STRUCT_STATE_STACK; -- 処理中の構造を保持するためのスタック.
@@ -682,16 +693,35 @@ package body  READER is
         variable  SELF          : inout READER_TYPE;
         file      STREAM        :       TEXT
     ) is
+        variable  read_line     : LINE;
+        variable  read_len      : integer;
     begin
         if (EndFile(STREAM)) then
             SELF.end_of_file := TRUE;
         else
-            READLINE(STREAM, SELF.text_line);
-            SELF.text_pos    := SELF.text_line'low;
-            SELF.text_end    := SELF.text_line'high;
-            SELF.line_num    := SELF.line_num + 1;
+            READLINE(STREAM, read_line);
+            SELF.line_empty    := (read_line'length < 1);
+            SELF.line_overflow := (read_line'length > SELF.text_line'length);
+            if SELF.line_overflow then
+                read_len := SELF.text_line'length;
+            else
+                read_len := read_line'length;
+            end if;
+            if not SELF.line_empty then
+                SELF.text_line(1 to read_len) := read_line.all(1 to read_len);
+                SELF.text_end := read_len;
+            else
+                SELF.text_end := 0;
+            end if;
+            SELF.text_pos    := 1;
             SELF.end_of_file := FALSE;
+            SELF.line_num    := SELF.line_num + 1;
             set_map_key_mode(SELF, MAPKEY_NULL);
+            if SELF.line_overflow then
+                DEBUG_DUMP(SELF, string'("read_texe_line buffer overflow"));
+                assert (FALSE) report "read_texe_line buffer overflow"
+                severity FAILURE;
+            end if;
         end if;
     end procedure;
     -------------------------------------------------------------------------------
@@ -713,7 +743,7 @@ package body  READER is
     ) is
     begin
         if (SELF.end_of_file = TRUE) or
-           (SELF.text_line   = null) or
+           (SELF.line_empty  = TRUE) or
            (POS     > SELF.text_end) then
             CHAR := nul;
             GOOD := FALSE;
@@ -766,8 +796,8 @@ package body  READER is
         variable  len           :       integer;    
         variable  curr_char     :       character;  
     begin
-        if (SELF.end_of_file  =  TRUE) or
-           (SELF.text_line    =  null) or
+        if (SELF.end_of_file = TRUE) or
+           (SELF.line_empty  = TRUE) or
            (START_POS > SELF.text_end) then
                 FOUND_CHAR := nul;
                 FOUND      := FALSE;
@@ -827,10 +857,11 @@ package body  READER is
         variable  curr_char     :       character;  
     begin
         while(SELF.end_of_file = FALSE) loop
-            if (SELF.text_line = null) or
+            if (SELF.line_empty = TRUE) or
                (SELF.text_pos > SELF.text_end) then
                 read_text_line(SELF, STREAM);
                 exit when(SELF.end_of_file);
+                next when(SELF.line_empty);
             end if;
             for pos in SELF.text_pos to SELF.text_end loop
                 curr_char := SELF.text_line(pos);
@@ -890,8 +921,8 @@ package body  READER is
     ) is
         variable  quote_char    :       character;
     begin
-        if (SELF.end_of_file  =  TRUE) or
-           (SELF.text_line    =  null) or
+        if (SELF.end_of_file = TRUE) or
+           (SELF.line_empty  = TRUE) or
            (START_POS > SELF.text_end) then
             FOUND     := FALSE;
             FOUND_LEN := 0;
@@ -967,8 +998,8 @@ package body  READER is
                   END_LINE      : out   boolean 
     ) is
     begin
-        if (SELF.end_of_file  =  TRUE) or
-           (SELF.text_line    =  null) or
+        if (SELF.end_of_file = TRUE) or
+           (SELF.line_empty  = TRUE) or
            (START_POS  /= SELF.text_line'low) or
            (START_POS+2 > SELF.text_end     ) then
             FOUND     := FALSE;
@@ -1011,7 +1042,7 @@ package body  READER is
     end procedure;
     -------------------------------------------------------------------------------
     --! @brief テキストラインの *指定された位置から* スキャンを開始し、
-    --!        ドキュメント開始を示すキーワード "..." 探す.
+    --!        ドキュメント終了を示すキーワード "..." 探す.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --!      * テキストラインをスキャンするだけで、ポインタを更新したり、新たに
     --!        ストリームからテキストラインを読み込む等のコンテキストの変更は行わない.
@@ -1030,8 +1061,8 @@ package body  READER is
                   END_LINE      : out   boolean 
     ) is
     begin
-        if (SELF.end_of_file  =  TRUE) or
-           (SELF.text_line    =  null) or
+        if (SELF.end_of_file = TRUE) or
+           (SELF.line_empty  = TRUE) or
            (START_POS  /= SELF.text_line'low) or
            (START_POS+2 > SELF.text_end     ) then
             FOUND     := FALSE;
@@ -1098,7 +1129,7 @@ package body  READER is
         variable  curr_state    :       STATE_TYPE;
     begin
         if    (SELF.end_of_file  =  TRUE) or
-              (SELF.text_line    =  null) or
+              (SELF.line_empty   =  TRUE) or
               (START_POS > SELF.text_end) then
             FOUND     := FALSE;
             FOUND_LEN := 0;
@@ -1253,7 +1284,7 @@ package body  READER is
         variable  quote_char    :       character;
     begin
         if (SELF.end_of_file  =  TRUE) or
-           (SELF.text_line    =  null) or
+           (SELF.line_empty   =  TRUE) or
            (START_POS > SELF.text_end) then
             FOUND     := FALSE;
             FOUND_LEN := 0;
@@ -1465,7 +1496,7 @@ package body  READER is
         variable  found_key     :       boolean;
     begin
         if (SELF.end_of_file  =  TRUE) or
-           (SELF.text_line    =  null) or
+           (SELF.line_empty   =  TRUE) or
            (START_POS > SELF.text_end) then
             FOUND     := FALSE;
             FOUND_LEN := 0;
@@ -1798,6 +1829,26 @@ package body  READER is
         SELF.text_pos := POS + LEN;
     end skip_token;
     -------------------------------------------------------------------------------
+    --! @brief 名前を設定する関数.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF        リーダーの名前の変数.
+    --! @param    NAME        セットする識別名.
+    -------------------------------------------------------------------------------
+    procedure set_reader_name(
+        variable  SELF          : inout READER_NAME_TYPE;
+                  NAME          : in    string
+    ) is
+    begin
+        if (NAME'length > SELF.str'length) then
+            SELF.len := SELF.str'length;
+        else
+            SELF.len := NAME'length;
+        end if;
+        SELF.str(1 to SELF.len) := NAME(1 to SELF.len);
+        SELF.lo  := 1;
+        SELF.hi  := SELF.len;
+    end set_reader_name;
+    -------------------------------------------------------------------------------
     --! @brief リーダーの状態を保持する構造体の初期化用定数を生成する関数.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --! @param    NAME        リーダーの識別名.
@@ -1807,14 +1858,15 @@ package body  READER is
     function  NEW_READER(NAME: string;STREAM_NAME: string) return READER_TYPE is
         variable self    : READER_TYPE;
     begin
-        WRITE(self.name       , NAME       );
-        WRITE(self.stream_name, STREAM_NAME);
-        self.text_line   := null;
-        self.text_pos    := 0;
-        self.text_end    := 0;
-        self.line_num    := 0;
-        self.end_of_file := FALSE;
-        self.debug_mode  := 0;
+        set_reader_name(self.name, NAME);
+        set_reader_name(self.stream_name, STREAM_NAME);
+        self.text_pos      := 0;
+        self.text_end      := 0;
+        self.line_num      := 0;
+        self.line_empty    := TRUE;
+        self.line_overflow := FALSE;
+        self.end_of_file   := FALSE;
+        self.debug_mode    := 0;
         init_struct_state(self);
         return self;
     end function;
@@ -2832,7 +2884,7 @@ package body  READER is
         literal_len := 0;
         str_pos     := STR'low;
         while(now_literal = FALSE and SELF.end_of_file = FALSE) loop
-            for pos in SELF.text_line'low to SELF.text_line'high loop
+            for pos in SELF.text_line'low to SELF.text_end loop
                 char   := SELF.text_line(pos);
                 if (char /= ' ' and char /= ht) then
                     now_literal := TRUE;
@@ -3420,9 +3472,9 @@ package body  READER is
     begin
         if TRUE then
             get_struct_state(SELF, state, indent, mapkey);
-            WRITE(text_line, "   name       : " & SELF.name(SELF.name'range));
+            WRITE(text_line, "   name       : " & SELF.name.str(SELF.name.lo to SELF.name.hi));
             WRITELINE(OUTPUT, text_line);
-            WRITE(text_line, "   stream_name: " & SELF.stream_name(SELF.stream_name'range) &
+            WRITE(text_line, "   stream_name: " & SELF.stream_name.str(SELF.stream_name.lo to SELF.stream_name.hi) &
                                             "(" & INTEGER_TO_STRING(SELF.line_num) &
                                             "," & INTEGER_TO_STRING(SELF.text_pos) &
                                             "," & INTEGER_TO_STRING(SELF.text_end) & ")");
@@ -3440,13 +3492,13 @@ package body  READER is
                                             "," & struct_mapkey_to_string(mapkey)  & ")");
             WRITELINE(OUTPUT, text_line);
         end loop;
-        if (SELF.text_line = null) then
+        if (SELF.text_end = 0) then
             WRITE(text_line, string'("   text_line  : null "));
         else
-            WRITE(text_line, "   text_line  : " & SELF.text_line(SELF.text_line'range));
+            WRITE(text_line, "   text_line  : " & SELF.text_line(SELF.text_line'low to SELF.text_end));
             WRITELINE(OUTPUT, text_line);
             WRITE(text_line, string'("               |"));
-            for i in SELF.text_line'low to SELF.text_line'high loop
+            for i in SELF.text_line'low to SELF.text_end loop
                 if (i = POS) then
                     WRITE(text_line, string'("^"));
                 else

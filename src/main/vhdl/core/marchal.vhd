@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    marchal.vhd
 --!     @brief   Marchal Dummy Plug Player.
---!     @version 1.9.1
---!     @date    2023/12/12
+--!     @version 2.0.0
+--!     @date    2025/9/14
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012-2023 Ichiro Kawazome
+--      Copyright (C) 2012-2025 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without

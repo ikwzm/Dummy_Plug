@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    vocal.vhd
 --!     @brief   Package for Dummy Plug Message Output.
---!     @version 1.9.1
---!     @date    2023/12/12
+--!     @version 2.0.0
+--!     @date    2025/9/14
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012-2023 Ichiro Kawazome
+--      Copyright (C) 2012-2025 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -42,18 +42,43 @@ use     std.textio.all;
 -----------------------------------------------------------------------------------
 package VOCAL is
     -------------------------------------------------------------------------------
+    --! @brief コアの名前を保持する構造体.
+    -------------------------------------------------------------------------------
+    type      VOCAL_NAME_TYPE is record
+        str                 : STRING(1 to 1024);
+        lo                  : integer;
+        hi                  : integer;
+        len                 : integer;
+    end record;
+    -------------------------------------------------------------------------------
+    --! @brief 各種タグを保持する構造体.
+    -------------------------------------------------------------------------------
+    type      VOCAL_TAG_TYPE is record
+        str                 : STRING(1 to 32);
+        lo                  : integer;
+        hi                  : integer;
+        len                 : integer;
+    end record;
+    -------------------------------------------------------------------------------
+    --! @brief 各種タグを設定する関数.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF        タグ変数.
+    --! @param    TAG         セットするタグ.
+    -------------------------------------------------------------------------------
+    procedure SET_VOCAL_TAG(variable SELF:inout VOCAL_TAG_TYPE;TAG:in STRING);
+    -------------------------------------------------------------------------------
     --! @brief 各種の状態を保持する構造体.
     -------------------------------------------------------------------------------
     type      VOCAL_TYPE is record
-        name                : LINE;
-        tag_debug           : LINE;
-        tag_remark          : LINE;
-        tag_note            : LINE;
-        tag_warning         : LINE;
-        tag_mismatch        : LINE;
-        tag_error           : LINE;
-        tag_failure         : LINE;
-        tag_read_error      : LINE;
+        name                : VOCAL_NAME_TYPE;
+        tag_debug           : VOCAL_TAG_TYPE;
+        tag_remark          : VOCAL_TAG_TYPE;
+        tag_note            : VOCAL_TAG_TYPE;
+        tag_warning         : VOCAL_TAG_TYPE;
+        tag_mismatch        : VOCAL_TAG_TYPE;
+        tag_error           : VOCAL_TAG_TYPE;
+        tag_failure         : VOCAL_TAG_TYPE;
+        tag_read_error      : VOCAL_TAG_TYPE;
         tag_field_width     : integer;
         time_field_width    : integer;
         name_field_width    : integer;
@@ -154,6 +179,26 @@ use     std.textio.all;
 -----------------------------------------------------------------------------------
 package body  VOCAL is
     -------------------------------------------------------------------------------
+    --! @brief 名前を設定する関数.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF        名前の変数.
+    --! @param    NAME        セットする識別名.
+    -------------------------------------------------------------------------------
+    procedure set_vocal_name(
+        variable  SELF          : inout VOCAL_NAME_TYPE;
+                  NAME          : in    STRING
+    ) is
+    begin
+        if (NAME'length > SELF.str'length) then
+            SELF.len := SELF.str'length;
+        else
+            SELF.len := NAME'length;
+        end if;
+        SELF.lo := 1;
+        SELF.hi := SELF.len;
+        SELF.str(SELF.lo to SELF.hi) := NAME(SELF.lo to SELF.hi);
+    end set_vocal_name;
+    -------------------------------------------------------------------------------
     --! @brief デフォルトの出力用タグ
     -------------------------------------------------------------------------------
     constant  DEFAULT_TAG_DEBUG          : STRING  := ">>>>> Debug   :";
@@ -164,6 +209,26 @@ package body  VOCAL is
     constant  DEFAULT_TAG_ERROR          : STRING  := "***** Error   :";
     constant  DEFAULT_TAG_FAILURE        : STRING  := "##### Failure :";
     constant  DEFAULT_TAG_READ_ERROR     : STRING  := "!!!!Read Error:";
+    -------------------------------------------------------------------------------
+    --! @brief 各種タグを設定する関数.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF        タグ変数.
+    --! @param    TAG         セットするタグ.
+    -------------------------------------------------------------------------------
+    procedure SET_VOCAL_TAG(
+        variable  SELF          : inout VOCAL_TAG_TYPE;
+                  TAG           : in    STRING
+    ) is
+    begin 
+        if (TAG'length > SELF.str'length) then
+            SELF.len := SELF.str'length;
+        else
+            SELF.len := TAG'length;
+        end if;
+        SELF.lo := 1;
+        SELF.hi := SELF.len;
+        SELF.str(SELF.lo to SELF.hi) := TAG(SELF.lo to SELF.hi);
+    end SET_VOCAL_TAG;
     -------------------------------------------------------------------------------
     --! @brief デフォルトの各フィールド幅
     -------------------------------------------------------------------------------
@@ -181,15 +246,15 @@ package body  VOCAL is
     ) return VOCAL_TYPE is
         variable self       : VOCAL_TYPE;
     begin
-        WRITE(self.name          , NAME);
-        WRITE(self.tag_debug     , DEFAULT_TAG_DEBUG     );
-        WRITE(self.tag_remark    , DEFAULT_TAG_REMARK    );
-        WRITE(self.tag_note      , DEFAULT_TAG_NOTE      );
-        WRITE(self.tag_warning   , DEFAULT_TAG_WARNING   );
-        WRITE(self.tag_mismatch  , DEFAULT_TAG_MISMATCH  );
-        WRITE(self.tag_error     , DEFAULT_TAG_ERROR     );
-        WRITE(self.tag_failure   , DEFAULT_TAG_FAILURE   );
-        WRITE(self.tag_read_error, DEFAULT_TAG_READ_ERROR);
+        set_vocal_name(self.name         , NAME);
+        SET_VOCAL_TAG(self.tag_debug     , DEFAULT_TAG_DEBUG     );
+        SET_VOCAL_TAG(self.tag_remark    , DEFAULT_TAG_REMARK    );
+        SET_VOCAL_TAG(self.tag_note      , DEFAULT_TAG_NOTE      );
+        SET_VOCAL_TAG(self.tag_warning   , DEFAULT_TAG_WARNING   );
+        SET_VOCAL_TAG(self.tag_mismatch  , DEFAULT_TAG_MISMATCH  );
+        SET_VOCAL_TAG(self.tag_error     , DEFAULT_TAG_ERROR     );
+        SET_VOCAL_TAG(self.tag_failure   , DEFAULT_TAG_FAILURE   );
+        SET_VOCAL_TAG(self.tag_read_error, DEFAULT_TAG_READ_ERROR);
         self.time_field_width := DEFAULT_TIME_FIELD_WIDTH;
         self.name_field_width := DEFAULT_NAME_FIELD_WIDTH;
         self.tag_field_width  := DEFAULT_TAG_FIELD_WIDTH;
@@ -209,14 +274,14 @@ package body  VOCAL is
     --! @param    TAG     タグ.
     --! @param    MESSAGE 出力するメッセージ.
     -------------------------------------------------------------------------------
-    procedure REPORT_MESSAGE(SELF:inout VOCAL_TYPE; TAG:inout LINE; MESSAGE:in STRING) is
+    procedure REPORT_MESSAGE(SELF:inout VOCAL_TYPE; TAG:inout VOCAL_TAG_TYPE; MESSAGE:in STRING) is
         variable text_line   : LINE;
     begin
         if    (SELF.tag_field_width > 0) then
-            WRITE(text_line, TAG(TAG'range), RIGHT,  SELF.tag_field_width);
+            WRITE(text_line, TAG.str(TAG.lo to TAG.hi), RIGHT,  SELF.tag_field_width);
             WRITE(text_line, string'(" "));
         elsif (SELF.tag_field_width < 0) then
-            WRITE(text_line, TAG(TAG'range), LEFT , -SELF.tag_field_width);
+            WRITE(text_line, TAG.str(TAG.lo to TAG.hi), LEFT , -SELF.tag_field_width);
             WRITE(text_line, string'(" "));
         end if;
         if    (SELF.time_field_width > 0) then
@@ -224,7 +289,7 @@ package body  VOCAL is
         elsif (SELF.time_field_width < 0) then
             WRITE(text_line, Now, LEFT , -SELF.time_field_width);
         end if;
-        WRITE(text_line, " (" & SELF.name(SELF.name'range) & ") " & MESSAGE);
+        WRITE(text_line, " (" & SELF.name.str(SELF.name.lo to SELF.name.hi) & ") " & MESSAGE);
         WRITELINE(OUTPUT, text_line);
     end procedure;
     -------------------------------------------------------------------------------
@@ -338,10 +403,10 @@ package body  VOCAL is
             WRITE(text_line, string'("|"));
         end if;
         if    (SELF.name_field_width > 0) then
-            WRITE(text_line, SELF.name(SELF.name'range), RIGHT,  SELF.name_field_width);
+            WRITE(text_line, SELF.name.str(SELF.name.lo to SELF.name.hi), RIGHT,  SELF.name_field_width);
             WRITE(text_line, string'(" < "));
         elsif (SELF.name_field_width < 0) then
-            WRITE(text_line, SELF.name(SELF.name'range), LEFT , -SELF.name_field_width);
+            WRITE(text_line, SELF.name.str(SELF.name.lo to SELF.name.hi), LEFT , -SELF.name_field_width);
             WRITE(text_line, string'(" < "));
         end if;
         WRITE(text_line, MESSAGE);
@@ -364,10 +429,10 @@ package body  VOCAL is
             WRITE(text_line, string'("|"));
         end if;
         if    (SELF.name_field_width > 0) then
-            WRITE(text_line, SELF.name(SELF.name'range), RIGHT,  SELF.name_field_width);
+            WRITE(text_line, SELF.name.str(SELF.name.lo to SELF.name.hi), RIGHT,  SELF.name_field_width);
             WRITE(text_line, string'(" < "));
         elsif (SELF.name_field_width < 0) then
-            WRITE(text_line, SELF.name(SELF.name'range), LEFT , -SELF.name_field_width);
+            WRITE(text_line, SELF.name.str(SELF.name.lo to SELF.name.hi), LEFT , -SELF.name_field_width);
             WRITE(text_line, string'(" < "));
         end if;
         WRITE(text_line, MESSAGE);

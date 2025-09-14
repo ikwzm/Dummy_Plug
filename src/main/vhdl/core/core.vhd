@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    core.vhd
 --!     @brief   Core Package for Dummy Plug.
---!     @version 1.9.1
---!     @date    2023/12/12
+--!     @version 2.0.0
+--!     @date    2025/9/14
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012-2023 Ichiro Kawazome
+--      Copyright (C) 2012-2025 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -104,6 +104,15 @@ package CORE is
     -------------------------------------------------------------------------------
     type      REPORT_STATUS_VECTOR is array (integer range <>) of  REPORT_STATUS_TYPE;
     -------------------------------------------------------------------------------
+    --! @brief コアの名前を保持する構造体.
+    -------------------------------------------------------------------------------
+    type      CORE_NAME_TYPE is record
+        str                 : STRING(1 to 1024);
+        lo                  : integer;
+        hi                  : integer;
+        len                 : integer;
+    end record;
+    -------------------------------------------------------------------------------
     --! @brief スクラッチ用文字列領域の大きさの定義.
     -------------------------------------------------------------------------------
     constant  STR_BUF_SIZE  : integer := 1024;
@@ -111,7 +120,7 @@ package CORE is
     --! @brief コアの各種状態を保持する構造体.
     -------------------------------------------------------------------------------
     type      CORE_TYPE is record
-                  name          : LINE;                     -- インスタンス名を保持.
+                  name          : CORE_NAME_TYPE;           -- インスタンス名を保持.
                   reader        : READER_TYPE;              -- リーダー用変数.
                   vocal         : VOCAL_TYPE;               -- ボーカル用変数.
                   str_buf       : STRING(1 to STR_BUF_SIZE);-- スクラッチ用文字列バッファ.
@@ -705,6 +714,26 @@ package body CORE is
         SELF.report_status.failure_count := SELF.report_status.failure_count + 1;
     end procedure;
     -------------------------------------------------------------------------------
+    --! @brief 名前を設定する関数.
+    --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    --! @param    SELF        リーダーの名前の変数.
+    --! @param    NAME        セットする識別名.
+    -------------------------------------------------------------------------------
+    procedure set_core_name(
+        variable  SELF          : inout CORE_NAME_TYPE;
+                  NAME          : in    string
+    ) is
+    begin
+        if (NAME'length > SELF.str'length) then
+            SELF.len := SELF.str'length;
+        else
+            SELF.len := NAME'length;
+        end if;
+        SELF.str(1 to SELF.len) := NAME(1 to SELF.len);
+        SELF.lo  := 1;
+        SELF.hi  := SELF.len;
+    end set_core_name;
+    -------------------------------------------------------------------------------
     --! @brief コア変数の初期化用定数を生成する関数.
     --! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     --! @param    NAME        コアの識別名.
@@ -734,7 +763,7 @@ package body CORE is
     ) return CORE_TYPE is
         variable self       : CORE_TYPE;
     begin
-        WRITE(self.name, NAME);
+        set_core_name(self.name, NAME);
         self.reader        := NEW_READER(NAME, STREAM_NAME);
         self.vocal         := NEW_VOCAL (VOCAL_NAME);
         self.debug         := 0;           
@@ -900,7 +929,7 @@ package body CORE is
                     exit when (seq_level = 0);
                 when EVENT_SCALAR     =>
                     READ_EVENT(SELF, STREAM, get_event);
-                    MATCH_KEY_WORD(SELF, SELF.name(SELF.name'range), match);
+                    MATCH_KEY_WORD(SELF, SELF.name.str(SELF.name.lo to SELF.name.hi), match);
                     if (match) then
                         FOUND := TRUE;
                     end if;
