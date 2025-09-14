@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    aix4_memory_test_2.vhd
 --!     @brief   TEST BENCH No.2 for DUMMY_PLUG.AXI4_MEMORY_PLAYER
---!     @version 1.7.5
---!     @date    2020/10/6
+--!     @version 2.0.0
+--!     @date    2025/9/14
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2019-2020 Ichiro Kawazome
+--      Copyright (C) 2019-2025 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
