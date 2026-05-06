@@ -1,12 +1,12 @@
 -----------------------------------------------------------------------------------
 --!     @file    axi4_signal_printer.vhd
 --!     @brief   AXI4 Signal Printer Module.
---!     @version 1.6.1
---!     @date    2016/3/15
+--!     @version 2.0.1
+--!     @date    2026/5/6
 --!     @author  Ichiro Kawazome <ichiro_k@ca2.so-net.ne.jp>
 -----------------------------------------------------------------------------------
 --
---      Copyright (C) 2012-2016 Ichiro Kawazome
+--      Copyright (C) 2012-2026 Ichiro Kawazome
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -393,6 +393,9 @@ begin
                        string'(" ") & BIN_TO_STRING(BREADY ) &
                        string'("|"));
             end loop;
+        end if;
+        if (READ_ENABLE = FALSE and WRITE_ENABLE = FALSE) then
+            wait until (ACLK'event and ACLK = '1');
         end if;
     end process;
 end MODEL;
